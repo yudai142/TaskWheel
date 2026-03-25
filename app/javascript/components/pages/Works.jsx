@@ -38,28 +38,28 @@ export default function Works() {
       setShowForm(false)
       fetchData()
     } catch (error) {
-      alert('“–”Ô‚Ì’Ç‰Á‚É¸”s‚µ‚Ü‚µ‚½')
+      alert('å½“ç•ªã®è¿½åŠ ã«å¤±æ•—ã—ã¾ã—ãŸ')
     }
   }
 
   const handleDelete = async (id) => {
-    if (!window.confirm('‚±‚Ì“–”Ô‚ğíœ‚µ‚Ü‚·‚©H')) return
+    if (!window.confirm('ã“ã®å½“ç•ªã‚’å‰Šé™¤ã—ã¾ã™ã‹ï¼Ÿ')) return
     try {
       await axios.delete(`/api/v1/works/${id}`)
       fetchData()
     } catch (error) {
-      alert('íœ‚É¸”s‚µ‚Ü‚µ‚½')
+      alert('å‰Šé™¤ã«å¤±æ•—ã—ã¾ã—ãŸ')
     }
   }
 
-  if (loading) return <div className="text-center py-12">“Ç‚İ‚İ’†...</div>
+  if (loading) return <div className="text-center py-12">èª­ã¿è¾¼ã¿ä¸­...</div>
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">“–”ÔŠÇ—</h2>
+        <h2 className="text-2xl font-bold text-gray-900">å½“ç•ªç®¡ç†</h2>
         <button onClick={() => setShowForm(!showForm)} className="btn-primary">
-          {showForm ? 'ƒLƒƒƒ“ƒZƒ‹' : 'V‹K’Ç‰Á'}
+          {showForm ? 'ã‚­ãƒ£ãƒ³ã‚»ãƒ«' : 'æ–°è¦è¿½åŠ '}
         </button>
       </div>
 
@@ -68,7 +68,7 @@ export default function Works() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                “–”Ô–¼
+                å½“ç•ªå
               </label>
               <input
                 type="text"
@@ -82,7 +82,7 @@ export default function Works() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                •¡”Š„‚è“–‚Ä”
+                è¤‡æ•°å‰²ã‚Šå½“ã¦æ•°
               </label>
               <input
                 type="number"
@@ -98,7 +98,7 @@ export default function Works() {
               />
             </div>
             <button type="submit" className="btn-primary w-full">
-              ’Ç‰Á
+              è¿½åŠ 
             </button>
           </form>
         </div>
@@ -114,11 +114,11 @@ export default function Works() {
                 </h3>
                 <div className="mt-2 space-y-1">
                   <p className="text-sm text-gray-600">
-                    ƒƒ“ƒo[: {work.members?.length || 0}l
+                    ãƒ¡ãƒ³ãƒãƒ¼: {work.members?.length || 0}äºº
                   </p>
                   {work.multiple && (
                     <p className="text-sm text-gray-600">
-                      •¡”Š„‚è“–‚Ä: {work.multiple}l
+                      è¤‡æ•°å‰²ã‚Šå½“ã¦: {work.multiple}äºº
                     </p>
                   )}
                 </div>
@@ -127,7 +127,7 @@ export default function Works() {
                 onClick={() => handleDelete(work.id)}
                 className="btn-danger"
               >
-                íœ
+                å‰Šé™¤
               </button>
             </div>
           </div>

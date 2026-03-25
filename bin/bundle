@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+# This file loads Bundler and then runs the `bundle` command.
+
+require "rubygems"
+require "bundler/setup"
+
+load Gem.bin_path("bundler", "bundle")

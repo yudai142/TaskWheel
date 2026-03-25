@@ -7,7 +7,6 @@ services:
     environment:
       POSTGRES_DB: duty_shuffle_development
       POSTGRES_PASSWORD: password
-      POSTGRES_INITDB_ARGS: "-c max_connections=1000"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -18,12 +17,25 @@ services:
       timeout: 5s
       retries: 5
 
+  webpack:
+    build: .
+    container_name: duty_shuffle_webpack
+    command: sh -c "yarn install && yarn dev"
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+      - bundle_cache:/usr/local/bundle
+    environment:
+      NODE_ENV: development
+      RAILS_ENV: development
+
   web:
     build: .
     container_name: duty_shuffle_web
-    command: bundle exec rails s -b 0.0.0.0
+    command: sh -c "bundle exec rails db:create db:migrate 2>/dev/null || true && bundle exec rails server -b 0.0.0.0"
     volumes:
       - .:/app
+      - node_modules:/app/node_modules
       - bundle_cache:/usr/local/bundle
     ports:
       - "3000:3000"
@@ -32,6 +44,8 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: postgresql://postgres:password@db:5432/duty_shuffle_development
+      DB_HOST: db
+      DB_PORT: 5432
       RAILS_ENV: development
       NODE_ENV: development
     stdin_open: true
@@ -40,3 +54,4 @@ services:
 volumes:
   postgres_data:
   bundle_cache:
+  node_modules:

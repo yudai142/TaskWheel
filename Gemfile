@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.2.0"
+ruby "~> 3.2.0"
 
 gem "rails", "~> 7.1.0"
 gem "pg", "~> 1.1"
@@ -17,14 +17,13 @@ gem "aws-sdk-s3", require: false
 gem "rack-cors"
 
 # React / JS
-gem "shakapacker"
-gem "react-rails"
+gem "shakapacker", "~> 7.2"
 
 # API
 gem "active_model_serializers"
 
 # Datetime
-gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
+gem "tzinfo-data"
 
 # Dev & Test
 group :development, :test do

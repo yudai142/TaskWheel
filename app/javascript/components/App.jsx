@@ -11,12 +11,12 @@ export default function App() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // ‰Šú‰»ˆ—
+    // åˆæœŸåŒ–å‡¦ç†
     setLoading(false)
   }, [])
 
   if (loading) {
-    return <div className="flex items-center justify-center min-h-screen">“Ç‚İ‚İ’†...</div>
+    return <div className="flex items-center justify-center min-h-screen">èª­ã¿è¾¼ã¿ä¸­...</div>
   }
 
   return (

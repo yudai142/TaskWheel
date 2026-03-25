@@ -1,28 +1,40 @@
 const path = require('path')
-const { config } = require('@shakapacker/core')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const { generateWebpackConfig, merge } = require('shakapacker')
 
-const moduleConfig = config
+const baseConfig = generateWebpackConfig()
 
-// Custom configuration
-moduleConfig.entry = {
-  application: path.resolve(__dirname, 'app', 'javascript', 'packs', 'application.js'),
-  index: path.resolve(__dirname, 'app', 'javascript', 'packs', 'index.jsx'),
+const customConfig = {
+  entry: {
+    application: path.resolve(__dirname, '..', '..', 'app', 'javascript', 'packs', 'application.js'),
+    index: path.resolve(__dirname, '..', '..', 'app', 'javascript', 'packs', 'index.jsx'),
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(jsx|js)$/,
+        include: path.resolve(__dirname, '..', '..', 'app', 'javascript'),
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+        },
+      },
+      {
+        test: /\.css$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'postcss-loader',
+        ],
+      },
+    ],
+  },
+  plugins: [
+    new MiniCssExtractPlugin({ filename: '[name]-[contenthash].css' }),
+  ],
+  resolve: {
+    extensions: ['.js', '.jsx'],
+  },
 }
 
-// Babel loader configuration for React
-moduleConfig.module.rules.push({
-  test: /\.(jsx|js)$/,
-  include: path.resolve(__dirname, 'app', 'javascript'),
-  exclude: /node_modules/,
-  use: {
-    loader: 'babel-loader',
-    options: {
-      presets: [
-        '@babel/preset-env',
-        '@babel/preset-react',
-      ],
-    },
-  },
-})
-
-module.exports = moduleConfig
+module.exports = merge(baseConfig, customConfig)

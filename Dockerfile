@@ -8,15 +8,15 @@ RUN apk add --no-cache \
     nodejs \
     npm \
     yarn \
-    git
+    git \
+    yaml-dev \
+    tzdata
 
 COPY Gemfile* ./
 
 RUN bundle install
 
-COPY package.json yarn.lock ./
-
-RUN yarn install
+COPY package.json ./
 
 COPY . .
 
