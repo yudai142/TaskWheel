@@ -514,7 +514,7 @@
             }
             return element;
           };
-          function createElement3(type, config, children) {
+          function createElement10(type, config, children) {
             var propName;
             var props = {};
             var key = null;
@@ -975,7 +975,7 @@
             }
             return lazyType;
           }
-          function forwardRef2(render) {
+          function forwardRef9(render) {
             {
               if (render != null && render.$$typeof === REACT_MEMO_TYPE) {
                 error("forwardRef requires a render function but received a `memo` component. Instead of forwardRef(memo(...)), use memo(forwardRef(...)).");
@@ -1613,7 +1613,7 @@
                 error("React.createElement: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s", typeString, info);
               }
             }
-            var element = createElement3.apply(this, arguments);
+            var element = createElement10.apply(this, arguments);
             if (element == null) {
               return element;
             }
@@ -1873,7 +1873,7 @@
           exports.createElement = createElement$1;
           exports.createFactory = createFactory;
           exports.createRef = createRef;
-          exports.forwardRef = forwardRef2;
+          exports.forwardRef = forwardRef9;
           exports.isValidElement = isValidElement2;
           exports.lazy = lazy;
           exports.memo = memo2;
@@ -2387,9 +2387,9 @@
           if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== "undefined" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart === "function") {
             __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error());
           }
-          var React10 = require_react();
+          var React17 = require_react();
           var Scheduler = require_scheduler();
-          var ReactSharedInternals = React10.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React17.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           var suppressWarning = false;
           function setSuppressWarning(newSuppressWarning) {
             {
@@ -2442,7 +2442,7 @@
           var Mode = 8;
           var ContextConsumer = 9;
           var ContextProvider = 10;
-          var ForwardRef = 11;
+          var ForwardRef8 = 11;
           var Profiler = 12;
           var SuspenseComponent = 13;
           var MemoComponent = 14;
@@ -3481,7 +3481,7 @@
               case IndeterminateComponent:
               case SimpleMemoComponent:
                 return describeFunctionComponentFrame(fiber.type);
-              case ForwardRef:
+              case ForwardRef8:
                 return describeFunctionComponentFrame(fiber.type.render);
               case ClassComponent:
                 return describeClassComponentFrame(fiber.type);
@@ -3592,7 +3592,7 @@
                 return getContextName$1(provider._context) + ".Provider";
               case DehydratedFragment:
                 return "DehydratedFragment";
-              case ForwardRef:
+              case ForwardRef8:
                 return getWrappedName$1(type, type.render, "ForwardRef");
               case Fragment3:
                 return "Fragment";
@@ -3994,7 +3994,7 @@
             {
               if (props.value == null) {
                 if (typeof props.children === "object" && props.children !== null) {
-                  React10.Children.forEach(props.children, function(child) {
+                  React17.Children.forEach(props.children, function(child) {
                     if (child == null) {
                       return;
                     }
@@ -9393,7 +9393,7 @@
               }
             }
           }
-          function createElement3(type, props, rootContainerElement, parentNamespace) {
+          function createElement10(type, props, rootContainerElement, parentNamespace) {
             var isCustomComponentTag;
             var ownerDocument = getOwnerDocumentFromRootContainer(rootContainerElement);
             var domElement;
@@ -10254,7 +10254,7 @@
               }
               parentNamespace = hostContextDev.namespace;
             }
-            var domElement = createElement3(type, props, rootContainerInstance, parentNamespace);
+            var domElement = createElement10(type, props, rootContainerInstance, parentNamespace);
             precacheFiberNode(internalInstanceHandle, domElement);
             updateFiberProps(domElement, props);
             return domElement;
@@ -16062,7 +16062,7 @@
           }
           function resetSuspendedComponent(sourceFiber, rootRenderLanes) {
             var tag = sourceFiber.tag;
-            if ((sourceFiber.mode & ConcurrentMode) === NoMode && (tag === FunctionComponent || tag === ForwardRef || tag === SimpleMemoComponent)) {
+            if ((sourceFiber.mode & ConcurrentMode) === NoMode && (tag === FunctionComponent || tag === ForwardRef8 || tag === SimpleMemoComponent)) {
               var currentSource = sourceFiber.alternate;
               if (currentSource) {
                 sourceFiber.updateQueue = currentSource.updateQueue;
@@ -16770,7 +16770,7 @@
                 child = updateClassComponent(null, workInProgress2, Component2, resolvedProps, renderLanes2);
                 return child;
               }
-              case ForwardRef: {
+              case ForwardRef8: {
                 {
                   workInProgress2.type = Component2 = resolveForwardRefForHotReloading(Component2);
                 }
@@ -17869,7 +17869,7 @@
                 return updateSuspenseComponent(current2, workInProgress2, renderLanes2);
               case HostPortal:
                 return updatePortalComponent(current2, workInProgress2, renderLanes2);
-              case ForwardRef: {
+              case ForwardRef8: {
                 var type = workInProgress2.type;
                 var _unresolvedProps2 = workInProgress2.pendingProps;
                 var _resolvedProps2 = workInProgress2.elementType === type ? _unresolvedProps2 : resolveDefaultProps(type, _unresolvedProps2);
@@ -18147,7 +18147,7 @@
               case LazyComponent:
               case SimpleMemoComponent:
               case FunctionComponent:
-              case ForwardRef:
+              case ForwardRef8:
               case Fragment3:
               case Mode:
               case Profiler:
@@ -18730,7 +18730,7 @@
               setCurrentFiber(finishedWork);
               switch (finishedWork.tag) {
                 case FunctionComponent:
-                case ForwardRef:
+                case ForwardRef8:
                 case SimpleMemoComponent: {
                   break;
                 }
@@ -18925,7 +18925,7 @@
             if ((finishedWork.flags & LayoutMask) !== NoFlags) {
               switch (finishedWork.tag) {
                 case FunctionComponent:
-                case ForwardRef:
+                case ForwardRef8:
                 case SimpleMemoComponent: {
                   if (!offscreenSubtreeWasHidden) {
                     if (finishedWork.mode & ProfileMode) {
@@ -19106,7 +19106,7 @@
           function reappearLayoutEffectsOnFiber(node) {
             switch (node.tag) {
               case FunctionComponent:
-              case ForwardRef:
+              case ForwardRef8:
               case SimpleMemoComponent: {
                 if (node.mode & ProfileMode) {
                   try {
@@ -19476,7 +19476,7 @@
                 return;
               }
               case FunctionComponent:
-              case ForwardRef:
+              case ForwardRef8:
               case MemoComponent:
               case SimpleMemoComponent: {
                 if (!offscreenSubtreeWasHidden) {
@@ -19631,7 +19631,7 @@
             var flags = finishedWork.flags;
             switch (finishedWork.tag) {
               case FunctionComponent:
-              case ForwardRef:
+              case ForwardRef8:
               case MemoComponent:
               case SimpleMemoComponent: {
                 recursivelyTraverseMutationEffects(root2, finishedWork);
@@ -19940,7 +19940,7 @@
               var firstChild = fiber.child;
               switch (fiber.tag) {
                 case FunctionComponent:
-                case ForwardRef:
+                case ForwardRef8:
                 case MemoComponent:
                 case SimpleMemoComponent: {
                   if (fiber.mode & ProfileMode) {
@@ -20086,7 +20086,7 @@
           function commitPassiveMountOnFiber(finishedRoot, finishedWork, committedLanes, committedTransitions) {
             switch (finishedWork.tag) {
               case FunctionComponent:
-              case ForwardRef:
+              case ForwardRef8:
               case SimpleMemoComponent: {
                 if (finishedWork.mode & ProfileMode) {
                   startPassiveEffectTimer();
@@ -20163,7 +20163,7 @@
           function commitPassiveUnmountOnFiber(finishedWork) {
             switch (finishedWork.tag) {
               case FunctionComponent:
-              case ForwardRef:
+              case ForwardRef8:
               case SimpleMemoComponent: {
                 if (finishedWork.mode & ProfileMode) {
                   startPassiveEffectTimer();
@@ -20214,7 +20214,7 @@
           function commitPassiveUnmountInsideDeletedTreeOnFiber(current2, nearestMountedAncestor) {
             switch (current2.tag) {
               case FunctionComponent:
-              case ForwardRef:
+              case ForwardRef8:
               case SimpleMemoComponent: {
                 if (current2.mode & ProfileMode) {
                   startPassiveEffectTimer();
@@ -20231,7 +20231,7 @@
             {
               switch (fiber.tag) {
                 case FunctionComponent:
-                case ForwardRef:
+                case ForwardRef8:
                 case SimpleMemoComponent: {
                   try {
                     commitHookEffectListMount(Layout2 | HasEffect, fiber);
@@ -20256,7 +20256,7 @@
             {
               switch (fiber.tag) {
                 case FunctionComponent:
-                case ForwardRef:
+                case ForwardRef8:
                 case SimpleMemoComponent: {
                   try {
                     commitHookEffectListMount(Passive$1 | HasEffect, fiber);
@@ -20272,7 +20272,7 @@
             {
               switch (fiber.tag) {
                 case FunctionComponent:
-                case ForwardRef:
+                case ForwardRef8:
                 case SimpleMemoComponent: {
                   try {
                     commitHookEffectListUnmount(Layout2 | HasEffect, fiber, fiber.return);
@@ -20295,7 +20295,7 @@
             {
               switch (fiber.tag) {
                 case FunctionComponent:
-                case ForwardRef:
+                case ForwardRef8:
                 case SimpleMemoComponent: {
                   try {
                     commitHookEffectListUnmount(Passive$1 | HasEffect, fiber, fiber.return);
@@ -21657,7 +21657,7 @@
                 return;
               }
               var tag = fiber.tag;
-              if (tag !== IndeterminateComponent && tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef && tag !== MemoComponent && tag !== SimpleMemoComponent) {
+              if (tag !== IndeterminateComponent && tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef8 && tag !== MemoComponent && tag !== SimpleMemoComponent) {
                 return;
               }
               var componentName = getComponentNameFromFiber(fiber) || "ReactComponent";
@@ -21721,7 +21721,7 @@
               if (isRendering && !getIsUpdatingOpaqueValueInRenderPhaseInDEV()) {
                 switch (fiber.tag) {
                   case FunctionComponent:
-                  case ForwardRef:
+                  case ForwardRef8:
                   case SimpleMemoComponent: {
                     var renderingComponentName = workInProgress && getComponentNameFromFiber(workInProgress) || "Unknown";
                     var dedupeKey = renderingComponentName;
@@ -21787,7 +21787,7 @@
                 if (executionContext !== NoContext) {
                   return;
                 }
-                if (fiber.tag !== FunctionComponent && fiber.tag !== ForwardRef && fiber.tag !== SimpleMemoComponent) {
+                if (fiber.tag !== FunctionComponent && fiber.tag !== ForwardRef8 && fiber.tag !== SimpleMemoComponent) {
                   return;
                 }
               }
@@ -21889,7 +21889,7 @@
                   }
                   break;
                 }
-                case ForwardRef: {
+                case ForwardRef8: {
                   if ($$typeofNextType === REACT_FORWARD_REF_TYPE) {
                     needsCompareFamilies = true;
                   } else if ($$typeofNextType === REACT_LAZY_TYPE) {
@@ -21965,7 +21965,7 @@
                 case ClassComponent:
                   candidateType = type;
                   break;
-                case ForwardRef:
+                case ForwardRef8:
                   candidateType = type.render;
                   break;
               }
@@ -22030,7 +22030,7 @@
                 case ClassComponent:
                   candidateType = type;
                   break;
-                case ForwardRef:
+                case ForwardRef8:
                   candidateType = type.render;
                   break;
               }
@@ -22176,7 +22176,7 @@
             } else if (Component2 !== void 0 && Component2 !== null) {
               var $$typeof = Component2.$$typeof;
               if ($$typeof === REACT_FORWARD_REF_TYPE) {
-                return ForwardRef;
+                return ForwardRef8;
               }
               if ($$typeof === REACT_MEMO_TYPE) {
                 return MemoComponent;
@@ -22239,7 +22239,7 @@
                 case ClassComponent:
                   workInProgress2.type = resolveClassForHotReloading(current2.type);
                   break;
-                case ForwardRef:
+                case ForwardRef8:
                   workInProgress2.type = resolveForwardRefForHotReloading(current2.type);
                   break;
               }
@@ -22354,7 +22354,7 @@
                           fiberTag = ContextConsumer;
                           break getTag;
                         case REACT_FORWARD_REF_TYPE:
-                          fiberTag = ForwardRef;
+                          fiberTag = ForwardRef8;
                           {
                             resolvedType = resolveForwardRefForHotReloading(resolvedType);
                           }
@@ -23556,26 +23556,6 @@
     }
   });
 
-  // node_modules/@heroicons/react/outline/index.js
-  var require_outline = __commonJS({
-    "node_modules/@heroicons/react/outline/index.js"(exports, module) {
-      var proxy = new Proxy(
-        {},
-        {
-          get: (obj, property) => {
-            if (property === "__esModule") {
-              return {};
-            }
-            throw new Error(
-              `You're trying to import \`@heroicons/react/outline/${property}\` from Heroicons v1 but have installed Heroicons v2. Install \`@heroicons/react@v1\` to resolve this error.`
-            );
-          }
-        }
-      );
-      module.exports = proxy;
-    }
-  });
-
   // node_modules/react/cjs/react-jsx-runtime.development.js
   var require_react_jsx_runtime_development = __commonJS({
     "node_modules/react/cjs/react-jsx-runtime.development.js"(exports) {
@@ -23583,7 +23563,7 @@
       if (true) {
         (function() {
           "use strict";
-          var React10 = require_react();
+          var React17 = require_react();
           var REACT_ELEMENT_TYPE = Symbol.for("react.element");
           var REACT_PORTAL_TYPE = Symbol.for("react.portal");
           var REACT_FRAGMENT_TYPE = Symbol.for("react.fragment");
@@ -23609,7 +23589,7 @@
             }
             return null;
           }
-          var ReactSharedInternals = React10.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React17.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           function error(format) {
             {
               {
@@ -26488,16 +26468,213 @@
 
   // app/javascript/components/Layout.jsx
   var import_react = __toESM(require_react());
-  var import_outline = __toESM(require_outline());
+
+  // node_modules/@heroicons/react/24/outline/esm/Bars3Icon.js
+  var React3 = __toESM(require_react(), 1);
+  function Bars3Icon({
+    title,
+    titleId,
+    ...props
+  }, svgRef) {
+    return /* @__PURE__ */ React3.createElement("svg", Object.assign({
+      xmlns: "http://www.w3.org/2000/svg",
+      fill: "none",
+      viewBox: "0 0 24 24",
+      strokeWidth: 1.5,
+      stroke: "currentColor",
+      "aria-hidden": "true",
+      "data-slot": "icon",
+      ref: svgRef,
+      "aria-labelledby": titleId
+    }, props), title ? /* @__PURE__ */ React3.createElement("title", {
+      id: titleId
+    }, title) : null, /* @__PURE__ */ React3.createElement("path", {
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      d: "M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+    }));
+  }
+  var ForwardRef = /* @__PURE__ */ React3.forwardRef(Bars3Icon);
+  var Bars3Icon_default = ForwardRef;
+
+  // node_modules/@heroicons/react/24/outline/esm/CalendarIcon.js
+  var React4 = __toESM(require_react(), 1);
+  function CalendarIcon({
+    title,
+    titleId,
+    ...props
+  }, svgRef) {
+    return /* @__PURE__ */ React4.createElement("svg", Object.assign({
+      xmlns: "http://www.w3.org/2000/svg",
+      fill: "none",
+      viewBox: "0 0 24 24",
+      strokeWidth: 1.5,
+      stroke: "currentColor",
+      "aria-hidden": "true",
+      "data-slot": "icon",
+      ref: svgRef,
+      "aria-labelledby": titleId
+    }, props), title ? /* @__PURE__ */ React4.createElement("title", {
+      id: titleId
+    }, title) : null, /* @__PURE__ */ React4.createElement("path", {
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      d: "M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"
+    }));
+  }
+  var ForwardRef2 = /* @__PURE__ */ React4.forwardRef(CalendarIcon);
+  var CalendarIcon_default = ForwardRef2;
+
+  // node_modules/@heroicons/react/24/outline/esm/ClipboardDocumentListIcon.js
+  var React5 = __toESM(require_react(), 1);
+  function ClipboardDocumentListIcon({
+    title,
+    titleId,
+    ...props
+  }, svgRef) {
+    return /* @__PURE__ */ React5.createElement("svg", Object.assign({
+      xmlns: "http://www.w3.org/2000/svg",
+      fill: "none",
+      viewBox: "0 0 24 24",
+      strokeWidth: 1.5,
+      stroke: "currentColor",
+      "aria-hidden": "true",
+      "data-slot": "icon",
+      ref: svgRef,
+      "aria-labelledby": titleId
+    }, props), title ? /* @__PURE__ */ React5.createElement("title", {
+      id: titleId
+    }, title) : null, /* @__PURE__ */ React5.createElement("path", {
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      d: "M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z"
+    }));
+  }
+  var ForwardRef3 = /* @__PURE__ */ React5.forwardRef(ClipboardDocumentListIcon);
+  var ClipboardDocumentListIcon_default = ForwardRef3;
+
+  // node_modules/@heroicons/react/24/outline/esm/CogIcon.js
+  var React6 = __toESM(require_react(), 1);
+  function CogIcon({
+    title,
+    titleId,
+    ...props
+  }, svgRef) {
+    return /* @__PURE__ */ React6.createElement("svg", Object.assign({
+      xmlns: "http://www.w3.org/2000/svg",
+      fill: "none",
+      viewBox: "0 0 24 24",
+      strokeWidth: 1.5,
+      stroke: "currentColor",
+      "aria-hidden": "true",
+      "data-slot": "icon",
+      ref: svgRef,
+      "aria-labelledby": titleId
+    }, props), title ? /* @__PURE__ */ React6.createElement("title", {
+      id: titleId
+    }, title) : null, /* @__PURE__ */ React6.createElement("path", {
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      d: "M4.5 12a7.5 7.5 0 0 0 15 0m-15 0a7.5 7.5 0 1 1 15 0m-15 0H3m16.5 0H21m-1.5 0H12m-8.457 3.077 1.41-.513m14.095-5.13 1.41-.513M5.106 17.785l1.15-.964m11.49-9.642 1.149-.964M7.501 19.795l.75-1.3m7.5-12.99.75-1.3m-6.063 16.658.26-1.477m2.605-14.772.26-1.477m0 17.726-.26-1.477M10.698 4.614l-.26-1.477M16.5 19.794l-.75-1.299M7.5 4.205 12 12m6.894 5.785-1.149-.964M6.256 7.178l-1.15-.964m15.352 8.864-1.41-.513M4.954 9.435l-1.41-.514M12.002 12l-3.75 6.495"
+    }));
+  }
+  var ForwardRef4 = /* @__PURE__ */ React6.forwardRef(CogIcon);
+  var CogIcon_default = ForwardRef4;
+
+  // node_modules/@heroicons/react/24/outline/esm/HomeIcon.js
+  var React7 = __toESM(require_react(), 1);
+  function HomeIcon({
+    title,
+    titleId,
+    ...props
+  }, svgRef) {
+    return /* @__PURE__ */ React7.createElement("svg", Object.assign({
+      xmlns: "http://www.w3.org/2000/svg",
+      fill: "none",
+      viewBox: "0 0 24 24",
+      strokeWidth: 1.5,
+      stroke: "currentColor",
+      "aria-hidden": "true",
+      "data-slot": "icon",
+      ref: svgRef,
+      "aria-labelledby": titleId
+    }, props), title ? /* @__PURE__ */ React7.createElement("title", {
+      id: titleId
+    }, title) : null, /* @__PURE__ */ React7.createElement("path", {
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      d: "m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
+    }));
+  }
+  var ForwardRef5 = /* @__PURE__ */ React7.forwardRef(HomeIcon);
+  var HomeIcon_default = ForwardRef5;
+
+  // node_modules/@heroicons/react/24/outline/esm/UserGroupIcon.js
+  var React8 = __toESM(require_react(), 1);
+  function UserGroupIcon({
+    title,
+    titleId,
+    ...props
+  }, svgRef) {
+    return /* @__PURE__ */ React8.createElement("svg", Object.assign({
+      xmlns: "http://www.w3.org/2000/svg",
+      fill: "none",
+      viewBox: "0 0 24 24",
+      strokeWidth: 1.5,
+      stroke: "currentColor",
+      "aria-hidden": "true",
+      "data-slot": "icon",
+      ref: svgRef,
+      "aria-labelledby": titleId
+    }, props), title ? /* @__PURE__ */ React8.createElement("title", {
+      id: titleId
+    }, title) : null, /* @__PURE__ */ React8.createElement("path", {
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      d: "M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"
+    }));
+  }
+  var ForwardRef6 = /* @__PURE__ */ React8.forwardRef(UserGroupIcon);
+  var UserGroupIcon_default = ForwardRef6;
+
+  // node_modules/@heroicons/react/24/outline/esm/XMarkIcon.js
+  var React9 = __toESM(require_react(), 1);
+  function XMarkIcon({
+    title,
+    titleId,
+    ...props
+  }, svgRef) {
+    return /* @__PURE__ */ React9.createElement("svg", Object.assign({
+      xmlns: "http://www.w3.org/2000/svg",
+      fill: "none",
+      viewBox: "0 0 24 24",
+      strokeWidth: 1.5,
+      stroke: "currentColor",
+      "aria-hidden": "true",
+      "data-slot": "icon",
+      ref: svgRef,
+      "aria-labelledby": titleId
+    }, props), title ? /* @__PURE__ */ React9.createElement("title", {
+      id: titleId
+    }, title) : null, /* @__PURE__ */ React9.createElement("path", {
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      d: "M6 18 18 6M6 6l12 12"
+    }));
+  }
+  var ForwardRef7 = /* @__PURE__ */ React9.forwardRef(XMarkIcon);
+  var XMarkIcon_default = ForwardRef7;
+
+  // app/javascript/components/Layout.jsx
   var import_jsx_runtime = __toESM(require_jsx_runtime());
   function Layout({ children }) {
     const [sidebarOpen, setSidebarOpen] = (0, import_react.useState)(true);
     const navigation = [
-      { name: "\u30C0\u30C3\u30B7\u30E5\u30DC\u30FC\u30C9", href: "/", icon: import_outline.HomeIcon },
-      { name: "\u30E1\u30F3\u30D0\u30FC", href: "/members", icon: import_outline.UsersIcon },
-      { name: "\u5F53\u756A", href: "/works", icon: import_outline.ClipboardListIcon },
-      { name: "\u5C65\u6B74", href: "/history", icon: import_outline.CalendarIcon },
-      { name: "\u8A2D\u5B9A", href: "/settings", icon: import_outline.CogIcon }
+      { name: "\u30C0\u30C3\u30B7\u30E5\u30DC\u30FC\u30C9", href: "/", icon: HomeIcon_default },
+      { name: "\u30E1\u30F3\u30D0\u30FC", href: "/members", icon: UserGroupIcon_default },
+      { name: "\u5F53\u756A", href: "/works", icon: ClipboardDocumentListIcon_default },
+      { name: "\u5C65\u6B74", href: "/history", icon: CalendarIcon_default },
+      { name: "\u8A2D\u5B9A", href: "/settings", icon: CogIcon_default }
     ];
     return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex h-screen bg-gray-100", children: [
       /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
@@ -26512,7 +26689,7 @@
                 {
                   onClick: () => setSidebarOpen(!sidebarOpen),
                   className: "p-1 hover:bg-gray-100 rounded",
-                  children: sidebarOpen ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_outline.XIcon, { className: "w-5 h-5" }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_outline.MenuIcon, { className: "w-5 h-5" })
+                  children: sidebarOpen ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(XMarkIcon_default, { className: "w-5 h-5" }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Bars3Icon_default, { className: "w-5 h-5" })
                 }
               )
             ] }),
@@ -29311,7 +29488,6 @@
         setWorks(worksRes.data);
         setMembers(membersRes.data);
       } catch (error) {
-        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
@@ -29393,7 +29569,6 @@
         const response = await axios_default.get("/api/v1/members");
         setMembers(response.data);
       } catch (error) {
-        console.error("Error fetching members:", error);
       } finally {
         setLoading(false);
       }
@@ -29522,7 +29697,6 @@
         setWorks(worksRes.data);
         setMembers(membersRes.data);
       } catch (error) {
-        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
@@ -29634,7 +29808,6 @@
         });
         setHistories(response.data);
       } catch (error) {
-        console.error("Error fetching histories:", error);
       } finally {
         setLoading(false);
       }
@@ -29797,8 +29970,8 @@
         /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "btn-secondary w-full", children: "\u30C7\u30FC\u30BF\u3092\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8" }),
         /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-sm text-gray-500 mt-2", children: "\u73FE\u5728\u306E\u3059\u3079\u3066\u306E\u30C7\u30FC\u30BF\u3092CSV\u30D5\u30A1\u30A4\u30EB\u3067\u30C0\u30A6\u30F3\u30ED\u30FC\u30C9\u3057\u307E\u3059" })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "card bg-red-50 border border-red-200", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { className: "text-lg font-semibold text-red-900 mb-4", children: "\u5371\u967A\u306A\u30A2\u30AF\u30B7\u30E7\u30F3" }),
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "card", style: { backgroundColor: "#fef2f2", borderColor: "#fecaca", borderWidth: "1px" }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { className: "text-lg font-semibold", style: { color: "#7f1d1d" }, children: "\u5371\u967A\u306A\u30A2\u30AF\u30B7\u30E7\u30F3" }),
         /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "btn-danger w-full", children: "\u3059\u3079\u3066\u306E\u30C7\u30FC\u30BF\u3092\u524A\u9664" }),
         /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-sm text-red-700 mt-2", children: "\u8B66\u544A: \u3053\u306E\u64CD\u4F5C\u306F\u3084\u308A\u76F4\u305B\u307E\u305B\u3093\u3002\u3059\u3079\u3066\u306E\u30C7\u30FC\u30BF\u304C\u524A\u9664\u3055\u308C\u307E\u3059\u3002" })
       ] })

@@ -20,7 +20,7 @@ export default function Dashboard() {
       setWorks(worksRes.data)
       setMembers(membersRes.data)
     } catch (error) {
-      console.error('Error fetching data:', error)
+      // Error fetching data
     } finally {
       setLoading(false)
     }

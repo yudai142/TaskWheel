@@ -19,7 +19,7 @@ export default function History() {
       })
       setHistories(response.data)
     } catch (error) {
-      console.error('Error fetching histories:', error)
+      // Error fetching histories
     } finally {
       setLoading(false)
     }

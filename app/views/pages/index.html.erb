@@ -9,6 +9,13 @@
     <script src="/builds/application.js" defer></script>
   </head>
   <body>
+    <script>
+      console.log('DEBUG: Page loaded at', new Date().toISOString());
+      console.log('DEBUG: root element exists?', !!document.getElementById('root'));
+      window.addEventListener('DOMContentLoaded', () => {
+        console.log('DEBUG: DOMContentLoaded event fired');
+      });
+    </script>
     <div id="root"></div>
   </body>
 </html>
