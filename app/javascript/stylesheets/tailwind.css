@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Debug styles */
+body {
+  background-color: #f5f5f5;
+}
+
+#root {
+  min-height: 100vh;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;

@@ -20,7 +20,7 @@ export default function Members() {
       const response = await axios.get('/api/v1/members')
       setMembers(response.data)
     } catch (error) {
-      console.error('Error fetching members:', error)
+      // Error fetching members
     } finally {
       setLoading(false)
     }

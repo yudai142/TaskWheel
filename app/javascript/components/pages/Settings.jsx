@@ -94,8 +94,8 @@ export default function Settings() {
         </p>
       </div>
 
-      <div className="card bg-red-50 border border-red-200">
-        <h3 className="text-lg font-semibold text-red-900 mb-4">
+      <div className="card" style={{ backgroundColor: '#fef2f2', borderColor: '#fecaca', borderWidth: '1px' }}>
+        <h3 className="text-lg font-semibold" style={{ color: '#7f1d1d' }}>
           危険なアクション
         </h3>
         <button className="btn-danger w-full">

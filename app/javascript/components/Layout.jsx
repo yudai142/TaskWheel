@@ -2,21 +2,21 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   HomeIcon,
-  UsersIcon,
-  ClipboardListIcon,
+  UserGroupIcon,
+  ClipboardDocumentListIcon,
   CalendarIcon,
   CogIcon,
-  MenuIcon,
-  XIcon,
-} from '@heroicons/react/outline'
+  Bars3Icon,
+  XMarkIcon,
+} from '@heroicons/react/24/outline'
 
 export default function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(true)
 
   const navigation = [
     { name: 'ダッシュボード', href: '/', icon: HomeIcon },
-    { name: 'メンバー', href: '/members', icon: UsersIcon },
-    { name: '当番', href: '/works', icon: ClipboardListIcon },
+    { name: 'メンバー', href: '/members', icon: UserGroupIcon },
+    { name: '当番', href: '/works', icon: ClipboardDocumentListIcon },
     { name: '履歴', href: '/history', icon: CalendarIcon },
     { name: '設定', href: '/settings', icon: CogIcon },
   ]
@@ -38,9 +38,9 @@ export default function Layout({ children }) {
             className="p-1 hover:bg-gray-100 rounded"
           >
             {sidebarOpen ? (
-              <XIcon className="w-5 h-5" />
+              <XMarkIcon className="w-5 h-5" />
             ) : (
-              <MenuIcon className="w-5 h-5" />
+              <Bars3Icon className="w-5 h-5" />
             )}
           </button>
         </div>
