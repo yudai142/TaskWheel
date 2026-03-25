@@ -1,11 +1,13 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 
-# データベース初期化
-echo "Setting up database..."
-bundle exec rails db:create || true
-bundle exec rails db:migrate || true
+yarn install
 
-# Rails サーバー起動
-echo "Starting Rails server..."
-exec bundle exec rails server -b 0.0.0.0
+# Build initial CSS
+yarn build:css
+
+# Start tailwind CSS watch in background
+yarn dev:css &
+
+# Start esbuild JS watch in foreground (keeps container alive)
+exec yarn dev
