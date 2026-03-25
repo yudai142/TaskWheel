@@ -14,11 +14,11 @@ export default function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(true)
 
   const navigation = [
-    { name: 'ƒ_ƒbƒVƒ…ƒ{[ƒh', href: '/', icon: HomeIcon },
-    { name: 'ƒƒ“ƒo[', href: '/members', icon: UsersIcon },
-    { name: '“–”Ô', href: '/works', icon: ClipboardListIcon },
-    { name: '—š—ğ', href: '/history', icon: CalendarIcon },
-    { name: 'İ’è', href: '/settings', icon: CogIcon },
+    { name: 'ãƒ€ãƒƒã‚·ãƒ¥ãƒœãƒ¼ãƒ‰', href: '/', icon: HomeIcon },
+    { name: 'ãƒ¡ãƒ³ãƒãƒ¼', href: '/members', icon: UsersIcon },
+    { name: 'å½“ç•ª', href: '/works', icon: ClipboardListIcon },
+    { name: 'å±¥æ­´', href: '/history', icon: CalendarIcon },
+    { name: 'è¨­å®š', href: '/settings', icon: CogIcon },
   ]
 
   return (
@@ -68,7 +68,7 @@ export default function Layout({ children }) {
         {/* Header */}
         <header className="bg-white shadow">
           <div className="px-6 py-4 flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900">‘|œ“–”ÔŠÇ—</h2>
+            <h2 className="text-2xl font-bold text-gray-900">æƒé™¤å½“ç•ªç®¡ç†</h2>
             <div className="flex items-center space-x-4">
               <button className="p-2 text-gray-500 hover:text-gray-700">
                 <span className="w-6 h-6">?</span>

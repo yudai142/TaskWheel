@@ -51,6 +51,7 @@ Thumbs.db
 *.swo
 *.swn
 *~
+.claude/*
 
 # Docker
 .dockerignore

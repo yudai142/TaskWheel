@@ -29,30 +29,30 @@ export default function Dashboard() {
   const handleShuffle = async (workId) => {
     try {
       const response = await axios.post('/api/v1/works/shuffle', { work_id: workId })
-      alert(`${response.data.member.given_name}‚³‚ñ‚ÉŒˆ’è‚µ‚Ü‚µ‚½I`)
+      alert(`${response.data.member.given_name}ã•ã‚“ã«æ±ºå®šã—ã¾ã—ãŸï¼`)
       fetchData()
     } catch (error) {
-      alert('ƒVƒƒƒbƒtƒ‹‚É¸”s‚µ‚Ü‚µ‚½')
+      alert('ã‚·ãƒ£ãƒƒãƒ•ãƒ«ã«å¤±æ•—ã—ã¾ã—ãŸ')
     }
   }
 
   if (loading) {
-    return <div className="text-center py-12">“Ç‚İ‚İ’†...</div>
+    return <div className="text-center py-12">èª­ã¿è¾¼ã¿ä¸­...</div>
   }
 
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="card">
-          <h3 className="text-lg font-semibold text-gray-900">“–”Ô”</h3>
+          <h3 className="text-lg font-semibold text-gray-900">å½“ç•ªæ•°</h3>
           <p className="text-3xl font-bold text-primary-600 mt-2">{works.length}</p>
         </div>
         <div className="card">
-          <h3 className="text-lg font-semibold text-gray-900">ƒƒ“ƒo[”</h3>
+          <h3 className="text-lg font-semibold text-gray-900">ãƒ¡ãƒ³ãƒãƒ¼æ•°</h3>
           <p className="text-3xl font-bold text-primary-600 mt-2">{members.length}</p>
         </div>
         <div className="card">
-          <h3 className="text-lg font-semibold text-gray-900">Šˆ“®’†</h3>
+          <h3 className="text-lg font-semibold text-gray-900">æ´»å‹•ä¸­</h3>
           <p className="text-3xl font-bold text-green-600 mt-2">
             {members.filter((m) => !m.archive).length}
           </p>
@@ -60,7 +60,7 @@ export default function Dashboard() {
       </div>
 
       <div className="card">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">“–”Ôˆê——</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">å½“ç•ªä¸€è¦§</h3>
         <div className="space-y-3">
           {works.map((work) => (
             <div
@@ -70,14 +70,14 @@ export default function Dashboard() {
               <div>
                 <h4 className="font-medium text-gray-900">{work.name}</h4>
                 <p className="text-sm text-gray-500">
-                  {work.members.length}l‚Ìƒƒ“ƒo[
+                  {work.members.length}äººã®ãƒ¡ãƒ³ãƒãƒ¼
                 </p>
               </div>
               <button
                 onClick={() => handleShuffle(work.id)}
                 className="btn-primary"
               >
-                ƒVƒƒƒbƒtƒ‹
+                ã‚·ãƒ£ãƒƒãƒ•ãƒ«
               </button>
             </div>
           ))}

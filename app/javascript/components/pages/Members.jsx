@@ -34,31 +34,31 @@ export default function Members() {
       setShowForm(false)
       fetchMembers()
     } catch (error) {
-      alert('ƒƒ“ƒo[‚Ì’Ç‰Á‚É¸”s‚µ‚Ü‚µ‚½')
+      alert('ãƒ¡ãƒ³ãƒãƒ¼ã®è¿½åŠ ã«å¤±æ•—ã—ã¾ã—ãŸ')
     }
   }
 
   const handleDelete = async (id) => {
-    if (!window.confirm('‚±‚Ìƒƒ“ƒo[‚ğíœ‚µ‚Ü‚·‚©H')) return
+    if (!window.confirm('ã“ã®ãƒ¡ãƒ³ãƒãƒ¼ã‚’å‰Šé™¤ã—ã¾ã™ã‹ï¼Ÿ')) return
     try {
       await axios.delete(`/api/v1/members/${id}`)
       fetchMembers()
     } catch (error) {
-      alert('íœ‚É¸”s‚µ‚Ü‚µ‚½')
+      alert('å‰Šé™¤ã«å¤±æ•—ã—ã¾ã—ãŸ')
     }
   }
 
-  if (loading) return <div className="text-center py-12">“Ç‚İ‚İ’†...</div>
+  if (loading) return <div className="text-center py-12">èª­ã¿è¾¼ã¿ä¸­...</div>
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">ƒƒ“ƒo[ŠÇ—</h2>
+        <h2 className="text-2xl font-bold text-gray-900">ãƒ¡ãƒ³ãƒãƒ¼ç®¡ç†</h2>
         <button
           onClick={() => setShowForm(!showForm)}
           className="btn-primary"
         >
-          {showForm ? 'ƒLƒƒƒ“ƒZƒ‹' : 'V‹K’Ç‰Á'}
+          {showForm ? 'ã‚­ãƒ£ãƒ³ã‚»ãƒ«' : 'æ–°è¦è¿½åŠ '}
         </button>
       </div>
 
@@ -66,7 +66,7 @@ export default function Members() {
         <div className="card">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">•cš</label>
+              <label className="block text-sm font-medium text-gray-700">è‹—å­—</label>
               <input
                 type="text"
                 className="input-field"
@@ -78,7 +78,7 @@ export default function Members() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">–¼‘O</label>
+              <label className="block text-sm font-medium text-gray-700">åå‰</label>
               <input
                 type="text"
                 className="input-field"
@@ -90,7 +90,7 @@ export default function Members() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">‚©‚È–¼</label>
+              <label className="block text-sm font-medium text-gray-700">ã‹ãªå</label>
               <input
                 type="text"
                 className="input-field"
@@ -102,7 +102,7 @@ export default function Members() {
               />
             </div>
             <button type="submit" className="btn-primary w-full">
-              ’Ç‰Á
+              è¿½åŠ 
             </button>
           </form>
         </div>
@@ -123,11 +123,11 @@ export default function Members() {
                 onClick={() => handleDelete(member.id)}
                 className="text-red-500 hover:text-red-700"
               >
-                ~
+                Ã—
               </button>
             </div>
             {member.archive && (
-              <span className="badge-danger mt-2">ƒA[ƒJƒCƒu’†</span>
+              <span className="badge-danger mt-2">ã‚¢ãƒ¼ã‚«ã‚¤ãƒ–ä¸­</span>
             )}
           </div>
         ))}
