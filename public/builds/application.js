@@ -29988,7 +29988,7 @@
     if (loading) {
       return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "flex items-center justify-center min-h-screen", children: "\u8AAD\u307F\u8FBC\u307F\u4E2D..." });
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(BrowserRouter, { children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Layout, { children: /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(Routes, { children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(BrowserRouter, { future: { v7_startTransition: true, v7_relativeSplatPath: true }, children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Layout, { children: /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(Routes, { children: [
       /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Route, { path: "/", element: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Dashboard, {}) }),
       /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Route, { path: "/members", element: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Members, {}) }),
       /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Route, { path: "/works", element: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Works, {}) }),
