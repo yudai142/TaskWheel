@@ -1,0 +1,59 @@
+# Logs
+*.log
+*.logs
+
+# Dependencies
+node_modules/
+vendor/
+.bundle
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Rails
+/tmp
+/log
+/public/packs
+/public/packs-test
+/node_modules
+/public/system
+*.rbc
+capybara-*.html
+.rspec
+/.bundle
+/vendor/bundle
+/lib/bundler/man
+.byebug_history
+.spring
+/bin/my_app
+/config/master.key
+
+# Shakapacker
+/public/packs
+/public/packs-test
+/tmp/cache/webpacker
+/tmp/cache/shakapacker
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*~
+
+# Docker
+.dockerignore
+
+# Test
+/coverage

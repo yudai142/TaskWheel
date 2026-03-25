@@ -1,0 +1,40 @@
+# PostgreSQL. Versions 9.3 and up are supported.
+#
+# Install the pg driver:
+#   gem install pg
+# On macOS with Homebrew:
+#   brew install libpq
+# On Windows:
+#   choco install postgresql
+#
+# Configure using `DATABASE_URL` environment variable or edit below
+# for connection without a `DATABASE_URL`.
+#
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  # For details on connection pooling, see Rails configuration guide
+  # https://guides.rubyonrails.org/configuring.html#database-connection-pooling
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
+
+development:
+  <<: *default
+  database: duty_shuffle_development
+  host: <%= ENV.fetch("DB_HOST", "localhost") %>
+  port: <%= ENV.fetch("DB_PORT", 5432) %>
+  username: postgres
+  password: password
+
+test:
+  <<: *default
+  database: duty_shuffle_test
+  host: <%= ENV.fetch("DB_HOST", "localhost") %>
+  port: <%= ENV.fetch("DB_PORT", 5432) %>
+  username: postgres
+  password: password
+
+production:
+  <<: *default
+  database: duty_shuffle_production
+  url: <%= ENV.fetch("DATABASE_URL") %>
