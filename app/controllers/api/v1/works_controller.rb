@@ -46,20 +46,20 @@ module Api
           Date.today
         end
 
-        already_assigned_ids = History.where(date: date).pluck(:member_id)
-        available = members.reject { |m| already_assigned_ids.include?(m.id) }
+        # 既に割り当てられているメンバーも含めてシャッフル
+        selected_member = members.sample
 
-        if available.empty?
-          return render_error("本日すでに全メンバーが他の当番に割り当てられています", :unprocessable_entity)
+        # 既に同じメンバーが同じ日付に記録されている場合は更新
+        existing_history = History.find_by(member_id: selected_member.id, date: date)
+        if existing_history
+          existing_history.update!(work_id: work.id)
+        else
+          History.create!(
+            work_id: work.id,
+            member_id: selected_member.id,
+            date: date
+          )
         end
-
-        selected_member = available.sample
-
-        History.create!(
-          work_id: work.id,
-          member_id: selected_member.id,
-          date: date
-        )
 
         # 同じメンバーの重複を除去
         remove_duplicate_assignments(date)
