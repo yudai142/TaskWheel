@@ -32,22 +32,37 @@ module Api
       end
 
       def shuffle
-        # VbtWbN
         work = Work.find(params[:work_id])
         members = work.available_members.active
-        
+
         if members.empty?
-          return render_error("No available members for shuffling", :unprocessable_entity)
+          return render_error("割り当て可能なメンバーがいません", :unprocessable_entity)
         end
 
-        selected_member = members.sample
-        today = Date.today
+        # 指定された日付、またはデフォルトで今日の日付
+        date = if params[:year] && params[:month] && params[:day]
+          Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i)
+        else
+          Date.today
+        end
+
+        already_assigned_ids = History.where(date: date).pluck(:member_id)
+        available = members.reject { |m| already_assigned_ids.include?(m.id) }
+
+        if available.empty?
+          return render_error("本日すでに全メンバーが他の当番に割り当てられています", :unprocessable_entity)
+        end
+
+        selected_member = available.sample
 
         History.create!(
           work_id: work.id,
           member_id: selected_member.id,
-          date: today
+          date: date
         )
+
+        # 同じメンバーの重複を除去
+        remove_duplicate_assignments(date)
 
         render json: { success: true, member: selected_member }
       end
@@ -70,6 +85,20 @@ module Api
 
       def work_params
         params.require(:work).permit(:name, :multiple, :archive, :is_above)
+      end
+
+      def remove_duplicate_assignments(date)
+        # 指定日付のHistoryレコードをメンバーごとにグループ化
+        histories = History.where(date: date)
+        grouped = histories.group_by(&:member_id)
+
+        # 同じメンバーが複数回割り当てられている場合、最初の1つ以外を削除
+        grouped.each do |member_id, records|
+          if records.length > 1
+            # 最新の割り当てを保持し、それ以前のものを削除
+            records.sort_by(&:id).slice(1..-1).each(&:destroy)
+          end
+        end
       end
     end
   end

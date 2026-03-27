@@ -514,7 +514,7 @@
             }
             return element;
           };
-          function createElement10(type, config, children) {
+          function createElement14(type, config, children) {
             var propName;
             var props = {};
             var key = null;
@@ -975,7 +975,7 @@
             }
             return lazyType;
           }
-          function forwardRef9(render) {
+          function forwardRef13(render) {
             {
               if (render != null && render.$$typeof === REACT_MEMO_TYPE) {
                 error("forwardRef requires a render function but received a `memo` component. Instead of forwardRef(memo(...)), use memo(forwardRef(...)).");
@@ -1613,7 +1613,7 @@
                 error("React.createElement: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s", typeString, info);
               }
             }
-            var element = createElement10.apply(this, arguments);
+            var element = createElement14.apply(this, arguments);
             if (element == null) {
               return element;
             }
@@ -1873,7 +1873,7 @@
           exports.createElement = createElement$1;
           exports.createFactory = createFactory;
           exports.createRef = createRef;
-          exports.forwardRef = forwardRef9;
+          exports.forwardRef = forwardRef13;
           exports.isValidElement = isValidElement2;
           exports.lazy = lazy;
           exports.memo = memo2;
@@ -2387,9 +2387,9 @@
           if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== "undefined" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart === "function") {
             __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error());
           }
-          var React17 = require_react();
+          var React21 = require_react();
           var Scheduler = require_scheduler();
-          var ReactSharedInternals = React17.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React21.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           var suppressWarning = false;
           function setSuppressWarning(newSuppressWarning) {
             {
@@ -2438,11 +2438,11 @@
           var HostPortal = 4;
           var HostComponent = 5;
           var HostText = 6;
-          var Fragment3 = 7;
+          var Fragment4 = 7;
           var Mode = 8;
           var ContextConsumer = 9;
           var ContextProvider = 10;
-          var ForwardRef8 = 11;
+          var ForwardRef12 = 11;
           var Profiler = 12;
           var SuspenseComponent = 13;
           var MemoComponent = 14;
@@ -3481,7 +3481,7 @@
               case IndeterminateComponent:
               case SimpleMemoComponent:
                 return describeFunctionComponentFrame(fiber.type);
-              case ForwardRef8:
+              case ForwardRef12:
                 return describeFunctionComponentFrame(fiber.type.render);
               case ClassComponent:
                 return describeClassComponentFrame(fiber.type);
@@ -3592,9 +3592,9 @@
                 return getContextName$1(provider._context) + ".Provider";
               case DehydratedFragment:
                 return "DehydratedFragment";
-              case ForwardRef8:
+              case ForwardRef12:
                 return getWrappedName$1(type, type.render, "ForwardRef");
-              case Fragment3:
+              case Fragment4:
                 return "Fragment";
               case HostComponent:
                 return type;
@@ -3994,7 +3994,7 @@
             {
               if (props.value == null) {
                 if (typeof props.children === "object" && props.children !== null) {
-                  React17.Children.forEach(props.children, function(child) {
+                  React21.Children.forEach(props.children, function(child) {
                     if (child == null) {
                       return;
                     }
@@ -9393,7 +9393,7 @@
               }
             }
           }
-          function createElement10(type, props, rootContainerElement, parentNamespace) {
+          function createElement14(type, props, rootContainerElement, parentNamespace) {
             var isCustomComponentTag;
             var ownerDocument = getOwnerDocumentFromRootContainer(rootContainerElement);
             var domElement;
@@ -10254,7 +10254,7 @@
               }
               parentNamespace = hostContextDev.namespace;
             }
-            var domElement = createElement10(type, props, rootContainerInstance, parentNamespace);
+            var domElement = createElement14(type, props, rootContainerInstance, parentNamespace);
             precacheFiberNode(internalInstanceHandle, domElement);
             updateFiberProps(domElement, props);
             return domElement;
@@ -11995,7 +11995,7 @@
               }
             }
             function updateFragment2(returnFiber, current2, fragment, lanes, key) {
-              if (current2 === null || current2.tag !== Fragment3) {
+              if (current2 === null || current2.tag !== Fragment4) {
                 var created = createFiberFromFragment(fragment, returnFiber.mode, lanes, key);
                 created.return = returnFiber;
                 return created;
@@ -12398,7 +12398,7 @@
                 if (child.key === key) {
                   var elementType = element.type;
                   if (elementType === REACT_FRAGMENT_TYPE) {
-                    if (child.tag === Fragment3) {
+                    if (child.tag === Fragment4) {
                       deleteRemainingChildren(returnFiber, child.sibling);
                       var existing = useFiber(child, element.props.children);
                       existing.return = returnFiber;
@@ -16062,7 +16062,7 @@
           }
           function resetSuspendedComponent(sourceFiber, rootRenderLanes) {
             var tag = sourceFiber.tag;
-            if ((sourceFiber.mode & ConcurrentMode) === NoMode && (tag === FunctionComponent || tag === ForwardRef8 || tag === SimpleMemoComponent)) {
+            if ((sourceFiber.mode & ConcurrentMode) === NoMode && (tag === FunctionComponent || tag === ForwardRef12 || tag === SimpleMemoComponent)) {
               var currentSource = sourceFiber.alternate;
               if (currentSource) {
                 sourceFiber.updateQueue = currentSource.updateQueue;
@@ -16770,7 +16770,7 @@
                 child = updateClassComponent(null, workInProgress2, Component2, resolvedProps, renderLanes2);
                 return child;
               }
-              case ForwardRef8: {
+              case ForwardRef12: {
                 {
                   workInProgress2.type = Component2 = resolveForwardRefForHotReloading(Component2);
                 }
@@ -17869,13 +17869,13 @@
                 return updateSuspenseComponent(current2, workInProgress2, renderLanes2);
               case HostPortal:
                 return updatePortalComponent(current2, workInProgress2, renderLanes2);
-              case ForwardRef8: {
+              case ForwardRef12: {
                 var type = workInProgress2.type;
                 var _unresolvedProps2 = workInProgress2.pendingProps;
                 var _resolvedProps2 = workInProgress2.elementType === type ? _unresolvedProps2 : resolveDefaultProps(type, _unresolvedProps2);
                 return updateForwardRef(current2, workInProgress2, type, _resolvedProps2, renderLanes2);
               }
-              case Fragment3:
+              case Fragment4:
                 return updateFragment(current2, workInProgress2, renderLanes2);
               case Mode:
                 return updateMode(current2, workInProgress2, renderLanes2);
@@ -18147,8 +18147,8 @@
               case LazyComponent:
               case SimpleMemoComponent:
               case FunctionComponent:
-              case ForwardRef8:
-              case Fragment3:
+              case ForwardRef12:
+              case Fragment4:
               case Mode:
               case Profiler:
               case ContextConsumer:
@@ -18730,7 +18730,7 @@
               setCurrentFiber(finishedWork);
               switch (finishedWork.tag) {
                 case FunctionComponent:
-                case ForwardRef8:
+                case ForwardRef12:
                 case SimpleMemoComponent: {
                   break;
                 }
@@ -18925,7 +18925,7 @@
             if ((finishedWork.flags & LayoutMask) !== NoFlags) {
               switch (finishedWork.tag) {
                 case FunctionComponent:
-                case ForwardRef8:
+                case ForwardRef12:
                 case SimpleMemoComponent: {
                   if (!offscreenSubtreeWasHidden) {
                     if (finishedWork.mode & ProfileMode) {
@@ -19106,7 +19106,7 @@
           function reappearLayoutEffectsOnFiber(node) {
             switch (node.tag) {
               case FunctionComponent:
-              case ForwardRef8:
+              case ForwardRef12:
               case SimpleMemoComponent: {
                 if (node.mode & ProfileMode) {
                   try {
@@ -19476,7 +19476,7 @@
                 return;
               }
               case FunctionComponent:
-              case ForwardRef8:
+              case ForwardRef12:
               case MemoComponent:
               case SimpleMemoComponent: {
                 if (!offscreenSubtreeWasHidden) {
@@ -19631,7 +19631,7 @@
             var flags = finishedWork.flags;
             switch (finishedWork.tag) {
               case FunctionComponent:
-              case ForwardRef8:
+              case ForwardRef12:
               case MemoComponent:
               case SimpleMemoComponent: {
                 recursivelyTraverseMutationEffects(root2, finishedWork);
@@ -19940,7 +19940,7 @@
               var firstChild = fiber.child;
               switch (fiber.tag) {
                 case FunctionComponent:
-                case ForwardRef8:
+                case ForwardRef12:
                 case MemoComponent:
                 case SimpleMemoComponent: {
                   if (fiber.mode & ProfileMode) {
@@ -20086,7 +20086,7 @@
           function commitPassiveMountOnFiber(finishedRoot, finishedWork, committedLanes, committedTransitions) {
             switch (finishedWork.tag) {
               case FunctionComponent:
-              case ForwardRef8:
+              case ForwardRef12:
               case SimpleMemoComponent: {
                 if (finishedWork.mode & ProfileMode) {
                   startPassiveEffectTimer();
@@ -20163,7 +20163,7 @@
           function commitPassiveUnmountOnFiber(finishedWork) {
             switch (finishedWork.tag) {
               case FunctionComponent:
-              case ForwardRef8:
+              case ForwardRef12:
               case SimpleMemoComponent: {
                 if (finishedWork.mode & ProfileMode) {
                   startPassiveEffectTimer();
@@ -20214,7 +20214,7 @@
           function commitPassiveUnmountInsideDeletedTreeOnFiber(current2, nearestMountedAncestor) {
             switch (current2.tag) {
               case FunctionComponent:
-              case ForwardRef8:
+              case ForwardRef12:
               case SimpleMemoComponent: {
                 if (current2.mode & ProfileMode) {
                   startPassiveEffectTimer();
@@ -20231,7 +20231,7 @@
             {
               switch (fiber.tag) {
                 case FunctionComponent:
-                case ForwardRef8:
+                case ForwardRef12:
                 case SimpleMemoComponent: {
                   try {
                     commitHookEffectListMount(Layout2 | HasEffect, fiber);
@@ -20256,7 +20256,7 @@
             {
               switch (fiber.tag) {
                 case FunctionComponent:
-                case ForwardRef8:
+                case ForwardRef12:
                 case SimpleMemoComponent: {
                   try {
                     commitHookEffectListMount(Passive$1 | HasEffect, fiber);
@@ -20272,7 +20272,7 @@
             {
               switch (fiber.tag) {
                 case FunctionComponent:
-                case ForwardRef8:
+                case ForwardRef12:
                 case SimpleMemoComponent: {
                   try {
                     commitHookEffectListUnmount(Layout2 | HasEffect, fiber, fiber.return);
@@ -20295,7 +20295,7 @@
             {
               switch (fiber.tag) {
                 case FunctionComponent:
-                case ForwardRef8:
+                case ForwardRef12:
                 case SimpleMemoComponent: {
                   try {
                     commitHookEffectListUnmount(Passive$1 | HasEffect, fiber, fiber.return);
@@ -21657,7 +21657,7 @@
                 return;
               }
               var tag = fiber.tag;
-              if (tag !== IndeterminateComponent && tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef8 && tag !== MemoComponent && tag !== SimpleMemoComponent) {
+              if (tag !== IndeterminateComponent && tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef12 && tag !== MemoComponent && tag !== SimpleMemoComponent) {
                 return;
               }
               var componentName = getComponentNameFromFiber(fiber) || "ReactComponent";
@@ -21721,7 +21721,7 @@
               if (isRendering && !getIsUpdatingOpaqueValueInRenderPhaseInDEV()) {
                 switch (fiber.tag) {
                   case FunctionComponent:
-                  case ForwardRef8:
+                  case ForwardRef12:
                   case SimpleMemoComponent: {
                     var renderingComponentName = workInProgress && getComponentNameFromFiber(workInProgress) || "Unknown";
                     var dedupeKey = renderingComponentName;
@@ -21787,7 +21787,7 @@
                 if (executionContext !== NoContext) {
                   return;
                 }
-                if (fiber.tag !== FunctionComponent && fiber.tag !== ForwardRef8 && fiber.tag !== SimpleMemoComponent) {
+                if (fiber.tag !== FunctionComponent && fiber.tag !== ForwardRef12 && fiber.tag !== SimpleMemoComponent) {
                   return;
                 }
               }
@@ -21889,7 +21889,7 @@
                   }
                   break;
                 }
-                case ForwardRef8: {
+                case ForwardRef12: {
                   if ($$typeofNextType === REACT_FORWARD_REF_TYPE) {
                     needsCompareFamilies = true;
                   } else if ($$typeofNextType === REACT_LAZY_TYPE) {
@@ -21965,7 +21965,7 @@
                 case ClassComponent:
                   candidateType = type;
                   break;
-                case ForwardRef8:
+                case ForwardRef12:
                   candidateType = type.render;
                   break;
               }
@@ -22030,7 +22030,7 @@
                 case ClassComponent:
                   candidateType = type;
                   break;
-                case ForwardRef8:
+                case ForwardRef12:
                   candidateType = type.render;
                   break;
               }
@@ -22176,7 +22176,7 @@
             } else if (Component2 !== void 0 && Component2 !== null) {
               var $$typeof = Component2.$$typeof;
               if ($$typeof === REACT_FORWARD_REF_TYPE) {
-                return ForwardRef8;
+                return ForwardRef12;
               }
               if ($$typeof === REACT_MEMO_TYPE) {
                 return MemoComponent;
@@ -22239,7 +22239,7 @@
                 case ClassComponent:
                   workInProgress2.type = resolveClassForHotReloading(current2.type);
                   break;
-                case ForwardRef8:
+                case ForwardRef12:
                   workInProgress2.type = resolveForwardRefForHotReloading(current2.type);
                   break;
               }
@@ -22354,7 +22354,7 @@
                           fiberTag = ContextConsumer;
                           break getTag;
                         case REACT_FORWARD_REF_TYPE:
-                          fiberTag = ForwardRef8;
+                          fiberTag = ForwardRef12;
                           {
                             resolvedType = resolveForwardRefForHotReloading(resolvedType);
                           }
@@ -22407,7 +22407,7 @@
             return fiber;
           }
           function createFiberFromFragment(elements, mode, lanes, key) {
-            var fiber = createFiber(Fragment3, elements, key, mode);
+            var fiber = createFiber(Fragment4, elements, key, mode);
             fiber.lanes = lanes;
             return fiber;
           }
@@ -23563,7 +23563,7 @@
       if (true) {
         (function() {
           "use strict";
-          var React17 = require_react();
+          var React21 = require_react();
           var REACT_ELEMENT_TYPE = Symbol.for("react.element");
           var REACT_PORTAL_TYPE = Symbol.for("react.portal");
           var REACT_FRAGMENT_TYPE = Symbol.for("react.fragment");
@@ -23589,7 +23589,7 @@
             }
             return null;
           }
-          var ReactSharedInternals = React17.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React21.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           function error(format) {
             {
               {
@@ -26525,9 +26525,9 @@
   var ForwardRef2 = /* @__PURE__ */ React4.forwardRef(CalendarIcon);
   var CalendarIcon_default = ForwardRef2;
 
-  // node_modules/@heroicons/react/24/outline/esm/ClipboardDocumentListIcon.js
+  // node_modules/@heroicons/react/24/outline/esm/CheckCircleIcon.js
   var React5 = __toESM(require_react(), 1);
-  function ClipboardDocumentListIcon({
+  function CheckCircleIcon({
     title,
     titleId,
     ...props
@@ -26547,15 +26547,15 @@
     }, title) : null, /* @__PURE__ */ React5.createElement("path", {
       strokeLinecap: "round",
       strokeLinejoin: "round",
-      d: "M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z"
+      d: "M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
     }));
   }
-  var ForwardRef3 = /* @__PURE__ */ React5.forwardRef(ClipboardDocumentListIcon);
-  var ClipboardDocumentListIcon_default = ForwardRef3;
+  var ForwardRef3 = /* @__PURE__ */ React5.forwardRef(CheckCircleIcon);
+  var CheckCircleIcon_default = ForwardRef3;
 
-  // node_modules/@heroicons/react/24/outline/esm/CogIcon.js
+  // node_modules/@heroicons/react/24/outline/esm/ChevronLeftIcon.js
   var React6 = __toESM(require_react(), 1);
-  function CogIcon({
+  function ChevronLeftIcon({
     title,
     titleId,
     ...props
@@ -26575,15 +26575,15 @@
     }, title) : null, /* @__PURE__ */ React6.createElement("path", {
       strokeLinecap: "round",
       strokeLinejoin: "round",
-      d: "M4.5 12a7.5 7.5 0 0 0 15 0m-15 0a7.5 7.5 0 1 1 15 0m-15 0H3m16.5 0H21m-1.5 0H12m-8.457 3.077 1.41-.513m14.095-5.13 1.41-.513M5.106 17.785l1.15-.964m11.49-9.642 1.149-.964M7.501 19.795l.75-1.3m7.5-12.99.75-1.3m-6.063 16.658.26-1.477m2.605-14.772.26-1.477m0 17.726-.26-1.477M10.698 4.614l-.26-1.477M16.5 19.794l-.75-1.299M7.5 4.205 12 12m6.894 5.785-1.149-.964M6.256 7.178l-1.15-.964m15.352 8.864-1.41-.513M4.954 9.435l-1.41-.514M12.002 12l-3.75 6.495"
+      d: "M15.75 19.5 8.25 12l7.5-7.5"
     }));
   }
-  var ForwardRef4 = /* @__PURE__ */ React6.forwardRef(CogIcon);
-  var CogIcon_default = ForwardRef4;
+  var ForwardRef4 = /* @__PURE__ */ React6.forwardRef(ChevronLeftIcon);
+  var ChevronLeftIcon_default = ForwardRef4;
 
-  // node_modules/@heroicons/react/24/outline/esm/HomeIcon.js
+  // node_modules/@heroicons/react/24/outline/esm/ChevronRightIcon.js
   var React7 = __toESM(require_react(), 1);
-  function HomeIcon({
+  function ChevronRightIcon({
     title,
     titleId,
     ...props
@@ -26603,15 +26603,15 @@
     }, title) : null, /* @__PURE__ */ React7.createElement("path", {
       strokeLinecap: "round",
       strokeLinejoin: "round",
-      d: "m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
+      d: "m8.25 4.5 7.5 7.5-7.5 7.5"
     }));
   }
-  var ForwardRef5 = /* @__PURE__ */ React7.forwardRef(HomeIcon);
-  var HomeIcon_default = ForwardRef5;
+  var ForwardRef5 = /* @__PURE__ */ React7.forwardRef(ChevronRightIcon);
+  var ChevronRightIcon_default = ForwardRef5;
 
-  // node_modules/@heroicons/react/24/outline/esm/UserGroupIcon.js
+  // node_modules/@heroicons/react/24/outline/esm/ClipboardDocumentListIcon.js
   var React8 = __toESM(require_react(), 1);
-  function UserGroupIcon({
+  function ClipboardDocumentListIcon({
     title,
     titleId,
     ...props
@@ -26631,15 +26631,15 @@
     }, title) : null, /* @__PURE__ */ React8.createElement("path", {
       strokeLinecap: "round",
       strokeLinejoin: "round",
-      d: "M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"
+      d: "M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z"
     }));
   }
-  var ForwardRef6 = /* @__PURE__ */ React8.forwardRef(UserGroupIcon);
-  var UserGroupIcon_default = ForwardRef6;
+  var ForwardRef6 = /* @__PURE__ */ React8.forwardRef(ClipboardDocumentListIcon);
+  var ClipboardDocumentListIcon_default = ForwardRef6;
 
-  // node_modules/@heroicons/react/24/outline/esm/XMarkIcon.js
+  // node_modules/@heroicons/react/24/outline/esm/CogIcon.js
   var React9 = __toESM(require_react(), 1);
-  function XMarkIcon({
+  function CogIcon({
     title,
     titleId,
     ...props
@@ -26659,11 +26659,123 @@
     }, title) : null, /* @__PURE__ */ React9.createElement("path", {
       strokeLinecap: "round",
       strokeLinejoin: "round",
+      d: "M4.5 12a7.5 7.5 0 0 0 15 0m-15 0a7.5 7.5 0 1 1 15 0m-15 0H3m16.5 0H21m-1.5 0H12m-8.457 3.077 1.41-.513m14.095-5.13 1.41-.513M5.106 17.785l1.15-.964m11.49-9.642 1.149-.964M7.501 19.795l.75-1.3m7.5-12.99.75-1.3m-6.063 16.658.26-1.477m2.605-14.772.26-1.477m0 17.726-.26-1.477M10.698 4.614l-.26-1.477M16.5 19.794l-.75-1.299M7.5 4.205 12 12m6.894 5.785-1.149-.964M6.256 7.178l-1.15-.964m15.352 8.864-1.41-.513M4.954 9.435l-1.41-.514M12.002 12l-3.75 6.495"
+    }));
+  }
+  var ForwardRef7 = /* @__PURE__ */ React9.forwardRef(CogIcon);
+  var CogIcon_default = ForwardRef7;
+
+  // node_modules/@heroicons/react/24/outline/esm/HomeIcon.js
+  var React10 = __toESM(require_react(), 1);
+  function HomeIcon({
+    title,
+    titleId,
+    ...props
+  }, svgRef) {
+    return /* @__PURE__ */ React10.createElement("svg", Object.assign({
+      xmlns: "http://www.w3.org/2000/svg",
+      fill: "none",
+      viewBox: "0 0 24 24",
+      strokeWidth: 1.5,
+      stroke: "currentColor",
+      "aria-hidden": "true",
+      "data-slot": "icon",
+      ref: svgRef,
+      "aria-labelledby": titleId
+    }, props), title ? /* @__PURE__ */ React10.createElement("title", {
+      id: titleId
+    }, title) : null, /* @__PURE__ */ React10.createElement("path", {
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      d: "m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
+    }));
+  }
+  var ForwardRef8 = /* @__PURE__ */ React10.forwardRef(HomeIcon);
+  var HomeIcon_default = ForwardRef8;
+
+  // node_modules/@heroicons/react/24/outline/esm/SparklesIcon.js
+  var React11 = __toESM(require_react(), 1);
+  function SparklesIcon({
+    title,
+    titleId,
+    ...props
+  }, svgRef) {
+    return /* @__PURE__ */ React11.createElement("svg", Object.assign({
+      xmlns: "http://www.w3.org/2000/svg",
+      fill: "none",
+      viewBox: "0 0 24 24",
+      strokeWidth: 1.5,
+      stroke: "currentColor",
+      "aria-hidden": "true",
+      "data-slot": "icon",
+      ref: svgRef,
+      "aria-labelledby": titleId
+    }, props), title ? /* @__PURE__ */ React11.createElement("title", {
+      id: titleId
+    }, title) : null, /* @__PURE__ */ React11.createElement("path", {
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      d: "M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"
+    }));
+  }
+  var ForwardRef9 = /* @__PURE__ */ React11.forwardRef(SparklesIcon);
+  var SparklesIcon_default = ForwardRef9;
+
+  // node_modules/@heroicons/react/24/outline/esm/UserGroupIcon.js
+  var React12 = __toESM(require_react(), 1);
+  function UserGroupIcon({
+    title,
+    titleId,
+    ...props
+  }, svgRef) {
+    return /* @__PURE__ */ React12.createElement("svg", Object.assign({
+      xmlns: "http://www.w3.org/2000/svg",
+      fill: "none",
+      viewBox: "0 0 24 24",
+      strokeWidth: 1.5,
+      stroke: "currentColor",
+      "aria-hidden": "true",
+      "data-slot": "icon",
+      ref: svgRef,
+      "aria-labelledby": titleId
+    }, props), title ? /* @__PURE__ */ React12.createElement("title", {
+      id: titleId
+    }, title) : null, /* @__PURE__ */ React12.createElement("path", {
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      d: "M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"
+    }));
+  }
+  var ForwardRef10 = /* @__PURE__ */ React12.forwardRef(UserGroupIcon);
+  var UserGroupIcon_default = ForwardRef10;
+
+  // node_modules/@heroicons/react/24/outline/esm/XMarkIcon.js
+  var React13 = __toESM(require_react(), 1);
+  function XMarkIcon({
+    title,
+    titleId,
+    ...props
+  }, svgRef) {
+    return /* @__PURE__ */ React13.createElement("svg", Object.assign({
+      xmlns: "http://www.w3.org/2000/svg",
+      fill: "none",
+      viewBox: "0 0 24 24",
+      strokeWidth: 1.5,
+      stroke: "currentColor",
+      "aria-hidden": "true",
+      "data-slot": "icon",
+      ref: svgRef,
+      "aria-labelledby": titleId
+    }, props), title ? /* @__PURE__ */ React13.createElement("title", {
+      id: titleId
+    }, title) : null, /* @__PURE__ */ React13.createElement("path", {
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
       d: "M6 18 18 6M6 6l12 12"
     }));
   }
-  var ForwardRef7 = /* @__PURE__ */ React9.forwardRef(XMarkIcon);
-  var XMarkIcon_default = ForwardRef7;
+  var ForwardRef11 = /* @__PURE__ */ React13.forwardRef(XMarkIcon);
+  var XMarkIcon_default = ForwardRef11;
 
   // app/javascript/components/Layout.jsx
   var import_jsx_runtime = __toESM(require_jsx_runtime());
@@ -29474,77 +29586,299 @@
   function Dashboard() {
     const [works, setWorks] = (0, import_react2.useState)([]);
     const [members, setMembers] = (0, import_react2.useState)([]);
-    const [todayHistory, setTodayHistory] = (0, import_react2.useState)(null);
+    const [histories, setHistories] = (0, import_react2.useState)([]);
+    const [selectedDate, setSelectedDate] = (0, import_react2.useState)(/* @__PURE__ */ new Date());
     const [loading, setLoading] = (0, import_react2.useState)(true);
+    const [shuffling, setShuffling] = (0, import_react2.useState)(null);
     (0, import_react2.useEffect)(() => {
       fetchData();
-    }, []);
+    }, [selectedDate]);
     const fetchData = async () => {
       try {
-        const [worksRes, membersRes] = await Promise.all([
+        const year = selectedDate.getFullYear();
+        const month = selectedDate.getMonth() + 1;
+        const day = selectedDate.getDate();
+        const [worksRes, membersRes, historiesRes] = await Promise.all([
           axios_default.get("/api/v1/works"),
-          axios_default.get("/api/v1/members")
+          axios_default.get("/api/v1/members"),
+          axios_default.get("/api/v1/histories", {
+            params: { year, month, day }
+          })
         ]);
         setWorks(worksRes.data);
         setMembers(membersRes.data);
+        setHistories(historiesRes.data);
       } catch (error) {
       } finally {
         setLoading(false);
       }
     };
     const handleShuffle = async (workId) => {
+      setShuffling(workId);
       try {
-        const response = await axios_default.post("/api/v1/works/shuffle", { work_id: workId });
+        const year = selectedDate.getFullYear();
+        const month = selectedDate.getMonth() + 1;
+        const day = selectedDate.getDate();
+        const response = await axios_default.post("/api/v1/works/shuffle", {
+          work_id: workId,
+          year,
+          month,
+          day
+        });
         alert(`${response.data.member.given_name}\u3055\u3093\u306B\u6C7A\u5B9A\u3057\u307E\u3057\u305F\uFF01`);
         fetchData();
       } catch (error) {
-        alert("\u30B7\u30E3\u30C3\u30D5\u30EB\u306B\u5931\u6557\u3057\u307E\u3057\u305F");
+        const msg = error.response?.data?.error || "\u30B7\u30E3\u30C3\u30D5\u30EB\u306B\u5931\u6557\u3057\u307E\u3057\u305F";
+        alert(msg);
+      } finally {
+        setShuffling(null);
       }
     };
+    const handleShuffleAllWorks = async () => {
+      if (works.length === 0) {
+        alert("\u5F53\u756A\u304C\u767B\u9332\u3055\u308C\u3066\u3044\u307E\u305B\u3093");
+        return;
+      }
+      setShuffling("all");
+      try {
+        let successCount = 0;
+        let assignedMembers = [];
+        const year = selectedDate.getFullYear();
+        const month = selectedDate.getMonth() + 1;
+        const day = selectedDate.getDate();
+        for (const work of works) {
+          try {
+            const response = await axios_default.post("/api/v1/works/shuffle", {
+              work_id: work.id,
+              year,
+              month,
+              day
+            });
+            successCount++;
+            assignedMembers.push({
+              work: work.name,
+              member: `${response.data.member.family_name}${response.data.member.given_name}`
+            });
+          } catch (error) {
+            const msg = error.response?.data?.error;
+            if (msg) {
+              assignedMembers.push({ work: work.name, member: `(\u30B9\u30AD\u30C3\u30D7: ${msg})` });
+            }
+          }
+        }
+        if (successCount > 0) {
+          await removeDuplicateAssignments();
+          const summary = assignedMembers.map((a) => `${a.work}\u2192${a.member}`).join("\n");
+          alert(`${successCount}\u500B\u306E\u5F53\u756A\u3092\u5272\u308A\u5F53\u3066\u307E\u3057\u305F\uFF01
+
+${summary}`);
+          fetchData();
+        } else {
+          alert("\u5272\u308A\u5F53\u3066\u306B\u5931\u6557\u3057\u307E\u3057\u305F");
+        }
+      } catch (error) {
+        alert("\u4E00\u62EC\u30B7\u30E3\u30C3\u30D5\u30EB\u306B\u5931\u6557\u3057\u307E\u3057\u305F");
+      } finally {
+        setShuffling(null);
+      }
+    };
+    const removeDuplicateAssignments = async () => {
+      try {
+        const year = selectedDate.getFullYear();
+        const month = selectedDate.getMonth() + 1;
+        const day = selectedDate.getDate();
+        const historiesRes = await axios_default.get("/api/v1/histories", {
+          params: { year, month, day }
+        });
+        const todayHistories = historiesRes.data;
+        const memberCounts = {};
+        todayHistories.forEach((h) => {
+          if (!memberCounts[h.member_id]) {
+            memberCounts[h.member_id] = [];
+          }
+          memberCounts[h.member_id].push(h.id);
+        });
+        for (const memberId in memberCounts) {
+          if (memberCounts[memberId].length > 1) {
+            const idsToDelete = memberCounts[memberId].slice(1);
+            for (const historyId of idsToDelete) {
+              try {
+                await axios_default.delete(`/api/v1/histories/${historyId}`);
+              } catch (error) {
+              }
+            }
+          }
+        }
+      } catch (error) {
+      }
+    };
+    const handleDeleteMember = async (historyId) => {
+      if (!window.confirm("\u3053\u306E\u5272\u308A\u5F53\u3066\u3092\u524A\u9664\u3057\u307E\u3059\u304B\uFF1F"))
+        return;
+      try {
+        await axios_default.delete(`/api/v1/histories/${historyId}`);
+        fetchData();
+      } catch (error) {
+        alert("\u524A\u9664\u306B\u5931\u6557\u3057\u307E\u3057\u305F");
+      }
+    };
+    const getTodayAssignedMembers = (workId) => {
+      return histories.filter((h) => h.work_id === workId);
+    };
+    const handlePrevDay = () => {
+      const prevDate = new Date(selectedDate);
+      prevDate.setDate(prevDate.getDate() - 1);
+      setSelectedDate(prevDate);
+    };
+    const handleNextDay = () => {
+      const nextDate = new Date(selectedDate);
+      nextDate.setDate(nextDate.getDate() + 1);
+      setSelectedDate(nextDate);
+    };
+    const handleToday = () => {
+      setSelectedDate(/* @__PURE__ */ new Date());
+    };
+    const formatDate = (date) => {
+      return date.toLocaleDateString("ja-JP", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        weekday: "short"
+      });
+    };
+    const isToday = (date) => {
+      const today = /* @__PURE__ */ new Date();
+      return date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
+    };
     if (loading) {
-      return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "text-center py-12", children: "\u8AAD\u307F\u8FBC\u307F\u4E2D..." });
+      return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "text-center py-12 text-gray-600", children: "\u8AAD\u307F\u8FBC\u307F\u4E2D..." });
     }
+    const activeMembers = members.filter((m) => !m.archive).length;
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "space-y-6", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-4", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "text-lg font-semibold text-gray-900", children: "\u5F53\u756A\u6570" }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-3xl font-bold text-primary-600 mt-2", children: works.length })
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "card bg-gradient-to-r from-primary-50 to-blue-50 border-2 border-primary-200", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex items-center justify-between gap-4 flex-wrap", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+          "button",
+          {
+            onClick: handlePrevDay,
+            className: "btn-secondary flex items-center p-2",
+            title: "\u524D\u306E\u65E5",
+            children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(ChevronLeftIcon_default, { className: "h-5 w-5" })
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex items-center space-x-2", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(CalendarIcon_default, { className: "h-6 w-6 text-primary-600" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "text-2xl font-bold text-gray-900 min-w-64 text-center", children: formatDate(selectedDate) }),
+          !isToday(selectedDate) && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+            "button",
+            {
+              onClick: handleToday,
+              className: "text-sm px-3 py-1 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors font-medium",
+              children: "\u4ECA\u65E5"
+            }
+          )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "text-lg font-semibold text-gray-900", children: "\u30E1\u30F3\u30D0\u30FC\u6570" }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-3xl font-bold text-primary-600 mt-2", children: members.length })
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "text-lg font-semibold text-gray-900", children: "\u6D3B\u52D5\u4E2D" }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-3xl font-bold text-green-600 mt-2", children: members.filter((m) => !m.archive).length })
-        ] })
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+          "button",
+          {
+            onClick: handleNextDay,
+            className: "btn-secondary flex items-center p-2",
+            title: "\u6B21\u306E\u65E5",
+            children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(ChevronRightIcon_default, { className: "h-5 w-5" })
+          }
+        )
+      ] }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "card bg-gradient-to-br from-primary-50 to-primary-100 border border-primary-200", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex items-center justify-between", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex-1", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-sm font-medium text-primary-600 uppercase tracking-wide", children: "\u5F53\u756A\u6570" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-4xl font-bold text-primary-900 mt-2", children: works.length }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-xs text-primary-600 mt-2", children: "\u500B\u306E\u5F53\u756A\u304C\u767B\u9332\u3055\u308C\u3066\u3044\u307E\u3059" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "flex-shrink-0", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "flex items-center justify-center h-14 w-14 rounded-lg bg-primary-200", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(ClipboardDocumentListIcon_default, { className: "h-8 w-8 text-primary-700" }) }) })
+        ] }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "card bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex items-center justify-between", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex-1", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-sm font-medium text-blue-600 uppercase tracking-wide", children: "\u30E1\u30F3\u30D0\u30FC\u6570" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-4xl font-bold text-blue-900 mt-2", children: members.length }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-xs text-blue-600 mt-2", children: "\u4EBA\u304C\u53C2\u52A0\u3057\u3066\u3044\u307E\u3059" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "flex-shrink-0", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "flex items-center justify-center h-14 w-14 rounded-lg bg-blue-200", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(UserGroupIcon_default, { className: "h-8 w-8 text-blue-700" }) }) })
+        ] }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "card bg-gradient-to-br from-green-50 to-green-100 border border-green-200", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex items-center justify-between", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex-1", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-sm font-medium text-green-600 uppercase tracking-wide", children: "\u6D3B\u52D5\u4E2D" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-4xl font-bold text-green-900 mt-2", children: activeMembers }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-xs text-green-600 mt-2", children: "\u4EBA\u304C\u6D3B\u52D5\u4E2D\u3067\u3059" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "flex-shrink-0", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "flex items-center justify-center h-14 w-14 rounded-lg bg-green-200", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(CheckCircleIcon_default, { className: "h-8 w-8 text-green-700" }) }) })
+        ] }) })
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "card", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "text-lg font-semibold text-gray-900 mb-4", children: "\u5F53\u756A\u4E00\u89A7" }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "space-y-3", children: works.map((work) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
-          "div",
-          {
-            className: "flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors",
-            children: [
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "font-medium text-gray-900", children: work.name }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "text-sm text-gray-500", children: [
-                  work.members.length,
-                  "\u4EBA\u306E\u30E1\u30F3\u30D0\u30FC"
-                ] })
-              ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-                "button",
-                {
-                  onClick: () => handleShuffle(work.id),
-                  className: "btn-primary",
-                  children: "\u30B7\u30E3\u30C3\u30D5\u30EB"
-                }
-              )
-            ]
-          },
-          work.id
-        )) })
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex items-center justify-between mb-6", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex items-center", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(SparklesIcon_default, { className: "h-6 w-6 text-primary-600 mr-2" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("h2", { className: "text-2xl font-bold text-gray-900", children: [
+              formatDate(selectedDate),
+              "\u306E\u5F53\u756A"
+            ] })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+            "button",
+            {
+              onClick: handleShuffleAllWorks,
+              disabled: shuffling === "all" || works.length === 0 || members.length === 0,
+              className: `btn-primary flex items-center justify-center transition-all duration-200 ${shuffling === "all" ? "opacity-75 cursor-wait" : ""} ${works.length === 0 || members.length === 0 ? "opacity-50 cursor-not-allowed" : ""}`,
+              children: shuffling === "all" ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "animate-spin mr-2", children: "\u23F3" }),
+                "\u51E6\u7406\u4E2D..."
+              ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(SparklesIcon_default, { className: "h-5 w-5 mr-2" }),
+                "\u4E00\u62EC\u30B7\u30E3\u30C3\u30D5\u30EB"
+              ] })
+            }
+          )
+        ] }),
+        works.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "text-center py-12", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-gray-500 text-lg", children: "\u5F53\u756A\u304C\u767B\u9332\u3055\u308C\u3066\u3044\u307E\u305B\u3093" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-gray-400 text-sm mt-2", children: "\u300C\u5F53\u756A\u300D\u30DA\u30FC\u30B8\u304B\u3089\u8FFD\u52A0\u3057\u3066\u304F\u3060\u3055\u3044" })
+        ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "space-y-4", children: works.map((work) => {
+          const todayAssignments = getTodayAssignedMembers(work.id);
+          return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
+            "div",
+            {
+              className: "border border-gray-200 rounded-xl p-5 bg-gradient-to-r from-gray-50 to-gray-25 hover:shadow-md transition-all",
+              children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex items-center mb-2", children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "h-3 w-3 bg-primary-600 rounded-full mr-3" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "text-lg font-semibold text-gray-900", children: work.name })
+                  ] }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-700", children: [
+                    "\u4ECA\u65E5\u306E\u5272\u308A\u5F53\u3066: ",
+                    todayAssignments.length,
+                    "\u4EBA"
+                  ] })
+                ] }) }),
+                todayAssignments.length > 0 ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "border-t border-gray-200 pt-4", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-sm font-semibold text-gray-600 mb-3", children: "\u672C\u65E5\u306E\u5272\u308A\u5F53\u3066\u30E1\u30F3\u30D0\u30FC:" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3", children: todayAssignments.map((assignment) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                    "div",
+                    {
+                      onClick: () => handleDeleteMember(assignment.id),
+                      className: "p-4 bg-white border-2 border-primary-300 rounded-lg hover:bg-red-50 hover:border-red-400 cursor-pointer transition-all flex items-center justify-center",
+                      children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "font-semibold text-gray-900 text-center", children: [
+                        assignment.member?.family_name,
+                        assignment.member?.given_name
+                      ] })
+                    },
+                    assignment.id
+                  )) })
+                ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "border-t border-gray-200 pt-4", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-sm text-gray-500 text-center py-2", children: "\u672C\u65E5\u306E\u5272\u308A\u5F53\u3066\u30E1\u30F3\u30D0\u30FC\u306F\u3044\u307E\u305B\u3093\u3002\u30B7\u30E3\u30C3\u30D5\u30EB\u30DC\u30BF\u30F3\u3067\u5272\u308A\u5F53\u3066\u3092\u3057\u3066\u304F\u3060\u3055\u3044\u3002" }) })
+              ]
+            },
+            work.id
+          );
+        }) })
       ] })
     ] });
   }
