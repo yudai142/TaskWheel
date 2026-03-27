@@ -5,7 +5,10 @@ module Api
   module V1
     class HistoriesController < BaseController
       def index
-        @histories = if params[:year] && params[:month]
+        @histories = if params[:year] && params[:month] && params[:day]
+          date = Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i)
+          History.by_date(date).recent
+        elsif params[:year] && params[:month]
           History.by_month(params[:year], params[:month]).recent
         else
           History.recent
