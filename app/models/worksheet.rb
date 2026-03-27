@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+# encoding: utf-8
+
 class Worksheet < ApplicationRecord
   validates :interval, presence: true, numericality: { greater_than: 0 }
   validates :week, presence: true, numericality: { greater_than_or_equal_to: 0, less_than: 7 }

@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+# encoding: utf-8
+
 class Member < ApplicationRecord
   has_many :member_options, dependent: :destroy
   has_many :works, through: :member_options

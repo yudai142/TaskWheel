@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+# encoding: utf-8
+
 module Api
   module V1
     class ResetDatesController < BaseController
@@ -6,12 +9,12 @@ module Api
       end
 
       def update
-        # リセット日付の更新ロジック
+        # ﾂδ環セﾂッﾂトﾂ禿ｺﾂ付ﾂづ個更ﾂ新ﾂδ債ジﾂッﾂク
         render json: { success: true }
       end
 
       def bulk_update
-        # 複数のリセット日付を一括更新
+        # ﾂ閉｡ﾂ青板づ個δ環セﾂッﾂトﾂ禿ｺﾂ付ﾂづｰﾂ暗ｪﾂ環�ﾂ更ﾂ新
         render json: { success: true }
       end
     end

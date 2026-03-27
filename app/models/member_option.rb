@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+# encoding: utf-8
+
 class MemberOption < ApplicationRecord
   belongs_to :work
   belongs_to :member
