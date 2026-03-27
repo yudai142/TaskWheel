@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+# encoding: utf-8
+
 module Api
   module V1
     class OffWorkDatesController < BaseController

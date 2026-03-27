@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+# encoding: utf-8
+
 module Api
   module V1
     class WorksController < BaseController
@@ -29,7 +32,7 @@ module Api
       end
 
       def shuffle
-        # シャッフルロジック
+        # ﾂシﾂδδッﾂフﾂδ仰δ債ジﾂッﾂク
         work = Work.find(params[:work_id])
         members = work.available_members.active
         

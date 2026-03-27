@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+# encoding: utf-8
+
 class History < ApplicationRecord
   belongs_to :work, optional: true
   belongs_to :member
