@@ -31710,20 +31710,27 @@ ${summary}`);
               children: /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(CalendarIcon_default, { className: "h-6 w-6" })
             }
           ),
-          showCalendar && /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("div", { className: "absolute top-full left-0 mt-2 z-50 bg-white rounded-xl shadow-lg border border-gray-200", children: /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(
-            dist_default2,
-            {
-              value: selectedDate,
-              onChange: (date) => {
-                setSelectedDate(date);
-                setShowCalendar(false);
-              },
-              locale: "ja-JP",
-              className: "react-calendar-custom",
-              onClickMonth: (value) => {
+          showCalendar && /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)(import_jsx_runtime22.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(
+              "div",
+              {
+                className: "fixed inset-0 z-40",
+                onClick: () => setShowCalendar(false)
               }
-            }
-          ) }),
+            ),
+            /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("div", { className: "absolute top-full left-1/2 -translate-x-1/2 mt-2 z-50 bg-white rounded-xl shadow-2xl border border-indigo-100 p-2", children: /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(
+              dist_default2,
+              {
+                value: selectedDate,
+                onChange: (date) => {
+                  setSelectedDate(date);
+                  setShowCalendar(false);
+                },
+                locale: "ja-JP",
+                className: "react-calendar-custom"
+              }
+            ) })
+          ] }),
           /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { className: "text-xl font-bold text-gray-900 whitespace-nowrap", children: formatDate2(selectedDate) }),
           !isToday(selectedDate) && /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(
             "button",

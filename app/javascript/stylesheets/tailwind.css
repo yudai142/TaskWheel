@@ -24,6 +24,141 @@
   background: #555;
 }
 
+/* ポップアップカレンダーのカスタムスタイル */
+.react-calendar-custom {
+  width: 340px !important;
+  max-width: 100%;
+  font-family: inherit;
+  border: none !important;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.react-calendar-custom .react-calendar__navigation {
+  background: #4f46e5;
+  margin-bottom: 0;
+  height: 48px;
+}
+
+.react-calendar-custom .react-calendar__navigation button {
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  min-width: 44px;
+  border-radius: 0;
+}
+
+.react-calendar-custom .react-calendar__navigation button:enabled:hover,
+.react-calendar-custom .react-calendar__navigation button:enabled:focus {
+  background: #4338ca !important;
+}
+
+.react-calendar-custom .react-calendar__navigation button:disabled {
+  background: #4f46e5 !important;
+  opacity: 0.6;
+}
+
+.react-calendar-custom .react-calendar__month-view__weekdays {
+  background: #eef2ff;
+  padding: 4px 0;
+}
+
+.react-calendar-custom .react-calendar__month-view__weekdays__weekday {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #6366f1;
+  padding: 4px 0;
+}
+
+/* 土曜日（6列目）の曜日ラベル */
+.react-calendar-custom .react-calendar__month-view__weekdays__weekday:nth-child(7) abbr {
+  color: #2563eb;
+}
+
+/* 日曜日（1列目）の曜日ラベル */
+.react-calendar-custom .react-calendar__month-view__weekdays__weekday:nth-child(1) abbr {
+  color: #dc2626;
+}
+
+.react-calendar-custom .react-calendar__month-view__days {
+  padding: 6px;
+  gap: 2px;
+}
+
+.react-calendar-custom .react-calendar__tile {
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  padding: 10px 4px !important;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #374151;
+  margin: 2px !important;
+  transition: all 0.15s ease;
+  background: #fff;
+}
+
+.react-calendar-custom .react-calendar__tile:enabled:hover,
+.react-calendar-custom .react-calendar__tile:enabled:focus {
+  background: #e0e7ff !important;
+  border-color: #6366f1 !important;
+  color: #4338ca;
+}
+
+/* 今日 */
+.react-calendar-custom .react-calendar__tile--now {
+  background: #fef3c7 !important;
+  border-color: #f59e0b !important;
+  color: #92400e;
+  font-weight: 700;
+}
+
+.react-calendar-custom .react-calendar__tile--now:enabled:hover,
+.react-calendar-custom .react-calendar__tile--now:enabled:focus {
+  background: #fde68a !important;
+  border-color: #d97706 !important;
+}
+
+/* 選択中 */
+.react-calendar-custom .react-calendar__tile--active {
+  background: #4f46e5 !important;
+  border-color: #4338ca !important;
+  color: #fff !important;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(79, 70, 229, 0.4);
+}
+
+.react-calendar-custom .react-calendar__tile--active:enabled:hover,
+.react-calendar-custom .react-calendar__tile--active:enabled:focus {
+  background: #4338ca !important;
+}
+
+/* 週末（土曜日）*/
+.react-calendar-custom .react-calendar__month-view__days__day:nth-child(7n) {
+  color: #2563eb;
+}
+
+/* 週末（日曜日）*/
+.react-calendar-custom .react-calendar__month-view__days__day:nth-child(7n+1) {
+  color: #dc2626;
+}
+
+/* 隣月の日付 */
+.react-calendar-custom .react-calendar__month-view__days__day--neighboringMonth {
+  color: #d1d5db !important;
+  border-color: #f3f4f6 !important;
+  background: #fafafa;
+}
+
+/* 年・月選択タイル */
+.react-calendar-custom .react-calendar__year-view .react-calendar__tile,
+.react-calendar-custom .react-calendar__decade-view .react-calendar__tile,
+.react-calendar-custom .react-calendar__century-view .react-calendar__tile {
+  padding: 14px 4px !important;
+  border-radius: 8px !important;
+  border: 1px solid #e5e7eb !important;
+  margin: 3px !important;
+}
+
 @layer components {
   .btn-primary {
     @apply px-4 py-2 rounded-lg bg-primary-500 text-white font-medium hover:bg-primary-600 transition-colors;
