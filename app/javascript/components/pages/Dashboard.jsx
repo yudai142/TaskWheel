@@ -234,6 +234,25 @@ export default function Dashboard() {
             )}
           </div>
           <button
+            onClick={handleShuffleAllWorks}
+            disabled={shuffling === 'all' || works.length === 0 || members.length === 0}
+            className={`btn-primary flex items-center justify-center transition-all duration-200 ${
+              shuffling === 'all' ? 'opacity-75 cursor-wait' : ''
+            } ${works.length === 0 || members.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+          >
+            {shuffling === 'all' ? (
+              <>
+                <span className="animate-spin mr-2">⏳</span>
+                処理中...
+              </>
+            ) : (
+              <>
+                <SparklesIcon className="h-5 w-5 mr-2" />
+                一括シャッフル
+              </>
+            )}
+          </button>
+          <button
             onClick={handleNextDay}
             className="btn-secondary flex items-center p-2"
             title="次の日"
@@ -296,30 +315,11 @@ export default function Dashboard() {
 
       {/* Works List Section */}
       <div className="card">
-        <div className="flex items-center justify-between mb-6">
+        <div className="mb-6">
           <div className="flex items-center">
             <SparklesIcon className="h-6 w-6 text-primary-600 mr-2" />
             <h2 className="text-2xl font-bold text-gray-900">{formatDate(selectedDate)}の当番</h2>
           </div>
-          <button
-            onClick={handleShuffleAllWorks}
-            disabled={shuffling === 'all' || works.length === 0 || members.length === 0}
-            className={`btn-primary flex items-center justify-center transition-all duration-200 ${
-              shuffling === 'all' ? 'opacity-75 cursor-wait' : ''
-            } ${works.length === 0 || members.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
-          >
-            {shuffling === 'all' ? (
-              <>
-                <span className="animate-spin mr-2">⏳</span>
-                処理中...
-              </>
-            ) : (
-              <>
-                <SparklesIcon className="h-5 w-5 mr-2" />
-                一括シャッフル
-              </>
-            )}
-          </button>
         </div>
 
         {works.length === 0 ? (

@@ -29780,6 +29780,21 @@ ${summary}`);
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
           "button",
           {
+            onClick: handleShuffleAllWorks,
+            disabled: shuffling === "all" || works.length === 0 || members.length === 0,
+            className: `btn-primary flex items-center justify-center transition-all duration-200 ${shuffling === "all" ? "opacity-75 cursor-wait" : ""} ${works.length === 0 || members.length === 0 ? "opacity-50 cursor-not-allowed" : ""}`,
+            children: shuffling === "all" ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "animate-spin mr-2", children: "\u23F3" }),
+              "\u51E6\u7406\u4E2D..."
+            ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(SparklesIcon_default, { className: "h-5 w-5 mr-2" }),
+              "\u4E00\u62EC\u30B7\u30E3\u30C3\u30D5\u30EB"
+            ] })
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+          "button",
+          {
             onClick: handleNextDay,
             className: "btn-secondary flex items-center p-2",
             title: "\u6B21\u306E\u65E5",
@@ -29814,30 +29829,13 @@ ${summary}`);
         ] }) })
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "card", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex items-center justify-between mb-6", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex items-center", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(SparklesIcon_default, { className: "h-6 w-6 text-primary-600 mr-2" }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("h2", { className: "text-2xl font-bold text-gray-900", children: [
-              formatDate(selectedDate),
-              "\u306E\u5F53\u756A"
-            ] })
-          ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-            "button",
-            {
-              onClick: handleShuffleAllWorks,
-              disabled: shuffling === "all" || works.length === 0 || members.length === 0,
-              className: `btn-primary flex items-center justify-center transition-all duration-200 ${shuffling === "all" ? "opacity-75 cursor-wait" : ""} ${works.length === 0 || members.length === 0 ? "opacity-50 cursor-not-allowed" : ""}`,
-              children: shuffling === "all" ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "animate-spin mr-2", children: "\u23F3" }),
-                "\u51E6\u7406\u4E2D..."
-              ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(SparklesIcon_default, { className: "h-5 w-5 mr-2" }),
-                "\u4E00\u62EC\u30B7\u30E3\u30C3\u30D5\u30EB"
-              ] })
-            }
-          )
-        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "mb-6", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex items-center", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(SparklesIcon_default, { className: "h-6 w-6 text-primary-600 mr-2" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("h2", { className: "text-2xl font-bold text-gray-900", children: [
+            formatDate(selectedDate),
+            "\u306E\u5F53\u756A"
+          ] })
+        ] }) }),
         works.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "text-center py-12", children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-gray-500 text-lg", children: "\u5F53\u756A\u304C\u767B\u9332\u3055\u308C\u3066\u3044\u307E\u305B\u3093" }),
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-gray-400 text-sm mt-2", children: "\u300C\u5F53\u756A\u300D\u30DA\u30FC\u30B8\u304B\u3089\u8FFD\u52A0\u3057\u3066\u304F\u3060\u3055\u3044" })
