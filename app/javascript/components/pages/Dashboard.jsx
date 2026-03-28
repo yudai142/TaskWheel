@@ -232,20 +232,23 @@ export default function Dashboard() {
               <CalendarIcon className="h-6 w-6" />
             </button>
             {showCalendar && (
-              <div className="absolute top-full left-0 mt-2 z-50 bg-white rounded-xl shadow-lg border border-gray-200">
-                <Calendar
-                  value={selectedDate}
-                  onChange={(date) => {
-                    setSelectedDate(date)
-                    setShowCalendar(false)
-                  }}
-                  locale="ja-JP"
-                  className="react-calendar-custom"
-                  onClickMonth={(value) => {
-                    // Year/Month selection is built-in for react-calendar
-                  }}
+              <>
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setShowCalendar(false)}
                 />
-              </div>
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 z-50 bg-white rounded-xl shadow-2xl border border-indigo-100 p-2">
+                  <Calendar
+                    value={selectedDate}
+                    onChange={(date) => {
+                      setSelectedDate(date)
+                      setShowCalendar(false)
+                    }}
+                    locale="ja-JP"
+                    className="react-calendar-custom"
+                  />
+                </div>
+              </>
             )}
             <span className="text-xl font-bold text-gray-900 whitespace-nowrap">
               {formatDate(selectedDate)}
