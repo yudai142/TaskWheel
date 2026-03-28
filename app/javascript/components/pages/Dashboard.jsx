@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { Calendar } from '../ui/calendar'
-import { Popover, PopoverTrigger, PopoverContent } from '../ui/popover'
-import ja from 'date-fns/locale/ja'
+import Calendar from 'react-calendar'
+import 'react-calendar/dist/Calendar.css'
 import { ChevronLeftIcon, ChevronRightIcon, CalendarIcon, ClipboardDocumentListIcon, UserGroupIcon, CheckCircleIcon, SparklesIcon } from '@heroicons/react/24/outline'
 
 export default function Dashboard() {
@@ -224,29 +223,30 @@ export default function Dashboard() {
             <ChevronLeftIcon className="h-5 w-5" />
           </button>
 
-          <div className="flex items-center space-x-2">
-            <Popover open={showCalendar} onOpenChange={setShowCalendar}>
-              <PopoverTrigger asChild>
-                <button
-                  className="text-primary-600 hover:text-primary-700 transition-colors flex-shrink-0"
-                  title="カレンダーを表示"
-                >
-                  <CalendarIcon className="h-6 w-6" />
-                </button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" side="bottom" align="center">
+          <div className="flex items-center space-x-2 relative">
+            <button
+              onClick={() => setShowCalendar(!showCalendar)}
+              className="text-primary-600 hover:text-primary-700 transition-colors flex-shrink-0"
+              title="カレンダーを表示"
+            >
+              <CalendarIcon className="h-6 w-6" />
+            </button>
+            {showCalendar && (
+              <div className="absolute top-full left-0 mt-2 z-50 bg-white rounded-xl shadow-lg border border-gray-200">
                 <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={(date) => {
+                  value={selectedDate}
+                  onChange={(date) => {
                     setSelectedDate(date)
                     setShowCalendar(false)
                   }}
-                  locale={ja}
-                  disabled={() => false}
+                  locale="ja-JP"
+                  className="react-calendar-custom"
+                  onClickMonth={(value) => {
+                    // Year/Month selection is built-in for react-calendar
+                  }}
                 />
-              </PopoverContent>
-            </Popover>
+              </div>
+            )}
             <span className="text-xl font-bold text-gray-900 whitespace-nowrap">
               {formatDate(selectedDate)}
             </span>
