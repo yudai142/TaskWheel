@@ -128,38 +128,38 @@
             ReactSharedInternals.ReactDebugCurrentFrame = ReactDebugCurrentFrame;
             ReactSharedInternals.ReactCurrentActQueue = ReactCurrentActQueue;
           }
-          function warn(format) {
+          function warn(format2) {
             {
               {
                 for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
                   args[_key - 1] = arguments[_key];
                 }
-                printWarning("warn", format, args);
+                printWarning("warn", format2, args);
               }
             }
           }
-          function error(format) {
+          function error(format2) {
             {
               {
                 for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
                   args[_key2 - 1] = arguments[_key2];
                 }
-                printWarning("error", format, args);
+                printWarning("error", format2, args);
               }
             }
           }
-          function printWarning(level, format, args) {
+          function printWarning(level, format2, args) {
             {
               var ReactDebugCurrentFrame2 = ReactSharedInternals.ReactDebugCurrentFrame;
               var stack = ReactDebugCurrentFrame2.getStackAddendum();
               if (stack !== "") {
-                format += "%s";
+                format2 += "%s";
                 args = args.concat([stack]);
               }
               var argsWithFormat = args.map(function(item) {
                 return String(item);
               });
-              argsWithFormat.unshift("Warning: " + format);
+              argsWithFormat.unshift("Warning: " + format2);
               Function.prototype.apply.call(console[level], console, argsWithFormat);
             }
           }
@@ -514,7 +514,7 @@
             }
             return element;
           };
-          function createElement14(type, config, children) {
+          function createElement22(type, config, children) {
             var propName;
             var props = {};
             var key = null;
@@ -582,7 +582,7 @@
             var newElement = ReactElement(oldElement.type, newKey, oldElement.ref, oldElement._self, oldElement._source, oldElement._owner, oldElement.props);
             return newElement;
           }
-          function cloneElement(element, config, children) {
+          function cloneElement9(element, config, children) {
             if (element === null || element === void 0) {
               throw new Error("React.cloneElement(...): The argument must be a React element, but you passed " + element + ".");
             }
@@ -630,7 +630,7 @@
             }
             return ReactElement(element.type, key, ref, self2, source, owner, props);
           }
-          function isValidElement2(object) {
+          function isValidElement8(object) {
             return typeof object === "object" && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
           }
           var SEPARATOR = ".";
@@ -641,8 +641,8 @@
               "=": "=0",
               ":": "=2"
             };
-            var escapedString = key.replace(escapeRegex, function(match) {
-              return escaperLookup[match];
+            var escapedString = key.replace(escapeRegex, function(match3) {
+              return escaperLookup[match3];
             });
             return "$" + escapedString;
           }
@@ -651,14 +651,14 @@
           function escapeUserProvidedKey(text) {
             return text.replace(userProvidedKeyEscapeRegex, "$&/");
           }
-          function getElementKey(element, index) {
+          function getElementKey(element, index2) {
             if (typeof element === "object" && element !== null && element.key != null) {
               {
                 checkKeyStringCoercion(element.key);
               }
               return escape("" + element.key);
             }
-            return index.toString(36);
+            return index2.toString(36);
           }
           function mapIntoArray(children, array, escapedPrefix, nameSoFar, callback) {
             var type = typeof children;
@@ -695,7 +695,7 @@
                   return c;
                 });
               } else if (mappedChild != null) {
-                if (isValidElement2(mappedChild)) {
+                if (isValidElement8(mappedChild)) {
                   {
                     if (mappedChild.key && (!_child || _child.key !== mappedChild.key)) {
                       checkKeyStringCoercion(mappedChild.key);
@@ -759,9 +759,9 @@
               return children;
             }
             var result = [];
-            var count = 0;
+            var count3 = 0;
             mapIntoArray(children, result, "", "", function(child) {
-              return func.call(context, child, count++);
+              return func.call(context, child, count3++);
             });
             return result;
           }
@@ -783,12 +783,12 @@
             }) || [];
           }
           function onlyChild(children) {
-            if (!isValidElement2(children)) {
+            if (!isValidElement8(children)) {
               throw new Error("React.Children.only expected to receive a single React element child.");
             }
             return children;
           }
-          function createContext3(defaultValue) {
+          function createContext7(defaultValue) {
             var context = {
               $$typeof: REACT_CONTEXT_TYPE,
               // As a workaround to support multiple concurrent renderers, we categorize
@@ -975,7 +975,7 @@
             }
             return lazyType;
           }
-          function forwardRef13(render) {
+          function forwardRef36(render) {
             {
               if (render != null && render.$$typeof === REACT_MEMO_TYPE) {
                 error("forwardRef requires a render function but received a `memo` component. Instead of forwardRef(memo(...)), use memo(forwardRef(...)).");
@@ -1074,7 +1074,7 @@
             }
             return dispatcher;
           }
-          function useContext3(Context) {
+          function useContext7(Context) {
             var dispatcher = resolveDispatcher();
             {
               if (Context._context !== void 0) {
@@ -1088,35 +1088,35 @@
             }
             return dispatcher.useContext(Context);
           }
-          function useState10(initialState) {
+          function useState25(initialState) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useState(initialState);
           }
-          function useReducer(reducer, initialArg, init) {
+          function useReducer3(reducer, initialArg, init) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useReducer(reducer, initialArg, init);
           }
-          function useRef3(initialValue) {
+          function useRef16(initialValue) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useRef(initialValue);
           }
-          function useEffect8(create, deps) {
+          function useEffect23(create, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useEffect(create, deps);
           }
-          function useInsertionEffect(create, deps) {
+          function useInsertionEffect2(create, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useInsertionEffect(create, deps);
           }
-          function useLayoutEffect3(create, deps) {
+          function useLayoutEffect7(create, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useLayoutEffect(create, deps);
           }
-          function useCallback3(callback, deps) {
+          function useCallback12(callback, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useCallback(callback, deps);
           }
-          function useMemo3(create, deps) {
+          function useMemo11(create, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useMemo(create, deps);
           }
@@ -1138,7 +1138,7 @@
             var dispatcher = resolveDispatcher();
             return dispatcher.useDeferredValue(value);
           }
-          function useId() {
+          function useId2() {
             var dispatcher = resolveDispatcher();
             return dispatcher.useId();
           }
@@ -1232,8 +1232,8 @@
                 try {
                   throw Error();
                 } catch (x) {
-                  var match = x.stack.trim().match(/\n( *(at )?)/);
-                  prefix = match && match[1] || "";
+                  var match3 = x.stack.trim().match(/\n( *(at )?)/);
+                  prefix = match3 && match3[1] || "";
                 }
               }
               return "\n" + prefix + name;
@@ -1514,11 +1514,11 @@
             if (isArray2(node)) {
               for (var i = 0; i < node.length; i++) {
                 var child = node[i];
-                if (isValidElement2(child)) {
+                if (isValidElement8(child)) {
                   validateExplicitKey(child, parentType);
                 }
               }
-            } else if (isValidElement2(node)) {
+            } else if (isValidElement8(node)) {
               if (node._store) {
                 node._store.validated = true;
               }
@@ -1529,7 +1529,7 @@
                   var iterator2 = iteratorFn.call(node);
                   var step;
                   while (!(step = iterator2.next()).done) {
-                    if (isValidElement2(step.value)) {
+                    if (isValidElement8(step.value)) {
                       validateExplicitKey(step.value, parentType);
                     }
                   }
@@ -1613,7 +1613,7 @@
                 error("React.createElement: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s", typeString, info);
               }
             }
-            var element = createElement14.apply(this, arguments);
+            var element = createElement22.apply(this, arguments);
             if (element == null) {
               return element;
             }
@@ -1652,7 +1652,7 @@
             return validatedFactory;
           }
           function cloneElementWithValidation(element, props, children) {
-            var newElement = cloneElement.apply(this, arguments);
+            var newElement = cloneElement9.apply(this, arguments);
             for (var i = 2; i < arguments.length; i++) {
               validateChildKeys(arguments[i], newElement.type);
             }
@@ -1852,14 +1852,14 @@
           var createElement$1 = createElementWithValidation;
           var cloneElement$1 = cloneElementWithValidation;
           var createFactory = createFactoryWithValidation;
-          var Children2 = {
+          var Children10 = {
             map: mapChildren,
             forEach: forEachChildren,
             count: countChildren,
             toArray: toArray2,
             only: onlyChild
           };
-          exports.Children = Children2;
+          exports.Children = Children10;
           exports.Component = Component2;
           exports.Fragment = REACT_FRAGMENT_TYPE;
           exports.Profiler = REACT_PROFILER_TYPE;
@@ -1869,29 +1869,29 @@
           exports.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED = ReactSharedInternals;
           exports.act = act;
           exports.cloneElement = cloneElement$1;
-          exports.createContext = createContext3;
+          exports.createContext = createContext7;
           exports.createElement = createElement$1;
           exports.createFactory = createFactory;
           exports.createRef = createRef;
-          exports.forwardRef = forwardRef13;
-          exports.isValidElement = isValidElement2;
+          exports.forwardRef = forwardRef36;
+          exports.isValidElement = isValidElement8;
           exports.lazy = lazy;
           exports.memo = memo2;
           exports.startTransition = startTransition;
           exports.unstable_act = act;
-          exports.useCallback = useCallback3;
-          exports.useContext = useContext3;
+          exports.useCallback = useCallback12;
+          exports.useContext = useContext7;
           exports.useDebugValue = useDebugValue;
           exports.useDeferredValue = useDeferredValue;
-          exports.useEffect = useEffect8;
-          exports.useId = useId;
+          exports.useEffect = useEffect23;
+          exports.useId = useId2;
           exports.useImperativeHandle = useImperativeHandle;
-          exports.useInsertionEffect = useInsertionEffect;
-          exports.useLayoutEffect = useLayoutEffect3;
-          exports.useMemo = useMemo3;
-          exports.useReducer = useReducer;
-          exports.useRef = useRef3;
-          exports.useState = useState10;
+          exports.useInsertionEffect = useInsertionEffect2;
+          exports.useLayoutEffect = useLayoutEffect7;
+          exports.useMemo = useMemo11;
+          exports.useReducer = useReducer3;
+          exports.useRef = useRef16;
+          exports.useState = useState25;
           exports.useSyncExternalStore = useSyncExternalStore;
           exports.useTransition = useTransition;
           exports.version = ReactVersion;
@@ -1929,9 +1929,9 @@
           var enableProfiling = false;
           var frameYieldMs = 5;
           function push(heap, node) {
-            var index = heap.length;
+            var index2 = heap.length;
             heap.push(node);
-            siftUp(heap, node, index);
+            siftUp(heap, node, index2);
           }
           function peek(heap) {
             return heap.length === 0 ? null : heap[0];
@@ -1949,42 +1949,42 @@
             return first;
           }
           function siftUp(heap, node, i) {
-            var index = i;
-            while (index > 0) {
-              var parentIndex = index - 1 >>> 1;
+            var index2 = i;
+            while (index2 > 0) {
+              var parentIndex = index2 - 1 >>> 1;
               var parent = heap[parentIndex];
               if (compare(parent, node) > 0) {
                 heap[parentIndex] = node;
-                heap[index] = parent;
-                index = parentIndex;
+                heap[index2] = parent;
+                index2 = parentIndex;
               } else {
                 return;
               }
             }
           }
           function siftDown(heap, node, i) {
-            var index = i;
+            var index2 = i;
             var length = heap.length;
             var halfLength = length >>> 1;
-            while (index < halfLength) {
-              var leftIndex = (index + 1) * 2 - 1;
+            while (index2 < halfLength) {
+              var leftIndex = (index2 + 1) * 2 - 1;
               var left = heap[leftIndex];
               var rightIndex = leftIndex + 1;
               var right = heap[rightIndex];
               if (compare(left, node) < 0) {
                 if (rightIndex < length && compare(right, left) < 0) {
-                  heap[index] = right;
+                  heap[index2] = right;
                   heap[rightIndex] = node;
-                  index = rightIndex;
+                  index2 = rightIndex;
                 } else {
-                  heap[index] = left;
+                  heap[index2] = left;
                   heap[leftIndex] = node;
-                  index = leftIndex;
+                  index2 = leftIndex;
                 }
               } else if (rightIndex < length && compare(right, node) < 0) {
-                heap[index] = right;
+                heap[index2] = right;
                 heap[rightIndex] = node;
-                index = rightIndex;
+                index2 = rightIndex;
               } else {
                 return;
               }
@@ -2387,47 +2387,47 @@
           if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== "undefined" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart === "function") {
             __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error());
           }
-          var React21 = require_react();
+          var React86 = require_react();
           var Scheduler = require_scheduler();
-          var ReactSharedInternals = React21.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React86.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           var suppressWarning = false;
           function setSuppressWarning(newSuppressWarning) {
             {
               suppressWarning = newSuppressWarning;
             }
           }
-          function warn(format) {
+          function warn(format2) {
             {
               if (!suppressWarning) {
                 for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
                   args[_key - 1] = arguments[_key];
                 }
-                printWarning("warn", format, args);
+                printWarning("warn", format2, args);
               }
             }
           }
-          function error(format) {
+          function error(format2) {
             {
               if (!suppressWarning) {
                 for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
                   args[_key2 - 1] = arguments[_key2];
                 }
-                printWarning("error", format, args);
+                printWarning("error", format2, args);
               }
             }
           }
-          function printWarning(level, format, args) {
+          function printWarning(level, format2, args) {
             {
               var ReactDebugCurrentFrame2 = ReactSharedInternals.ReactDebugCurrentFrame;
               var stack = ReactDebugCurrentFrame2.getStackAddendum();
               if (stack !== "") {
-                format += "%s";
+                format2 += "%s";
                 args = args.concat([stack]);
               }
               var argsWithFormat = args.map(function(item) {
                 return String(item);
               });
-              argsWithFormat.unshift("Warning: " + format);
+              argsWithFormat.unshift("Warning: " + format2);
               Function.prototype.apply.call(console[level], console, argsWithFormat);
             }
           }
@@ -2438,7 +2438,7 @@
           var HostPortal = 4;
           var HostComponent = 5;
           var HostText = 6;
-          var Fragment4 = 7;
+          var Fragment12 = 7;
           var Mode = 8;
           var ContextConsumer = 9;
           var ContextProvider = 10;
@@ -2492,7 +2492,7 @@
               allNativeEvents.add(dependencies[i]);
             }
           }
-          var canUseDOM = !!(typeof window !== "undefined" && typeof window.document !== "undefined" && typeof window.document.createElement !== "undefined");
+          var canUseDOM2 = !!(typeof window !== "undefined" && typeof window.document !== "undefined" && typeof window.document.createElement !== "undefined");
           var hasOwnProperty2 = Object.prototype.hasOwnProperty;
           function typeName(value) {
             {
@@ -3298,8 +3298,8 @@
                 try {
                   throw Error();
                 } catch (x) {
-                  var match = x.stack.trim().match(/\n( *(at )?)/);
-                  prefix = match && match[1] || "";
+                  var match3 = x.stack.trim().match(/\n( *(at )?)/);
+                  prefix = match3 && match3[1] || "";
                 }
               }
               return "\n" + prefix + name;
@@ -3594,7 +3594,7 @@
                 return "DehydratedFragment";
               case ForwardRef12:
                 return getWrappedName$1(type, type.render, "ForwardRef");
-              case Fragment4:
+              case Fragment12:
                 return "Fragment";
               case HostComponent:
                 return type;
@@ -3994,7 +3994,7 @@
             {
               if (props.value == null) {
                 if (typeof props.children === "object" && props.children !== null) {
-                  React21.Children.forEach(props.children, function(child) {
+                  React86.Children.forEach(props.children, function(child) {
                     if (child == null) {
                       return;
                     }
@@ -5223,8 +5223,8 @@
             {
               var invalidProps = [];
               for (var key in props) {
-                var isValid = validateProperty(type, key);
-                if (!isValid) {
+                var isValid2 = validateProperty(type, key);
+                if (!isValid2) {
                   invalidProps.push(key);
                 }
               }
@@ -5366,8 +5366,8 @@
             {
               var unknownProps = [];
               for (var key in props) {
-                var isValid = validateProperty$1(type, key, props[key], eventRegistry);
-                if (!isValid) {
+                var isValid2 = validateProperty$1(type, key, props[key], eventRegistry);
+                if (!isValid2) {
                   unknownProps.push(key);
                 }
               }
@@ -5536,7 +5536,7 @@
             return listener;
           }
           var passiveBrowserEventsSupported = false;
-          if (canUseDOM) {
+          if (canUseDOM2) {
             try {
               var options = {};
               Object.defineProperty(options, "passive", {
@@ -5967,9 +5967,9 @@
             }
             var child = node.child;
             while (child !== null) {
-              var match = findCurrentHostFiberImpl(child);
-              if (match !== null) {
-                return match;
+              var match3 = findCurrentHostFiberImpl(child);
+              if (match3 !== null) {
+                return match3;
               }
               child = child.sibling;
             }
@@ -5986,9 +5986,9 @@
             var child = node.child;
             while (child !== null) {
               if (child.tag !== HostPortal) {
-                var match = findCurrentHostFiberWithNoPortalsImpl(child);
-                if (match !== null) {
-                  return match;
+                var match3 = findCurrentHostFiberWithNoPortalsImpl(child);
+                if (match3 !== null) {
+                  return match3;
                 }
               }
               child = child.sibling;
@@ -6153,7 +6153,7 @@
             {
               var map = /* @__PURE__ */ new Map();
               var lane = 1;
-              for (var index2 = 0; index2 < TotalLanes; index2++) {
+              for (var index3 = 0; index3 < TotalLanes; index3++) {
                 var label = getLabelForLane(lane);
                 map.set(lane, label);
                 lane *= 2;
@@ -6656,9 +6656,9 @@
               var entanglements = root2.entanglements;
               var lanes = nextLanes & entangledLanes;
               while (lanes > 0) {
-                var index2 = pickArbitraryLaneIndex(lanes);
-                var lane = 1 << index2;
-                nextLanes |= entanglements[index2];
+                var index3 = pickArbitraryLaneIndex(lanes);
+                var lane = 1 << index3;
+                nextLanes |= entanglements[index3];
                 lanes &= ~lane;
               }
             }
@@ -6668,9 +6668,9 @@
             var eventTimes = root2.eventTimes;
             var mostRecentEventTime = NoTimestamp;
             while (lanes > 0) {
-              var index2 = pickArbitraryLaneIndex(lanes);
-              var lane = 1 << index2;
-              var eventTime = eventTimes[index2];
+              var index3 = pickArbitraryLaneIndex(lanes);
+              var lane = 1 << index3;
+              var eventTime = eventTimes[index3];
               if (eventTime > mostRecentEventTime) {
                 mostRecentEventTime = eventTime;
               }
@@ -6729,12 +6729,12 @@
             var expirationTimes = root2.expirationTimes;
             var lanes = pendingLanes;
             while (lanes > 0) {
-              var index2 = pickArbitraryLaneIndex(lanes);
-              var lane = 1 << index2;
-              var expirationTime = expirationTimes[index2];
+              var index3 = pickArbitraryLaneIndex(lanes);
+              var lane = 1 << index3;
+              var expirationTime = expirationTimes[index3];
               if (expirationTime === NoTimestamp) {
                 if ((lane & suspendedLanes) === NoLanes || (lane & pingedLanes) !== NoLanes) {
-                  expirationTimes[index2] = computeExpirationTime(lane, currentTime);
+                  expirationTimes[index3] = computeExpirationTime(lane, currentTime);
                 }
               } else if (expirationTime <= currentTime) {
                 root2.expiredLanes |= lane;
@@ -6844,8 +6844,8 @@
               root2.pingedLanes = NoLanes;
             }
             var eventTimes = root2.eventTimes;
-            var index2 = laneToIndex(updateLane);
-            eventTimes[index2] = eventTime;
+            var index3 = laneToIndex(updateLane);
+            eventTimes[index3] = eventTime;
           }
           function markRootSuspended(root2, suspendedLanes) {
             root2.suspendedLanes |= suspendedLanes;
@@ -6853,9 +6853,9 @@
             var expirationTimes = root2.expirationTimes;
             var lanes = suspendedLanes;
             while (lanes > 0) {
-              var index2 = pickArbitraryLaneIndex(lanes);
-              var lane = 1 << index2;
-              expirationTimes[index2] = NoTimestamp;
+              var index3 = pickArbitraryLaneIndex(lanes);
+              var lane = 1 << index3;
+              expirationTimes[index3] = NoTimestamp;
               lanes &= ~lane;
             }
           }
@@ -6875,11 +6875,11 @@
             var expirationTimes = root2.expirationTimes;
             var lanes = noLongerPendingLanes;
             while (lanes > 0) {
-              var index2 = pickArbitraryLaneIndex(lanes);
-              var lane = 1 << index2;
-              entanglements[index2] = NoLanes;
-              eventTimes[index2] = NoTimestamp;
-              expirationTimes[index2] = NoTimestamp;
+              var index3 = pickArbitraryLaneIndex(lanes);
+              var lane = 1 << index3;
+              entanglements[index3] = NoLanes;
+              eventTimes[index3] = NoTimestamp;
+              expirationTimes[index3] = NoTimestamp;
               lanes &= ~lane;
             }
           }
@@ -6888,14 +6888,14 @@
             var entanglements = root2.entanglements;
             var lanes = rootEntangledLanes;
             while (lanes) {
-              var index2 = pickArbitraryLaneIndex(lanes);
-              var lane = 1 << index2;
+              var index3 = pickArbitraryLaneIndex(lanes);
+              var lane = 1 << index3;
               if (
                 // Is this one of the newly entangled lanes?
                 lane & entangledLanes | // Is this lane transitively entangled with the newly entangled lanes?
-                entanglements[index2] & entangledLanes
+                entanglements[index3] & entangledLanes
               ) {
-                entanglements[index2] |= entangledLanes;
+                entanglements[index3] |= entangledLanes;
               }
               lanes &= ~lane;
             }
@@ -6951,9 +6951,9 @@
             }
             var pendingUpdatersLaneMap = root2.pendingUpdatersLaneMap;
             while (lanes > 0) {
-              var index2 = laneToIndex(lanes);
-              var lane = 1 << index2;
-              var updaters = pendingUpdatersLaneMap[index2];
+              var index3 = laneToIndex(lanes);
+              var lane = 1 << index3;
+              var updaters = pendingUpdatersLaneMap[index3];
               updaters.add(fiber);
               lanes &= ~lane;
             }
@@ -6965,9 +6965,9 @@
             var pendingUpdatersLaneMap = root2.pendingUpdatersLaneMap;
             var memoizedUpdaters = root2.memoizedUpdaters;
             while (lanes > 0) {
-              var index2 = laneToIndex(lanes);
-              var lane = 1 << index2;
-              var updaters = pendingUpdatersLaneMap[index2];
+              var index3 = laneToIndex(lanes);
+              var lane = 1 << index3;
+              var updaters = pendingUpdatersLaneMap[index3];
               if (updaters.size > 0) {
                 updaters.forEach(function(fiber) {
                   var alternate = fiber.alternate;
@@ -7968,13 +7968,13 @@
           var SyntheticWheelEvent = createSyntheticEvent(WheelEventInterface);
           var END_KEYCODES = [9, 13, 27, 32];
           var START_KEYCODE = 229;
-          var canUseCompositionEvent = canUseDOM && "CompositionEvent" in window;
+          var canUseCompositionEvent = canUseDOM2 && "CompositionEvent" in window;
           var documentMode = null;
-          if (canUseDOM && "documentMode" in document) {
+          if (canUseDOM2 && "documentMode" in document) {
             documentMode = document.documentMode;
           }
-          var canUseTextInputEvent = canUseDOM && "TextEvent" in window && !documentMode;
-          var useFallbackCompositionData = canUseDOM && (!canUseCompositionEvent || documentMode && documentMode > 8 && documentMode <= 11);
+          var canUseTextInputEvent = canUseDOM2 && "TextEvent" in window && !documentMode;
+          var useFallbackCompositionData = canUseDOM2 && (!canUseCompositionEvent || documentMode && documentMode > 8 && documentMode <= 11);
           var SPACEBAR_CODE = 32;
           var SPACEBAR_CHAR = String.fromCharCode(SPACEBAR_CODE);
           function registerEvents() {
@@ -8168,7 +8168,7 @@
             return false;
           }
           function isEventSupported(eventNameSuffix) {
-            if (!canUseDOM) {
+            if (!canUseDOM2) {
               return false;
             }
             var eventName = "on" + eventNameSuffix;
@@ -8220,7 +8220,7 @@
             }
           }
           var isInputEventSupported = false;
-          if (canUseDOM) {
+          if (canUseDOM2) {
             isInputEventSupported = isEventSupported("input") && (!document.documentMode || document.documentMode > 9);
           }
           function startWatchingForValueChange(target, targetInst) {
@@ -8422,17 +8422,17 @@
               node = node.parentNode;
             }
           }
-          function getNodeForCharacterOffset(root2, offset) {
+          function getNodeForCharacterOffset(root2, offset4) {
             var node = getLeafNode(root2);
             var nodeStart = 0;
             var nodeEnd = 0;
             while (node) {
               if (node.nodeType === TEXT_NODE) {
                 nodeEnd = nodeStart + node.textContent.length;
-                if (nodeStart <= offset && nodeEnd >= offset) {
+                if (nodeStart <= offset4 && nodeEnd >= offset4) {
                   return {
                     node,
-                    offset: offset - nodeStart
+                    offset: offset4 - nodeStart
                   };
                 }
                 nodeStart = nodeEnd;
@@ -8653,7 +8653,7 @@
               setOffsets(input, offsets);
             }
           }
-          var skipSelectionChangeEvent = canUseDOM && "documentMode" in document && document.documentMode <= 11;
+          var skipSelectionChangeEvent = canUseDOM2 && "documentMode" in document && document.documentMode <= 11;
           function registerEvents$3() {
             registerTwoPhaseEvent("onSelect", ["focusout", "contextmenu", "dragend", "focusin", "keydown", "keyup", "mousedown", "mouseup", "selectionchange"]);
           }
@@ -8748,7 +8748,7 @@
           };
           var prefixedEventNames = {};
           var style = {};
-          if (canUseDOM) {
+          if (canUseDOM2) {
             style = document.createElement("div").style;
             if (!("AnimationEvent" in window)) {
               delete vendorPrefixes.animationend.animation;
@@ -9261,7 +9261,7 @@
                 possibleRegistrationNames
               });
             };
-            canDiffStyleForHydrationWarning = canUseDOM && !document.documentMode;
+            canDiffStyleForHydrationWarning = canUseDOM2 && !document.documentMode;
             warnForPropDifference = function(propName, serverValue, clientValue) {
               if (didWarnInvalidHydration) {
                 return;
@@ -9328,10 +9328,10 @@
           function getOwnerDocumentFromRootContainer(rootContainerElement) {
             return rootContainerElement.nodeType === DOCUMENT_NODE ? rootContainerElement : rootContainerElement.ownerDocument;
           }
-          function noop2() {
+          function noop4() {
           }
           function trapClickOnNonInteractiveElement(node) {
-            node.onclick = noop2;
+            node.onclick = noop4;
           }
           function setInitialDOMProperties(tag, domElement, rootContainerElement, nextProps, isCustomComponentTag) {
             for (var propKey in nextProps) {
@@ -9393,7 +9393,7 @@
               }
             }
           }
-          function createElement14(type, props, rootContainerElement, parentNamespace) {
+          function createElement22(type, props, rootContainerElement, parentNamespace) {
             var isCustomComponentTag;
             var ownerDocument = getOwnerDocumentFromRootContainer(rootContainerElement);
             var domElement;
@@ -10254,7 +10254,7 @@
               }
               parentNamespace = hostContextDev.namespace;
             }
-            var domElement = createElement14(type, props, rootContainerInstance, parentNamespace);
+            var domElement = createElement22(type, props, rootContainerInstance, parentNamespace);
             precacheFiberNode(internalInstanceHandle, domElement);
             updateFiberProps(domElement, props);
             return domElement;
@@ -10471,17 +10471,17 @@
           }
           function getSuspenseInstanceFallbackErrorDetails(instance) {
             var dataset = instance.nextSibling && instance.nextSibling.dataset;
-            var digest, message, stack;
+            var digest, message2, stack;
             if (dataset) {
               digest = dataset.dgst;
               {
-                message = dataset.msg;
+                message2 = dataset.msg;
                 stack = dataset.stck;
               }
             }
             {
               return {
-                message,
+                message: message2,
                 digest,
                 stack
               };
@@ -10814,36 +10814,36 @@
           {
             fiberStack = [];
           }
-          var index = -1;
+          var index2 = -1;
           function createCursor(defaultValue) {
             return {
               current: defaultValue
             };
           }
           function pop(cursor, fiber) {
-            if (index < 0) {
+            if (index2 < 0) {
               {
                 error("Unexpected pop.");
               }
               return;
             }
             {
-              if (fiber !== fiberStack[index]) {
+              if (fiber !== fiberStack[index2]) {
                 error("Unexpected Fiber popped.");
               }
             }
-            cursor.current = valueStack[index];
-            valueStack[index] = null;
+            cursor.current = valueStack[index2];
+            valueStack[index2] = null;
             {
-              fiberStack[index] = null;
+              fiberStack[index2] = null;
             }
-            index--;
+            index2--;
           }
           function push(cursor, value, fiber) {
-            index++;
-            valueStack[index] = cursor.current;
+            index2++;
+            valueStack[index2] = cursor.current;
             {
-              fiberStack[index] = fiber;
+              fiberStack[index2] = fiber;
             }
             cursor.current = value;
           }
@@ -11090,7 +11090,7 @@
             treeForkProvider = workInProgress2;
             treeForkCount = totalChildren;
           }
-          function pushTreeId(workInProgress2, totalChildren, index2) {
+          function pushTreeId(workInProgress2, totalChildren, index3) {
             warnIfNotHydrating();
             idStack[idStackIndex++] = treeContextId;
             idStack[idStackIndex++] = treeContextOverflow;
@@ -11100,7 +11100,7 @@
             var baseOverflow = treeContextOverflow;
             var baseLength = getBitLength(baseIdWithLeadingBit) - 1;
             var baseId = baseIdWithLeadingBit & ~(1 << baseLength);
-            var slot = index2 + 1;
+            var slot = index3 + 1;
             var length = getBitLength(totalChildren) + baseLength;
             if (length > 30) {
               var numberOfOverflowBits = baseLength - baseLength % 5;
@@ -11995,7 +11995,7 @@
               }
             }
             function updateFragment2(returnFiber, current2, fragment, lanes, key) {
-              if (current2 === null || current2.tag !== Fragment4) {
+              if (current2 === null || current2.tag !== Fragment12) {
                 var created = createFiberFromFragment(fragment, returnFiber.mode, lanes, key);
                 created.return = returnFiber;
                 return created;
@@ -12398,7 +12398,7 @@
                 if (child.key === key) {
                   var elementType = element.type;
                   if (elementType === REACT_FRAGMENT_TYPE) {
-                    if (child.tag === Fragment4) {
+                    if (child.tag === Fragment12) {
                       deleteRemainingChildren(returnFiber, child.sibling);
                       var existing = useFiber(child, element.props.children);
                       existing.return = returnFiber;
@@ -15576,11 +15576,11 @@
             var contextType = ctor.contextType;
             {
               if ("contextType" in ctor) {
-                var isValid = (
+                var isValid2 = (
                   // Allow null for conditional declaration
                   contextType === null || contextType !== void 0 && contextType.$$typeof === REACT_CONTEXT_TYPE && contextType._context === void 0
                 );
-                if (!isValid && !didWarnAboutInvalidateContextType.has(ctor)) {
+                if (!isValid2 && !didWarnAboutInvalidateContextType.has(ctor)) {
                   didWarnAboutInvalidateContextType.add(ctor);
                   var addendum = "";
                   if (contextType === void 0) {
@@ -17243,16 +17243,16 @@
                 );
               }
               if (isSuspenseInstanceFallback(suspenseInstance)) {
-                var digest, message, stack;
+                var digest, message2, stack;
                 {
                   var _getSuspenseInstanceF = getSuspenseInstanceFallbackErrorDetails(suspenseInstance);
                   digest = _getSuspenseInstanceF.digest;
-                  message = _getSuspenseInstanceF.message;
+                  message2 = _getSuspenseInstanceF.message;
                   stack = _getSuspenseInstanceF.stack;
                 }
                 var error2;
-                if (message) {
-                  error2 = new Error(message);
+                if (message2) {
+                  error2 = new Error(message2);
                 } else {
                   error2 = new Error("The server could not finish this Suspense boundary, likely due to an error during server rendering. Switched to client rendering.");
                 }
@@ -17395,13 +17395,13 @@
               }
             }
           }
-          function validateSuspenseListNestedChild(childSlot, index2) {
+          function validateSuspenseListNestedChild(childSlot, index3) {
             {
               var isAnArray = isArray2(childSlot);
               var isIterable2 = !isAnArray && typeof getIteratorFn(childSlot) === "function";
               if (isAnArray || isIterable2) {
                 var type = isAnArray ? "array" : "iterable";
-                error("A nested %s was passed to row #%s in <SuspenseList />. Wrap it in an additional SuspenseList to configure its revealOrder: <SuspenseList revealOrder=...> ... <SuspenseList revealOrder=...>{%s}</SuspenseList> ... </SuspenseList>", type, index2, type);
+                error("A nested %s was passed to row #%s in <SuspenseList />. Wrap it in an additional SuspenseList to configure its revealOrder: <SuspenseList revealOrder=...> ... <SuspenseList revealOrder=...>{%s}</SuspenseList> ... </SuspenseList>", type, index3, type);
                 return false;
               }
             }
@@ -17875,7 +17875,7 @@
                 var _resolvedProps2 = workInProgress2.elementType === type ? _unresolvedProps2 : resolveDefaultProps(type, _unresolvedProps2);
                 return updateForwardRef(current2, workInProgress2, type, _resolvedProps2, renderLanes2);
               }
-              case Fragment4:
+              case Fragment12:
                 return updateFragment(current2, workInProgress2, renderLanes2);
               case Mode:
                 return updateMode(current2, workInProgress2, renderLanes2);
@@ -17941,7 +17941,7 @@
           var updateHostComponent$1;
           var updateHostText$1;
           {
-            appendAllChildren = function(parent, workInProgress2, needsVisibilityToggle, isHidden) {
+            appendAllChildren = function(parent, workInProgress2, needsVisibilityToggle, isHidden2) {
               var node = workInProgress2.child;
               while (node !== null) {
                 if (node.tag === HostComponent || node.tag === HostText) {
@@ -18148,7 +18148,7 @@
               case SimpleMemoComponent:
               case FunctionComponent:
               case ForwardRef12:
-              case Fragment4:
+              case Fragment12:
               case Mode:
               case Profiler:
               case ContextConsumer:
@@ -19134,7 +19134,7 @@
               }
             }
           }
-          function hideOrUnhideAllChildren(finishedWork, isHidden) {
+          function hideOrUnhideAllChildren(finishedWork, isHidden2) {
             var hostSubtreeRoot = null;
             {
               var node = finishedWork;
@@ -19144,7 +19144,7 @@
                     hostSubtreeRoot = node;
                     try {
                       var instance = node.stateNode;
-                      if (isHidden) {
+                      if (isHidden2) {
                         hideInstance(instance);
                       } else {
                         unhideInstance(node.stateNode, node.memoizedProps);
@@ -19157,7 +19157,7 @@
                   if (hostSubtreeRoot === null) {
                     try {
                       var _instance3 = node.stateNode;
-                      if (isHidden) {
+                      if (isHidden2) {
                         hideTextInstance(_instance3);
                       } else {
                         unhideTextInstance(_instance3, node.memoizedProps);
@@ -19759,9 +19759,9 @@
                 if (offscreenFiber.flags & Visibility) {
                   var offscreenInstance = offscreenFiber.stateNode;
                   var newState = offscreenFiber.memoizedState;
-                  var isHidden = newState !== null;
-                  offscreenInstance.isHidden = isHidden;
-                  if (isHidden) {
+                  var isHidden2 = newState !== null;
+                  offscreenInstance.isHidden = isHidden2;
+                  if (isHidden2) {
                     var wasHidden = offscreenFiber.alternate !== null && offscreenFiber.alternate.memoizedState !== null;
                     if (!wasHidden) {
                       markCommitTimeOfFallback();
@@ -19865,8 +19865,8 @@
               var fiber = nextEffect;
               var firstChild = fiber.child;
               if (fiber.tag === OffscreenComponent && isModernRoot) {
-                var isHidden = fiber.memoizedState !== null;
-                var newOffscreenSubtreeIsHidden = isHidden || offscreenSubtreeIsHidden;
+                var isHidden2 = fiber.memoizedState !== null;
+                var newOffscreenSubtreeIsHidden = isHidden2 || offscreenSubtreeIsHidden;
                 if (newOffscreenSubtreeIsHidden) {
                   commitLayoutMountEffects_complete(subtreeRoot, root2, committedLanes);
                   continue;
@@ -19968,8 +19968,8 @@
                   break;
                 }
                 case OffscreenComponent: {
-                  var isHidden = fiber.memoizedState !== null;
-                  if (isHidden) {
+                  var isHidden2 = fiber.memoizedState !== null;
+                  if (isHidden2) {
                     disappearLayoutEffects_complete(subtreeRoot);
                     continue;
                   }
@@ -20005,8 +20005,8 @@
               var fiber = nextEffect;
               var firstChild = fiber.child;
               if (fiber.tag === OffscreenComponent) {
-                var isHidden = fiber.memoizedState !== null;
-                if (isHidden) {
+                var isHidden2 = fiber.memoizedState !== null;
+                if (isHidden2) {
                   reappearLayoutEffects_complete(subtreeRoot);
                   continue;
                 }
@@ -20873,7 +20873,7 @@
               }
             }
           }
-          function flushSync(fn) {
+          function flushSync8(fn) {
             if (rootWithPendingPassiveEffects !== null && rootWithPendingPassiveEffects.tag === LegacyRoot && (executionContext & (RenderContext | CommitContext)) === NoContext) {
               flushPassiveEffects();
             }
@@ -21939,7 +21939,7 @@
               }
               var staleFamilies = update.staleFamilies, updatedFamilies = update.updatedFamilies;
               flushPassiveEffects();
-              flushSync(function() {
+              flushSync8(function() {
                 scheduleFibersWithFamiliesRecursively(root2.current, updatedFamilies, staleFamilies);
               });
             }
@@ -21950,7 +21950,7 @@
                 return;
               }
               flushPassiveEffects();
-              flushSync(function() {
+              flushSync8(function() {
                 updateContainer(element, root2, null, null);
               });
             }
@@ -22407,7 +22407,7 @@
             return fiber;
           }
           function createFiberFromFragment(elements, mode, lanes, key) {
-            var fiber = createFiber(Fragment4, elements, key, mode);
+            var fiber = createFiber(Fragment12, elements, key, mode);
             fiber.lanes = lanes;
             return fiber;
           }
@@ -22740,7 +22740,7 @@
                 break;
               }
               case SuspenseComponent: {
-                flushSync(function() {
+                flushSync8(function() {
                   var root3 = enqueueConcurrentRenderForLane(fiber, SyncLane);
                   if (root3 !== null) {
                     var eventTime = requestEventTime();
@@ -22819,10 +22819,10 @@
           var setErrorHandler = null;
           var setSuspenseHandler = null;
           {
-            var copyWithDeleteImpl = function(obj, path, index2) {
-              var key = path[index2];
+            var copyWithDeleteImpl = function(obj, path, index3) {
+              var key = path[index3];
               var updated = isArray2(obj) ? obj.slice() : assign({}, obj);
-              if (index2 + 1 === path.length) {
+              if (index3 + 1 === path.length) {
                 if (isArray2(updated)) {
                   updated.splice(key, 1);
                 } else {
@@ -22830,17 +22830,17 @@
                 }
                 return updated;
               }
-              updated[key] = copyWithDeleteImpl(obj[key], path, index2 + 1);
+              updated[key] = copyWithDeleteImpl(obj[key], path, index3 + 1);
               return updated;
             };
             var copyWithDelete = function(obj, path) {
               return copyWithDeleteImpl(obj, path, 0);
             };
-            var copyWithRenameImpl = function(obj, oldPath, newPath, index2) {
-              var oldKey = oldPath[index2];
+            var copyWithRenameImpl = function(obj, oldPath, newPath, index3) {
+              var oldKey = oldPath[index3];
               var updated = isArray2(obj) ? obj.slice() : assign({}, obj);
-              if (index2 + 1 === oldPath.length) {
-                var newKey = newPath[index2];
+              if (index3 + 1 === oldPath.length) {
+                var newKey = newPath[index3];
                 updated[newKey] = updated[oldKey];
                 if (isArray2(updated)) {
                   updated.splice(oldKey, 1);
@@ -22853,7 +22853,7 @@
                   obj[oldKey],
                   oldPath,
                   newPath,
-                  index2 + 1
+                  index3 + 1
                 );
               }
               return updated;
@@ -22872,13 +22872,13 @@
               }
               return copyWithRenameImpl(obj, oldPath, newPath, 0);
             };
-            var copyWithSetImpl = function(obj, path, index2, value) {
-              if (index2 >= path.length) {
+            var copyWithSetImpl = function(obj, path, index3, value) {
+              if (index3 >= path.length) {
                 return value;
               }
-              var key = path[index2];
+              var key = path[index3];
               var updated = isArray2(obj) ? obj.slice() : assign({}, obj);
-              updated[key] = copyWithSetImpl(obj[key], path, index2 + 1, value);
+              updated[key] = copyWithSetImpl(obj[key], path, index3 + 1, value);
               return updated;
             };
             var copyWithSet = function(obj, path, value) {
@@ -23069,7 +23069,7 @@
                   error("Attempted to synchronously unmount a root while React was already rendering. React cannot finish unmounting the root until the current render has completed, which may lead to a race condition.");
                 }
               }
-              flushSync(function() {
+              flushSync8(function() {
                 updateContainer(null, root2, null, null);
               });
               unmarkContainerAsRoot(container);
@@ -23244,7 +23244,7 @@
               markContainerAsRoot(root2.current, container);
               var rootContainerElement = container.nodeType === COMMENT_NODE ? container.parentNode : container;
               listenToAllSupportedEvents(rootContainerElement);
-              flushSync();
+              flushSync8();
               return root2;
             } else {
               var rootSibling;
@@ -23275,7 +23275,7 @@
               markContainerAsRoot(_root.current, container);
               var _rootContainerElement = container.nodeType === COMMENT_NODE ? container.parentNode : container;
               listenToAllSupportedEvents(_rootContainerElement);
-              flushSync(function() {
+              flushSync8(function() {
                 updateContainer(initialChildren, _root, parentComponent, callback);
               });
               return _root;
@@ -23403,7 +23403,7 @@
                   error("unmountComponentAtNode(): The node you're attempting to unmount was rendered by another copy of React.");
                 }
               }
-              flushSync(function() {
+              flushSync8(function() {
                 legacyRenderSubtreeIntoContainer(null, null, container, false, function() {
                   container._reactRootContainer = null;
                   unmarkContainerAsRoot(container);
@@ -23435,7 +23435,7 @@
             }
           }
           setRestoreImplementation(restoreControlledState$3);
-          setBatchingImplementation(batchedUpdates$1, discreteUpdates, flushSync);
+          setBatchingImplementation(batchedUpdates$1, discreteUpdates, flushSync8);
           function createPortal$1(children, container) {
             var key = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : null;
             if (!isValidContainer(container)) {
@@ -23474,7 +23474,7 @@
                 error("flushSync was called from inside a lifecycle method. React cannot flush when React is already rendering. Consider moving this call to a scheduler task or micro task.");
               }
             }
-            return flushSync(fn);
+            return flushSync8(fn);
           }
           var foundDevTools = injectIntoDevTools({
             findFiberByHostInstance: getClosestInstanceFromNode,
@@ -23483,7 +23483,7 @@
             rendererPackageName: "react-dom"
           });
           {
-            if (!foundDevTools && canUseDOM && window.top === window.self) {
+            if (!foundDevTools && canUseDOM2 && window.top === window.self) {
               if (navigator.userAgent.indexOf("Chrome") > -1 && navigator.userAgent.indexOf("Edge") === -1 || navigator.userAgent.indexOf("Firefox") > -1) {
                 var protocol = window.location.protocol;
                 if (/^(https?|file):$/.test(protocol)) {
@@ -23563,7 +23563,7 @@
       if (true) {
         (function() {
           "use strict";
-          var React21 = require_react();
+          var React86 = require_react();
           var REACT_ELEMENT_TYPE = Symbol.for("react.element");
           var REACT_PORTAL_TYPE = Symbol.for("react.portal");
           var REACT_FRAGMENT_TYPE = Symbol.for("react.fragment");
@@ -23589,29 +23589,29 @@
             }
             return null;
           }
-          var ReactSharedInternals = React21.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
-          function error(format) {
+          var ReactSharedInternals = React86.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          function error(format2) {
             {
               {
                 for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
                   args[_key2 - 1] = arguments[_key2];
                 }
-                printWarning("error", format, args);
+                printWarning("error", format2, args);
               }
             }
           }
-          function printWarning(level, format, args) {
+          function printWarning(level, format2, args) {
             {
               var ReactDebugCurrentFrame2 = ReactSharedInternals.ReactDebugCurrentFrame;
               var stack = ReactDebugCurrentFrame2.getStackAddendum();
               if (stack !== "") {
-                format += "%s";
+                format2 += "%s";
                 args = args.concat([stack]);
               }
               var argsWithFormat = args.map(function(item) {
                 return String(item);
               });
-              argsWithFormat.unshift("Warning: " + format);
+              argsWithFormat.unshift("Warning: " + format2);
               Function.prototype.apply.call(console[level], console, argsWithFormat);
             }
           }
@@ -23799,8 +23799,8 @@
                 try {
                   throw Error();
                 } catch (x) {
-                  var match = x.stack.trim().match(/\n( *(at )?)/);
-                  prefix = match && match[1] || "";
+                  var match3 = x.stack.trim().match(/\n( *(at )?)/);
+                  prefix = match3 && match3[1] || "";
                 }
               }
               return "\n" + prefix + name;
@@ -24217,7 +24217,7 @@
           {
             propTypesMisspellWarningShown = false;
           }
-          function isValidElement2(object) {
+          function isValidElement8(object) {
             {
               return typeof object === "object" && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
             }
@@ -24284,11 +24284,11 @@
               if (isArray2(node)) {
                 for (var i = 0; i < node.length; i++) {
                   var child = node[i];
-                  if (isValidElement2(child)) {
+                  if (isValidElement8(child)) {
                     validateExplicitKey(child, parentType);
                   }
                 }
-              } else if (isValidElement2(node)) {
+              } else if (isValidElement8(node)) {
                 if (node._store) {
                   node._store.validated = true;
                 }
@@ -24299,7 +24299,7 @@
                     var iterator2 = iteratorFn.call(node);
                     var step;
                     while (!(step = iterator2.next()).done) {
-                      if (isValidElement2(step.value)) {
+                      if (isValidElement8(step.value)) {
                         validateExplicitKey(step.value, parentType);
                       }
                     }
@@ -24439,10 +24439,10 @@
               return jsxWithValidation(type, props, key, false);
             }
           }
-          var jsx9 = jsxWithValidationDynamic;
+          var jsx30 = jsxWithValidationDynamic;
           var jsxs8 = jsxWithValidationStatic;
           exports.Fragment = REACT_FRAGMENT_TYPE;
-          exports.jsx = jsx9;
+          exports.jsx = jsx30;
           exports.jsxs = jsxs8;
         })();
       }
@@ -24465,7 +24465,7 @@
   var import_client = __toESM(require_client());
 
   // app/javascript/components/App.jsx
-  var import_react7 = __toESM(require_react());
+  var import_react44 = __toESM(require_react());
 
   // node_modules/react-router-dom/dist/index.js
   var React2 = __toESM(require_react());
@@ -24523,17 +24523,17 @@
     }
     return getUrlBasedHistory(createBrowserLocation, createBrowserHref, null, options);
   }
-  function invariant(value, message) {
+  function invariant(value, message2) {
     if (value === false || value === null || typeof value === "undefined") {
-      throw new Error(message);
+      throw new Error(message2);
     }
   }
-  function warning(cond, message) {
+  function warning(cond, message2) {
     if (!cond) {
       if (typeof console !== "undefined")
-        console.warn(message);
+        console.warn(message2);
       try {
-        throw new Error(message);
+        throw new Error(message2);
       } catch (e) {
       }
     }
@@ -24541,11 +24541,11 @@
   function createKey() {
     return Math.random().toString(36).substr(2, 8);
   }
-  function getHistoryState(location, index) {
+  function getHistoryState(location, index2) {
     return {
       usr: location.state,
       key: location.key,
-      idx: index
+      idx: index2
     };
   }
   function createLocation(current, to, state, key) {
@@ -24608,11 +24608,11 @@
     let globalHistory = window2.history;
     let action = Action.Pop;
     let listener = null;
-    let index = getIndex();
-    if (index == null) {
-      index = 0;
+    let index2 = getIndex();
+    if (index2 == null) {
+      index2 = 0;
       globalHistory.replaceState(_extends({}, globalHistory.state, {
-        idx: index
+        idx: index2
       }), "");
     }
     function getIndex() {
@@ -24624,8 +24624,8 @@
     function handlePop() {
       action = Action.Pop;
       let nextIndex = getIndex();
-      let delta = nextIndex == null ? null : nextIndex - index;
-      index = nextIndex;
+      let delta = nextIndex == null ? null : nextIndex - index2;
+      index2 = nextIndex;
       if (listener) {
         listener({
           action,
@@ -24639,8 +24639,8 @@
       let location = createLocation(history.location, to, state);
       if (validateLocation)
         validateLocation(location, to);
-      index = getIndex() + 1;
-      let historyState = getHistoryState(location, index);
+      index2 = getIndex() + 1;
+      let historyState = getHistoryState(location, index2);
       let url = history.createHref(location);
       try {
         globalHistory.pushState(historyState, "", url);
@@ -24663,8 +24663,8 @@
       let location = createLocation(history.location, to, state);
       if (validateLocation)
         validateLocation(location, to);
-      index = getIndex();
-      let historyState = getHistoryState(location, index);
+      index2 = getIndex();
+      let historyState = getHistoryState(location, index2);
       let url = history.createHref(location);
       globalHistory.replaceState(historyState, "", url);
       if (v5Compat && listener) {
@@ -24748,12 +24748,12 @@
     }
     return matches;
   }
-  function convertRouteMatchToUiMatch(match, loaderData) {
+  function convertRouteMatchToUiMatch(match3, loaderData) {
     let {
       route,
       pathname,
       params
-    } = match;
+    } = match3;
     return {
       id: route.id,
       pathname,
@@ -24772,11 +24772,11 @@
     if (parentPath === void 0) {
       parentPath = "";
     }
-    let flattenRoute = (route, index, relativePath) => {
+    let flattenRoute = (route, index2, relativePath) => {
       let meta = {
         relativePath: relativePath === void 0 ? route.path || "" : relativePath,
         caseSensitive: route.caseSensitive === true,
-        childrenIndex: index,
+        childrenIndex: index2,
         route
       };
       if (meta.relativePath.startsWith("/")) {
@@ -24803,13 +24803,13 @@
         routesMeta
       });
     };
-    routes.forEach((route, index) => {
+    routes.forEach((route, index2) => {
       var _route$path;
       if (route.path === "" || !((_route$path = route.path) != null && _route$path.includes("?"))) {
-        flattenRoute(route, index);
+        flattenRoute(route, index2);
       } else {
         for (let exploded of explodeOptionalSegments(route.path)) {
-          flattenRoute(route, index, exploded);
+          flattenRoute(route, index2, exploded);
         }
       }
     });
@@ -24843,13 +24843,13 @@
   var staticSegmentValue = 10;
   var splatPenalty = -2;
   var isSplat = (s) => s === "*";
-  function computeScore(path, index) {
+  function computeScore(path, index2) {
     let segments = path.split("/");
     let initialScore = segments.length;
     if (segments.some(isSplat)) {
       initialScore += splatPenalty;
     }
-    if (index) {
+    if (index2) {
       initialScore += indexRouteValue;
     }
     return segments.filter((s) => !isSplat(s)).reduce((score, segment) => score + (paramRe.test(segment) ? dynamicSegmentValue : segment === "" ? emptySegmentValue : staticSegmentValue), initialScore);
@@ -24882,32 +24882,32 @@
       let meta = routesMeta[i];
       let end = i === routesMeta.length - 1;
       let remainingPathname = matchedPathname === "/" ? pathname : pathname.slice(matchedPathname.length) || "/";
-      let match = matchPath({
+      let match3 = matchPath({
         path: meta.relativePath,
         caseSensitive: meta.caseSensitive,
         end
       }, remainingPathname);
       let route = meta.route;
-      if (!match && end && allowPartial && !routesMeta[routesMeta.length - 1].route.index) {
-        match = matchPath({
+      if (!match3 && end && allowPartial && !routesMeta[routesMeta.length - 1].route.index) {
+        match3 = matchPath({
           path: meta.relativePath,
           caseSensitive: meta.caseSensitive,
           end: false
         }, remainingPathname);
       }
-      if (!match) {
+      if (!match3) {
         return null;
       }
-      Object.assign(matchedParams, match.params);
+      Object.assign(matchedParams, match3.params);
       matches.push({
         // TODO: Can this as be avoided?
         params: matchedParams,
-        pathname: joinPaths([matchedPathname, match.pathname]),
-        pathnameBase: normalizePathname(joinPaths([matchedPathname, match.pathnameBase])),
+        pathname: joinPaths([matchedPathname, match3.pathname]),
+        pathnameBase: normalizePathname(joinPaths([matchedPathname, match3.pathnameBase])),
         route
       });
-      if (match.pathnameBase !== "/") {
-        matchedPathname = joinPaths([matchedPathname, match.pathnameBase]);
+      if (match3.pathnameBase !== "/") {
+        matchedPathname = joinPaths([matchedPathname, match3.pathnameBase]);
       }
     }
     return matches;
@@ -24921,22 +24921,22 @@
       };
     }
     let [matcher, compiledParams] = compilePath(pattern.path, pattern.caseSensitive, pattern.end);
-    let match = pathname.match(matcher);
-    if (!match)
+    let match3 = pathname.match(matcher);
+    if (!match3)
       return null;
-    let matchedPathname = match[0];
+    let matchedPathname = match3[0];
     let pathnameBase = matchedPathname.replace(/(.)\/+$/, "$1");
-    let captureGroups = match.slice(1);
-    let params = compiledParams.reduce((memo2, _ref, index) => {
+    let captureGroups = match3.slice(1);
+    let params = compiledParams.reduce((memo2, _ref, index2) => {
       let {
         paramName,
         isOptional
       } = _ref;
       if (paramName === "*") {
-        let splatValue = captureGroups[index] || "";
+        let splatValue = captureGroups[index2] || "";
         pathnameBase = matchedPathname.slice(0, matchedPathname.length - splatValue.length).replace(/(.)\/+$/, "$1");
       }
-      const value = captureGroups[index];
+      const value = captureGroups[index2];
       if (isOptional && !value) {
         memo2[paramName] = void 0;
       } else {
@@ -25055,14 +25055,14 @@
     return "Cannot include a '" + char + "' character in a manually specified " + ("`to." + field + "` field [" + JSON.stringify(path) + "].  Please separate it out to the ") + ("`to." + dest + "` field. Alternatively you may provide the full path as ") + 'a string in <Link to="..."> and the router will parse it for you.';
   }
   function getPathContributingMatches(matches) {
-    return matches.filter((match, index) => index === 0 || match.route.path && match.route.path.length > 0);
+    return matches.filter((match3, index2) => index2 === 0 || match3.route.path && match3.route.path.length > 0);
   }
   function getResolveToMatches(matches, v7_relativeSplatPath) {
     let pathMatches = getPathContributingMatches(matches);
     if (v7_relativeSplatPath) {
-      return pathMatches.map((match, idx) => idx === pathMatches.length - 1 ? match.pathname : match.pathnameBase);
+      return pathMatches.map((match3, idx) => idx === pathMatches.length - 1 ? match3.pathname : match3.pathnameBase);
     }
-    return pathMatches.map((match) => match.pathnameBase);
+    return pathMatches.map((match3) => match3.pathnameBase);
   }
   function resolveTo(toArg, routePathnames, locationPathname, isPathRelative) {
     if (isPathRelative === void 0) {
@@ -25328,17 +25328,17 @@
       true ? warning(parentRoute || matches != null, 'No routes matched location "' + location.pathname + location.search + location.hash + '" ') : void 0;
       true ? warning(matches == null || matches[matches.length - 1].route.element !== void 0 || matches[matches.length - 1].route.Component !== void 0 || matches[matches.length - 1].route.lazy !== void 0, 'Matched leaf route at location "' + location.pathname + location.search + location.hash + '" does not have an element or Component. This means it will render an <Outlet /> with a null value by default resulting in an "empty" page.') : void 0;
     }
-    let renderedMatches = _renderMatches(matches && matches.map((match) => Object.assign({}, match, {
-      params: Object.assign({}, parentParams, match.params),
+    let renderedMatches = _renderMatches(matches && matches.map((match3) => Object.assign({}, match3, {
+      params: Object.assign({}, parentParams, match3.params),
       pathname: joinPaths([
         parentPathnameBase,
         // Re-encode pathnames that were decoded inside matchRoutes
-        navigator2.encodeLocation ? navigator2.encodeLocation(match.pathname).pathname : match.pathname
+        navigator2.encodeLocation ? navigator2.encodeLocation(match3.pathname).pathname : match3.pathname
       ]),
-      pathnameBase: match.pathnameBase === "/" ? parentPathnameBase : joinPaths([
+      pathnameBase: match3.pathnameBase === "/" ? parentPathnameBase : joinPaths([
         parentPathnameBase,
         // Re-encode pathnames that were decoded inside matchRoutes
-        navigator2.encodeLocation ? navigator2.encodeLocation(match.pathnameBase).pathname : match.pathnameBase
+        navigator2.encodeLocation ? navigator2.encodeLocation(match3.pathnameBase).pathname : match3.pathnameBase
       ])
     })), parentMatches, dataRouterState, future);
     if (locationArg && renderedMatches) {
@@ -25359,7 +25359,7 @@
   }
   function DefaultErrorComponent() {
     let error = useRouteError();
-    let message = isRouteErrorResponse(error) ? error.status + " " + error.statusText : error instanceof Error ? error.message : JSON.stringify(error);
+    let message2 = isRouteErrorResponse(error) ? error.status + " " + error.statusText : error instanceof Error ? error.message : JSON.stringify(error);
     let stack = error instanceof Error ? error.stack : null;
     let lightgrey = "rgba(200,200,200, 0.5)";
     let preStyles = {
@@ -25383,7 +25383,7 @@
       style: {
         fontStyle: "italic"
       }
-    }, message), stack ? /* @__PURE__ */ React.createElement("pre", {
+    }, message2), stack ? /* @__PURE__ */ React.createElement("pre", {
       style: preStyles
     }, stack) : null, devInfo);
   }
@@ -25431,12 +25431,12 @@
   function RenderedRoute(_ref) {
     let {
       routeContext,
-      match,
+      match: match3,
       children
     } = _ref;
     let dataRouterContext = React.useContext(DataRouterContext);
-    if (dataRouterContext && dataRouterContext.static && dataRouterContext.staticContext && (match.route.errorElement || match.route.ErrorBoundary)) {
-      dataRouterContext.staticContext._deepestRenderedBoundaryId = match.route.id;
+    if (dataRouterContext && dataRouterContext.static && dataRouterContext.staticContext && (match3.route.errorElement || match3.route.ErrorBoundary)) {
+      dataRouterContext.staticContext._deepestRenderedBoundaryId = match3.route.id;
     }
     return /* @__PURE__ */ React.createElement(RouteContext.Provider, {
       value: routeContext
@@ -25477,17 +25477,17 @@
     let fallbackIndex = -1;
     if (dataRouterState && future && future.v7_partialHydration) {
       for (let i = 0; i < renderedMatches.length; i++) {
-        let match = renderedMatches[i];
-        if (match.route.HydrateFallback || match.route.hydrateFallbackElement) {
+        let match3 = renderedMatches[i];
+        if (match3.route.HydrateFallback || match3.route.hydrateFallbackElement) {
           fallbackIndex = i;
         }
-        if (match.route.id) {
+        if (match3.route.id) {
           let {
             loaderData,
             errors: errors2
           } = dataRouterState;
-          let needsToRunLoader = match.route.loader && loaderData[match.route.id] === void 0 && (!errors2 || errors2[match.route.id] === void 0);
-          if (match.route.lazy || needsToRunLoader) {
+          let needsToRunLoader = match3.route.loader && loaderData[match3.route.id] === void 0 && (!errors2 || errors2[match3.route.id] === void 0);
+          if (match3.route.lazy || needsToRunLoader) {
             renderFallback = true;
             if (fallbackIndex >= 0) {
               renderedMatches = renderedMatches.slice(0, fallbackIndex + 1);
@@ -25499,41 +25499,41 @@
         }
       }
     }
-    return renderedMatches.reduceRight((outlet, match, index) => {
+    return renderedMatches.reduceRight((outlet, match3, index2) => {
       let error;
       let shouldRenderHydrateFallback = false;
       let errorElement = null;
       let hydrateFallbackElement = null;
       if (dataRouterState) {
-        error = errors && match.route.id ? errors[match.route.id] : void 0;
-        errorElement = match.route.errorElement || defaultErrorElement;
+        error = errors && match3.route.id ? errors[match3.route.id] : void 0;
+        errorElement = match3.route.errorElement || defaultErrorElement;
         if (renderFallback) {
-          if (fallbackIndex < 0 && index === 0) {
+          if (fallbackIndex < 0 && index2 === 0) {
             warningOnce("route-fallback", false, "No `HydrateFallback` element provided to render during initial hydration");
             shouldRenderHydrateFallback = true;
             hydrateFallbackElement = null;
-          } else if (fallbackIndex === index) {
+          } else if (fallbackIndex === index2) {
             shouldRenderHydrateFallback = true;
-            hydrateFallbackElement = match.route.hydrateFallbackElement || null;
+            hydrateFallbackElement = match3.route.hydrateFallbackElement || null;
           }
         }
       }
-      let matches2 = parentMatches.concat(renderedMatches.slice(0, index + 1));
+      let matches2 = parentMatches.concat(renderedMatches.slice(0, index2 + 1));
       let getChildren = () => {
         let children;
         if (error) {
           children = errorElement;
         } else if (shouldRenderHydrateFallback) {
           children = hydrateFallbackElement;
-        } else if (match.route.Component) {
-          children = /* @__PURE__ */ React.createElement(match.route.Component, null);
-        } else if (match.route.element) {
-          children = match.route.element;
+        } else if (match3.route.Component) {
+          children = /* @__PURE__ */ React.createElement(match3.route.Component, null);
+        } else if (match3.route.element) {
+          children = match3.route.element;
         } else {
           children = outlet;
         }
         return /* @__PURE__ */ React.createElement(RenderedRoute, {
-          match,
+          match: match3,
           routeContext: {
             outlet,
             matches: matches2,
@@ -25542,7 +25542,7 @@
           children
         });
       };
-      return dataRouterState && (match.route.ErrorBoundary || match.route.errorElement || index === 0) ? /* @__PURE__ */ React.createElement(RenderErrorBoundary, {
+      return dataRouterState && (match3.route.ErrorBoundary || match3.route.errorElement || index2 === 0) ? /* @__PURE__ */ React.createElement(RenderErrorBoundary, {
         location: dataRouterState.location,
         revalidation: dataRouterState.revalidation,
         component: errorElement,
@@ -25650,17 +25650,17 @@
     return navigate;
   }
   var alreadyWarned$1 = {};
-  function warningOnce(key, cond, message) {
+  function warningOnce(key, cond, message2) {
     if (!cond && !alreadyWarned$1[key]) {
       alreadyWarned$1[key] = true;
-      true ? warning(false, message) : void 0;
+      true ? warning(false, message2) : void 0;
     }
   }
   var alreadyWarned = {};
-  function warnOnce(key, message) {
-    if (!alreadyWarned[message]) {
-      alreadyWarned[message] = true;
-      console.warn(message);
+  function warnOnce(key, message2) {
+    if (!alreadyWarned[message2]) {
+      alreadyWarned[message2] = true;
+      console.warn(message2);
     }
   }
   var logDeprecation = (flag, msg, link) => warnOnce(flag, "\u26A0\uFE0F React Router Future Flag Warning: " + msg + ". " + ("You can use the `" + flag + "` future flag to opt-in early. ") + ("For more information, see " + link + "."));
@@ -25762,11 +25762,11 @@
       parentPath = [];
     }
     let routes = [];
-    React.Children.forEach(children, (element, index) => {
+    React.Children.forEach(children, (element, index2) => {
       if (!/* @__PURE__ */ React.isValidElement(element)) {
         return;
       }
-      let treePath = [...parentPath, index];
+      let treePath = [...parentPath, index2];
       if (element.type === React.Fragment) {
         routes.push.apply(routes, createRoutesFromChildren(element.props.children, treePath));
         return;
@@ -26326,7 +26326,7 @@
     } = React2.useContext(NavigationContext);
     let routeContext = React2.useContext(RouteContext);
     !routeContext ? true ? invariant(false, "useFormAction must be used inside a RouteContext") : invariant(false) : void 0;
-    let [match] = routeContext.matches.slice(-1);
+    let [match3] = routeContext.matches.slice(-1);
     let path = _extends3({}, useResolvedPath(action ? action : ".", {
       relative
     }));
@@ -26343,7 +26343,7 @@
         path.search = qs ? "?" + qs : "";
       }
     }
-    if ((!action || action === ".") && match.route.index) {
+    if ((!action || action === ".") && match3.route.index) {
       path.search = path.search ? path.search.replace(/^\?/, "?index&") : "?index";
     }
     if (basename !== "/") {
@@ -26832,7 +26832,7 @@
   }
 
   // app/javascript/components/pages/Dashboard.jsx
-  var import_react2 = __toESM(require_react());
+  var import_react39 = __toESM(require_react());
 
   // node_modules/axios/lib/helpers/bind.js
   function bind(fn, thisArg) {
@@ -27301,10 +27301,10 @@
      *
      * @returns {Error} The created error.
      */
-    constructor(message, code, config, request, response) {
-      super(message);
+    constructor(message2, code, config, request, response) {
+      super(message2);
       Object.defineProperty(this, "message", {
-        value: message,
+        value: message2,
         enumerable: true,
         writable: true,
         configurable: true
@@ -27432,10 +27432,10 @@
           value = JSON.stringify(value);
         } else if (utils_default.isArray(value) && isFlatArray(value) || (utils_default.isFileList(value) || utils_default.endsWith(key, "[]")) && (arr = utils_default.toArray(value))) {
           key = removeBrackets(key);
-          arr.forEach(function each(el, index) {
+          arr.forEach(function each(el, index2) {
             !(utils_default.isUndefined(el) || el === null) && formData.append(
               // eslint-disable-next-line no-nested-ternary
-              indexes === true ? renderKey([key], index, dots) : indexes === null ? key : key + "[]",
+              indexes === true ? renderKey([key], index2, dots) : indexes === null ? key : key + "[]",
               convertValue(el)
             );
           });
@@ -27488,8 +27488,8 @@
       "%20": "+",
       "%00": "\0"
     };
-    return encodeURIComponent(str).replace(/[!'()~]|%20|%00/g, function replacer(match) {
-      return charMap[match];
+    return encodeURIComponent(str).replace(/[!'()~]|%20|%00/g, function replacer(match3) {
+      return charMap[match3];
     });
   }
   function AxiosURLSearchParams(params, options) {
@@ -27672,8 +27672,8 @@
 
   // node_modules/axios/lib/helpers/formDataToJSON.js
   function parsePropPath(name) {
-    return utils_default.matchAll(/\w+|\[(\w*)]/g, name).map((match) => {
-      return match[0] === "[]" ? "" : match[1] || match[0];
+    return utils_default.matchAll(/\w+|\[(\w*)]/g, name).map((match3) => {
+      return match3[0] === "[]" ? "" : match3[1] || match3[0];
     });
   }
   function arrayToObject(arr) {
@@ -27689,12 +27689,12 @@
     return obj;
   }
   function formDataToJSON(formData) {
-    function buildPath(path, value, target, index) {
-      let name = path[index++];
+    function buildPath(path, value, target, index2) {
+      let name = path[index2++];
       if (name === "__proto__")
         return true;
       const isNumericKey = Number.isFinite(+name);
-      const isLast = index >= path.length;
+      const isLast = index2 >= path.length;
       name = !name && utils_default.isArray(target) ? target.length : name;
       if (isLast) {
         if (utils_default.hasOwnProp(target, name)) {
@@ -27707,7 +27707,7 @@
       if (!target[name] || !utils_default.isObject(target[name])) {
         target[name] = [];
       }
-      const result = buildPath(path, value, target[name], index);
+      const result = buildPath(path, value, target[name], index2);
       if (result && utils_default.isArray(target[name])) {
         target[name] = arrayToObject(target[name]);
       }
@@ -27896,9 +27896,9 @@
   function parseTokens(str) {
     const tokens = /* @__PURE__ */ Object.create(null);
     const tokensRE = /([^\s,;=]+)\s*(?:=\s*([^,;]+))?/g;
-    let match;
-    while (match = tokensRE.exec(str)) {
-      tokens[match[1]] = match[2];
+    let match3;
+    while (match3 = tokensRE.exec(str)) {
+      tokens[match3[1]] = match3[2];
     }
     return tokens;
   }
@@ -28033,7 +28033,7 @@
       }
       return deleted;
     }
-    normalize(format) {
+    normalize(format2) {
       const self2 = this;
       const headers = {};
       utils_default.forEach(this, (value, header) => {
@@ -28043,7 +28043,7 @@
           delete self2[header];
           return;
         }
-        const normalized = format ? formatHeader(header) : String(header).trim();
+        const normalized = format2 ? formatHeader(header) : String(header).trim();
         if (normalized !== header) {
           delete self2[header];
         }
@@ -28148,8 +28148,8 @@
      *
      * @returns {CanceledError} The created error.
      */
-    constructor(message, config, request) {
-      super(message == null ? "canceled" : message, AxiosError_default.ERR_CANCELED, config, request);
+    constructor(message2, config, request) {
+      super(message2 == null ? "canceled" : message2, AxiosError_default.ERR_CANCELED, config, request);
       this.name = "CanceledError";
       this.__CANCEL__ = true;
     }
@@ -28176,19 +28176,19 @@
 
   // node_modules/axios/lib/helpers/parseProtocol.js
   function parseProtocol(url) {
-    const match = /^([-+\w]{1,25})(:?\/\/|:)/.exec(url);
-    return match && match[1] || "";
+    const match3 = /^([-+\w]{1,25})(:?\/\/|:)/.exec(url);
+    return match3 && match3[1] || "";
   }
 
   // node_modules/axios/lib/helpers/speedometer.js
-  function speedometer(samplesCount, min) {
+  function speedometer(samplesCount, min3) {
     samplesCount = samplesCount || 10;
     const bytes = new Array(samplesCount);
     const timestamps = new Array(samplesCount);
     let head = 0;
     let tail = 0;
     let firstSampleTS;
-    min = min !== void 0 ? min : 1e3;
+    min3 = min3 !== void 0 ? min3 : 1e3;
     return function push(chunkLength) {
       const now = Date.now();
       const startedAt = timestamps[tail];
@@ -28207,7 +28207,7 @@
       if (head === tail) {
         tail = (tail + 1) % samplesCount;
       }
-      if (now - firstSampleTS < min) {
+      if (now - firstSampleTS < min3) {
         return;
       }
       const passed = startedAt && now - startedAt;
@@ -28326,8 +28326,8 @@
       read(name) {
         if (typeof document === "undefined")
           return null;
-        const match = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
-        return match ? decodeURIComponent(match[1]) : null;
+        const match3 = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
+        return match3 ? decodeURIComponent(match3[1]) : null;
       },
       remove(name) {
         this.write(name, "", Date.now() - 864e5, "/");
@@ -29092,9 +29092,9 @@
     };
   });
   var deprecatedWarnings = {};
-  validators.transitional = function transitional(validator, version, message) {
+  validators.transitional = function transitional(validator, version, message2) {
     function formatMessage(opt, desc) {
-      return "[Axios v" + VERSION + "] Transitional option '" + opt + "'" + desc + (message ? ". " + message : "");
+      return "[Axios v" + VERSION + "] Transitional option '" + opt + "'" + desc + (message2 ? ". " + message2 : "");
     }
     return (value, opt, opts) => {
       if (validator === false) {
@@ -29371,11 +29371,11 @@
         };
         return promise;
       };
-      executor(function cancel(message, config, request) {
+      executor(function cancel(message2, config, request) {
         if (token.reason) {
           return;
         }
-        token.reason = new CanceledError_default(message, config, request);
+        token.reason = new CanceledError_default(message2, config, request);
         resolvePromise(token.reason);
       });
     }
@@ -29408,9 +29408,9 @@
       if (!this._listeners) {
         return;
       }
-      const index = this._listeners.indexOf(listener);
-      if (index !== -1) {
-        this._listeners.splice(index, 1);
+      const index2 = this._listeners.indexOf(listener);
+      if (index2 !== -1) {
+        this._listeners.splice(index2, 1);
       }
     }
     toAbortSignal() {
@@ -29581,16 +29581,13298 @@
     mergeConfig: mergeConfig2
   } = axios_default;
 
-  // app/javascript/components/pages/Dashboard.jsx
+  // app/javascript/components/ui/calendar.jsx
+  var React42 = __toESM(require_react());
+
+  // node_modules/lucide-react/dist/esm/createLucideIcon.js
+  var import_react4 = __toESM(require_react());
+
+  // node_modules/lucide-react/dist/esm/shared/src/utils/mergeClasses.js
+  var mergeClasses = (...classes) => classes.filter((className, index2, array) => {
+    return Boolean(className) && className.trim() !== "" && array.indexOf(className) === index2;
+  }).join(" ").trim();
+
+  // node_modules/lucide-react/dist/esm/shared/src/utils/toKebabCase.js
+  var toKebabCase = (string) => string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+
+  // node_modules/lucide-react/dist/esm/shared/src/utils/toCamelCase.js
+  var toCamelCase2 = (string) => string.replace(
+    /^([A-Z])|[\s-_]+(\w)/g,
+    (match3, p1, p2) => p2 ? p2.toUpperCase() : p1.toLowerCase()
+  );
+
+  // node_modules/lucide-react/dist/esm/shared/src/utils/toPascalCase.js
+  var toPascalCase = (string) => {
+    const camelCase = toCamelCase2(string);
+    return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
+  };
+
+  // node_modules/lucide-react/dist/esm/Icon.js
+  var import_react3 = __toESM(require_react());
+
+  // node_modules/lucide-react/dist/esm/defaultAttributes.js
+  var defaultAttributes = {
+    xmlns: "http://www.w3.org/2000/svg",
+    width: 24,
+    height: 24,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 2,
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  };
+
+  // node_modules/lucide-react/dist/esm/shared/src/utils/hasA11yProp.js
+  var hasA11yProp = (props) => {
+    for (const prop in props) {
+      if (prop.startsWith("aria-") || prop === "role" || prop === "title") {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  // node_modules/lucide-react/dist/esm/context.js
+  var import_react2 = __toESM(require_react());
+  var LucideContext = (0, import_react2.createContext)({});
+  var useLucideContext = () => (0, import_react2.useContext)(LucideContext);
+
+  // node_modules/lucide-react/dist/esm/Icon.js
+  var Icon = (0, import_react3.forwardRef)(
+    ({ color, size: size4, strokeWidth, absoluteStrokeWidth, className = "", children, iconNode, ...rest }, ref) => {
+      const {
+        size: contextSize = 24,
+        strokeWidth: contextStrokeWidth = 2,
+        absoluteStrokeWidth: contextAbsoluteStrokeWidth = false,
+        color: contextColor = "currentColor",
+        className: contextClass = ""
+      } = useLucideContext() ?? {};
+      const calculatedStrokeWidth = absoluteStrokeWidth ?? contextAbsoluteStrokeWidth ? Number(strokeWidth ?? contextStrokeWidth) * 24 / Number(size4 ?? contextSize) : strokeWidth ?? contextStrokeWidth;
+      return (0, import_react3.createElement)(
+        "svg",
+        {
+          ref,
+          ...defaultAttributes,
+          width: size4 ?? contextSize ?? defaultAttributes.width,
+          height: size4 ?? contextSize ?? defaultAttributes.height,
+          stroke: color ?? contextColor,
+          strokeWidth: calculatedStrokeWidth,
+          className: mergeClasses("lucide", contextClass, className),
+          ...!children && !hasA11yProp(rest) && { "aria-hidden": "true" },
+          ...rest
+        },
+        [
+          ...iconNode.map(([tag, attrs]) => (0, import_react3.createElement)(tag, attrs)),
+          ...Array.isArray(children) ? children : [children]
+        ]
+      );
+    }
+  );
+
+  // node_modules/lucide-react/dist/esm/createLucideIcon.js
+  var createLucideIcon = (iconName, iconNode) => {
+    const Component2 = (0, import_react4.forwardRef)(
+      ({ className, ...props }, ref) => (0, import_react4.createElement)(Icon, {
+        ref,
+        iconNode,
+        className: mergeClasses(
+          `lucide-${toKebabCase(toPascalCase(iconName))}`,
+          `lucide-${iconName}`,
+          className
+        ),
+        ...props
+      })
+    );
+    Component2.displayName = toPascalCase(iconName);
+    return Component2;
+  };
+
+  // node_modules/lucide-react/dist/esm/icons/chevron-left.js
+  var __iconNode = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
+  var ChevronLeft = createLucideIcon("chevron-left", __iconNode);
+
+  // node_modules/lucide-react/dist/esm/icons/chevron-right.js
+  var __iconNode2 = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
+  var ChevronRight = createLucideIcon("chevron-right", __iconNode2);
+
+  // node_modules/@date-fns/tz/constants/index.js
+  var constructFromSymbol = Symbol.for("constructDateFrom");
+
+  // node_modules/@date-fns/tz/tzName/index.js
+  function tzName(timeZone, date, format2 = "long") {
+    return new Intl.DateTimeFormat("en-US", {
+      // Enforces engine to render the time. Without the option JavaScriptCore omits it.
+      hour: "numeric",
+      timeZone,
+      timeZoneName: format2
+    }).format(date).split(/\s/g).slice(2).join(" ");
+  }
+
+  // node_modules/@date-fns/tz/tzOffset/index.js
+  var offsetFormatCache = {};
+  var offsetCache = {};
+  function tzOffset(timeZone, date) {
+    try {
+      const format2 = offsetFormatCache[timeZone] ||= new Intl.DateTimeFormat("en-US", {
+        timeZone,
+        timeZoneName: "longOffset"
+      }).format;
+      const offsetStr = format2(date).split("GMT")[1];
+      if (offsetStr in offsetCache)
+        return offsetCache[offsetStr];
+      return calcOffset(offsetStr, offsetStr.split(":"));
+    } catch {
+      if (timeZone in offsetCache)
+        return offsetCache[timeZone];
+      const captures = timeZone?.match(offsetRe);
+      if (captures)
+        return calcOffset(timeZone, captures.slice(1));
+      return NaN;
+    }
+  }
+  var offsetRe = /([+-]\d\d):?(\d\d)?/;
+  function calcOffset(cacheStr, values) {
+    const hours = +(values[0] || 0);
+    const minutes = +(values[1] || 0);
+    const seconds = +(values[2] || 0) / 60;
+    return offsetCache[cacheStr] = hours * 60 + minutes > 0 ? hours * 60 + minutes + seconds : hours * 60 - minutes - seconds;
+  }
+
+  // node_modules/@date-fns/tz/date/mini.js
+  var TZDateMini = class _TZDateMini extends Date {
+    //#region static
+    constructor(...args) {
+      super();
+      if (args.length > 1 && typeof args[args.length - 1] === "string") {
+        this.timeZone = args.pop();
+      }
+      this.internal = /* @__PURE__ */ new Date();
+      if (isNaN(tzOffset(this.timeZone, this))) {
+        this.setTime(NaN);
+      } else {
+        if (!args.length) {
+          this.setTime(Date.now());
+        } else if (typeof args[0] === "number" && (args.length === 1 || args.length === 2 && typeof args[1] !== "number")) {
+          this.setTime(args[0]);
+        } else if (typeof args[0] === "string") {
+          this.setTime(+new Date(args[0]));
+        } else if (args[0] instanceof Date) {
+          this.setTime(+args[0]);
+        } else {
+          this.setTime(+new Date(...args));
+          adjustToSystemTZ(this, NaN);
+          syncToInternal(this);
+        }
+      }
+    }
+    static tz(tz, ...args) {
+      return args.length ? new _TZDateMini(...args, tz) : new _TZDateMini(Date.now(), tz);
+    }
+    //#endregion
+    //#region time zone
+    withTimeZone(timeZone) {
+      return new _TZDateMini(+this, timeZone);
+    }
+    getTimezoneOffset() {
+      const offset4 = -tzOffset(this.timeZone, this);
+      return offset4 > 0 ? Math.floor(offset4) : Math.ceil(offset4);
+    }
+    //#endregion
+    //#region time
+    setTime(time) {
+      Date.prototype.setTime.apply(this, arguments);
+      syncToInternal(this);
+      return +this;
+    }
+    //#endregion
+    //#region date-fns integration
+    [Symbol.for("constructDateFrom")](date) {
+      return new _TZDateMini(+new Date(date), this.timeZone);
+    }
+    //#endregion
+  };
+  var re = /^(get|set)(?!UTC)/;
+  Object.getOwnPropertyNames(Date.prototype).forEach((method) => {
+    if (!re.test(method))
+      return;
+    const utcMethod = method.replace(re, "$1UTC");
+    if (!TZDateMini.prototype[utcMethod])
+      return;
+    if (method.startsWith("get")) {
+      TZDateMini.prototype[method] = function() {
+        return this.internal[utcMethod]();
+      };
+    } else {
+      TZDateMini.prototype[method] = function() {
+        Date.prototype[utcMethod].apply(this.internal, arguments);
+        syncFromInternal(this);
+        return +this;
+      };
+      TZDateMini.prototype[utcMethod] = function() {
+        Date.prototype[utcMethod].apply(this, arguments);
+        syncToInternal(this);
+        return +this;
+      };
+    }
+  });
+  function syncToInternal(date) {
+    date.internal.setTime(+date);
+    date.internal.setUTCSeconds(date.internal.getUTCSeconds() - Math.round(-tzOffset(date.timeZone, date) * 60));
+  }
+  function syncFromInternal(date) {
+    Date.prototype.setFullYear.call(date, date.internal.getUTCFullYear(), date.internal.getUTCMonth(), date.internal.getUTCDate());
+    Date.prototype.setHours.call(date, date.internal.getUTCHours(), date.internal.getUTCMinutes(), date.internal.getUTCSeconds(), date.internal.getUTCMilliseconds());
+    adjustToSystemTZ(date);
+  }
+  function adjustToSystemTZ(date) {
+    const baseOffset = tzOffset(date.timeZone, date);
+    const offset4 = baseOffset > 0 ? Math.floor(baseOffset) : Math.ceil(baseOffset);
+    const prevHour = /* @__PURE__ */ new Date(+date);
+    prevHour.setUTCHours(prevHour.getUTCHours() - 1);
+    const systemOffset = -(/* @__PURE__ */ new Date(+date)).getTimezoneOffset();
+    const prevHourSystemOffset = -(/* @__PURE__ */ new Date(+prevHour)).getTimezoneOffset();
+    const systemDSTChange = systemOffset - prevHourSystemOffset;
+    const dstShift = Date.prototype.getHours.apply(date) !== date.internal.getUTCHours();
+    if (systemDSTChange && dstShift)
+      date.internal.setUTCMinutes(date.internal.getUTCMinutes() + systemDSTChange);
+    const offsetDiff = systemOffset - offset4;
+    if (offsetDiff)
+      Date.prototype.setUTCMinutes.call(date, Date.prototype.getUTCMinutes.call(date) + offsetDiff);
+    const systemDate = /* @__PURE__ */ new Date(+date);
+    systemDate.setUTCSeconds(0);
+    const systemSecondsOffset = systemOffset > 0 ? systemDate.getSeconds() : (systemDate.getSeconds() - 60) % 60;
+    const secondsOffset = Math.round(-(tzOffset(date.timeZone, date) * 60)) % 60;
+    if (secondsOffset || systemSecondsOffset) {
+      date.internal.setUTCSeconds(date.internal.getUTCSeconds() + secondsOffset);
+      Date.prototype.setUTCSeconds.call(date, Date.prototype.getUTCSeconds.call(date) + secondsOffset + systemSecondsOffset);
+    }
+    const postBaseOffset = tzOffset(date.timeZone, date);
+    const postOffset = postBaseOffset > 0 ? Math.floor(postBaseOffset) : Math.ceil(postBaseOffset);
+    const postSystemOffset = -(/* @__PURE__ */ new Date(+date)).getTimezoneOffset();
+    const postOffsetDiff = postSystemOffset - postOffset;
+    const offsetChanged = postOffset !== offset4;
+    const postDiff = postOffsetDiff - offsetDiff;
+    if (offsetChanged && postDiff) {
+      Date.prototype.setUTCMinutes.call(date, Date.prototype.getUTCMinutes.call(date) + postDiff);
+      const newBaseOffset = tzOffset(date.timeZone, date);
+      const newOffset = newBaseOffset > 0 ? Math.floor(newBaseOffset) : Math.ceil(newBaseOffset);
+      const offsetChange = postOffset - newOffset;
+      if (offsetChange) {
+        date.internal.setUTCMinutes(date.internal.getUTCMinutes() + offsetChange);
+        Date.prototype.setUTCMinutes.call(date, Date.prototype.getUTCMinutes.call(date) + offsetChange);
+      }
+    }
+  }
+
+  // node_modules/@date-fns/tz/date/index.js
+  var TZDate = class _TZDate extends TZDateMini {
+    //#region static
+    static tz(tz, ...args) {
+      return args.length ? new _TZDate(...args, tz) : new _TZDate(Date.now(), tz);
+    }
+    //#endregion
+    //#region representation
+    toISOString() {
+      const [sign, hours, minutes] = this.tzComponents();
+      const tz = `${sign}${hours}:${minutes}`;
+      return this.internal.toISOString().slice(0, -1) + tz;
+    }
+    toString() {
+      return `${this.toDateString()} ${this.toTimeString()}`;
+    }
+    toDateString() {
+      const [day, date, month, year] = this.internal.toUTCString().split(" ");
+      return `${day?.slice(0, -1)} ${month} ${date} ${year}`;
+    }
+    toTimeString() {
+      const time = this.internal.toUTCString().split(" ")[4];
+      const [sign, hours, minutes] = this.tzComponents();
+      return `${time} GMT${sign}${hours}${minutes} (${tzName(this.timeZone, this)})`;
+    }
+    toLocaleString(locales, options) {
+      return Date.prototype.toLocaleString.call(this, locales, {
+        ...options,
+        timeZone: options?.timeZone || this.timeZone
+      });
+    }
+    toLocaleDateString(locales, options) {
+      return Date.prototype.toLocaleDateString.call(this, locales, {
+        ...options,
+        timeZone: options?.timeZone || this.timeZone
+      });
+    }
+    toLocaleTimeString(locales, options) {
+      return Date.prototype.toLocaleTimeString.call(this, locales, {
+        ...options,
+        timeZone: options?.timeZone || this.timeZone
+      });
+    }
+    //#endregion
+    //#region private
+    tzComponents() {
+      const offset4 = this.getTimezoneOffset();
+      const sign = offset4 > 0 ? "-" : "+";
+      const hours = String(Math.floor(Math.abs(offset4) / 60)).padStart(2, "0");
+      const minutes = String(Math.abs(offset4) % 60).padStart(2, "0");
+      return [sign, hours, minutes];
+    }
+    //#endregion
+    withTimeZone(timeZone) {
+      return new _TZDate(+this, timeZone);
+    }
+    //#region date-fns integration
+    [Symbol.for("constructDateFrom")](date) {
+      return new _TZDate(+new Date(date), this.timeZone);
+    }
+    //#endregion
+  };
+
+  // node_modules/date-fns/constants.js
+  var daysInYear = 365.2425;
+  var maxTime = Math.pow(10, 8) * 24 * 60 * 60 * 1e3;
+  var minTime = -maxTime;
+  var millisecondsInWeek = 6048e5;
+  var millisecondsInDay = 864e5;
+  var secondsInHour = 3600;
+  var secondsInDay = secondsInHour * 24;
+  var secondsInWeek = secondsInDay * 7;
+  var secondsInYear = secondsInDay * daysInYear;
+  var secondsInMonth = secondsInYear / 12;
+  var secondsInQuarter = secondsInMonth * 3;
+  var constructFromSymbol2 = Symbol.for("constructDateFrom");
+
+  // node_modules/date-fns/constructFrom.js
+  function constructFrom(date, value) {
+    if (typeof date === "function")
+      return date(value);
+    if (date && typeof date === "object" && constructFromSymbol2 in date)
+      return date[constructFromSymbol2](value);
+    if (date instanceof Date)
+      return new date.constructor(value);
+    return new Date(value);
+  }
+
+  // node_modules/date-fns/toDate.js
+  function toDate(argument, context) {
+    return constructFrom(context || argument, argument);
+  }
+
+  // node_modules/date-fns/addDays.js
+  function addDays(date, amount, options) {
+    const _date = toDate(date, options?.in);
+    if (isNaN(amount))
+      return constructFrom(options?.in || date, NaN);
+    if (!amount)
+      return _date;
+    _date.setDate(_date.getDate() + amount);
+    return _date;
+  }
+
+  // node_modules/date-fns/addMonths.js
+  function addMonths(date, amount, options) {
+    const _date = toDate(date, options?.in);
+    if (isNaN(amount))
+      return constructFrom(options?.in || date, NaN);
+    if (!amount) {
+      return _date;
+    }
+    const dayOfMonth = _date.getDate();
+    const endOfDesiredMonth = constructFrom(options?.in || date, _date.getTime());
+    endOfDesiredMonth.setMonth(_date.getMonth() + amount + 1, 0);
+    const daysInMonth = endOfDesiredMonth.getDate();
+    if (dayOfMonth >= daysInMonth) {
+      return endOfDesiredMonth;
+    } else {
+      _date.setFullYear(
+        endOfDesiredMonth.getFullYear(),
+        endOfDesiredMonth.getMonth(),
+        dayOfMonth
+      );
+      return _date;
+    }
+  }
+
+  // node_modules/date-fns/_lib/defaultOptions.js
+  var defaultOptions = {};
+  function getDefaultOptions() {
+    return defaultOptions;
+  }
+
+  // node_modules/date-fns/startOfWeek.js
+  function startOfWeek(date, options) {
+    const defaultOptions2 = getDefaultOptions();
+    const weekStartsOn = options?.weekStartsOn ?? options?.locale?.options?.weekStartsOn ?? defaultOptions2.weekStartsOn ?? defaultOptions2.locale?.options?.weekStartsOn ?? 0;
+    const _date = toDate(date, options?.in);
+    const day = _date.getDay();
+    const diff = (day < weekStartsOn ? 7 : 0) + day - weekStartsOn;
+    _date.setDate(_date.getDate() - diff);
+    _date.setHours(0, 0, 0, 0);
+    return _date;
+  }
+
+  // node_modules/date-fns/startOfISOWeek.js
+  function startOfISOWeek(date, options) {
+    return startOfWeek(date, { ...options, weekStartsOn: 1 });
+  }
+
+  // node_modules/date-fns/getISOWeekYear.js
+  function getISOWeekYear(date, options) {
+    const _date = toDate(date, options?.in);
+    const year = _date.getFullYear();
+    const fourthOfJanuaryOfNextYear = constructFrom(_date, 0);
+    fourthOfJanuaryOfNextYear.setFullYear(year + 1, 0, 4);
+    fourthOfJanuaryOfNextYear.setHours(0, 0, 0, 0);
+    const startOfNextYear = startOfISOWeek(fourthOfJanuaryOfNextYear);
+    const fourthOfJanuaryOfThisYear = constructFrom(_date, 0);
+    fourthOfJanuaryOfThisYear.setFullYear(year, 0, 4);
+    fourthOfJanuaryOfThisYear.setHours(0, 0, 0, 0);
+    const startOfThisYear = startOfISOWeek(fourthOfJanuaryOfThisYear);
+    if (_date.getTime() >= startOfNextYear.getTime()) {
+      return year + 1;
+    } else if (_date.getTime() >= startOfThisYear.getTime()) {
+      return year;
+    } else {
+      return year - 1;
+    }
+  }
+
+  // node_modules/date-fns/_lib/getTimezoneOffsetInMilliseconds.js
+  function getTimezoneOffsetInMilliseconds(date) {
+    const _date = toDate(date);
+    const utcDate = new Date(
+      Date.UTC(
+        _date.getFullYear(),
+        _date.getMonth(),
+        _date.getDate(),
+        _date.getHours(),
+        _date.getMinutes(),
+        _date.getSeconds(),
+        _date.getMilliseconds()
+      )
+    );
+    utcDate.setUTCFullYear(_date.getFullYear());
+    return +date - +utcDate;
+  }
+
+  // node_modules/date-fns/_lib/normalizeDates.js
+  function normalizeDates(context, ...dates) {
+    const normalize = constructFrom.bind(
+      null,
+      context || dates.find((date) => typeof date === "object")
+    );
+    return dates.map(normalize);
+  }
+
+  // node_modules/date-fns/startOfDay.js
+  function startOfDay(date, options) {
+    const _date = toDate(date, options?.in);
+    _date.setHours(0, 0, 0, 0);
+    return _date;
+  }
+
+  // node_modules/date-fns/differenceInCalendarDays.js
+  function differenceInCalendarDays(laterDate, earlierDate, options) {
+    const [laterDate_, earlierDate_] = normalizeDates(
+      options?.in,
+      laterDate,
+      earlierDate
+    );
+    const laterStartOfDay = startOfDay(laterDate_);
+    const earlierStartOfDay = startOfDay(earlierDate_);
+    const laterTimestamp = +laterStartOfDay - getTimezoneOffsetInMilliseconds(laterStartOfDay);
+    const earlierTimestamp = +earlierStartOfDay - getTimezoneOffsetInMilliseconds(earlierStartOfDay);
+    return Math.round((laterTimestamp - earlierTimestamp) / millisecondsInDay);
+  }
+
+  // node_modules/date-fns/startOfISOWeekYear.js
+  function startOfISOWeekYear(date, options) {
+    const year = getISOWeekYear(date, options);
+    const fourthOfJanuary = constructFrom(options?.in || date, 0);
+    fourthOfJanuary.setFullYear(year, 0, 4);
+    fourthOfJanuary.setHours(0, 0, 0, 0);
+    return startOfISOWeek(fourthOfJanuary);
+  }
+
+  // node_modules/date-fns/addWeeks.js
+  function addWeeks(date, amount, options) {
+    return addDays(date, amount * 7, options);
+  }
+
+  // node_modules/date-fns/addYears.js
+  function addYears(date, amount, options) {
+    return addMonths(date, amount * 12, options);
+  }
+
+  // node_modules/date-fns/max.js
+  function max(dates, options) {
+    let result;
+    let context = options?.in;
+    dates.forEach((date) => {
+      if (!context && typeof date === "object")
+        context = constructFrom.bind(null, date);
+      const date_ = toDate(date, context);
+      if (!result || result < date_ || isNaN(+date_))
+        result = date_;
+    });
+    return constructFrom(context, result || NaN);
+  }
+
+  // node_modules/date-fns/min.js
+  function min(dates, options) {
+    let result;
+    let context = options?.in;
+    dates.forEach((date) => {
+      if (!context && typeof date === "object")
+        context = constructFrom.bind(null, date);
+      const date_ = toDate(date, context);
+      if (!result || result > date_ || isNaN(+date_))
+        result = date_;
+    });
+    return constructFrom(context, result || NaN);
+  }
+
+  // node_modules/date-fns/isSameDay.js
+  function isSameDay(laterDate, earlierDate, options) {
+    const [dateLeft_, dateRight_] = normalizeDates(
+      options?.in,
+      laterDate,
+      earlierDate
+    );
+    return +startOfDay(dateLeft_) === +startOfDay(dateRight_);
+  }
+
+  // node_modules/date-fns/isDate.js
+  function isDate2(value) {
+    return value instanceof Date || typeof value === "object" && Object.prototype.toString.call(value) === "[object Date]";
+  }
+
+  // node_modules/date-fns/isValid.js
+  function isValid(date) {
+    return !(!isDate2(date) && typeof date !== "number" || isNaN(+toDate(date)));
+  }
+
+  // node_modules/date-fns/differenceInCalendarMonths.js
+  function differenceInCalendarMonths(laterDate, earlierDate, options) {
+    const [laterDate_, earlierDate_] = normalizeDates(
+      options?.in,
+      laterDate,
+      earlierDate
+    );
+    const yearsDiff = laterDate_.getFullYear() - earlierDate_.getFullYear();
+    const monthsDiff = laterDate_.getMonth() - earlierDate_.getMonth();
+    return yearsDiff * 12 + monthsDiff;
+  }
+
+  // node_modules/date-fns/endOfMonth.js
+  function endOfMonth(date, options) {
+    const _date = toDate(date, options?.in);
+    const month = _date.getMonth();
+    _date.setFullYear(_date.getFullYear(), month + 1, 0);
+    _date.setHours(23, 59, 59, 999);
+    return _date;
+  }
+
+  // node_modules/date-fns/_lib/normalizeInterval.js
+  function normalizeInterval(context, interval) {
+    const [start, end] = normalizeDates(context, interval.start, interval.end);
+    return { start, end };
+  }
+
+  // node_modules/date-fns/eachMonthOfInterval.js
+  function eachMonthOfInterval(interval, options) {
+    const { start, end } = normalizeInterval(options?.in, interval);
+    let reversed = +start > +end;
+    const endTime = reversed ? +start : +end;
+    const date = reversed ? end : start;
+    date.setHours(0, 0, 0, 0);
+    date.setDate(1);
+    let step = options?.step ?? 1;
+    if (!step)
+      return [];
+    if (step < 0) {
+      step = -step;
+      reversed = !reversed;
+    }
+    const dates = [];
+    while (+date <= endTime) {
+      dates.push(constructFrom(start, date));
+      date.setMonth(date.getMonth() + step);
+    }
+    return reversed ? dates.reverse() : dates;
+  }
+
+  // node_modules/date-fns/startOfMonth.js
+  function startOfMonth(date, options) {
+    const _date = toDate(date, options?.in);
+    _date.setDate(1);
+    _date.setHours(0, 0, 0, 0);
+    return _date;
+  }
+
+  // node_modules/date-fns/endOfYear.js
+  function endOfYear(date, options) {
+    const _date = toDate(date, options?.in);
+    const year = _date.getFullYear();
+    _date.setFullYear(year + 1, 0, 0);
+    _date.setHours(23, 59, 59, 999);
+    return _date;
+  }
+
+  // node_modules/date-fns/startOfYear.js
+  function startOfYear(date, options) {
+    const date_ = toDate(date, options?.in);
+    date_.setFullYear(date_.getFullYear(), 0, 1);
+    date_.setHours(0, 0, 0, 0);
+    return date_;
+  }
+
+  // node_modules/date-fns/eachYearOfInterval.js
+  function eachYearOfInterval(interval, options) {
+    const { start, end } = normalizeInterval(options?.in, interval);
+    let reversed = +start > +end;
+    const endTime = reversed ? +start : +end;
+    const date = reversed ? end : start;
+    date.setHours(0, 0, 0, 0);
+    date.setMonth(0, 1);
+    let step = options?.step ?? 1;
+    if (!step)
+      return [];
+    if (step < 0) {
+      step = -step;
+      reversed = !reversed;
+    }
+    const dates = [];
+    while (+date <= endTime) {
+      dates.push(constructFrom(start, date));
+      date.setFullYear(date.getFullYear() + step);
+    }
+    return reversed ? dates.reverse() : dates;
+  }
+
+  // node_modules/date-fns/endOfWeek.js
+  function endOfWeek(date, options) {
+    const defaultOptions2 = getDefaultOptions();
+    const weekStartsOn = options?.weekStartsOn ?? options?.locale?.options?.weekStartsOn ?? defaultOptions2.weekStartsOn ?? defaultOptions2.locale?.options?.weekStartsOn ?? 0;
+    const _date = toDate(date, options?.in);
+    const day = _date.getDay();
+    const diff = (day < weekStartsOn ? -7 : 0) + 6 - (day - weekStartsOn);
+    _date.setDate(_date.getDate() + diff);
+    _date.setHours(23, 59, 59, 999);
+    return _date;
+  }
+
+  // node_modules/date-fns/endOfISOWeek.js
+  function endOfISOWeek(date, options) {
+    return endOfWeek(date, { ...options, weekStartsOn: 1 });
+  }
+
+  // node_modules/date-fns/locale/en-US/_lib/formatDistance.js
+  var formatDistanceLocale = {
+    lessThanXSeconds: {
+      one: "less than a second",
+      other: "less than {{count}} seconds"
+    },
+    xSeconds: {
+      one: "1 second",
+      other: "{{count}} seconds"
+    },
+    halfAMinute: "half a minute",
+    lessThanXMinutes: {
+      one: "less than a minute",
+      other: "less than {{count}} minutes"
+    },
+    xMinutes: {
+      one: "1 minute",
+      other: "{{count}} minutes"
+    },
+    aboutXHours: {
+      one: "about 1 hour",
+      other: "about {{count}} hours"
+    },
+    xHours: {
+      one: "1 hour",
+      other: "{{count}} hours"
+    },
+    xDays: {
+      one: "1 day",
+      other: "{{count}} days"
+    },
+    aboutXWeeks: {
+      one: "about 1 week",
+      other: "about {{count}} weeks"
+    },
+    xWeeks: {
+      one: "1 week",
+      other: "{{count}} weeks"
+    },
+    aboutXMonths: {
+      one: "about 1 month",
+      other: "about {{count}} months"
+    },
+    xMonths: {
+      one: "1 month",
+      other: "{{count}} months"
+    },
+    aboutXYears: {
+      one: "about 1 year",
+      other: "about {{count}} years"
+    },
+    xYears: {
+      one: "1 year",
+      other: "{{count}} years"
+    },
+    overXYears: {
+      one: "over 1 year",
+      other: "over {{count}} years"
+    },
+    almostXYears: {
+      one: "almost 1 year",
+      other: "almost {{count}} years"
+    }
+  };
+  var formatDistance = (token, count3, options) => {
+    let result;
+    const tokenValue = formatDistanceLocale[token];
+    if (typeof tokenValue === "string") {
+      result = tokenValue;
+    } else if (count3 === 1) {
+      result = tokenValue.one;
+    } else {
+      result = tokenValue.other.replace("{{count}}", count3.toString());
+    }
+    if (options?.addSuffix) {
+      if (options.comparison && options.comparison > 0) {
+        return "in " + result;
+      } else {
+        return result + " ago";
+      }
+    }
+    return result;
+  };
+
+  // node_modules/date-fns/locale/_lib/buildFormatLongFn.js
+  function buildFormatLongFn(args) {
+    return (options = {}) => {
+      const width = options.width ? String(options.width) : args.defaultWidth;
+      const format2 = args.formats[width] || args.formats[args.defaultWidth];
+      return format2;
+    };
+  }
+
+  // node_modules/date-fns/locale/en-US/_lib/formatLong.js
+  var dateFormats = {
+    full: "EEEE, MMMM do, y",
+    long: "MMMM do, y",
+    medium: "MMM d, y",
+    short: "MM/dd/yyyy"
+  };
+  var timeFormats = {
+    full: "h:mm:ss a zzzz",
+    long: "h:mm:ss a z",
+    medium: "h:mm:ss a",
+    short: "h:mm a"
+  };
+  var dateTimeFormats = {
+    full: "{{date}} 'at' {{time}}",
+    long: "{{date}} 'at' {{time}}",
+    medium: "{{date}}, {{time}}",
+    short: "{{date}}, {{time}}"
+  };
+  var formatLong = {
+    date: buildFormatLongFn({
+      formats: dateFormats,
+      defaultWidth: "full"
+    }),
+    time: buildFormatLongFn({
+      formats: timeFormats,
+      defaultWidth: "full"
+    }),
+    dateTime: buildFormatLongFn({
+      formats: dateTimeFormats,
+      defaultWidth: "full"
+    })
+  };
+
+  // node_modules/date-fns/locale/en-US/_lib/formatRelative.js
+  var formatRelativeLocale = {
+    lastWeek: "'last' eeee 'at' p",
+    yesterday: "'yesterday at' p",
+    today: "'today at' p",
+    tomorrow: "'tomorrow at' p",
+    nextWeek: "eeee 'at' p",
+    other: "P"
+  };
+  var formatRelative = (token, _date, _baseDate, _options) => formatRelativeLocale[token];
+
+  // node_modules/date-fns/locale/_lib/buildLocalizeFn.js
+  function buildLocalizeFn(args) {
+    return (value, options) => {
+      const context = options?.context ? String(options.context) : "standalone";
+      let valuesArray;
+      if (context === "formatting" && args.formattingValues) {
+        const defaultWidth = args.defaultFormattingWidth || args.defaultWidth;
+        const width = options?.width ? String(options.width) : defaultWidth;
+        valuesArray = args.formattingValues[width] || args.formattingValues[defaultWidth];
+      } else {
+        const defaultWidth = args.defaultWidth;
+        const width = options?.width ? String(options.width) : args.defaultWidth;
+        valuesArray = args.values[width] || args.values[defaultWidth];
+      }
+      const index2 = args.argumentCallback ? args.argumentCallback(value) : value;
+      return valuesArray[index2];
+    };
+  }
+
+  // node_modules/date-fns/locale/en-US/_lib/localize.js
+  var eraValues = {
+    narrow: ["B", "A"],
+    abbreviated: ["BC", "AD"],
+    wide: ["Before Christ", "Anno Domini"]
+  };
+  var quarterValues = {
+    narrow: ["1", "2", "3", "4"],
+    abbreviated: ["Q1", "Q2", "Q3", "Q4"],
+    wide: ["1st quarter", "2nd quarter", "3rd quarter", "4th quarter"]
+  };
+  var monthValues = {
+    narrow: ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"],
+    abbreviated: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ],
+    wide: [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ]
+  };
+  var dayValues = {
+    narrow: ["S", "M", "T", "W", "T", "F", "S"],
+    short: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+    abbreviated: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    wide: [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    ]
+  };
+  var dayPeriodValues = {
+    narrow: {
+      am: "a",
+      pm: "p",
+      midnight: "mi",
+      noon: "n",
+      morning: "morning",
+      afternoon: "afternoon",
+      evening: "evening",
+      night: "night"
+    },
+    abbreviated: {
+      am: "AM",
+      pm: "PM",
+      midnight: "midnight",
+      noon: "noon",
+      morning: "morning",
+      afternoon: "afternoon",
+      evening: "evening",
+      night: "night"
+    },
+    wide: {
+      am: "a.m.",
+      pm: "p.m.",
+      midnight: "midnight",
+      noon: "noon",
+      morning: "morning",
+      afternoon: "afternoon",
+      evening: "evening",
+      night: "night"
+    }
+  };
+  var formattingDayPeriodValues = {
+    narrow: {
+      am: "a",
+      pm: "p",
+      midnight: "mi",
+      noon: "n",
+      morning: "in the morning",
+      afternoon: "in the afternoon",
+      evening: "in the evening",
+      night: "at night"
+    },
+    abbreviated: {
+      am: "AM",
+      pm: "PM",
+      midnight: "midnight",
+      noon: "noon",
+      morning: "in the morning",
+      afternoon: "in the afternoon",
+      evening: "in the evening",
+      night: "at night"
+    },
+    wide: {
+      am: "a.m.",
+      pm: "p.m.",
+      midnight: "midnight",
+      noon: "noon",
+      morning: "in the morning",
+      afternoon: "in the afternoon",
+      evening: "in the evening",
+      night: "at night"
+    }
+  };
+  var ordinalNumber = (dirtyNumber, _options) => {
+    const number = Number(dirtyNumber);
+    const rem100 = number % 100;
+    if (rem100 > 20 || rem100 < 10) {
+      switch (rem100 % 10) {
+        case 1:
+          return number + "st";
+        case 2:
+          return number + "nd";
+        case 3:
+          return number + "rd";
+      }
+    }
+    return number + "th";
+  };
+  var localize = {
+    ordinalNumber,
+    era: buildLocalizeFn({
+      values: eraValues,
+      defaultWidth: "wide"
+    }),
+    quarter: buildLocalizeFn({
+      values: quarterValues,
+      defaultWidth: "wide",
+      argumentCallback: (quarter) => quarter - 1
+    }),
+    month: buildLocalizeFn({
+      values: monthValues,
+      defaultWidth: "wide"
+    }),
+    day: buildLocalizeFn({
+      values: dayValues,
+      defaultWidth: "wide"
+    }),
+    dayPeriod: buildLocalizeFn({
+      values: dayPeriodValues,
+      defaultWidth: "wide",
+      formattingValues: formattingDayPeriodValues,
+      defaultFormattingWidth: "wide"
+    })
+  };
+
+  // node_modules/date-fns/locale/_lib/buildMatchFn.js
+  function buildMatchFn(args) {
+    return (string, options = {}) => {
+      const width = options.width;
+      const matchPattern = width && args.matchPatterns[width] || args.matchPatterns[args.defaultMatchWidth];
+      const matchResult = string.match(matchPattern);
+      if (!matchResult) {
+        return null;
+      }
+      const matchedString = matchResult[0];
+      const parsePatterns = width && args.parsePatterns[width] || args.parsePatterns[args.defaultParseWidth];
+      const key = Array.isArray(parsePatterns) ? findIndex(parsePatterns, (pattern) => pattern.test(matchedString)) : (
+        // [TODO] -- I challenge you to fix the type
+        findKey2(parsePatterns, (pattern) => pattern.test(matchedString))
+      );
+      let value;
+      value = args.valueCallback ? args.valueCallback(key) : key;
+      value = options.valueCallback ? (
+        // [TODO] -- I challenge you to fix the type
+        options.valueCallback(value)
+      ) : value;
+      const rest = string.slice(matchedString.length);
+      return { value, rest };
+    };
+  }
+  function findKey2(object, predicate) {
+    for (const key in object) {
+      if (Object.prototype.hasOwnProperty.call(object, key) && predicate(object[key])) {
+        return key;
+      }
+    }
+    return void 0;
+  }
+  function findIndex(array, predicate) {
+    for (let key = 0; key < array.length; key++) {
+      if (predicate(array[key])) {
+        return key;
+      }
+    }
+    return void 0;
+  }
+
+  // node_modules/date-fns/locale/_lib/buildMatchPatternFn.js
+  function buildMatchPatternFn(args) {
+    return (string, options = {}) => {
+      const matchResult = string.match(args.matchPattern);
+      if (!matchResult)
+        return null;
+      const matchedString = matchResult[0];
+      const parseResult = string.match(args.parsePattern);
+      if (!parseResult)
+        return null;
+      let value = args.valueCallback ? args.valueCallback(parseResult[0]) : parseResult[0];
+      value = options.valueCallback ? options.valueCallback(value) : value;
+      const rest = string.slice(matchedString.length);
+      return { value, rest };
+    };
+  }
+
+  // node_modules/date-fns/locale/en-US/_lib/match.js
+  var matchOrdinalNumberPattern = /^(\d+)(th|st|nd|rd)?/i;
+  var parseOrdinalNumberPattern = /\d+/i;
+  var matchEraPatterns = {
+    narrow: /^(b|a)/i,
+    abbreviated: /^(b\.?\s?c\.?|b\.?\s?c\.?\s?e\.?|a\.?\s?d\.?|c\.?\s?e\.?)/i,
+    wide: /^(before christ|before common era|anno domini|common era)/i
+  };
+  var parseEraPatterns = {
+    any: [/^b/i, /^(a|c)/i]
+  };
+  var matchQuarterPatterns = {
+    narrow: /^[1234]/i,
+    abbreviated: /^q[1234]/i,
+    wide: /^[1234](th|st|nd|rd)? quarter/i
+  };
+  var parseQuarterPatterns = {
+    any: [/1/i, /2/i, /3/i, /4/i]
+  };
+  var matchMonthPatterns = {
+    narrow: /^[jfmasond]/i,
+    abbreviated: /^(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/i,
+    wide: /^(january|february|march|april|may|june|july|august|september|october|november|december)/i
+  };
+  var parseMonthPatterns = {
+    narrow: [
+      /^j/i,
+      /^f/i,
+      /^m/i,
+      /^a/i,
+      /^m/i,
+      /^j/i,
+      /^j/i,
+      /^a/i,
+      /^s/i,
+      /^o/i,
+      /^n/i,
+      /^d/i
+    ],
+    any: [
+      /^ja/i,
+      /^f/i,
+      /^mar/i,
+      /^ap/i,
+      /^may/i,
+      /^jun/i,
+      /^jul/i,
+      /^au/i,
+      /^s/i,
+      /^o/i,
+      /^n/i,
+      /^d/i
+    ]
+  };
+  var matchDayPatterns = {
+    narrow: /^[smtwf]/i,
+    short: /^(su|mo|tu|we|th|fr|sa)/i,
+    abbreviated: /^(sun|mon|tue|wed|thu|fri|sat)/i,
+    wide: /^(sunday|monday|tuesday|wednesday|thursday|friday|saturday)/i
+  };
+  var parseDayPatterns = {
+    narrow: [/^s/i, /^m/i, /^t/i, /^w/i, /^t/i, /^f/i, /^s/i],
+    any: [/^su/i, /^m/i, /^tu/i, /^w/i, /^th/i, /^f/i, /^sa/i]
+  };
+  var matchDayPeriodPatterns = {
+    narrow: /^(a|p|mi|n|(in the|at) (morning|afternoon|evening|night))/i,
+    any: /^([ap]\.?\s?m\.?|midnight|noon|(in the|at) (morning|afternoon|evening|night))/i
+  };
+  var parseDayPeriodPatterns = {
+    any: {
+      am: /^a/i,
+      pm: /^p/i,
+      midnight: /^mi/i,
+      noon: /^no/i,
+      morning: /morning/i,
+      afternoon: /afternoon/i,
+      evening: /evening/i,
+      night: /night/i
+    }
+  };
+  var match = {
+    ordinalNumber: buildMatchPatternFn({
+      matchPattern: matchOrdinalNumberPattern,
+      parsePattern: parseOrdinalNumberPattern,
+      valueCallback: (value) => parseInt(value, 10)
+    }),
+    era: buildMatchFn({
+      matchPatterns: matchEraPatterns,
+      defaultMatchWidth: "wide",
+      parsePatterns: parseEraPatterns,
+      defaultParseWidth: "any"
+    }),
+    quarter: buildMatchFn({
+      matchPatterns: matchQuarterPatterns,
+      defaultMatchWidth: "wide",
+      parsePatterns: parseQuarterPatterns,
+      defaultParseWidth: "any",
+      valueCallback: (index2) => index2 + 1
+    }),
+    month: buildMatchFn({
+      matchPatterns: matchMonthPatterns,
+      defaultMatchWidth: "wide",
+      parsePatterns: parseMonthPatterns,
+      defaultParseWidth: "any"
+    }),
+    day: buildMatchFn({
+      matchPatterns: matchDayPatterns,
+      defaultMatchWidth: "wide",
+      parsePatterns: parseDayPatterns,
+      defaultParseWidth: "any"
+    }),
+    dayPeriod: buildMatchFn({
+      matchPatterns: matchDayPeriodPatterns,
+      defaultMatchWidth: "any",
+      parsePatterns: parseDayPeriodPatterns,
+      defaultParseWidth: "any"
+    })
+  };
+
+  // node_modules/date-fns/locale/en-US.js
+  var enUS = {
+    code: "en-US",
+    formatDistance,
+    formatLong,
+    formatRelative,
+    localize,
+    match,
+    options: {
+      weekStartsOn: 0,
+      firstWeekContainsDate: 1
+    }
+  };
+
+  // node_modules/date-fns/getDayOfYear.js
+  function getDayOfYear(date, options) {
+    const _date = toDate(date, options?.in);
+    const diff = differenceInCalendarDays(_date, startOfYear(_date));
+    const dayOfYear = diff + 1;
+    return dayOfYear;
+  }
+
+  // node_modules/date-fns/getISOWeek.js
+  function getISOWeek(date, options) {
+    const _date = toDate(date, options?.in);
+    const diff = +startOfISOWeek(_date) - +startOfISOWeekYear(_date);
+    return Math.round(diff / millisecondsInWeek) + 1;
+  }
+
+  // node_modules/date-fns/getWeekYear.js
+  function getWeekYear(date, options) {
+    const _date = toDate(date, options?.in);
+    const year = _date.getFullYear();
+    const defaultOptions2 = getDefaultOptions();
+    const firstWeekContainsDate = options?.firstWeekContainsDate ?? options?.locale?.options?.firstWeekContainsDate ?? defaultOptions2.firstWeekContainsDate ?? defaultOptions2.locale?.options?.firstWeekContainsDate ?? 1;
+    const firstWeekOfNextYear = constructFrom(options?.in || date, 0);
+    firstWeekOfNextYear.setFullYear(year + 1, 0, firstWeekContainsDate);
+    firstWeekOfNextYear.setHours(0, 0, 0, 0);
+    const startOfNextYear = startOfWeek(firstWeekOfNextYear, options);
+    const firstWeekOfThisYear = constructFrom(options?.in || date, 0);
+    firstWeekOfThisYear.setFullYear(year, 0, firstWeekContainsDate);
+    firstWeekOfThisYear.setHours(0, 0, 0, 0);
+    const startOfThisYear = startOfWeek(firstWeekOfThisYear, options);
+    if (+_date >= +startOfNextYear) {
+      return year + 1;
+    } else if (+_date >= +startOfThisYear) {
+      return year;
+    } else {
+      return year - 1;
+    }
+  }
+
+  // node_modules/date-fns/startOfWeekYear.js
+  function startOfWeekYear(date, options) {
+    const defaultOptions2 = getDefaultOptions();
+    const firstWeekContainsDate = options?.firstWeekContainsDate ?? options?.locale?.options?.firstWeekContainsDate ?? defaultOptions2.firstWeekContainsDate ?? defaultOptions2.locale?.options?.firstWeekContainsDate ?? 1;
+    const year = getWeekYear(date, options);
+    const firstWeek = constructFrom(options?.in || date, 0);
+    firstWeek.setFullYear(year, 0, firstWeekContainsDate);
+    firstWeek.setHours(0, 0, 0, 0);
+    const _date = startOfWeek(firstWeek, options);
+    return _date;
+  }
+
+  // node_modules/date-fns/getWeek.js
+  function getWeek(date, options) {
+    const _date = toDate(date, options?.in);
+    const diff = +startOfWeek(_date, options) - +startOfWeekYear(_date, options);
+    return Math.round(diff / millisecondsInWeek) + 1;
+  }
+
+  // node_modules/date-fns/_lib/addLeadingZeros.js
+  function addLeadingZeros(number, targetLength) {
+    const sign = number < 0 ? "-" : "";
+    const output = Math.abs(number).toString().padStart(targetLength, "0");
+    return sign + output;
+  }
+
+  // node_modules/date-fns/_lib/format/lightFormatters.js
+  var lightFormatters = {
+    // Year
+    y(date, token) {
+      const signedYear = date.getFullYear();
+      const year = signedYear > 0 ? signedYear : 1 - signedYear;
+      return addLeadingZeros(token === "yy" ? year % 100 : year, token.length);
+    },
+    // Month
+    M(date, token) {
+      const month = date.getMonth();
+      return token === "M" ? String(month + 1) : addLeadingZeros(month + 1, 2);
+    },
+    // Day of the month
+    d(date, token) {
+      return addLeadingZeros(date.getDate(), token.length);
+    },
+    // AM or PM
+    a(date, token) {
+      const dayPeriodEnumValue = date.getHours() / 12 >= 1 ? "pm" : "am";
+      switch (token) {
+        case "a":
+        case "aa":
+          return dayPeriodEnumValue.toUpperCase();
+        case "aaa":
+          return dayPeriodEnumValue;
+        case "aaaaa":
+          return dayPeriodEnumValue[0];
+        case "aaaa":
+        default:
+          return dayPeriodEnumValue === "am" ? "a.m." : "p.m.";
+      }
+    },
+    // Hour [1-12]
+    h(date, token) {
+      return addLeadingZeros(date.getHours() % 12 || 12, token.length);
+    },
+    // Hour [0-23]
+    H(date, token) {
+      return addLeadingZeros(date.getHours(), token.length);
+    },
+    // Minute
+    m(date, token) {
+      return addLeadingZeros(date.getMinutes(), token.length);
+    },
+    // Second
+    s(date, token) {
+      return addLeadingZeros(date.getSeconds(), token.length);
+    },
+    // Fraction of second
+    S(date, token) {
+      const numberOfDigits = token.length;
+      const milliseconds = date.getMilliseconds();
+      const fractionalSeconds = Math.trunc(
+        milliseconds * Math.pow(10, numberOfDigits - 3)
+      );
+      return addLeadingZeros(fractionalSeconds, token.length);
+    }
+  };
+
+  // node_modules/date-fns/_lib/format/formatters.js
+  var dayPeriodEnum = {
+    am: "am",
+    pm: "pm",
+    midnight: "midnight",
+    noon: "noon",
+    morning: "morning",
+    afternoon: "afternoon",
+    evening: "evening",
+    night: "night"
+  };
+  var formatters = {
+    // Era
+    G: function(date, token, localize3) {
+      const era = date.getFullYear() > 0 ? 1 : 0;
+      switch (token) {
+        case "G":
+        case "GG":
+        case "GGG":
+          return localize3.era(era, { width: "abbreviated" });
+        case "GGGGG":
+          return localize3.era(era, { width: "narrow" });
+        case "GGGG":
+        default:
+          return localize3.era(era, { width: "wide" });
+      }
+    },
+    // Year
+    y: function(date, token, localize3) {
+      if (token === "yo") {
+        const signedYear = date.getFullYear();
+        const year = signedYear > 0 ? signedYear : 1 - signedYear;
+        return localize3.ordinalNumber(year, { unit: "year" });
+      }
+      return lightFormatters.y(date, token);
+    },
+    // Local week-numbering year
+    Y: function(date, token, localize3, options) {
+      const signedWeekYear = getWeekYear(date, options);
+      const weekYear = signedWeekYear > 0 ? signedWeekYear : 1 - signedWeekYear;
+      if (token === "YY") {
+        const twoDigitYear = weekYear % 100;
+        return addLeadingZeros(twoDigitYear, 2);
+      }
+      if (token === "Yo") {
+        return localize3.ordinalNumber(weekYear, { unit: "year" });
+      }
+      return addLeadingZeros(weekYear, token.length);
+    },
+    // ISO week-numbering year
+    R: function(date, token) {
+      const isoWeekYear = getISOWeekYear(date);
+      return addLeadingZeros(isoWeekYear, token.length);
+    },
+    // Extended year. This is a single number designating the year of this calendar system.
+    // The main difference between `y` and `u` localizers are B.C. years:
+    // | Year | `y` | `u` |
+    // |------|-----|-----|
+    // | AC 1 |   1 |   1 |
+    // | BC 1 |   1 |   0 |
+    // | BC 2 |   2 |  -1 |
+    // Also `yy` always returns the last two digits of a year,
+    // while `uu` pads single digit years to 2 characters and returns other years unchanged.
+    u: function(date, token) {
+      const year = date.getFullYear();
+      return addLeadingZeros(year, token.length);
+    },
+    // Quarter
+    Q: function(date, token, localize3) {
+      const quarter = Math.ceil((date.getMonth() + 1) / 3);
+      switch (token) {
+        case "Q":
+          return String(quarter);
+        case "QQ":
+          return addLeadingZeros(quarter, 2);
+        case "Qo":
+          return localize3.ordinalNumber(quarter, { unit: "quarter" });
+        case "QQQ":
+          return localize3.quarter(quarter, {
+            width: "abbreviated",
+            context: "formatting"
+          });
+        case "QQQQQ":
+          return localize3.quarter(quarter, {
+            width: "narrow",
+            context: "formatting"
+          });
+        case "QQQQ":
+        default:
+          return localize3.quarter(quarter, {
+            width: "wide",
+            context: "formatting"
+          });
+      }
+    },
+    // Stand-alone quarter
+    q: function(date, token, localize3) {
+      const quarter = Math.ceil((date.getMonth() + 1) / 3);
+      switch (token) {
+        case "q":
+          return String(quarter);
+        case "qq":
+          return addLeadingZeros(quarter, 2);
+        case "qo":
+          return localize3.ordinalNumber(quarter, { unit: "quarter" });
+        case "qqq":
+          return localize3.quarter(quarter, {
+            width: "abbreviated",
+            context: "standalone"
+          });
+        case "qqqqq":
+          return localize3.quarter(quarter, {
+            width: "narrow",
+            context: "standalone"
+          });
+        case "qqqq":
+        default:
+          return localize3.quarter(quarter, {
+            width: "wide",
+            context: "standalone"
+          });
+      }
+    },
+    // Month
+    M: function(date, token, localize3) {
+      const month = date.getMonth();
+      switch (token) {
+        case "M":
+        case "MM":
+          return lightFormatters.M(date, token);
+        case "Mo":
+          return localize3.ordinalNumber(month + 1, { unit: "month" });
+        case "MMM":
+          return localize3.month(month, {
+            width: "abbreviated",
+            context: "formatting"
+          });
+        case "MMMMM":
+          return localize3.month(month, {
+            width: "narrow",
+            context: "formatting"
+          });
+        case "MMMM":
+        default:
+          return localize3.month(month, { width: "wide", context: "formatting" });
+      }
+    },
+    // Stand-alone month
+    L: function(date, token, localize3) {
+      const month = date.getMonth();
+      switch (token) {
+        case "L":
+          return String(month + 1);
+        case "LL":
+          return addLeadingZeros(month + 1, 2);
+        case "Lo":
+          return localize3.ordinalNumber(month + 1, { unit: "month" });
+        case "LLL":
+          return localize3.month(month, {
+            width: "abbreviated",
+            context: "standalone"
+          });
+        case "LLLLL":
+          return localize3.month(month, {
+            width: "narrow",
+            context: "standalone"
+          });
+        case "LLLL":
+        default:
+          return localize3.month(month, { width: "wide", context: "standalone" });
+      }
+    },
+    // Local week of year
+    w: function(date, token, localize3, options) {
+      const week = getWeek(date, options);
+      if (token === "wo") {
+        return localize3.ordinalNumber(week, { unit: "week" });
+      }
+      return addLeadingZeros(week, token.length);
+    },
+    // ISO week of year
+    I: function(date, token, localize3) {
+      const isoWeek = getISOWeek(date);
+      if (token === "Io") {
+        return localize3.ordinalNumber(isoWeek, { unit: "week" });
+      }
+      return addLeadingZeros(isoWeek, token.length);
+    },
+    // Day of the month
+    d: function(date, token, localize3) {
+      if (token === "do") {
+        return localize3.ordinalNumber(date.getDate(), { unit: "date" });
+      }
+      return lightFormatters.d(date, token);
+    },
+    // Day of year
+    D: function(date, token, localize3) {
+      const dayOfYear = getDayOfYear(date);
+      if (token === "Do") {
+        return localize3.ordinalNumber(dayOfYear, { unit: "dayOfYear" });
+      }
+      return addLeadingZeros(dayOfYear, token.length);
+    },
+    // Day of week
+    E: function(date, token, localize3) {
+      const dayOfWeek = date.getDay();
+      switch (token) {
+        case "E":
+        case "EE":
+        case "EEE":
+          return localize3.day(dayOfWeek, {
+            width: "abbreviated",
+            context: "formatting"
+          });
+        case "EEEEE":
+          return localize3.day(dayOfWeek, {
+            width: "narrow",
+            context: "formatting"
+          });
+        case "EEEEEE":
+          return localize3.day(dayOfWeek, {
+            width: "short",
+            context: "formatting"
+          });
+        case "EEEE":
+        default:
+          return localize3.day(dayOfWeek, {
+            width: "wide",
+            context: "formatting"
+          });
+      }
+    },
+    // Local day of week
+    e: function(date, token, localize3, options) {
+      const dayOfWeek = date.getDay();
+      const localDayOfWeek = (dayOfWeek - options.weekStartsOn + 8) % 7 || 7;
+      switch (token) {
+        case "e":
+          return String(localDayOfWeek);
+        case "ee":
+          return addLeadingZeros(localDayOfWeek, 2);
+        case "eo":
+          return localize3.ordinalNumber(localDayOfWeek, { unit: "day" });
+        case "eee":
+          return localize3.day(dayOfWeek, {
+            width: "abbreviated",
+            context: "formatting"
+          });
+        case "eeeee":
+          return localize3.day(dayOfWeek, {
+            width: "narrow",
+            context: "formatting"
+          });
+        case "eeeeee":
+          return localize3.day(dayOfWeek, {
+            width: "short",
+            context: "formatting"
+          });
+        case "eeee":
+        default:
+          return localize3.day(dayOfWeek, {
+            width: "wide",
+            context: "formatting"
+          });
+      }
+    },
+    // Stand-alone local day of week
+    c: function(date, token, localize3, options) {
+      const dayOfWeek = date.getDay();
+      const localDayOfWeek = (dayOfWeek - options.weekStartsOn + 8) % 7 || 7;
+      switch (token) {
+        case "c":
+          return String(localDayOfWeek);
+        case "cc":
+          return addLeadingZeros(localDayOfWeek, token.length);
+        case "co":
+          return localize3.ordinalNumber(localDayOfWeek, { unit: "day" });
+        case "ccc":
+          return localize3.day(dayOfWeek, {
+            width: "abbreviated",
+            context: "standalone"
+          });
+        case "ccccc":
+          return localize3.day(dayOfWeek, {
+            width: "narrow",
+            context: "standalone"
+          });
+        case "cccccc":
+          return localize3.day(dayOfWeek, {
+            width: "short",
+            context: "standalone"
+          });
+        case "cccc":
+        default:
+          return localize3.day(dayOfWeek, {
+            width: "wide",
+            context: "standalone"
+          });
+      }
+    },
+    // ISO day of week
+    i: function(date, token, localize3) {
+      const dayOfWeek = date.getDay();
+      const isoDayOfWeek = dayOfWeek === 0 ? 7 : dayOfWeek;
+      switch (token) {
+        case "i":
+          return String(isoDayOfWeek);
+        case "ii":
+          return addLeadingZeros(isoDayOfWeek, token.length);
+        case "io":
+          return localize3.ordinalNumber(isoDayOfWeek, { unit: "day" });
+        case "iii":
+          return localize3.day(dayOfWeek, {
+            width: "abbreviated",
+            context: "formatting"
+          });
+        case "iiiii":
+          return localize3.day(dayOfWeek, {
+            width: "narrow",
+            context: "formatting"
+          });
+        case "iiiiii":
+          return localize3.day(dayOfWeek, {
+            width: "short",
+            context: "formatting"
+          });
+        case "iiii":
+        default:
+          return localize3.day(dayOfWeek, {
+            width: "wide",
+            context: "formatting"
+          });
+      }
+    },
+    // AM or PM
+    a: function(date, token, localize3) {
+      const hours = date.getHours();
+      const dayPeriodEnumValue = hours / 12 >= 1 ? "pm" : "am";
+      switch (token) {
+        case "a":
+        case "aa":
+          return localize3.dayPeriod(dayPeriodEnumValue, {
+            width: "abbreviated",
+            context: "formatting"
+          });
+        case "aaa":
+          return localize3.dayPeriod(dayPeriodEnumValue, {
+            width: "abbreviated",
+            context: "formatting"
+          }).toLowerCase();
+        case "aaaaa":
+          return localize3.dayPeriod(dayPeriodEnumValue, {
+            width: "narrow",
+            context: "formatting"
+          });
+        case "aaaa":
+        default:
+          return localize3.dayPeriod(dayPeriodEnumValue, {
+            width: "wide",
+            context: "formatting"
+          });
+      }
+    },
+    // AM, PM, midnight, noon
+    b: function(date, token, localize3) {
+      const hours = date.getHours();
+      let dayPeriodEnumValue;
+      if (hours === 12) {
+        dayPeriodEnumValue = dayPeriodEnum.noon;
+      } else if (hours === 0) {
+        dayPeriodEnumValue = dayPeriodEnum.midnight;
+      } else {
+        dayPeriodEnumValue = hours / 12 >= 1 ? "pm" : "am";
+      }
+      switch (token) {
+        case "b":
+        case "bb":
+          return localize3.dayPeriod(dayPeriodEnumValue, {
+            width: "abbreviated",
+            context: "formatting"
+          });
+        case "bbb":
+          return localize3.dayPeriod(dayPeriodEnumValue, {
+            width: "abbreviated",
+            context: "formatting"
+          }).toLowerCase();
+        case "bbbbb":
+          return localize3.dayPeriod(dayPeriodEnumValue, {
+            width: "narrow",
+            context: "formatting"
+          });
+        case "bbbb":
+        default:
+          return localize3.dayPeriod(dayPeriodEnumValue, {
+            width: "wide",
+            context: "formatting"
+          });
+      }
+    },
+    // in the morning, in the afternoon, in the evening, at night
+    B: function(date, token, localize3) {
+      const hours = date.getHours();
+      let dayPeriodEnumValue;
+      if (hours >= 17) {
+        dayPeriodEnumValue = dayPeriodEnum.evening;
+      } else if (hours >= 12) {
+        dayPeriodEnumValue = dayPeriodEnum.afternoon;
+      } else if (hours >= 4) {
+        dayPeriodEnumValue = dayPeriodEnum.morning;
+      } else {
+        dayPeriodEnumValue = dayPeriodEnum.night;
+      }
+      switch (token) {
+        case "B":
+        case "BB":
+        case "BBB":
+          return localize3.dayPeriod(dayPeriodEnumValue, {
+            width: "abbreviated",
+            context: "formatting"
+          });
+        case "BBBBB":
+          return localize3.dayPeriod(dayPeriodEnumValue, {
+            width: "narrow",
+            context: "formatting"
+          });
+        case "BBBB":
+        default:
+          return localize3.dayPeriod(dayPeriodEnumValue, {
+            width: "wide",
+            context: "formatting"
+          });
+      }
+    },
+    // Hour [1-12]
+    h: function(date, token, localize3) {
+      if (token === "ho") {
+        let hours = date.getHours() % 12;
+        if (hours === 0)
+          hours = 12;
+        return localize3.ordinalNumber(hours, { unit: "hour" });
+      }
+      return lightFormatters.h(date, token);
+    },
+    // Hour [0-23]
+    H: function(date, token, localize3) {
+      if (token === "Ho") {
+        return localize3.ordinalNumber(date.getHours(), { unit: "hour" });
+      }
+      return lightFormatters.H(date, token);
+    },
+    // Hour [0-11]
+    K: function(date, token, localize3) {
+      const hours = date.getHours() % 12;
+      if (token === "Ko") {
+        return localize3.ordinalNumber(hours, { unit: "hour" });
+      }
+      return addLeadingZeros(hours, token.length);
+    },
+    // Hour [1-24]
+    k: function(date, token, localize3) {
+      let hours = date.getHours();
+      if (hours === 0)
+        hours = 24;
+      if (token === "ko") {
+        return localize3.ordinalNumber(hours, { unit: "hour" });
+      }
+      return addLeadingZeros(hours, token.length);
+    },
+    // Minute
+    m: function(date, token, localize3) {
+      if (token === "mo") {
+        return localize3.ordinalNumber(date.getMinutes(), { unit: "minute" });
+      }
+      return lightFormatters.m(date, token);
+    },
+    // Second
+    s: function(date, token, localize3) {
+      if (token === "so") {
+        return localize3.ordinalNumber(date.getSeconds(), { unit: "second" });
+      }
+      return lightFormatters.s(date, token);
+    },
+    // Fraction of second
+    S: function(date, token) {
+      return lightFormatters.S(date, token);
+    },
+    // Timezone (ISO-8601. If offset is 0, output is always `'Z'`)
+    X: function(date, token, _localize) {
+      const timezoneOffset = date.getTimezoneOffset();
+      if (timezoneOffset === 0) {
+        return "Z";
+      }
+      switch (token) {
+        case "X":
+          return formatTimezoneWithOptionalMinutes(timezoneOffset);
+        case "XXXX":
+        case "XX":
+          return formatTimezone(timezoneOffset);
+        case "XXXXX":
+        case "XXX":
+        default:
+          return formatTimezone(timezoneOffset, ":");
+      }
+    },
+    // Timezone (ISO-8601. If offset is 0, output is `'+00:00'` or equivalent)
+    x: function(date, token, _localize) {
+      const timezoneOffset = date.getTimezoneOffset();
+      switch (token) {
+        case "x":
+          return formatTimezoneWithOptionalMinutes(timezoneOffset);
+        case "xxxx":
+        case "xx":
+          return formatTimezone(timezoneOffset);
+        case "xxxxx":
+        case "xxx":
+        default:
+          return formatTimezone(timezoneOffset, ":");
+      }
+    },
+    // Timezone (GMT)
+    O: function(date, token, _localize) {
+      const timezoneOffset = date.getTimezoneOffset();
+      switch (token) {
+        case "O":
+        case "OO":
+        case "OOO":
+          return "GMT" + formatTimezoneShort(timezoneOffset, ":");
+        case "OOOO":
+        default:
+          return "GMT" + formatTimezone(timezoneOffset, ":");
+      }
+    },
+    // Timezone (specific non-location)
+    z: function(date, token, _localize) {
+      const timezoneOffset = date.getTimezoneOffset();
+      switch (token) {
+        case "z":
+        case "zz":
+        case "zzz":
+          return "GMT" + formatTimezoneShort(timezoneOffset, ":");
+        case "zzzz":
+        default:
+          return "GMT" + formatTimezone(timezoneOffset, ":");
+      }
+    },
+    // Seconds timestamp
+    t: function(date, token, _localize) {
+      const timestamp = Math.trunc(+date / 1e3);
+      return addLeadingZeros(timestamp, token.length);
+    },
+    // Milliseconds timestamp
+    T: function(date, token, _localize) {
+      return addLeadingZeros(+date, token.length);
+    }
+  };
+  function formatTimezoneShort(offset4, delimiter = "") {
+    const sign = offset4 > 0 ? "-" : "+";
+    const absOffset = Math.abs(offset4);
+    const hours = Math.trunc(absOffset / 60);
+    const minutes = absOffset % 60;
+    if (minutes === 0) {
+      return sign + String(hours);
+    }
+    return sign + String(hours) + delimiter + addLeadingZeros(minutes, 2);
+  }
+  function formatTimezoneWithOptionalMinutes(offset4, delimiter) {
+    if (offset4 % 60 === 0) {
+      const sign = offset4 > 0 ? "-" : "+";
+      return sign + addLeadingZeros(Math.abs(offset4) / 60, 2);
+    }
+    return formatTimezone(offset4, delimiter);
+  }
+  function formatTimezone(offset4, delimiter = "") {
+    const sign = offset4 > 0 ? "-" : "+";
+    const absOffset = Math.abs(offset4);
+    const hours = addLeadingZeros(Math.trunc(absOffset / 60), 2);
+    const minutes = addLeadingZeros(absOffset % 60, 2);
+    return sign + hours + delimiter + minutes;
+  }
+
+  // node_modules/date-fns/_lib/format/longFormatters.js
+  var dateLongFormatter = (pattern, formatLong3) => {
+    switch (pattern) {
+      case "P":
+        return formatLong3.date({ width: "short" });
+      case "PP":
+        return formatLong3.date({ width: "medium" });
+      case "PPP":
+        return formatLong3.date({ width: "long" });
+      case "PPPP":
+      default:
+        return formatLong3.date({ width: "full" });
+    }
+  };
+  var timeLongFormatter = (pattern, formatLong3) => {
+    switch (pattern) {
+      case "p":
+        return formatLong3.time({ width: "short" });
+      case "pp":
+        return formatLong3.time({ width: "medium" });
+      case "ppp":
+        return formatLong3.time({ width: "long" });
+      case "pppp":
+      default:
+        return formatLong3.time({ width: "full" });
+    }
+  };
+  var dateTimeLongFormatter = (pattern, formatLong3) => {
+    const matchResult = pattern.match(/(P+)(p+)?/) || [];
+    const datePattern = matchResult[1];
+    const timePattern = matchResult[2];
+    if (!timePattern) {
+      return dateLongFormatter(pattern, formatLong3);
+    }
+    let dateTimeFormat;
+    switch (datePattern) {
+      case "P":
+        dateTimeFormat = formatLong3.dateTime({ width: "short" });
+        break;
+      case "PP":
+        dateTimeFormat = formatLong3.dateTime({ width: "medium" });
+        break;
+      case "PPP":
+        dateTimeFormat = formatLong3.dateTime({ width: "long" });
+        break;
+      case "PPPP":
+      default:
+        dateTimeFormat = formatLong3.dateTime({ width: "full" });
+        break;
+    }
+    return dateTimeFormat.replace("{{date}}", dateLongFormatter(datePattern, formatLong3)).replace("{{time}}", timeLongFormatter(timePattern, formatLong3));
+  };
+  var longFormatters = {
+    p: timeLongFormatter,
+    P: dateTimeLongFormatter
+  };
+
+  // node_modules/date-fns/_lib/protectedTokens.js
+  var dayOfYearTokenRE = /^D+$/;
+  var weekYearTokenRE = /^Y+$/;
+  var throwTokens = ["D", "DD", "YY", "YYYY"];
+  function isProtectedDayOfYearToken(token) {
+    return dayOfYearTokenRE.test(token);
+  }
+  function isProtectedWeekYearToken(token) {
+    return weekYearTokenRE.test(token);
+  }
+  function warnOrThrowProtectedError(token, format2, input) {
+    const _message = message(token, format2, input);
+    console.warn(_message);
+    if (throwTokens.includes(token))
+      throw new RangeError(_message);
+  }
+  function message(token, format2, input) {
+    const subject = token[0] === "Y" ? "years" : "days of the month";
+    return `Use \`${token.toLowerCase()}\` instead of \`${token}\` (in \`${format2}\`) for formatting ${subject} to the input \`${input}\`; see: https://github.com/date-fns/date-fns/blob/master/docs/unicodeTokens.md`;
+  }
+
+  // node_modules/date-fns/format.js
+  var formattingTokensRegExp = /[yYQqMLwIdDecihHKkms]o|(\w)\1*|''|'(''|[^'])+('|$)|./g;
+  var longFormattingTokensRegExp = /P+p+|P+|p+|''|'(''|[^'])+('|$)|./g;
+  var escapedStringRegExp = /^'([^]*?)'?$/;
+  var doubleQuoteRegExp = /''/g;
+  var unescapedLatinCharacterRegExp = /[a-zA-Z]/;
+  function format(date, formatStr, options) {
+    const defaultOptions2 = getDefaultOptions();
+    const locale = options?.locale ?? defaultOptions2.locale ?? enUS;
+    const firstWeekContainsDate = options?.firstWeekContainsDate ?? options?.locale?.options?.firstWeekContainsDate ?? defaultOptions2.firstWeekContainsDate ?? defaultOptions2.locale?.options?.firstWeekContainsDate ?? 1;
+    const weekStartsOn = options?.weekStartsOn ?? options?.locale?.options?.weekStartsOn ?? defaultOptions2.weekStartsOn ?? defaultOptions2.locale?.options?.weekStartsOn ?? 0;
+    const originalDate = toDate(date, options?.in);
+    if (!isValid(originalDate)) {
+      throw new RangeError("Invalid time value");
+    }
+    let parts = formatStr.match(longFormattingTokensRegExp).map((substring) => {
+      const firstCharacter = substring[0];
+      if (firstCharacter === "p" || firstCharacter === "P") {
+        const longFormatter = longFormatters[firstCharacter];
+        return longFormatter(substring, locale.formatLong);
+      }
+      return substring;
+    }).join("").match(formattingTokensRegExp).map((substring) => {
+      if (substring === "''") {
+        return { isToken: false, value: "'" };
+      }
+      const firstCharacter = substring[0];
+      if (firstCharacter === "'") {
+        return { isToken: false, value: cleanEscapedString(substring) };
+      }
+      if (formatters[firstCharacter]) {
+        return { isToken: true, value: substring };
+      }
+      if (firstCharacter.match(unescapedLatinCharacterRegExp)) {
+        throw new RangeError(
+          "Format string contains an unescaped latin alphabet character `" + firstCharacter + "`"
+        );
+      }
+      return { isToken: false, value: substring };
+    });
+    if (locale.localize.preprocessor) {
+      parts = locale.localize.preprocessor(originalDate, parts);
+    }
+    const formatterOptions = {
+      firstWeekContainsDate,
+      weekStartsOn,
+      locale
+    };
+    return parts.map((part) => {
+      if (!part.isToken)
+        return part.value;
+      const token = part.value;
+      if (!options?.useAdditionalWeekYearTokens && isProtectedWeekYearToken(token) || !options?.useAdditionalDayOfYearTokens && isProtectedDayOfYearToken(token)) {
+        warnOrThrowProtectedError(token, formatStr, String(date));
+      }
+      const formatter = formatters[token[0]];
+      return formatter(originalDate, token, locale.localize, formatterOptions);
+    }).join("");
+  }
+  function cleanEscapedString(input) {
+    const matched = input.match(escapedStringRegExp);
+    if (!matched) {
+      return input;
+    }
+    return matched[1].replace(doubleQuoteRegExp, "'");
+  }
+
+  // node_modules/date-fns/getDaysInMonth.js
+  function getDaysInMonth(date, options) {
+    const _date = toDate(date, options?.in);
+    const year = _date.getFullYear();
+    const monthIndex = _date.getMonth();
+    const lastDayOfMonth = constructFrom(_date, 0);
+    lastDayOfMonth.setFullYear(year, monthIndex + 1, 0);
+    lastDayOfMonth.setHours(0, 0, 0, 0);
+    return lastDayOfMonth.getDate();
+  }
+
+  // node_modules/date-fns/getMonth.js
+  function getMonth(date, options) {
+    return toDate(date, options?.in).getMonth();
+  }
+
+  // node_modules/date-fns/getYear.js
+  function getYear(date, options) {
+    return toDate(date, options?.in).getFullYear();
+  }
+
+  // node_modules/date-fns/isAfter.js
+  function isAfter(date, dateToCompare) {
+    return +toDate(date) > +toDate(dateToCompare);
+  }
+
+  // node_modules/date-fns/isBefore.js
+  function isBefore(date, dateToCompare) {
+    return +toDate(date) < +toDate(dateToCompare);
+  }
+
+  // node_modules/date-fns/isSameMonth.js
+  function isSameMonth(laterDate, earlierDate, options) {
+    const [laterDate_, earlierDate_] = normalizeDates(
+      options?.in,
+      laterDate,
+      earlierDate
+    );
+    return laterDate_.getFullYear() === earlierDate_.getFullYear() && laterDate_.getMonth() === earlierDate_.getMonth();
+  }
+
+  // node_modules/date-fns/isSameYear.js
+  function isSameYear(laterDate, earlierDate, options) {
+    const [laterDate_, earlierDate_] = normalizeDates(
+      options?.in,
+      laterDate,
+      earlierDate
+    );
+    return laterDate_.getFullYear() === earlierDate_.getFullYear();
+  }
+
+  // node_modules/date-fns/setMonth.js
+  function setMonth(date, month, options) {
+    const _date = toDate(date, options?.in);
+    const year = _date.getFullYear();
+    const day = _date.getDate();
+    const midMonth = constructFrom(options?.in || date, 0);
+    midMonth.setFullYear(year, month, 15);
+    midMonth.setHours(0, 0, 0, 0);
+    const daysInMonth = getDaysInMonth(midMonth);
+    _date.setMonth(month, Math.min(day, daysInMonth));
+    return _date;
+  }
+
+  // node_modules/date-fns/setYear.js
+  function setYear(date, year, options) {
+    const date_ = toDate(date, options?.in);
+    if (isNaN(+date_))
+      return constructFrom(options?.in || date, NaN);
+    date_.setFullYear(year);
+    return date_;
+  }
+
+  // node_modules/react-day-picker/dist/esm/helpers/getBroadcastWeeksInMonth.js
+  var FIVE_WEEKS = 5;
+  var FOUR_WEEKS = 4;
+  function getBroadcastWeeksInMonth(month, dateLib) {
+    const firstDayOfMonth = dateLib.startOfMonth(month);
+    const firstDayOfWeek = firstDayOfMonth.getDay() > 0 ? firstDayOfMonth.getDay() : 7;
+    const broadcastStartDate = dateLib.addDays(month, -firstDayOfWeek + 1);
+    const lastDateOfLastWeek = dateLib.addDays(broadcastStartDate, FIVE_WEEKS * 7 - 1);
+    const numberOfWeeks = dateLib.getMonth(month) === dateLib.getMonth(lastDateOfLastWeek) ? FIVE_WEEKS : FOUR_WEEKS;
+    return numberOfWeeks;
+  }
+
+  // node_modules/react-day-picker/dist/esm/helpers/startOfBroadcastWeek.js
+  function startOfBroadcastWeek(date, dateLib) {
+    const firstOfMonth = dateLib.startOfMonth(date);
+    const dayOfWeek = firstOfMonth.getDay();
+    if (dayOfWeek === 1) {
+      return firstOfMonth;
+    } else if (dayOfWeek === 0) {
+      return dateLib.addDays(firstOfMonth, -1 * 6);
+    } else {
+      return dateLib.addDays(firstOfMonth, -1 * (dayOfWeek - 1));
+    }
+  }
+
+  // node_modules/react-day-picker/dist/esm/helpers/endOfBroadcastWeek.js
+  function endOfBroadcastWeek(date, dateLib) {
+    const startDate = startOfBroadcastWeek(date, dateLib);
+    const numberOfWeeks = getBroadcastWeeksInMonth(date, dateLib);
+    const endDate = dateLib.addDays(startDate, numberOfWeeks * 7 - 1);
+    return endDate;
+  }
+
+  // node_modules/date-fns/locale/ja/_lib/formatDistance.js
+  var formatDistanceLocale2 = {
+    lessThanXSeconds: {
+      one: "1\u79D2\u672A\u6E80",
+      other: "{{count}}\u79D2\u672A\u6E80",
+      oneWithSuffix: "\u7D041\u79D2",
+      otherWithSuffix: "\u7D04{{count}}\u79D2"
+    },
+    xSeconds: {
+      one: "1\u79D2",
+      other: "{{count}}\u79D2"
+    },
+    halfAMinute: "30\u79D2",
+    lessThanXMinutes: {
+      one: "1\u5206\u672A\u6E80",
+      other: "{{count}}\u5206\u672A\u6E80",
+      oneWithSuffix: "\u7D041\u5206",
+      otherWithSuffix: "\u7D04{{count}}\u5206"
+    },
+    xMinutes: {
+      one: "1\u5206",
+      other: "{{count}}\u5206"
+    },
+    aboutXHours: {
+      one: "\u7D041\u6642\u9593",
+      other: "\u7D04{{count}}\u6642\u9593"
+    },
+    xHours: {
+      one: "1\u6642\u9593",
+      other: "{{count}}\u6642\u9593"
+    },
+    xDays: {
+      one: "1\u65E5",
+      other: "{{count}}\u65E5"
+    },
+    aboutXWeeks: {
+      one: "\u7D041\u9031\u9593",
+      other: "\u7D04{{count}}\u9031\u9593"
+    },
+    xWeeks: {
+      one: "1\u9031\u9593",
+      other: "{{count}}\u9031\u9593"
+    },
+    aboutXMonths: {
+      one: "\u7D041\u304B\u6708",
+      other: "\u7D04{{count}}\u304B\u6708"
+    },
+    xMonths: {
+      one: "1\u304B\u6708",
+      other: "{{count}}\u304B\u6708"
+    },
+    aboutXYears: {
+      one: "\u7D041\u5E74",
+      other: "\u7D04{{count}}\u5E74"
+    },
+    xYears: {
+      one: "1\u5E74",
+      other: "{{count}}\u5E74"
+    },
+    overXYears: {
+      one: "1\u5E74\u4EE5\u4E0A",
+      other: "{{count}}\u5E74\u4EE5\u4E0A"
+    },
+    almostXYears: {
+      one: "1\u5E74\u8FD1\u304F",
+      other: "{{count}}\u5E74\u8FD1\u304F"
+    }
+  };
+  var formatDistance2 = (token, count3, options) => {
+    options = options || {};
+    let result;
+    const tokenValue = formatDistanceLocale2[token];
+    if (typeof tokenValue === "string") {
+      result = tokenValue;
+    } else if (count3 === 1) {
+      if (options.addSuffix && tokenValue.oneWithSuffix) {
+        result = tokenValue.oneWithSuffix;
+      } else {
+        result = tokenValue.one;
+      }
+    } else {
+      if (options.addSuffix && tokenValue.otherWithSuffix) {
+        result = tokenValue.otherWithSuffix.replace("{{count}}", String(count3));
+      } else {
+        result = tokenValue.other.replace("{{count}}", String(count3));
+      }
+    }
+    if (options.addSuffix) {
+      if (options.comparison && options.comparison > 0) {
+        return result + "\u5F8C";
+      } else {
+        return result + "\u524D";
+      }
+    }
+    return result;
+  };
+
+  // node_modules/date-fns/locale/ja/_lib/formatLong.js
+  var dateFormats2 = {
+    full: "y\u5E74M\u6708d\u65E5EEEE",
+    long: "y\u5E74M\u6708d\u65E5",
+    medium: "y/MM/dd",
+    short: "y/MM/dd"
+  };
+  var timeFormats2 = {
+    full: "H\u6642mm\u5206ss\u79D2 zzzz",
+    long: "H:mm:ss z",
+    medium: "H:mm:ss",
+    short: "H:mm"
+  };
+  var dateTimeFormats2 = {
+    full: "{{date}} {{time}}",
+    long: "{{date}} {{time}}",
+    medium: "{{date}} {{time}}",
+    short: "{{date}} {{time}}"
+  };
+  var formatLong2 = {
+    date: buildFormatLongFn({
+      formats: dateFormats2,
+      defaultWidth: "full"
+    }),
+    time: buildFormatLongFn({
+      formats: timeFormats2,
+      defaultWidth: "full"
+    }),
+    dateTime: buildFormatLongFn({
+      formats: dateTimeFormats2,
+      defaultWidth: "full"
+    })
+  };
+
+  // node_modules/date-fns/locale/ja/_lib/formatRelative.js
+  var formatRelativeLocale2 = {
+    lastWeek: "\u5148\u9031\u306Eeeee\u306Ep",
+    yesterday: "\u6628\u65E5\u306Ep",
+    today: "\u4ECA\u65E5\u306Ep",
+    tomorrow: "\u660E\u65E5\u306Ep",
+    nextWeek: "\u7FCC\u9031\u306Eeeee\u306Ep",
+    other: "P"
+  };
+  var formatRelative2 = (token, _date, _baseDate, _options) => {
+    return formatRelativeLocale2[token];
+  };
+
+  // node_modules/date-fns/locale/ja/_lib/localize.js
+  var eraValues2 = {
+    narrow: ["BC", "AC"],
+    abbreviated: ["\u7D00\u5143\u524D", "\u897F\u66A6"],
+    wide: ["\u7D00\u5143\u524D", "\u897F\u66A6"]
+  };
+  var quarterValues2 = {
+    narrow: ["1", "2", "3", "4"],
+    abbreviated: ["Q1", "Q2", "Q3", "Q4"],
+    wide: ["\u7B2C1\u56DB\u534A\u671F", "\u7B2C2\u56DB\u534A\u671F", "\u7B2C3\u56DB\u534A\u671F", "\u7B2C4\u56DB\u534A\u671F"]
+  };
+  var monthValues2 = {
+    narrow: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+    abbreviated: [
+      "1\u6708",
+      "2\u6708",
+      "3\u6708",
+      "4\u6708",
+      "5\u6708",
+      "6\u6708",
+      "7\u6708",
+      "8\u6708",
+      "9\u6708",
+      "10\u6708",
+      "11\u6708",
+      "12\u6708"
+    ],
+    wide: [
+      "1\u6708",
+      "2\u6708",
+      "3\u6708",
+      "4\u6708",
+      "5\u6708",
+      "6\u6708",
+      "7\u6708",
+      "8\u6708",
+      "9\u6708",
+      "10\u6708",
+      "11\u6708",
+      "12\u6708"
+    ]
+  };
+  var dayValues2 = {
+    narrow: ["\u65E5", "\u6708", "\u706B", "\u6C34", "\u6728", "\u91D1", "\u571F"],
+    short: ["\u65E5", "\u6708", "\u706B", "\u6C34", "\u6728", "\u91D1", "\u571F"],
+    abbreviated: ["\u65E5", "\u6708", "\u706B", "\u6C34", "\u6728", "\u91D1", "\u571F"],
+    wide: ["\u65E5\u66DC\u65E5", "\u6708\u66DC\u65E5", "\u706B\u66DC\u65E5", "\u6C34\u66DC\u65E5", "\u6728\u66DC\u65E5", "\u91D1\u66DC\u65E5", "\u571F\u66DC\u65E5"]
+  };
+  var dayPeriodValues2 = {
+    narrow: {
+      am: "\u5348\u524D",
+      pm: "\u5348\u5F8C",
+      midnight: "\u6DF1\u591C",
+      noon: "\u6B63\u5348",
+      morning: "\u671D",
+      afternoon: "\u5348\u5F8C",
+      evening: "\u591C",
+      night: "\u6DF1\u591C"
+    },
+    abbreviated: {
+      am: "\u5348\u524D",
+      pm: "\u5348\u5F8C",
+      midnight: "\u6DF1\u591C",
+      noon: "\u6B63\u5348",
+      morning: "\u671D",
+      afternoon: "\u5348\u5F8C",
+      evening: "\u591C",
+      night: "\u6DF1\u591C"
+    },
+    wide: {
+      am: "\u5348\u524D",
+      pm: "\u5348\u5F8C",
+      midnight: "\u6DF1\u591C",
+      noon: "\u6B63\u5348",
+      morning: "\u671D",
+      afternoon: "\u5348\u5F8C",
+      evening: "\u591C",
+      night: "\u6DF1\u591C"
+    }
+  };
+  var formattingDayPeriodValues2 = {
+    narrow: {
+      am: "\u5348\u524D",
+      pm: "\u5348\u5F8C",
+      midnight: "\u6DF1\u591C",
+      noon: "\u6B63\u5348",
+      morning: "\u671D",
+      afternoon: "\u5348\u5F8C",
+      evening: "\u591C",
+      night: "\u6DF1\u591C"
+    },
+    abbreviated: {
+      am: "\u5348\u524D",
+      pm: "\u5348\u5F8C",
+      midnight: "\u6DF1\u591C",
+      noon: "\u6B63\u5348",
+      morning: "\u671D",
+      afternoon: "\u5348\u5F8C",
+      evening: "\u591C",
+      night: "\u6DF1\u591C"
+    },
+    wide: {
+      am: "\u5348\u524D",
+      pm: "\u5348\u5F8C",
+      midnight: "\u6DF1\u591C",
+      noon: "\u6B63\u5348",
+      morning: "\u671D",
+      afternoon: "\u5348\u5F8C",
+      evening: "\u591C",
+      night: "\u6DF1\u591C"
+    }
+  };
+  var ordinalNumber2 = (dirtyNumber, options) => {
+    const number = Number(dirtyNumber);
+    const unit = String(options?.unit);
+    switch (unit) {
+      case "year":
+        return `${number}\u5E74`;
+      case "quarter":
+        return `\u7B2C${number}\u56DB\u534A\u671F`;
+      case "month":
+        return `${number}\u6708`;
+      case "week":
+        return `\u7B2C${number}\u9031`;
+      case "date":
+        return `${number}\u65E5`;
+      case "hour":
+        return `${number}\u6642`;
+      case "minute":
+        return `${number}\u5206`;
+      case "second":
+        return `${number}\u79D2`;
+      default:
+        return `${number}`;
+    }
+  };
+  var localize2 = {
+    ordinalNumber: ordinalNumber2,
+    era: buildLocalizeFn({
+      values: eraValues2,
+      defaultWidth: "wide"
+    }),
+    quarter: buildLocalizeFn({
+      values: quarterValues2,
+      defaultWidth: "wide",
+      argumentCallback: (quarter) => Number(quarter) - 1
+    }),
+    month: buildLocalizeFn({
+      values: monthValues2,
+      defaultWidth: "wide"
+    }),
+    day: buildLocalizeFn({
+      values: dayValues2,
+      defaultWidth: "wide"
+    }),
+    dayPeriod: buildLocalizeFn({
+      values: dayPeriodValues2,
+      defaultWidth: "wide",
+      formattingValues: formattingDayPeriodValues2,
+      defaultFormattingWidth: "wide"
+    })
+  };
+
+  // node_modules/date-fns/locale/ja/_lib/match.js
+  var matchOrdinalNumberPattern2 = /^第?\d+(年|四半期|月|週|日|時|分|秒)?/i;
+  var parseOrdinalNumberPattern2 = /\d+/i;
+  var matchEraPatterns2 = {
+    narrow: /^(B\.?C\.?|A\.?D\.?)/i,
+    abbreviated: /^(紀元[前後]|西暦)/i,
+    wide: /^(紀元[前後]|西暦)/i
+  };
+  var parseEraPatterns2 = {
+    narrow: [/^B/i, /^A/i],
+    any: [/^(紀元前)/i, /^(西暦|紀元後)/i]
+  };
+  var matchQuarterPatterns2 = {
+    narrow: /^[1234]/i,
+    abbreviated: /^Q[1234]/i,
+    wide: /^第[1234一二三四１２３４]四半期/i
+  };
+  var parseQuarterPatterns2 = {
+    any: [/(1|一|１)/i, /(2|二|２)/i, /(3|三|３)/i, /(4|四|４)/i]
+  };
+  var matchMonthPatterns2 = {
+    narrow: /^([123456789]|1[012])/,
+    abbreviated: /^([123456789]|1[012])月/i,
+    wide: /^([123456789]|1[012])月/i
+  };
+  var parseMonthPatterns2 = {
+    any: [
+      /^1\D/,
+      /^2/,
+      /^3/,
+      /^4/,
+      /^5/,
+      /^6/,
+      /^7/,
+      /^8/,
+      /^9/,
+      /^10/,
+      /^11/,
+      /^12/
+    ]
+  };
+  var matchDayPatterns2 = {
+    narrow: /^[日月火水木金土]/,
+    short: /^[日月火水木金土]/,
+    abbreviated: /^[日月火水木金土]/,
+    wide: /^[日月火水木金土]曜日/
+  };
+  var parseDayPatterns2 = {
+    any: [/^日/, /^月/, /^火/, /^水/, /^木/, /^金/, /^土/]
+  };
+  var matchDayPeriodPatterns2 = {
+    any: /^(AM|PM|午前|午後|正午|深夜|真夜中|夜|朝)/i
+  };
+  var parseDayPeriodPatterns2 = {
+    any: {
+      am: /^(A|午前)/i,
+      pm: /^(P|午後)/i,
+      midnight: /^深夜|真夜中/i,
+      noon: /^正午/i,
+      morning: /^朝/i,
+      afternoon: /^午後/i,
+      evening: /^夜/i,
+      night: /^深夜/i
+    }
+  };
+  var match2 = {
+    ordinalNumber: buildMatchPatternFn({
+      matchPattern: matchOrdinalNumberPattern2,
+      parsePattern: parseOrdinalNumberPattern2,
+      valueCallback: function(value) {
+        return parseInt(value, 10);
+      }
+    }),
+    era: buildMatchFn({
+      matchPatterns: matchEraPatterns2,
+      defaultMatchWidth: "wide",
+      parsePatterns: parseEraPatterns2,
+      defaultParseWidth: "any"
+    }),
+    quarter: buildMatchFn({
+      matchPatterns: matchQuarterPatterns2,
+      defaultMatchWidth: "wide",
+      parsePatterns: parseQuarterPatterns2,
+      defaultParseWidth: "any",
+      valueCallback: (index2) => index2 + 1
+    }),
+    month: buildMatchFn({
+      matchPatterns: matchMonthPatterns2,
+      defaultMatchWidth: "wide",
+      parsePatterns: parseMonthPatterns2,
+      defaultParseWidth: "any"
+    }),
+    day: buildMatchFn({
+      matchPatterns: matchDayPatterns2,
+      defaultMatchWidth: "wide",
+      parsePatterns: parseDayPatterns2,
+      defaultParseWidth: "any"
+    }),
+    dayPeriod: buildMatchFn({
+      matchPatterns: matchDayPeriodPatterns2,
+      defaultMatchWidth: "any",
+      parsePatterns: parseDayPeriodPatterns2,
+      defaultParseWidth: "any"
+    })
+  };
+
+  // node_modules/date-fns/locale/ja.js
+  var ja = {
+    code: "ja",
+    formatDistance: formatDistance2,
+    formatLong: formatLong2,
+    formatRelative: formatRelative2,
+    localize: localize2,
+    match: match2,
+    options: {
+      weekStartsOn: 0,
+      firstWeekContainsDate: 1
+    }
+  };
+  var ja_default = ja;
+
+  // node_modules/react-day-picker/dist/esm/locale/en-US.js
+  var enUS2 = {
+    ...enUS,
+    labels: {
+      labelDayButton: (date, modifiers, options, dateLib) => {
+        let formatDate;
+        if (dateLib && typeof dateLib.format === "function") {
+          formatDate = dateLib.format.bind(dateLib);
+        } else {
+          formatDate = (d, pattern) => format(d, pattern, { locale: enUS, ...options });
+        }
+        let label = formatDate(date, "PPPP");
+        if (modifiers.today)
+          label = `Today, ${label}`;
+        if (modifiers.selected)
+          label = `${label}, selected`;
+        return label;
+      },
+      labelMonthDropdown: "Choose the Month",
+      labelNext: "Go to the Next Month",
+      labelPrevious: "Go to the Previous Month",
+      labelWeekNumber: (weekNumber) => `Week ${weekNumber}`,
+      labelYearDropdown: "Choose the Year",
+      labelGrid: (date, options, dateLib) => {
+        let formatDate;
+        if (dateLib && typeof dateLib.format === "function") {
+          formatDate = dateLib.format.bind(dateLib);
+        } else {
+          formatDate = (d, pattern) => format(d, pattern, { locale: enUS, ...options });
+        }
+        return formatDate(date, "LLLL yyyy");
+      },
+      labelGridcell: (date, modifiers, options, dateLib) => {
+        let formatDate;
+        if (dateLib && typeof dateLib.format === "function") {
+          formatDate = dateLib.format.bind(dateLib);
+        } else {
+          formatDate = (d, pattern) => format(d, pattern, { locale: enUS, ...options });
+        }
+        let label = formatDate(date, "PPPP");
+        if (modifiers?.today) {
+          label = `Today, ${label}`;
+        }
+        return label;
+      },
+      labelNav: "Navigation bar",
+      labelWeekNumberHeader: "Week Number",
+      labelWeekday: (date, options, dateLib) => {
+        let formatDate;
+        if (dateLib && typeof dateLib.format === "function") {
+          formatDate = dateLib.format.bind(dateLib);
+        } else {
+          formatDate = (d, pattern) => format(d, pattern, { locale: enUS, ...options });
+        }
+        return formatDate(date, "cccc");
+      }
+    }
+  };
+
+  // node_modules/react-day-picker/dist/esm/classes/DateLib.js
+  var DateLib = class _DateLib {
+    /**
+     * Creates an instance of `DateLib`.
+     *
+     * @param options Configuration options for the date library.
+     * @param overrides Custom overrides for the date library functions.
+     */
+    constructor(options, overrides) {
+      this.Date = Date;
+      this.today = () => {
+        if (this.overrides?.today) {
+          return this.overrides.today();
+        }
+        if (this.options.timeZone) {
+          return TZDate.tz(this.options.timeZone);
+        }
+        return new this.Date();
+      };
+      this.newDate = (year, monthIndex, date) => {
+        if (this.overrides?.newDate) {
+          return this.overrides.newDate(year, monthIndex, date);
+        }
+        if (this.options.timeZone) {
+          return new TZDate(year, monthIndex, date, this.options.timeZone);
+        }
+        return new Date(year, monthIndex, date);
+      };
+      this.addDays = (date, amount) => {
+        return this.overrides?.addDays ? this.overrides.addDays(date, amount) : addDays(date, amount);
+      };
+      this.addMonths = (date, amount) => {
+        return this.overrides?.addMonths ? this.overrides.addMonths(date, amount) : addMonths(date, amount);
+      };
+      this.addWeeks = (date, amount) => {
+        return this.overrides?.addWeeks ? this.overrides.addWeeks(date, amount) : addWeeks(date, amount);
+      };
+      this.addYears = (date, amount) => {
+        return this.overrides?.addYears ? this.overrides.addYears(date, amount) : addYears(date, amount);
+      };
+      this.differenceInCalendarDays = (dateLeft, dateRight) => {
+        return this.overrides?.differenceInCalendarDays ? this.overrides.differenceInCalendarDays(dateLeft, dateRight) : differenceInCalendarDays(dateLeft, dateRight);
+      };
+      this.differenceInCalendarMonths = (dateLeft, dateRight) => {
+        return this.overrides?.differenceInCalendarMonths ? this.overrides.differenceInCalendarMonths(dateLeft, dateRight) : differenceInCalendarMonths(dateLeft, dateRight);
+      };
+      this.eachMonthOfInterval = (interval) => {
+        return this.overrides?.eachMonthOfInterval ? this.overrides.eachMonthOfInterval(interval) : eachMonthOfInterval(interval);
+      };
+      this.eachYearOfInterval = (interval) => {
+        const years = this.overrides?.eachYearOfInterval ? this.overrides.eachYearOfInterval(interval) : eachYearOfInterval(interval);
+        const uniqueYears = new Set(years.map((d) => this.getYear(d)));
+        if (uniqueYears.size === years.length) {
+          return years;
+        }
+        const yearsArray = [];
+        uniqueYears.forEach((y) => {
+          yearsArray.push(new Date(y, 0, 1));
+        });
+        return yearsArray;
+      };
+      this.endOfBroadcastWeek = (date) => {
+        return this.overrides?.endOfBroadcastWeek ? this.overrides.endOfBroadcastWeek(date) : endOfBroadcastWeek(date, this);
+      };
+      this.endOfISOWeek = (date) => {
+        return this.overrides?.endOfISOWeek ? this.overrides.endOfISOWeek(date) : endOfISOWeek(date);
+      };
+      this.endOfMonth = (date) => {
+        return this.overrides?.endOfMonth ? this.overrides.endOfMonth(date) : endOfMonth(date);
+      };
+      this.endOfWeek = (date, options2) => {
+        return this.overrides?.endOfWeek ? this.overrides.endOfWeek(date, options2) : endOfWeek(date, this.options);
+      };
+      this.endOfYear = (date) => {
+        return this.overrides?.endOfYear ? this.overrides.endOfYear(date) : endOfYear(date);
+      };
+      this.format = (date, formatStr, _options) => {
+        const formatted = this.overrides?.format ? this.overrides.format(date, formatStr, this.options) : format(date, formatStr, this.options);
+        if (this.options.numerals && this.options.numerals !== "latn") {
+          return this.replaceDigits(formatted);
+        }
+        return formatted;
+      };
+      this.getISOWeek = (date) => {
+        return this.overrides?.getISOWeek ? this.overrides.getISOWeek(date) : getISOWeek(date);
+      };
+      this.getMonth = (date, _options) => {
+        return this.overrides?.getMonth ? this.overrides.getMonth(date, this.options) : getMonth(date, this.options);
+      };
+      this.getYear = (date, _options) => {
+        return this.overrides?.getYear ? this.overrides.getYear(date, this.options) : getYear(date, this.options);
+      };
+      this.getWeek = (date, _options) => {
+        return this.overrides?.getWeek ? this.overrides.getWeek(date, this.options) : getWeek(date, this.options);
+      };
+      this.isAfter = (date, dateToCompare) => {
+        return this.overrides?.isAfter ? this.overrides.isAfter(date, dateToCompare) : isAfter(date, dateToCompare);
+      };
+      this.isBefore = (date, dateToCompare) => {
+        return this.overrides?.isBefore ? this.overrides.isBefore(date, dateToCompare) : isBefore(date, dateToCompare);
+      };
+      this.isDate = (value) => {
+        return this.overrides?.isDate ? this.overrides.isDate(value) : isDate2(value);
+      };
+      this.isSameDay = (dateLeft, dateRight) => {
+        return this.overrides?.isSameDay ? this.overrides.isSameDay(dateLeft, dateRight) : isSameDay(dateLeft, dateRight);
+      };
+      this.isSameMonth = (dateLeft, dateRight) => {
+        return this.overrides?.isSameMonth ? this.overrides.isSameMonth(dateLeft, dateRight) : isSameMonth(dateLeft, dateRight);
+      };
+      this.isSameYear = (dateLeft, dateRight) => {
+        return this.overrides?.isSameYear ? this.overrides.isSameYear(dateLeft, dateRight) : isSameYear(dateLeft, dateRight);
+      };
+      this.max = (dates) => {
+        return this.overrides?.max ? this.overrides.max(dates) : max(dates);
+      };
+      this.min = (dates) => {
+        return this.overrides?.min ? this.overrides.min(dates) : min(dates);
+      };
+      this.setMonth = (date, month) => {
+        return this.overrides?.setMonth ? this.overrides.setMonth(date, month) : setMonth(date, month);
+      };
+      this.setYear = (date, year) => {
+        return this.overrides?.setYear ? this.overrides.setYear(date, year) : setYear(date, year);
+      };
+      this.startOfBroadcastWeek = (date, _dateLib) => {
+        return this.overrides?.startOfBroadcastWeek ? this.overrides.startOfBroadcastWeek(date, this) : startOfBroadcastWeek(date, this);
+      };
+      this.startOfDay = (date) => {
+        return this.overrides?.startOfDay ? this.overrides.startOfDay(date) : startOfDay(date);
+      };
+      this.startOfISOWeek = (date) => {
+        return this.overrides?.startOfISOWeek ? this.overrides.startOfISOWeek(date) : startOfISOWeek(date);
+      };
+      this.startOfMonth = (date) => {
+        return this.overrides?.startOfMonth ? this.overrides.startOfMonth(date) : startOfMonth(date);
+      };
+      this.startOfWeek = (date, _options) => {
+        return this.overrides?.startOfWeek ? this.overrides.startOfWeek(date, this.options) : startOfWeek(date, this.options);
+      };
+      this.startOfYear = (date) => {
+        return this.overrides?.startOfYear ? this.overrides.startOfYear(date) : startOfYear(date);
+      };
+      this.options = { locale: enUS2, ...options };
+      this.overrides = overrides;
+    }
+    /**
+     * Generates a mapping of Arabic digits (0-9) to the target numbering system
+     * digits.
+     *
+     * @since 9.5.0
+     * @returns A record mapping Arabic digits to the target numerals.
+     */
+    getDigitMap() {
+      const { numerals = "latn" } = this.options;
+      const formatter = new Intl.NumberFormat("en-US", {
+        numberingSystem: numerals
+      });
+      const digitMap = {};
+      for (let i = 0; i < 10; i++) {
+        digitMap[i.toString()] = formatter.format(i);
+      }
+      return digitMap;
+    }
+    /**
+     * Replaces Arabic digits in a string with the target numbering system digits.
+     *
+     * @since 9.5.0
+     * @param input The string containing Arabic digits.
+     * @returns The string with digits replaced.
+     */
+    replaceDigits(input) {
+      const digitMap = this.getDigitMap();
+      return input.replace(/\d/g, (digit) => digitMap[digit] || digit);
+    }
+    /**
+     * Formats a number using the configured numbering system.
+     *
+     * @since 9.5.0
+     * @param value The number to format.
+     * @returns The formatted number as a string.
+     */
+    formatNumber(value) {
+      return this.replaceDigits(value.toString());
+    }
+    /**
+     * Returns the preferred ordering for month and year labels for the current
+     * locale.
+     */
+    getMonthYearOrder() {
+      const code = this.options.locale?.code;
+      if (!code) {
+        return "month-first";
+      }
+      return _DateLib.yearFirstLocales.has(code) ? "year-first" : "month-first";
+    }
+    /**
+     * Formats the month/year pair respecting locale conventions.
+     *
+     * @since 9.11.0
+     */
+    formatMonthYear(date) {
+      const { locale, timeZone, numerals } = this.options;
+      const localeCode = locale?.code;
+      if (localeCode && _DateLib.yearFirstLocales.has(localeCode)) {
+        try {
+          const intl = new Intl.DateTimeFormat(localeCode, {
+            month: "long",
+            year: "numeric",
+            timeZone,
+            numberingSystem: numerals
+          });
+          const formatted = intl.format(date);
+          return formatted;
+        } catch {
+        }
+      }
+      const pattern = this.getMonthYearOrder() === "year-first" ? "y LLLL" : "LLLL y";
+      return this.format(date, pattern);
+    }
+  };
+  DateLib.yearFirstLocales = /* @__PURE__ */ new Set([
+    "eu",
+    "hu",
+    "ja",
+    "ja-Hira",
+    "ja-JP",
+    "ko",
+    "ko-KR",
+    "lt",
+    "lt-LT",
+    "lv",
+    "lv-LV",
+    "mn",
+    "mn-MN",
+    "zh",
+    "zh-CN",
+    "zh-HK",
+    "zh-TW"
+  ]);
+  var defaultDateLib = new DateLib();
+
+  // node_modules/react-day-picker/dist/esm/classes/CalendarDay.js
+  var CalendarDay = class {
+    constructor(date, displayMonth, dateLib = defaultDateLib) {
+      this.date = date;
+      this.displayMonth = displayMonth;
+      this.outside = Boolean(displayMonth && !dateLib.isSameMonth(date, displayMonth));
+      this.dateLib = dateLib;
+      this.isoDate = dateLib.format(date, "yyyy-MM-dd");
+      this.displayMonthId = dateLib.format(displayMonth, "yyyy-MM");
+      this.dateMonthId = dateLib.format(date, "yyyy-MM");
+    }
+    /**
+     * Checks if this day is equal to another `CalendarDay`, considering both the
+     * date and the displayed month.
+     *
+     * @param day The `CalendarDay` to compare with.
+     * @returns `true` if the days are equal, otherwise `false`.
+     */
+    isEqualTo(day) {
+      return this.dateLib.isSameDay(day.date, this.date) && this.dateLib.isSameMonth(day.displayMonth, this.displayMonth);
+    }
+  };
+
+  // node_modules/react-day-picker/dist/esm/classes/CalendarMonth.js
+  var CalendarMonth = class {
+    constructor(month, weeks) {
+      this.date = month;
+      this.weeks = weeks;
+    }
+  };
+
+  // node_modules/react-day-picker/dist/esm/classes/CalendarWeek.js
+  var CalendarWeek = class {
+    constructor(weekNumber, days) {
+      this.days = days;
+      this.weekNumber = weekNumber;
+    }
+  };
+
+  // node_modules/react-day-picker/dist/esm/components/custom-components.js
+  var custom_components_exports = {};
+  __export(custom_components_exports, {
+    Button: () => Button,
+    CaptionLabel: () => CaptionLabel,
+    Chevron: () => Chevron,
+    Day: () => Day,
+    DayButton: () => DayButton,
+    Dropdown: () => Dropdown,
+    DropdownNav: () => DropdownNav,
+    Footer: () => Footer,
+    Month: () => Month,
+    MonthCaption: () => MonthCaption,
+    MonthGrid: () => MonthGrid,
+    Months: () => Months,
+    MonthsDropdown: () => MonthsDropdown,
+    Nav: () => Nav,
+    NextMonthButton: () => NextMonthButton,
+    Option: () => Option,
+    PreviousMonthButton: () => PreviousMonthButton,
+    Root: () => Root,
+    Select: () => Select,
+    Week: () => Week,
+    WeekNumber: () => WeekNumber,
+    WeekNumberHeader: () => WeekNumberHeader,
+    Weekday: () => Weekday,
+    Weekdays: () => Weekdays,
+    Weeks: () => Weeks,
+    YearsDropdown: () => YearsDropdown
+  });
+
+  // node_modules/react-day-picker/dist/esm/components/Button.js
+  var import_react5 = __toESM(require_react(), 1);
+  function Button(props) {
+    return import_react5.default.createElement("button", { ...props });
+  }
+
+  // node_modules/react-day-picker/dist/esm/components/CaptionLabel.js
+  var import_react6 = __toESM(require_react(), 1);
+  function CaptionLabel(props) {
+    return import_react6.default.createElement("span", { ...props });
+  }
+
+  // node_modules/react-day-picker/dist/esm/components/Chevron.js
+  var import_react7 = __toESM(require_react(), 1);
+  function Chevron(props) {
+    const { size: size4 = 24, orientation = "left", className } = props;
+    return (
+      // biome-ignore lint/a11y/noSvgWithoutTitle: handled by the parent component
+      import_react7.default.createElement(
+        "svg",
+        { className, width: size4, height: size4, viewBox: "0 0 24 24" },
+        orientation === "up" && import_react7.default.createElement("polygon", { points: "6.77 17 12.5 11.43 18.24 17 20 15.28 12.5 8 5 15.28" }),
+        orientation === "down" && import_react7.default.createElement("polygon", { points: "6.77 8 12.5 13.57 18.24 8 20 9.72 12.5 17 5 9.72" }),
+        orientation === "left" && import_react7.default.createElement("polygon", { points: "16 18.112 9.81111111 12 16 5.87733333 14.0888889 4 6 12 14.0888889 20" }),
+        orientation === "right" && import_react7.default.createElement("polygon", { points: "8 18.112 14.18888889 12 8 5.87733333 9.91111111 4 18 12 9.91111111 20" })
+      )
+    );
+  }
+
+  // node_modules/react-day-picker/dist/esm/components/Day.js
+  var import_react8 = __toESM(require_react(), 1);
+  function Day(props) {
+    const { day, modifiers, ...tdProps } = props;
+    return import_react8.default.createElement("td", { ...tdProps });
+  }
+
+  // node_modules/react-day-picker/dist/esm/components/DayButton.js
+  var import_react9 = __toESM(require_react(), 1);
+  function DayButton(props) {
+    const { day, modifiers, ...buttonProps } = props;
+    const ref = import_react9.default.useRef(null);
+    import_react9.default.useEffect(() => {
+      if (modifiers.focused)
+        ref.current?.focus();
+    }, [modifiers.focused]);
+    return import_react9.default.createElement("button", { ref, ...buttonProps });
+  }
+
+  // node_modules/react-day-picker/dist/esm/components/Dropdown.js
+  var import_react10 = __toESM(require_react(), 1);
+
+  // node_modules/react-day-picker/dist/esm/UI.js
+  var UI;
+  (function(UI2) {
+    UI2["Root"] = "root";
+    UI2["Chevron"] = "chevron";
+    UI2["Day"] = "day";
+    UI2["DayButton"] = "day_button";
+    UI2["CaptionLabel"] = "caption_label";
+    UI2["Dropdowns"] = "dropdowns";
+    UI2["Dropdown"] = "dropdown";
+    UI2["DropdownRoot"] = "dropdown_root";
+    UI2["Footer"] = "footer";
+    UI2["MonthGrid"] = "month_grid";
+    UI2["MonthCaption"] = "month_caption";
+    UI2["MonthsDropdown"] = "months_dropdown";
+    UI2["Month"] = "month";
+    UI2["Months"] = "months";
+    UI2["Nav"] = "nav";
+    UI2["NextMonthButton"] = "button_next";
+    UI2["PreviousMonthButton"] = "button_previous";
+    UI2["Week"] = "week";
+    UI2["Weeks"] = "weeks";
+    UI2["Weekday"] = "weekday";
+    UI2["Weekdays"] = "weekdays";
+    UI2["WeekNumber"] = "week_number";
+    UI2["WeekNumberHeader"] = "week_number_header";
+    UI2["YearsDropdown"] = "years_dropdown";
+  })(UI || (UI = {}));
+  var DayFlag;
+  (function(DayFlag2) {
+    DayFlag2["disabled"] = "disabled";
+    DayFlag2["hidden"] = "hidden";
+    DayFlag2["outside"] = "outside";
+    DayFlag2["focused"] = "focused";
+    DayFlag2["today"] = "today";
+  })(DayFlag || (DayFlag = {}));
+  var SelectionState;
+  (function(SelectionState2) {
+    SelectionState2["range_end"] = "range_end";
+    SelectionState2["range_middle"] = "range_middle";
+    SelectionState2["range_start"] = "range_start";
+    SelectionState2["selected"] = "selected";
+  })(SelectionState || (SelectionState = {}));
+  var Animation;
+  (function(Animation2) {
+    Animation2["weeks_before_enter"] = "weeks_before_enter";
+    Animation2["weeks_before_exit"] = "weeks_before_exit";
+    Animation2["weeks_after_enter"] = "weeks_after_enter";
+    Animation2["weeks_after_exit"] = "weeks_after_exit";
+    Animation2["caption_after_enter"] = "caption_after_enter";
+    Animation2["caption_after_exit"] = "caption_after_exit";
+    Animation2["caption_before_enter"] = "caption_before_enter";
+    Animation2["caption_before_exit"] = "caption_before_exit";
+  })(Animation || (Animation = {}));
+
+  // node_modules/react-day-picker/dist/esm/components/Dropdown.js
+  function Dropdown(props) {
+    const { options, className, components, classNames, ...selectProps } = props;
+    const cssClassSelect = [classNames[UI.Dropdown], className].join(" ");
+    const selectedOption = options?.find(({ value }) => value === selectProps.value);
+    return import_react10.default.createElement(
+      "span",
+      { "data-disabled": selectProps.disabled, className: classNames[UI.DropdownRoot] },
+      import_react10.default.createElement(components.Select, { className: cssClassSelect, ...selectProps }, options?.map(({ value, label, disabled }) => import_react10.default.createElement(components.Option, { key: value, value, disabled }, label))),
+      import_react10.default.createElement(
+        "span",
+        { className: classNames[UI.CaptionLabel], "aria-hidden": true },
+        selectedOption?.label,
+        import_react10.default.createElement(components.Chevron, { orientation: "down", size: 18, className: classNames[UI.Chevron] })
+      )
+    );
+  }
+
+  // node_modules/react-day-picker/dist/esm/components/DropdownNav.js
+  var import_react11 = __toESM(require_react(), 1);
+  function DropdownNav(props) {
+    return import_react11.default.createElement("div", { ...props });
+  }
+
+  // node_modules/react-day-picker/dist/esm/components/Footer.js
+  var import_react12 = __toESM(require_react(), 1);
+  function Footer(props) {
+    return import_react12.default.createElement("div", { ...props });
+  }
+
+  // node_modules/react-day-picker/dist/esm/components/Month.js
+  var import_react13 = __toESM(require_react(), 1);
+  function Month(props) {
+    const { calendarMonth, displayIndex, ...divProps } = props;
+    return import_react13.default.createElement("div", { ...divProps }, props.children);
+  }
+
+  // node_modules/react-day-picker/dist/esm/components/MonthCaption.js
+  var import_react14 = __toESM(require_react(), 1);
+  function MonthCaption(props) {
+    const { calendarMonth, displayIndex, ...divProps } = props;
+    return import_react14.default.createElement("div", { ...divProps });
+  }
+
+  // node_modules/react-day-picker/dist/esm/components/MonthGrid.js
+  var import_react15 = __toESM(require_react(), 1);
+  function MonthGrid(props) {
+    return import_react15.default.createElement("table", { ...props });
+  }
+
+  // node_modules/react-day-picker/dist/esm/components/Months.js
+  var import_react16 = __toESM(require_react(), 1);
+  function Months(props) {
+    return import_react16.default.createElement("div", { ...props });
+  }
+
+  // node_modules/react-day-picker/dist/esm/components/MonthsDropdown.js
+  var import_react18 = __toESM(require_react(), 1);
+
+  // node_modules/react-day-picker/dist/esm/useDayPicker.js
+  var import_react17 = __toESM(require_react(), 1);
+  var dayPickerContext = (0, import_react17.createContext)(void 0);
+  function useDayPicker() {
+    const context = (0, import_react17.useContext)(dayPickerContext);
+    if (context === void 0) {
+      throw new Error("useDayPicker() must be used within a custom component.");
+    }
+    return context;
+  }
+
+  // node_modules/react-day-picker/dist/esm/components/MonthsDropdown.js
+  function MonthsDropdown(props) {
+    const { components } = useDayPicker();
+    return import_react18.default.createElement(components.Dropdown, { ...props });
+  }
+
+  // node_modules/react-day-picker/dist/esm/components/Nav.js
+  var import_react19 = __toESM(require_react(), 1);
+  function Nav(props) {
+    const { onPreviousClick, onNextClick, previousMonth, nextMonth, ...navProps } = props;
+    const { components, classNames, labels: { labelPrevious: labelPrevious2, labelNext: labelNext2 } } = useDayPicker();
+    const handleNextClick = (0, import_react19.useCallback)((e) => {
+      if (nextMonth) {
+        onNextClick?.(e);
+      }
+    }, [nextMonth, onNextClick]);
+    const handlePreviousClick = (0, import_react19.useCallback)((e) => {
+      if (previousMonth) {
+        onPreviousClick?.(e);
+      }
+    }, [previousMonth, onPreviousClick]);
+    return import_react19.default.createElement(
+      "nav",
+      { ...navProps },
+      import_react19.default.createElement(
+        components.PreviousMonthButton,
+        { type: "button", className: classNames[UI.PreviousMonthButton], tabIndex: previousMonth ? void 0 : -1, "aria-disabled": previousMonth ? void 0 : true, "aria-label": labelPrevious2(previousMonth), onClick: handlePreviousClick },
+        import_react19.default.createElement(components.Chevron, { disabled: previousMonth ? void 0 : true, className: classNames[UI.Chevron], orientation: "left" })
+      ),
+      import_react19.default.createElement(
+        components.NextMonthButton,
+        { type: "button", className: classNames[UI.NextMonthButton], tabIndex: nextMonth ? void 0 : -1, "aria-disabled": nextMonth ? void 0 : true, "aria-label": labelNext2(nextMonth), onClick: handleNextClick },
+        import_react19.default.createElement(components.Chevron, { disabled: nextMonth ? void 0 : true, orientation: "right", className: classNames[UI.Chevron] })
+      )
+    );
+  }
+
+  // node_modules/react-day-picker/dist/esm/components/NextMonthButton.js
+  var import_react20 = __toESM(require_react(), 1);
+  function NextMonthButton(props) {
+    const { components } = useDayPicker();
+    return import_react20.default.createElement(components.Button, { ...props });
+  }
+
+  // node_modules/react-day-picker/dist/esm/components/Option.js
+  var import_react21 = __toESM(require_react(), 1);
+  function Option(props) {
+    return import_react21.default.createElement("option", { ...props });
+  }
+
+  // node_modules/react-day-picker/dist/esm/components/PreviousMonthButton.js
+  var import_react22 = __toESM(require_react(), 1);
+  function PreviousMonthButton(props) {
+    const { components } = useDayPicker();
+    return import_react22.default.createElement(components.Button, { ...props });
+  }
+
+  // node_modules/react-day-picker/dist/esm/components/Root.js
+  var import_react23 = __toESM(require_react(), 1);
+  function Root(props) {
+    const { rootRef, ...rest } = props;
+    return import_react23.default.createElement("div", { ...rest, ref: rootRef });
+  }
+
+  // node_modules/react-day-picker/dist/esm/components/Select.js
+  var import_react24 = __toESM(require_react(), 1);
+  function Select(props) {
+    return import_react24.default.createElement("select", { ...props });
+  }
+
+  // node_modules/react-day-picker/dist/esm/components/Week.js
+  var import_react25 = __toESM(require_react(), 1);
+  function Week(props) {
+    const { week, ...trProps } = props;
+    return import_react25.default.createElement("tr", { ...trProps });
+  }
+
+  // node_modules/react-day-picker/dist/esm/components/Weekday.js
+  var import_react26 = __toESM(require_react(), 1);
+  function Weekday(props) {
+    return import_react26.default.createElement("th", { ...props });
+  }
+
+  // node_modules/react-day-picker/dist/esm/components/Weekdays.js
+  var import_react27 = __toESM(require_react(), 1);
+  function Weekdays(props) {
+    return import_react27.default.createElement(
+      "thead",
+      { "aria-hidden": true },
+      import_react27.default.createElement("tr", { ...props })
+    );
+  }
+
+  // node_modules/react-day-picker/dist/esm/components/WeekNumber.js
+  var import_react28 = __toESM(require_react(), 1);
+  function WeekNumber(props) {
+    const { week, ...thProps } = props;
+    return import_react28.default.createElement("th", { ...thProps });
+  }
+
+  // node_modules/react-day-picker/dist/esm/components/WeekNumberHeader.js
+  var import_react29 = __toESM(require_react(), 1);
+  function WeekNumberHeader(props) {
+    return import_react29.default.createElement("th", { ...props });
+  }
+
+  // node_modules/react-day-picker/dist/esm/components/Weeks.js
+  var import_react30 = __toESM(require_react(), 1);
+  function Weeks(props) {
+    return import_react30.default.createElement("tbody", { ...props });
+  }
+
+  // node_modules/react-day-picker/dist/esm/components/YearsDropdown.js
+  var import_react31 = __toESM(require_react(), 1);
+  function YearsDropdown(props) {
+    const { components } = useDayPicker();
+    return import_react31.default.createElement(components.Dropdown, { ...props });
+  }
+
+  // node_modules/react-day-picker/dist/esm/DayPicker.js
+  var import_react36 = __toESM(require_react(), 1);
+
+  // node_modules/react-day-picker/dist/esm/utils/rangeIncludesDate.js
+  function rangeIncludesDate(range, date, excludeEnds = false, dateLib = defaultDateLib) {
+    let { from, to } = range;
+    const { differenceInCalendarDays: differenceInCalendarDays2, isSameDay: isSameDay2 } = dateLib;
+    if (from && to) {
+      const isRangeInverted = differenceInCalendarDays2(to, from) < 0;
+      if (isRangeInverted) {
+        [from, to] = [to, from];
+      }
+      const isInRange = differenceInCalendarDays2(date, from) >= (excludeEnds ? 1 : 0) && differenceInCalendarDays2(to, date) >= (excludeEnds ? 1 : 0);
+      return isInRange;
+    }
+    if (!excludeEnds && to) {
+      return isSameDay2(to, date);
+    }
+    if (!excludeEnds && from) {
+      return isSameDay2(from, date);
+    }
+    return false;
+  }
+
+  // node_modules/react-day-picker/dist/esm/utils/typeguards.js
+  function isDateInterval(matcher) {
+    return Boolean(matcher && typeof matcher === "object" && "before" in matcher && "after" in matcher);
+  }
+  function isDateRange(value) {
+    return Boolean(value && typeof value === "object" && "from" in value);
+  }
+  function isDateAfterType(value) {
+    return Boolean(value && typeof value === "object" && "after" in value);
+  }
+  function isDateBeforeType(value) {
+    return Boolean(value && typeof value === "object" && "before" in value);
+  }
+  function isDayOfWeekType(value) {
+    return Boolean(value && typeof value === "object" && "dayOfWeek" in value);
+  }
+  function isDatesArray(value, dateLib) {
+    return Array.isArray(value) && value.every(dateLib.isDate);
+  }
+
+  // node_modules/react-day-picker/dist/esm/utils/dateMatchModifiers.js
+  function dateMatchModifiers(date, matchers, dateLib = defaultDateLib) {
+    const matchersArr = !Array.isArray(matchers) ? [matchers] : matchers;
+    const { isSameDay: isSameDay2, differenceInCalendarDays: differenceInCalendarDays2, isAfter: isAfter2 } = dateLib;
+    return matchersArr.some((matcher) => {
+      if (typeof matcher === "boolean") {
+        return matcher;
+      }
+      if (dateLib.isDate(matcher)) {
+        return isSameDay2(date, matcher);
+      }
+      if (isDatesArray(matcher, dateLib)) {
+        return matcher.some((matcherDate) => isSameDay2(date, matcherDate));
+      }
+      if (isDateRange(matcher)) {
+        return rangeIncludesDate(matcher, date, false, dateLib);
+      }
+      if (isDayOfWeekType(matcher)) {
+        if (!Array.isArray(matcher.dayOfWeek)) {
+          return matcher.dayOfWeek === date.getDay();
+        }
+        return matcher.dayOfWeek.includes(date.getDay());
+      }
+      if (isDateInterval(matcher)) {
+        const diffBefore = differenceInCalendarDays2(matcher.before, date);
+        const diffAfter = differenceInCalendarDays2(matcher.after, date);
+        const isDayBefore = diffBefore > 0;
+        const isDayAfter = diffAfter < 0;
+        const isClosedInterval = isAfter2(matcher.before, matcher.after);
+        if (isClosedInterval) {
+          return isDayAfter && isDayBefore;
+        } else {
+          return isDayBefore || isDayAfter;
+        }
+      }
+      if (isDateAfterType(matcher)) {
+        return differenceInCalendarDays2(date, matcher.after) > 0;
+      }
+      if (isDateBeforeType(matcher)) {
+        return differenceInCalendarDays2(matcher.before, date) > 0;
+      }
+      if (typeof matcher === "function") {
+        return matcher(date);
+      }
+      return false;
+    });
+  }
+
+  // node_modules/react-day-picker/dist/esm/helpers/createGetModifiers.js
+  function createGetModifiers(days, props, navStart, navEnd, dateLib) {
+    const { disabled, hidden, modifiers, showOutsideDays, broadcastCalendar, today = dateLib.today() } = props;
+    const { isSameDay: isSameDay2, isSameMonth: isSameMonth2, startOfMonth: startOfMonth2, isBefore: isBefore2, endOfMonth: endOfMonth2, isAfter: isAfter2 } = dateLib;
+    const computedNavStart = navStart && startOfMonth2(navStart);
+    const computedNavEnd = navEnd && endOfMonth2(navEnd);
+    const internalModifiersMap = {
+      [DayFlag.focused]: [],
+      [DayFlag.outside]: [],
+      [DayFlag.disabled]: [],
+      [DayFlag.hidden]: [],
+      [DayFlag.today]: []
+    };
+    const customModifiersMap = {};
+    for (const day of days) {
+      const { date, displayMonth } = day;
+      const isOutside = Boolean(displayMonth && !isSameMonth2(date, displayMonth));
+      const isBeforeNavStart = Boolean(computedNavStart && isBefore2(date, computedNavStart));
+      const isAfterNavEnd = Boolean(computedNavEnd && isAfter2(date, computedNavEnd));
+      const isDisabled = Boolean(disabled && dateMatchModifiers(date, disabled, dateLib));
+      const isHidden2 = Boolean(hidden && dateMatchModifiers(date, hidden, dateLib)) || isBeforeNavStart || isAfterNavEnd || // Broadcast calendar will show outside days as default
+      !broadcastCalendar && !showOutsideDays && isOutside || broadcastCalendar && showOutsideDays === false && isOutside;
+      const isToday = isSameDay2(date, today);
+      if (isOutside)
+        internalModifiersMap.outside.push(day);
+      if (isDisabled)
+        internalModifiersMap.disabled.push(day);
+      if (isHidden2)
+        internalModifiersMap.hidden.push(day);
+      if (isToday)
+        internalModifiersMap.today.push(day);
+      if (modifiers) {
+        Object.keys(modifiers).forEach((name) => {
+          const modifierValue = modifiers?.[name];
+          const isMatch = modifierValue ? dateMatchModifiers(date, modifierValue, dateLib) : false;
+          if (!isMatch)
+            return;
+          if (customModifiersMap[name]) {
+            customModifiersMap[name].push(day);
+          } else {
+            customModifiersMap[name] = [day];
+          }
+        });
+      }
+    }
+    return (day) => {
+      const dayFlags = {
+        [DayFlag.focused]: false,
+        [DayFlag.disabled]: false,
+        [DayFlag.hidden]: false,
+        [DayFlag.outside]: false,
+        [DayFlag.today]: false
+      };
+      const customModifiers = {};
+      for (const name in internalModifiersMap) {
+        const days2 = internalModifiersMap[name];
+        dayFlags[name] = days2.some((d) => d === day);
+      }
+      for (const name in customModifiersMap) {
+        customModifiers[name] = customModifiersMap[name].some((d) => d === day);
+      }
+      return {
+        ...dayFlags,
+        // custom modifiers should override all the previous ones
+        ...customModifiers
+      };
+    };
+  }
+
+  // node_modules/react-day-picker/dist/esm/helpers/getClassNamesForModifiers.js
+  function getClassNamesForModifiers(modifiers, classNames, modifiersClassNames = {}) {
+    const modifierClassNames = Object.entries(modifiers).filter(([, active]) => active === true).reduce((previousValue, [key]) => {
+      if (modifiersClassNames[key]) {
+        previousValue.push(modifiersClassNames[key]);
+      } else if (classNames[DayFlag[key]]) {
+        previousValue.push(classNames[DayFlag[key]]);
+      } else if (classNames[SelectionState[key]]) {
+        previousValue.push(classNames[SelectionState[key]]);
+      }
+      return previousValue;
+    }, [classNames[UI.Day]]);
+    return modifierClassNames;
+  }
+
+  // node_modules/react-day-picker/dist/esm/helpers/getComponents.js
+  function getComponents(customComponents) {
+    return {
+      ...custom_components_exports,
+      ...customComponents
+    };
+  }
+
+  // node_modules/react-day-picker/dist/esm/helpers/getDataAttributes.js
+  function getDataAttributes(props) {
+    const dataAttributes = {
+      "data-mode": props.mode ?? void 0,
+      "data-required": "required" in props ? props.required : void 0,
+      "data-multiple-months": props.numberOfMonths && props.numberOfMonths > 1 || void 0,
+      "data-week-numbers": props.showWeekNumber || void 0,
+      "data-broadcast-calendar": props.broadcastCalendar || void 0,
+      "data-nav-layout": props.navLayout || void 0
+    };
+    Object.entries(props).forEach(([key, val]) => {
+      if (key.startsWith("data-")) {
+        dataAttributes[key] = val;
+      }
+    });
+    return dataAttributes;
+  }
+
+  // node_modules/react-day-picker/dist/esm/helpers/getDefaultClassNames.js
+  function getDefaultClassNames() {
+    const classNames = {};
+    for (const key in UI) {
+      classNames[UI[key]] = `rdp-${UI[key]}`;
+    }
+    for (const key in DayFlag) {
+      classNames[DayFlag[key]] = `rdp-${DayFlag[key]}`;
+    }
+    for (const key in SelectionState) {
+      classNames[SelectionState[key]] = `rdp-${SelectionState[key]}`;
+    }
+    for (const key in Animation) {
+      classNames[Animation[key]] = `rdp-${Animation[key]}`;
+    }
+    return classNames;
+  }
+
+  // node_modules/react-day-picker/dist/esm/formatters/index.js
+  var formatters_exports = {};
+  __export(formatters_exports, {
+    formatCaption: () => formatCaption,
+    formatDay: () => formatDay,
+    formatMonthCaption: () => formatMonthCaption,
+    formatMonthDropdown: () => formatMonthDropdown,
+    formatWeekNumber: () => formatWeekNumber,
+    formatWeekNumberHeader: () => formatWeekNumberHeader,
+    formatWeekdayName: () => formatWeekdayName,
+    formatYearCaption: () => formatYearCaption,
+    formatYearDropdown: () => formatYearDropdown
+  });
+
+  // node_modules/react-day-picker/dist/esm/formatters/formatCaption.js
+  function formatCaption(month, options, dateLib) {
+    const lib = dateLib ?? new DateLib(options);
+    return lib.formatMonthYear(month);
+  }
+  var formatMonthCaption = formatCaption;
+
+  // node_modules/react-day-picker/dist/esm/formatters/formatDay.js
+  function formatDay(date, options, dateLib) {
+    return (dateLib ?? new DateLib(options)).format(date, "d");
+  }
+
+  // node_modules/react-day-picker/dist/esm/formatters/formatMonthDropdown.js
+  function formatMonthDropdown(month, dateLib = defaultDateLib) {
+    return dateLib.format(month, "LLLL");
+  }
+
+  // node_modules/react-day-picker/dist/esm/formatters/formatWeekdayName.js
+  function formatWeekdayName(weekday, options, dateLib) {
+    return (dateLib ?? new DateLib(options)).format(weekday, "cccccc");
+  }
+
+  // node_modules/react-day-picker/dist/esm/formatters/formatWeekNumber.js
+  function formatWeekNumber(weekNumber, dateLib = defaultDateLib) {
+    if (weekNumber < 10) {
+      return dateLib.formatNumber(`0${weekNumber.toLocaleString()}`);
+    }
+    return dateLib.formatNumber(`${weekNumber.toLocaleString()}`);
+  }
+
+  // node_modules/react-day-picker/dist/esm/formatters/formatWeekNumberHeader.js
+  function formatWeekNumberHeader() {
+    return ``;
+  }
+
+  // node_modules/react-day-picker/dist/esm/formatters/formatYearDropdown.js
+  function formatYearDropdown(year, dateLib = defaultDateLib) {
+    return dateLib.format(year, "yyyy");
+  }
+  var formatYearCaption = formatYearDropdown;
+
+  // node_modules/react-day-picker/dist/esm/helpers/getFormatters.js
+  function getFormatters(customFormatters) {
+    if (customFormatters?.formatMonthCaption && !customFormatters.formatCaption) {
+      customFormatters.formatCaption = customFormatters.formatMonthCaption;
+    }
+    if (customFormatters?.formatYearCaption && !customFormatters.formatYearDropdown) {
+      customFormatters.formatYearDropdown = customFormatters.formatYearCaption;
+    }
+    return {
+      ...formatters_exports,
+      ...customFormatters
+    };
+  }
+
+  // node_modules/react-day-picker/dist/esm/labels/index.js
+  var labels_exports = {};
+  __export(labels_exports, {
+    labelCaption: () => labelCaption,
+    labelDay: () => labelDay,
+    labelDayButton: () => labelDayButton,
+    labelGrid: () => labelGrid,
+    labelGridcell: () => labelGridcell,
+    labelMonthDropdown: () => labelMonthDropdown,
+    labelNav: () => labelNav,
+    labelNext: () => labelNext,
+    labelPrevious: () => labelPrevious,
+    labelWeekNumber: () => labelWeekNumber,
+    labelWeekNumberHeader: () => labelWeekNumberHeader,
+    labelWeekday: () => labelWeekday,
+    labelYearDropdown: () => labelYearDropdown
+  });
+
+  // node_modules/react-day-picker/dist/esm/labels/labelDayButton.js
+  function labelDayButton(date, modifiers, options, dateLib) {
+    let label = (dateLib ?? new DateLib(options)).format(date, "PPPP");
+    if (modifiers.today)
+      label = `Today, ${label}`;
+    if (modifiers.selected)
+      label = `${label}, selected`;
+    return label;
+  }
+  var labelDay = labelDayButton;
+
+  // node_modules/react-day-picker/dist/esm/labels/labelGrid.js
+  function labelGrid(date, options, dateLib) {
+    const lib = dateLib ?? new DateLib(options);
+    return lib.formatMonthYear(date);
+  }
+  var labelCaption = labelGrid;
+
+  // node_modules/react-day-picker/dist/esm/labels/labelGridcell.js
+  function labelGridcell(date, modifiers, options, dateLib) {
+    let label = (dateLib ?? new DateLib(options)).format(date, "PPPP");
+    if (modifiers?.today) {
+      label = `Today, ${label}`;
+    }
+    return label;
+  }
+
+  // node_modules/react-day-picker/dist/esm/labels/labelMonthDropdown.js
+  function labelMonthDropdown(_options) {
+    return "Choose the Month";
+  }
+
+  // node_modules/react-day-picker/dist/esm/labels/labelNav.js
+  function labelNav() {
+    return "";
+  }
+
+  // node_modules/react-day-picker/dist/esm/labels/labelNext.js
+  var defaultLabel = "Go to the Next Month";
+  function labelNext(_month, _options) {
+    return defaultLabel;
+  }
+
+  // node_modules/react-day-picker/dist/esm/labels/labelPrevious.js
+  function labelPrevious(_month) {
+    return "Go to the Previous Month";
+  }
+
+  // node_modules/react-day-picker/dist/esm/labels/labelWeekday.js
+  function labelWeekday(date, options, dateLib) {
+    return (dateLib ?? new DateLib(options)).format(date, "cccc");
+  }
+
+  // node_modules/react-day-picker/dist/esm/labels/labelWeekNumber.js
+  function labelWeekNumber(weekNumber, _options) {
+    return `Week ${weekNumber}`;
+  }
+
+  // node_modules/react-day-picker/dist/esm/labels/labelWeekNumberHeader.js
+  function labelWeekNumberHeader(_options) {
+    return "Week Number";
+  }
+
+  // node_modules/react-day-picker/dist/esm/labels/labelYearDropdown.js
+  function labelYearDropdown(_options) {
+    return "Choose the Year";
+  }
+
+  // node_modules/react-day-picker/dist/esm/helpers/getLabels.js
+  var resolveLabel = (defaultLabel2, customLabel, localeLabel) => {
+    if (customLabel)
+      return customLabel;
+    if (localeLabel) {
+      return typeof localeLabel === "function" ? localeLabel : (..._args) => localeLabel;
+    }
+    return defaultLabel2;
+  };
+  function getLabels(customLabels, options) {
+    const localeLabels = options.locale?.labels ?? {};
+    return {
+      ...labels_exports,
+      ...customLabels ?? {},
+      labelDayButton: resolveLabel(labelDayButton, customLabels?.labelDayButton, localeLabels.labelDayButton),
+      labelMonthDropdown: resolveLabel(labelMonthDropdown, customLabels?.labelMonthDropdown, localeLabels.labelMonthDropdown),
+      labelNext: resolveLabel(labelNext, customLabels?.labelNext, localeLabels.labelNext),
+      labelPrevious: resolveLabel(labelPrevious, customLabels?.labelPrevious, localeLabels.labelPrevious),
+      labelWeekNumber: resolveLabel(labelWeekNumber, customLabels?.labelWeekNumber, localeLabels.labelWeekNumber),
+      labelYearDropdown: resolveLabel(labelYearDropdown, customLabels?.labelYearDropdown, localeLabels.labelYearDropdown),
+      labelGrid: resolveLabel(labelGrid, customLabels?.labelGrid, localeLabels.labelGrid),
+      labelGridcell: resolveLabel(labelGridcell, customLabels?.labelGridcell, localeLabels.labelGridcell),
+      labelNav: resolveLabel(labelNav, customLabels?.labelNav, localeLabels.labelNav),
+      labelWeekNumberHeader: resolveLabel(labelWeekNumberHeader, customLabels?.labelWeekNumberHeader, localeLabels.labelWeekNumberHeader),
+      labelWeekday: resolveLabel(labelWeekday, customLabels?.labelWeekday, localeLabels.labelWeekday)
+    };
+  }
+
+  // node_modules/react-day-picker/dist/esm/helpers/getMonthOptions.js
+  function getMonthOptions(displayMonth, navStart, navEnd, formatters2, dateLib) {
+    const { startOfMonth: startOfMonth2, startOfYear: startOfYear2, endOfYear: endOfYear2, eachMonthOfInterval: eachMonthOfInterval2, getMonth: getMonth2 } = dateLib;
+    const months = eachMonthOfInterval2({
+      start: startOfYear2(displayMonth),
+      end: endOfYear2(displayMonth)
+    });
+    const options = months.map((month) => {
+      const label = formatters2.formatMonthDropdown(month, dateLib);
+      const value = getMonth2(month);
+      const disabled = navStart && month < startOfMonth2(navStart) || navEnd && month > startOfMonth2(navEnd) || false;
+      return { value, label, disabled };
+    });
+    return options;
+  }
+
+  // node_modules/react-day-picker/dist/esm/helpers/getStyleForModifiers.js
+  function getStyleForModifiers(dayModifiers, styles = {}, modifiersStyles = {}) {
+    let style = { ...styles?.[UI.Day] };
+    Object.entries(dayModifiers).filter(([, active]) => active === true).forEach(([modifier]) => {
+      style = {
+        ...style,
+        ...modifiersStyles?.[modifier]
+      };
+    });
+    return style;
+  }
+
+  // node_modules/react-day-picker/dist/esm/helpers/getWeekdays.js
+  function getWeekdays(dateLib, ISOWeek, broadcastCalendar, today) {
+    const referenceToday = today ?? dateLib.today();
+    const start = broadcastCalendar ? dateLib.startOfBroadcastWeek(referenceToday, dateLib) : ISOWeek ? dateLib.startOfISOWeek(referenceToday) : dateLib.startOfWeek(referenceToday);
+    const days = [];
+    for (let i = 0; i < 7; i++) {
+      const day = dateLib.addDays(start, i);
+      days.push(day);
+    }
+    return days;
+  }
+
+  // node_modules/react-day-picker/dist/esm/helpers/getYearOptions.js
+  function getYearOptions(navStart, navEnd, formatters2, dateLib, reverse = false) {
+    if (!navStart)
+      return void 0;
+    if (!navEnd)
+      return void 0;
+    const { startOfYear: startOfYear2, endOfYear: endOfYear2, eachYearOfInterval: eachYearOfInterval2, getYear: getYear2 } = dateLib;
+    const firstNavYear = startOfYear2(navStart);
+    const lastNavYear = endOfYear2(navEnd);
+    const years = eachYearOfInterval2({ start: firstNavYear, end: lastNavYear });
+    if (reverse)
+      years.reverse();
+    return years.map((year) => {
+      const label = formatters2.formatYearDropdown(year, dateLib);
+      return {
+        value: getYear2(year),
+        label,
+        disabled: false
+      };
+    });
+  }
+
+  // node_modules/react-day-picker/dist/esm/noonDateLib.js
+  function createNoonOverrides(timeZone, options = {}) {
+    const { weekStartsOn, locale } = options;
+    const fallbackWeekStartsOn = weekStartsOn ?? locale?.options?.weekStartsOn ?? 0;
+    const toNoonTZDate = (date) => {
+      const normalizedDate = typeof date === "number" || typeof date === "string" ? new Date(date) : date;
+      return new TZDate(normalizedDate.getFullYear(), normalizedDate.getMonth(), normalizedDate.getDate(), 12, 0, 0, timeZone);
+    };
+    const toCalendarDate = (date) => {
+      const zoned = toNoonTZDate(date);
+      return new Date(zoned.getFullYear(), zoned.getMonth(), zoned.getDate(), 0, 0, 0, 0);
+    };
+    return {
+      today: () => {
+        return toNoonTZDate(TZDate.tz(timeZone));
+      },
+      newDate: (year, monthIndex, date) => {
+        return new TZDate(year, monthIndex, date, 12, 0, 0, timeZone);
+      },
+      startOfDay: (date) => {
+        return toNoonTZDate(date);
+      },
+      startOfWeek: (date, options2) => {
+        const base = toNoonTZDate(date);
+        const weekStartsOnValue = options2?.weekStartsOn ?? fallbackWeekStartsOn;
+        const diff = (base.getDay() - weekStartsOnValue + 7) % 7;
+        base.setDate(base.getDate() - diff);
+        return base;
+      },
+      startOfISOWeek: (date) => {
+        const base = toNoonTZDate(date);
+        const diff = (base.getDay() - 1 + 7) % 7;
+        base.setDate(base.getDate() - diff);
+        return base;
+      },
+      startOfMonth: (date) => {
+        const base = toNoonTZDate(date);
+        base.setDate(1);
+        return base;
+      },
+      startOfYear: (date) => {
+        const base = toNoonTZDate(date);
+        base.setMonth(0, 1);
+        return base;
+      },
+      endOfWeek: (date, options2) => {
+        const base = toNoonTZDate(date);
+        const weekStartsOnValue = options2?.weekStartsOn ?? fallbackWeekStartsOn;
+        const endDow = (weekStartsOnValue + 6) % 7;
+        const diff = (endDow - base.getDay() + 7) % 7;
+        base.setDate(base.getDate() + diff);
+        return base;
+      },
+      endOfISOWeek: (date) => {
+        const base = toNoonTZDate(date);
+        const diff = (7 - base.getDay()) % 7;
+        base.setDate(base.getDate() + diff);
+        return base;
+      },
+      endOfMonth: (date) => {
+        const base = toNoonTZDate(date);
+        base.setMonth(base.getMonth() + 1, 0);
+        return base;
+      },
+      endOfYear: (date) => {
+        const base = toNoonTZDate(date);
+        base.setMonth(11, 31);
+        return base;
+      },
+      eachMonthOfInterval: (interval) => {
+        const start = toNoonTZDate(interval.start);
+        const end = toNoonTZDate(interval.end);
+        const result = [];
+        const cursor = new TZDate(start.getFullYear(), start.getMonth(), 1, 12, 0, 0, timeZone);
+        const endKey = end.getFullYear() * 12 + end.getMonth();
+        while (cursor.getFullYear() * 12 + cursor.getMonth() <= endKey) {
+          result.push(new TZDate(cursor, timeZone));
+          cursor.setMonth(cursor.getMonth() + 1, 1);
+        }
+        return result;
+      },
+      // Normalize to noon once before arithmetic (avoid DST/midnight edge cases),
+      // mutate the same TZDate, and return it.
+      addDays: (date, amount) => {
+        const base = toNoonTZDate(date);
+        base.setDate(base.getDate() + amount);
+        return base;
+      },
+      addWeeks: (date, amount) => {
+        const base = toNoonTZDate(date);
+        base.setDate(base.getDate() + amount * 7);
+        return base;
+      },
+      addMonths: (date, amount) => {
+        const base = toNoonTZDate(date);
+        base.setMonth(base.getMonth() + amount);
+        return base;
+      },
+      addYears: (date, amount) => {
+        const base = toNoonTZDate(date);
+        base.setFullYear(base.getFullYear() + amount);
+        return base;
+      },
+      eachYearOfInterval: (interval) => {
+        const start = toNoonTZDate(interval.start);
+        const end = toNoonTZDate(interval.end);
+        const years = [];
+        const cursor = new TZDate(start.getFullYear(), 0, 1, 12, 0, 0, timeZone);
+        while (cursor.getFullYear() <= end.getFullYear()) {
+          years.push(new TZDate(cursor, timeZone));
+          cursor.setFullYear(cursor.getFullYear() + 1, 0, 1);
+        }
+        return years;
+      },
+      getWeek: (date, options2) => {
+        const base = toCalendarDate(date);
+        return getWeek(base, {
+          weekStartsOn: options2?.weekStartsOn ?? fallbackWeekStartsOn,
+          firstWeekContainsDate: options2?.firstWeekContainsDate ?? locale?.options?.firstWeekContainsDate ?? 1
+        });
+      },
+      getISOWeek: (date) => {
+        const base = toCalendarDate(date);
+        return getISOWeek(base);
+      },
+      differenceInCalendarDays: (dateLeft, dateRight) => {
+        const left = toCalendarDate(dateLeft);
+        const right = toCalendarDate(dateRight);
+        return differenceInCalendarDays(left, right);
+      },
+      differenceInCalendarMonths: (dateLeft, dateRight) => {
+        const left = toCalendarDate(dateLeft);
+        const right = toCalendarDate(dateRight);
+        return differenceInCalendarMonths(left, right);
+      }
+    };
+  }
+
+  // node_modules/react-day-picker/dist/esm/useAnimation.js
+  var import_react32 = __toESM(require_react(), 1);
+  var asHtmlElement = (element) => {
+    if (element instanceof HTMLElement)
+      return element;
+    return null;
+  };
+  var queryMonthEls = (element) => [
+    ...element.querySelectorAll("[data-animated-month]") ?? []
+  ];
+  var queryMonthEl = (element) => asHtmlElement(element.querySelector("[data-animated-month]"));
+  var queryCaptionEl = (element) => asHtmlElement(element.querySelector("[data-animated-caption]"));
+  var queryWeeksEl = (element) => asHtmlElement(element.querySelector("[data-animated-weeks]"));
+  var queryNavEl = (element) => asHtmlElement(element.querySelector("[data-animated-nav]"));
+  var queryWeekdaysEl = (element) => asHtmlElement(element.querySelector("[data-animated-weekdays]"));
+  function useAnimation(rootElRef, enabled, { classNames, months, focused, dateLib }) {
+    const previousRootElSnapshotRef = (0, import_react32.useRef)(null);
+    const previousMonthsRef = (0, import_react32.useRef)(months);
+    const animatingRef = (0, import_react32.useRef)(false);
+    (0, import_react32.useLayoutEffect)(() => {
+      const previousMonths = previousMonthsRef.current;
+      previousMonthsRef.current = months;
+      if (!enabled || !rootElRef.current || // safety check because the ref can be set to anything by consumers
+      !(rootElRef.current instanceof HTMLElement) || // validation required for the animation to work as expected
+      months.length === 0 || previousMonths.length === 0 || months.length !== previousMonths.length) {
+        return;
+      }
+      const isSameMonth2 = dateLib.isSameMonth(months[0].date, previousMonths[0].date);
+      const isAfterPreviousMonth = dateLib.isAfter(months[0].date, previousMonths[0].date);
+      const captionAnimationClass = isAfterPreviousMonth ? classNames[Animation.caption_after_enter] : classNames[Animation.caption_before_enter];
+      const weeksAnimationClass = isAfterPreviousMonth ? classNames[Animation.weeks_after_enter] : classNames[Animation.weeks_before_enter];
+      const previousRootElSnapshot = previousRootElSnapshotRef.current;
+      const rootElSnapshot = rootElRef.current.cloneNode(true);
+      if (rootElSnapshot instanceof HTMLElement) {
+        const currentMonthElsSnapshot = queryMonthEls(rootElSnapshot);
+        currentMonthElsSnapshot.forEach((currentMonthElSnapshot) => {
+          if (!(currentMonthElSnapshot instanceof HTMLElement))
+            return;
+          const previousMonthElSnapshot = queryMonthEl(currentMonthElSnapshot);
+          if (previousMonthElSnapshot && currentMonthElSnapshot.contains(previousMonthElSnapshot)) {
+            currentMonthElSnapshot.removeChild(previousMonthElSnapshot);
+          }
+          const captionEl = queryCaptionEl(currentMonthElSnapshot);
+          if (captionEl) {
+            captionEl.classList.remove(captionAnimationClass);
+          }
+          const weeksEl = queryWeeksEl(currentMonthElSnapshot);
+          if (weeksEl) {
+            weeksEl.classList.remove(weeksAnimationClass);
+          }
+        });
+        previousRootElSnapshotRef.current = rootElSnapshot;
+      } else {
+        previousRootElSnapshotRef.current = null;
+      }
+      if (animatingRef.current || isSameMonth2 || // skip animation if a day is focused because it can cause issues to the animation and is better for a11y
+      focused) {
+        return;
+      }
+      const previousMonthEls = previousRootElSnapshot instanceof HTMLElement ? queryMonthEls(previousRootElSnapshot) : [];
+      const currentMonthEls = queryMonthEls(rootElRef.current);
+      if (currentMonthEls?.every((el) => el instanceof HTMLElement) && previousMonthEls && previousMonthEls.every((el) => el instanceof HTMLElement)) {
+        animatingRef.current = true;
+        const cleanUpFunctions = [];
+        rootElRef.current.style.isolation = "isolate";
+        const navEl = queryNavEl(rootElRef.current);
+        if (navEl) {
+          navEl.style.zIndex = "1";
+        }
+        currentMonthEls.forEach((currentMonthEl, index2) => {
+          const previousMonthEl = previousMonthEls[index2];
+          if (!previousMonthEl) {
+            return;
+          }
+          currentMonthEl.style.position = "relative";
+          currentMonthEl.style.overflow = "hidden";
+          const captionEl = queryCaptionEl(currentMonthEl);
+          if (captionEl) {
+            captionEl.classList.add(captionAnimationClass);
+          }
+          const weeksEl = queryWeeksEl(currentMonthEl);
+          if (weeksEl) {
+            weeksEl.classList.add(weeksAnimationClass);
+          }
+          const cleanUp = () => {
+            animatingRef.current = false;
+            if (rootElRef.current) {
+              rootElRef.current.style.isolation = "";
+            }
+            if (navEl) {
+              navEl.style.zIndex = "";
+            }
+            if (captionEl) {
+              captionEl.classList.remove(captionAnimationClass);
+            }
+            if (weeksEl) {
+              weeksEl.classList.remove(weeksAnimationClass);
+            }
+            currentMonthEl.style.position = "";
+            currentMonthEl.style.overflow = "";
+            if (currentMonthEl.contains(previousMonthEl)) {
+              currentMonthEl.removeChild(previousMonthEl);
+            }
+          };
+          cleanUpFunctions.push(cleanUp);
+          previousMonthEl.style.pointerEvents = "none";
+          previousMonthEl.style.position = "absolute";
+          previousMonthEl.style.overflow = "hidden";
+          previousMonthEl.setAttribute("aria-hidden", "true");
+          const previousWeekdaysEl = queryWeekdaysEl(previousMonthEl);
+          if (previousWeekdaysEl) {
+            previousWeekdaysEl.style.opacity = "0";
+          }
+          const previousCaptionEl = queryCaptionEl(previousMonthEl);
+          if (previousCaptionEl) {
+            previousCaptionEl.classList.add(isAfterPreviousMonth ? classNames[Animation.caption_before_exit] : classNames[Animation.caption_after_exit]);
+            previousCaptionEl.addEventListener("animationend", cleanUp);
+          }
+          const previousWeeksEl = queryWeeksEl(previousMonthEl);
+          if (previousWeeksEl) {
+            previousWeeksEl.classList.add(isAfterPreviousMonth ? classNames[Animation.weeks_before_exit] : classNames[Animation.weeks_after_exit]);
+          }
+          currentMonthEl.insertBefore(previousMonthEl, currentMonthEl.firstChild);
+        });
+      }
+    });
+  }
+
+  // node_modules/react-day-picker/dist/esm/useCalendar.js
+  var import_react34 = __toESM(require_react(), 1);
+
+  // node_modules/react-day-picker/dist/esm/helpers/getDates.js
+  function getDates(displayMonths, maxDate, props, dateLib) {
+    const firstMonth = displayMonths[0];
+    const lastMonth = displayMonths[displayMonths.length - 1];
+    const { ISOWeek, fixedWeeks, broadcastCalendar } = props ?? {};
+    const { addDays: addDays2, differenceInCalendarDays: differenceInCalendarDays2, differenceInCalendarMonths: differenceInCalendarMonths2, endOfBroadcastWeek: endOfBroadcastWeek2, endOfISOWeek: endOfISOWeek2, endOfMonth: endOfMonth2, endOfWeek: endOfWeek2, isAfter: isAfter2, startOfBroadcastWeek: startOfBroadcastWeek2, startOfISOWeek: startOfISOWeek2, startOfWeek: startOfWeek2 } = dateLib;
+    const startWeekFirstDate = broadcastCalendar ? startOfBroadcastWeek2(firstMonth, dateLib) : ISOWeek ? startOfISOWeek2(firstMonth) : startOfWeek2(firstMonth);
+    const displayMonthsWeekEnd = broadcastCalendar ? endOfBroadcastWeek2(lastMonth) : ISOWeek ? endOfISOWeek2(endOfMonth2(lastMonth)) : endOfWeek2(endOfMonth2(lastMonth));
+    const constraintWeekEnd = maxDate && (broadcastCalendar ? endOfBroadcastWeek2(maxDate) : ISOWeek ? endOfISOWeek2(maxDate) : endOfWeek2(maxDate));
+    const gridEndDate = constraintWeekEnd && isAfter2(displayMonthsWeekEnd, constraintWeekEnd) ? constraintWeekEnd : displayMonthsWeekEnd;
+    const nOfDays = differenceInCalendarDays2(gridEndDate, startWeekFirstDate);
+    const nOfMonths = differenceInCalendarMonths2(lastMonth, firstMonth) + 1;
+    const dates = [];
+    for (let i = 0; i <= nOfDays; i++) {
+      const date = addDays2(startWeekFirstDate, i);
+      dates.push(date);
+    }
+    const nrOfDaysWithFixedWeeks = broadcastCalendar ? 35 : 42;
+    const extraDates = nrOfDaysWithFixedWeeks * nOfMonths;
+    if (fixedWeeks && dates.length < extraDates) {
+      const daysToAdd = extraDates - dates.length;
+      for (let i = 0; i < daysToAdd; i++) {
+        const date = addDays2(dates[dates.length - 1], 1);
+        dates.push(date);
+      }
+    }
+    return dates;
+  }
+
+  // node_modules/react-day-picker/dist/esm/helpers/getDays.js
+  function getDays(calendarMonths) {
+    const initialDays = [];
+    return calendarMonths.reduce((days, month) => {
+      const weekDays = month.weeks.reduce((weekDays2, week) => {
+        return weekDays2.concat(week.days.slice());
+      }, initialDays.slice());
+      return days.concat(weekDays.slice());
+    }, initialDays.slice());
+  }
+
+  // node_modules/react-day-picker/dist/esm/helpers/getDisplayMonths.js
+  function getDisplayMonths(firstDisplayedMonth, calendarEndMonth, props, dateLib) {
+    const { numberOfMonths = 1 } = props;
+    const months = [];
+    for (let i = 0; i < numberOfMonths; i++) {
+      const month = dateLib.addMonths(firstDisplayedMonth, i);
+      if (calendarEndMonth && month > calendarEndMonth) {
+        break;
+      }
+      months.push(month);
+    }
+    return months;
+  }
+
+  // node_modules/react-day-picker/dist/esm/helpers/getInitialMonth.js
+  function getInitialMonth(props, navStart, navEnd, dateLib) {
+    const { month, defaultMonth, today = dateLib.today(), numberOfMonths = 1 } = props;
+    let initialMonth = month || defaultMonth || today;
+    const { differenceInCalendarMonths: differenceInCalendarMonths2, addMonths: addMonths2, startOfMonth: startOfMonth2 } = dateLib;
+    if (navEnd && differenceInCalendarMonths2(navEnd, initialMonth) < numberOfMonths - 1) {
+      const offset4 = -1 * (numberOfMonths - 1);
+      initialMonth = addMonths2(navEnd, offset4);
+    }
+    if (navStart && differenceInCalendarMonths2(initialMonth, navStart) < 0) {
+      initialMonth = navStart;
+    }
+    return startOfMonth2(initialMonth);
+  }
+
+  // node_modules/react-day-picker/dist/esm/helpers/getMonths.js
+  function getMonths(displayMonths, dates, props, dateLib) {
+    const { addDays: addDays2, endOfBroadcastWeek: endOfBroadcastWeek2, endOfISOWeek: endOfISOWeek2, endOfMonth: endOfMonth2, endOfWeek: endOfWeek2, getISOWeek: getISOWeek2, getWeek: getWeek2, startOfBroadcastWeek: startOfBroadcastWeek2, startOfISOWeek: startOfISOWeek2, startOfWeek: startOfWeek2 } = dateLib;
+    const dayPickerMonths = displayMonths.reduce((months, month) => {
+      const firstDateOfFirstWeek = props.broadcastCalendar ? startOfBroadcastWeek2(month, dateLib) : props.ISOWeek ? startOfISOWeek2(month) : startOfWeek2(month);
+      const lastDateOfLastWeek = props.broadcastCalendar ? endOfBroadcastWeek2(month) : props.ISOWeek ? endOfISOWeek2(endOfMonth2(month)) : endOfWeek2(endOfMonth2(month));
+      const monthDates = dates.filter((date) => {
+        return date >= firstDateOfFirstWeek && date <= lastDateOfLastWeek;
+      });
+      const nrOfDaysWithFixedWeeks = props.broadcastCalendar ? 35 : 42;
+      if (props.fixedWeeks && monthDates.length < nrOfDaysWithFixedWeeks) {
+        const extraDates = dates.filter((date) => {
+          const daysToAdd = nrOfDaysWithFixedWeeks - monthDates.length;
+          return date > lastDateOfLastWeek && date <= addDays2(lastDateOfLastWeek, daysToAdd);
+        });
+        monthDates.push(...extraDates);
+      }
+      const weeks = monthDates.reduce((weeks2, date) => {
+        const weekNumber = props.ISOWeek ? getISOWeek2(date) : getWeek2(date);
+        const week = weeks2.find((week2) => week2.weekNumber === weekNumber);
+        const day = new CalendarDay(date, month, dateLib);
+        if (!week) {
+          weeks2.push(new CalendarWeek(weekNumber, [day]));
+        } else {
+          week.days.push(day);
+        }
+        return weeks2;
+      }, []);
+      const dayPickerMonth = new CalendarMonth(month, weeks);
+      months.push(dayPickerMonth);
+      return months;
+    }, []);
+    if (!props.reverseMonths) {
+      return dayPickerMonths;
+    } else {
+      return dayPickerMonths.reverse();
+    }
+  }
+
+  // node_modules/react-day-picker/dist/esm/helpers/getNavMonth.js
+  function getNavMonths(props, dateLib) {
+    let { startMonth, endMonth } = props;
+    const { startOfYear: startOfYear2, startOfDay: startOfDay2, startOfMonth: startOfMonth2, endOfMonth: endOfMonth2, addYears: addYears2, endOfYear: endOfYear2, newDate, today } = dateLib;
+    const { fromYear, toYear, fromMonth, toMonth } = props;
+    if (!startMonth && fromMonth) {
+      startMonth = fromMonth;
+    }
+    if (!startMonth && fromYear) {
+      startMonth = dateLib.newDate(fromYear, 0, 1);
+    }
+    if (!endMonth && toMonth) {
+      endMonth = toMonth;
+    }
+    if (!endMonth && toYear) {
+      endMonth = newDate(toYear, 11, 31);
+    }
+    const hasYearDropdown = props.captionLayout === "dropdown" || props.captionLayout === "dropdown-years";
+    if (startMonth) {
+      startMonth = startOfMonth2(startMonth);
+    } else if (fromYear) {
+      startMonth = newDate(fromYear, 0, 1);
+    } else if (!startMonth && hasYearDropdown) {
+      startMonth = startOfYear2(addYears2(props.today ?? today(), -100));
+    }
+    if (endMonth) {
+      endMonth = endOfMonth2(endMonth);
+    } else if (toYear) {
+      endMonth = newDate(toYear, 11, 31);
+    } else if (!endMonth && hasYearDropdown) {
+      endMonth = endOfYear2(props.today ?? today());
+    }
+    return [
+      startMonth ? startOfDay2(startMonth) : startMonth,
+      endMonth ? startOfDay2(endMonth) : endMonth
+    ];
+  }
+
+  // node_modules/react-day-picker/dist/esm/helpers/getNextMonth.js
+  function getNextMonth(firstDisplayedMonth, calendarEndMonth, options, dateLib) {
+    if (options.disableNavigation) {
+      return void 0;
+    }
+    const { pagedNavigation, numberOfMonths = 1 } = options;
+    const { startOfMonth: startOfMonth2, addMonths: addMonths2, differenceInCalendarMonths: differenceInCalendarMonths2 } = dateLib;
+    const offset4 = pagedNavigation ? numberOfMonths : 1;
+    const month = startOfMonth2(firstDisplayedMonth);
+    if (!calendarEndMonth) {
+      return addMonths2(month, offset4);
+    }
+    const monthsDiff = differenceInCalendarMonths2(calendarEndMonth, firstDisplayedMonth);
+    if (monthsDiff < numberOfMonths) {
+      return void 0;
+    }
+    return addMonths2(month, offset4);
+  }
+
+  // node_modules/react-day-picker/dist/esm/helpers/getPreviousMonth.js
+  function getPreviousMonth(firstDisplayedMonth, calendarStartMonth, options, dateLib) {
+    if (options.disableNavigation) {
+      return void 0;
+    }
+    const { pagedNavigation, numberOfMonths } = options;
+    const { startOfMonth: startOfMonth2, addMonths: addMonths2, differenceInCalendarMonths: differenceInCalendarMonths2 } = dateLib;
+    const offset4 = pagedNavigation ? numberOfMonths ?? 1 : 1;
+    const month = startOfMonth2(firstDisplayedMonth);
+    if (!calendarStartMonth) {
+      return addMonths2(month, -offset4);
+    }
+    const monthsDiff = differenceInCalendarMonths2(month, calendarStartMonth);
+    if (monthsDiff <= 0) {
+      return void 0;
+    }
+    return addMonths2(month, -offset4);
+  }
+
+  // node_modules/react-day-picker/dist/esm/helpers/getWeeks.js
+  function getWeeks(months) {
+    const initialWeeks = [];
+    return months.reduce((weeks, month) => {
+      return weeks.concat(month.weeks.slice());
+    }, initialWeeks.slice());
+  }
+
+  // node_modules/react-day-picker/dist/esm/helpers/useControlledValue.js
+  var import_react33 = __toESM(require_react(), 1);
+  function useControlledValue(defaultValue, controlledValue) {
+    const [uncontrolledValue, setValue] = (0, import_react33.useState)(defaultValue);
+    const value = controlledValue === void 0 ? uncontrolledValue : controlledValue;
+    return [value, setValue];
+  }
+
+  // node_modules/react-day-picker/dist/esm/useCalendar.js
+  function useCalendar(props, dateLib) {
+    const [navStart, navEnd] = getNavMonths(props, dateLib);
+    const { startOfMonth: startOfMonth2, endOfMonth: endOfMonth2 } = dateLib;
+    const initialMonth = getInitialMonth(props, navStart, navEnd, dateLib);
+    const [firstMonth, setFirstMonth] = useControlledValue(
+      initialMonth,
+      // initialMonth is always computed from props.month if provided
+      props.month ? initialMonth : void 0
+    );
+    (0, import_react34.useEffect)(() => {
+      const newInitialMonth = getInitialMonth(props, navStart, navEnd, dateLib);
+      setFirstMonth(newInitialMonth);
+    }, [props.timeZone]);
+    const { months, weeks, days, previousMonth, nextMonth } = (0, import_react34.useMemo)(() => {
+      const displayMonths = getDisplayMonths(firstMonth, navEnd, { numberOfMonths: props.numberOfMonths }, dateLib);
+      const dates = getDates(displayMonths, props.endMonth ? endOfMonth2(props.endMonth) : void 0, {
+        ISOWeek: props.ISOWeek,
+        fixedWeeks: props.fixedWeeks,
+        broadcastCalendar: props.broadcastCalendar
+      }, dateLib);
+      const months2 = getMonths(displayMonths, dates, {
+        broadcastCalendar: props.broadcastCalendar,
+        fixedWeeks: props.fixedWeeks,
+        ISOWeek: props.ISOWeek,
+        reverseMonths: props.reverseMonths
+      }, dateLib);
+      const weeks2 = getWeeks(months2);
+      const days2 = getDays(months2);
+      const previousMonth2 = getPreviousMonth(firstMonth, navStart, props, dateLib);
+      const nextMonth2 = getNextMonth(firstMonth, navEnd, props, dateLib);
+      return {
+        months: months2,
+        weeks: weeks2,
+        days: days2,
+        previousMonth: previousMonth2,
+        nextMonth: nextMonth2
+      };
+    }, [
+      dateLib,
+      firstMonth.getTime(),
+      navEnd?.getTime(),
+      navStart?.getTime(),
+      props.disableNavigation,
+      props.broadcastCalendar,
+      props.endMonth?.getTime(),
+      props.fixedWeeks,
+      props.ISOWeek,
+      props.numberOfMonths,
+      props.pagedNavigation,
+      props.reverseMonths
+    ]);
+    const { disableNavigation, onMonthChange } = props;
+    const isDayInCalendar = (day) => weeks.some((week) => week.days.some((d) => d.isEqualTo(day)));
+    const goToMonth = (date) => {
+      if (disableNavigation) {
+        return;
+      }
+      let newMonth = startOfMonth2(date);
+      if (navStart && newMonth < startOfMonth2(navStart)) {
+        newMonth = startOfMonth2(navStart);
+      }
+      if (navEnd && newMonth > startOfMonth2(navEnd)) {
+        newMonth = startOfMonth2(navEnd);
+      }
+      setFirstMonth(newMonth);
+      onMonthChange?.(newMonth);
+    };
+    const goToDay = (day) => {
+      if (isDayInCalendar(day)) {
+        return;
+      }
+      goToMonth(day.date);
+    };
+    const calendar = {
+      months,
+      weeks,
+      days,
+      navStart,
+      navEnd,
+      previousMonth,
+      nextMonth,
+      goToMonth,
+      goToDay
+    };
+    return calendar;
+  }
+
+  // node_modules/react-day-picker/dist/esm/useFocus.js
+  var import_react35 = __toESM(require_react(), 1);
+
+  // node_modules/react-day-picker/dist/esm/helpers/calculateFocusTarget.js
+  var FocusTargetPriority;
+  (function(FocusTargetPriority2) {
+    FocusTargetPriority2[FocusTargetPriority2["Today"] = 0] = "Today";
+    FocusTargetPriority2[FocusTargetPriority2["Selected"] = 1] = "Selected";
+    FocusTargetPriority2[FocusTargetPriority2["LastFocused"] = 2] = "LastFocused";
+    FocusTargetPriority2[FocusTargetPriority2["FocusedModifier"] = 3] = "FocusedModifier";
+  })(FocusTargetPriority || (FocusTargetPriority = {}));
+  function isFocusableDay(modifiers) {
+    return !modifiers[DayFlag.disabled] && !modifiers[DayFlag.hidden] && !modifiers[DayFlag.outside];
+  }
+  function calculateFocusTarget(days, getModifiers, isSelected, lastFocused) {
+    let focusTarget;
+    let foundFocusTargetPriority = -1;
+    for (const day of days) {
+      const modifiers = getModifiers(day);
+      if (isFocusableDay(modifiers)) {
+        if (modifiers[DayFlag.focused] && foundFocusTargetPriority < FocusTargetPriority.FocusedModifier) {
+          focusTarget = day;
+          foundFocusTargetPriority = FocusTargetPriority.FocusedModifier;
+        } else if (lastFocused?.isEqualTo(day) && foundFocusTargetPriority < FocusTargetPriority.LastFocused) {
+          focusTarget = day;
+          foundFocusTargetPriority = FocusTargetPriority.LastFocused;
+        } else if (isSelected(day.date) && foundFocusTargetPriority < FocusTargetPriority.Selected) {
+          focusTarget = day;
+          foundFocusTargetPriority = FocusTargetPriority.Selected;
+        } else if (modifiers[DayFlag.today] && foundFocusTargetPriority < FocusTargetPriority.Today) {
+          focusTarget = day;
+          foundFocusTargetPriority = FocusTargetPriority.Today;
+        }
+      }
+    }
+    if (!focusTarget) {
+      focusTarget = days.find((day) => isFocusableDay(getModifiers(day)));
+    }
+    return focusTarget;
+  }
+
+  // node_modules/react-day-picker/dist/esm/helpers/getFocusableDate.js
+  function getFocusableDate(moveBy, moveDir, refDate, navStart, navEnd, props, dateLib) {
+    const { ISOWeek, broadcastCalendar } = props;
+    const { addDays: addDays2, addMonths: addMonths2, addWeeks: addWeeks2, addYears: addYears2, endOfBroadcastWeek: endOfBroadcastWeek2, endOfISOWeek: endOfISOWeek2, endOfWeek: endOfWeek2, max: max3, min: min3, startOfBroadcastWeek: startOfBroadcastWeek2, startOfISOWeek: startOfISOWeek2, startOfWeek: startOfWeek2 } = dateLib;
+    const moveFns = {
+      day: addDays2,
+      week: addWeeks2,
+      month: addMonths2,
+      year: addYears2,
+      startOfWeek: (date) => broadcastCalendar ? startOfBroadcastWeek2(date, dateLib) : ISOWeek ? startOfISOWeek2(date) : startOfWeek2(date),
+      endOfWeek: (date) => broadcastCalendar ? endOfBroadcastWeek2(date) : ISOWeek ? endOfISOWeek2(date) : endOfWeek2(date)
+    };
+    let focusableDate = moveFns[moveBy](refDate, moveDir === "after" ? 1 : -1);
+    if (moveDir === "before" && navStart) {
+      focusableDate = max3([navStart, focusableDate]);
+    } else if (moveDir === "after" && navEnd) {
+      focusableDate = min3([navEnd, focusableDate]);
+    }
+    return focusableDate;
+  }
+
+  // node_modules/react-day-picker/dist/esm/helpers/getNextFocus.js
+  function getNextFocus(moveBy, moveDir, refDay, calendarStartMonth, calendarEndMonth, props, dateLib, attempt = 0) {
+    if (attempt > 365) {
+      return void 0;
+    }
+    const focusableDate = getFocusableDate(moveBy, moveDir, refDay.date, calendarStartMonth, calendarEndMonth, props, dateLib);
+    const isDisabled = Boolean(props.disabled && dateMatchModifiers(focusableDate, props.disabled, dateLib));
+    const isHidden2 = Boolean(props.hidden && dateMatchModifiers(focusableDate, props.hidden, dateLib));
+    const targetMonth = focusableDate;
+    const focusDay = new CalendarDay(focusableDate, targetMonth, dateLib);
+    if (!isDisabled && !isHidden2) {
+      return focusDay;
+    }
+    return getNextFocus(moveBy, moveDir, focusDay, calendarStartMonth, calendarEndMonth, props, dateLib, attempt + 1);
+  }
+
+  // node_modules/react-day-picker/dist/esm/useFocus.js
+  function useFocus(props, calendar, getModifiers, isSelected, dateLib) {
+    const { autoFocus } = props;
+    const [lastFocused, setLastFocused] = (0, import_react35.useState)();
+    const focusTarget = calculateFocusTarget(calendar.days, getModifiers, isSelected || (() => false), lastFocused);
+    const [focusedDay, setFocused] = (0, import_react35.useState)(autoFocus ? focusTarget : void 0);
+    const blur = () => {
+      setLastFocused(focusedDay);
+      setFocused(void 0);
+    };
+    const moveFocus = (moveBy, moveDir) => {
+      if (!focusedDay)
+        return;
+      const nextFocus = getNextFocus(moveBy, moveDir, focusedDay, calendar.navStart, calendar.navEnd, props, dateLib);
+      if (!nextFocus)
+        return;
+      if (props.disableNavigation) {
+        const isNextInCalendar = calendar.days.some((day) => day.isEqualTo(nextFocus));
+        if (!isNextInCalendar) {
+          return;
+        }
+      }
+      calendar.goToDay(nextFocus);
+      setFocused(nextFocus);
+    };
+    const isFocusTarget = (day) => {
+      return Boolean(focusTarget?.isEqualTo(day));
+    };
+    const useFocus2 = {
+      isFocusTarget,
+      setFocused,
+      focused: focusedDay,
+      blur,
+      moveFocus
+    };
+    return useFocus2;
+  }
+
+  // node_modules/react-day-picker/dist/esm/selection/useMulti.js
+  function useMulti(props, dateLib) {
+    const { selected: initiallySelected, required, onSelect } = props;
+    const [internallySelected, setSelected] = useControlledValue(initiallySelected, onSelect ? initiallySelected : void 0);
+    const selected = !onSelect ? internallySelected : initiallySelected;
+    const { isSameDay: isSameDay2 } = dateLib;
+    const isSelected = (date) => {
+      return selected?.some((d) => isSameDay2(d, date)) ?? false;
+    };
+    const { min: min3, max: max3 } = props;
+    const select = (triggerDate, modifiers, e) => {
+      let newDates = [...selected ?? []];
+      if (isSelected(triggerDate)) {
+        if (selected?.length === min3) {
+          return;
+        }
+        if (required && selected?.length === 1) {
+          return;
+        }
+        newDates = selected?.filter((d) => !isSameDay2(d, triggerDate));
+      } else {
+        if (selected?.length === max3) {
+          newDates = [triggerDate];
+        } else {
+          newDates = [...newDates, triggerDate];
+        }
+      }
+      if (!onSelect) {
+        setSelected(newDates);
+      }
+      onSelect?.(newDates, triggerDate, modifiers, e);
+      return newDates;
+    };
+    return {
+      selected,
+      select,
+      isSelected
+    };
+  }
+
+  // node_modules/react-day-picker/dist/esm/utils/addToRange.js
+  function addToRange(date, initialRange, min3 = 0, max3 = 0, required = false, dateLib = defaultDateLib) {
+    const { from, to } = initialRange || {};
+    const { isSameDay: isSameDay2, isAfter: isAfter2, isBefore: isBefore2 } = dateLib;
+    let range;
+    if (!from && !to) {
+      range = { from: date, to: min3 > 0 ? void 0 : date };
+    } else if (from && !to) {
+      if (isSameDay2(from, date)) {
+        if (min3 === 0) {
+          range = { from, to: date };
+        } else if (required) {
+          range = { from, to: void 0 };
+        } else {
+          range = void 0;
+        }
+      } else if (isBefore2(date, from)) {
+        range = { from: date, to: from };
+      } else {
+        range = { from, to: date };
+      }
+    } else if (from && to) {
+      if (isSameDay2(from, date) && isSameDay2(to, date)) {
+        if (required) {
+          range = { from, to };
+        } else {
+          range = void 0;
+        }
+      } else if (isSameDay2(from, date)) {
+        range = { from, to: min3 > 0 ? void 0 : date };
+      } else if (isSameDay2(to, date)) {
+        range = { from: date, to: min3 > 0 ? void 0 : date };
+      } else if (isBefore2(date, from)) {
+        range = { from: date, to };
+      } else if (isAfter2(date, from)) {
+        range = { from, to: date };
+      } else if (isAfter2(date, to)) {
+        range = { from, to: date };
+      } else {
+        throw new Error("Invalid range");
+      }
+    }
+    if (range?.from && range?.to) {
+      const diff = dateLib.differenceInCalendarDays(range.to, range.from);
+      if (max3 > 0 && diff > max3) {
+        range = { from: date, to: void 0 };
+      } else if (min3 > 1 && diff < min3) {
+        range = { from: date, to: void 0 };
+      }
+    }
+    return range;
+  }
+
+  // node_modules/react-day-picker/dist/esm/utils/rangeContainsDayOfWeek.js
+  function rangeContainsDayOfWeek(range, dayOfWeek, dateLib = defaultDateLib) {
+    const dayOfWeekArr = !Array.isArray(dayOfWeek) ? [dayOfWeek] : dayOfWeek;
+    let date = range.from;
+    const totalDays = dateLib.differenceInCalendarDays(range.to, range.from);
+    const totalDaysLimit = Math.min(totalDays, 6);
+    for (let i = 0; i <= totalDaysLimit; i++) {
+      if (dayOfWeekArr.includes(date.getDay())) {
+        return true;
+      }
+      date = dateLib.addDays(date, 1);
+    }
+    return false;
+  }
+
+  // node_modules/react-day-picker/dist/esm/utils/rangeOverlaps.js
+  function rangeOverlaps(rangeLeft, rangeRight, dateLib = defaultDateLib) {
+    return rangeIncludesDate(rangeLeft, rangeRight.from, false, dateLib) || rangeIncludesDate(rangeLeft, rangeRight.to, false, dateLib) || rangeIncludesDate(rangeRight, rangeLeft.from, false, dateLib) || rangeIncludesDate(rangeRight, rangeLeft.to, false, dateLib);
+  }
+
+  // node_modules/react-day-picker/dist/esm/utils/rangeContainsModifiers.js
+  function rangeContainsModifiers(range, modifiers, dateLib = defaultDateLib) {
+    const matchers = Array.isArray(modifiers) ? modifiers : [modifiers];
+    const nonFunctionMatchers = matchers.filter((matcher) => typeof matcher !== "function");
+    const nonFunctionMatchersResult = nonFunctionMatchers.some((matcher) => {
+      if (typeof matcher === "boolean")
+        return matcher;
+      if (dateLib.isDate(matcher)) {
+        return rangeIncludesDate(range, matcher, false, dateLib);
+      }
+      if (isDatesArray(matcher, dateLib)) {
+        return matcher.some((date) => rangeIncludesDate(range, date, false, dateLib));
+      }
+      if (isDateRange(matcher)) {
+        if (matcher.from && matcher.to) {
+          return rangeOverlaps(range, { from: matcher.from, to: matcher.to }, dateLib);
+        }
+        return false;
+      }
+      if (isDayOfWeekType(matcher)) {
+        return rangeContainsDayOfWeek(range, matcher.dayOfWeek, dateLib);
+      }
+      if (isDateInterval(matcher)) {
+        const isClosedInterval = dateLib.isAfter(matcher.before, matcher.after);
+        if (isClosedInterval) {
+          return rangeOverlaps(range, {
+            from: dateLib.addDays(matcher.after, 1),
+            to: dateLib.addDays(matcher.before, -1)
+          }, dateLib);
+        }
+        return dateMatchModifiers(range.from, matcher, dateLib) || dateMatchModifiers(range.to, matcher, dateLib);
+      }
+      if (isDateAfterType(matcher) || isDateBeforeType(matcher)) {
+        return dateMatchModifiers(range.from, matcher, dateLib) || dateMatchModifiers(range.to, matcher, dateLib);
+      }
+      return false;
+    });
+    if (nonFunctionMatchersResult) {
+      return true;
+    }
+    const functionMatchers = matchers.filter((matcher) => typeof matcher === "function");
+    if (functionMatchers.length) {
+      let date = range.from;
+      const totalDays = dateLib.differenceInCalendarDays(range.to, range.from);
+      for (let i = 0; i <= totalDays; i++) {
+        if (functionMatchers.some((matcher) => matcher(date))) {
+          return true;
+        }
+        date = dateLib.addDays(date, 1);
+      }
+    }
+    return false;
+  }
+
+  // node_modules/react-day-picker/dist/esm/selection/useRange.js
+  function useRange(props, dateLib) {
+    const { disabled, excludeDisabled, resetOnSelect, selected: initiallySelected, required, onSelect } = props;
+    const [internallySelected, setSelected] = useControlledValue(initiallySelected, onSelect ? initiallySelected : void 0);
+    const selected = !onSelect ? internallySelected : initiallySelected;
+    const isSelected = (date) => selected && rangeIncludesDate(selected, date, false, dateLib);
+    const select = (triggerDate, modifiers, e) => {
+      const { min: min3, max: max3 } = props;
+      let newRange;
+      if (triggerDate) {
+        const selectedFrom = selected?.from;
+        const selectedTo = selected?.to;
+        const hasFullRange = !!selectedFrom && !!selectedTo;
+        const isClickingSingleDayRange = !!selectedFrom && !!selectedTo && dateLib.isSameDay(selectedFrom, selectedTo) && dateLib.isSameDay(triggerDate, selectedFrom);
+        if (resetOnSelect && (hasFullRange || !selected?.from)) {
+          if (!required && isClickingSingleDayRange) {
+            newRange = void 0;
+          } else {
+            newRange = { from: triggerDate, to: void 0 };
+          }
+        } else {
+          newRange = addToRange(triggerDate, selected, min3, max3, required, dateLib);
+        }
+      }
+      if (excludeDisabled && disabled && newRange?.from && newRange.to) {
+        if (rangeContainsModifiers({ from: newRange.from, to: newRange.to }, disabled, dateLib)) {
+          newRange.from = triggerDate;
+          newRange.to = void 0;
+        }
+      }
+      if (!onSelect) {
+        setSelected(newRange);
+      }
+      onSelect?.(newRange, triggerDate, modifiers, e);
+      return newRange;
+    };
+    return {
+      selected,
+      select,
+      isSelected
+    };
+  }
+
+  // node_modules/react-day-picker/dist/esm/selection/useSingle.js
+  function useSingle(props, dateLib) {
+    const { selected: initiallySelected, required, onSelect } = props;
+    const [internallySelected, setSelected] = useControlledValue(initiallySelected, onSelect ? initiallySelected : void 0);
+    const selected = !onSelect ? internallySelected : initiallySelected;
+    const { isSameDay: isSameDay2 } = dateLib;
+    const isSelected = (compareDate) => {
+      return selected ? isSameDay2(selected, compareDate) : false;
+    };
+    const select = (triggerDate, modifiers, e) => {
+      let newDate = triggerDate;
+      if (!required && selected && selected && isSameDay2(triggerDate, selected)) {
+        newDate = void 0;
+      }
+      if (!onSelect) {
+        setSelected(newDate);
+      }
+      if (required) {
+        onSelect?.(newDate, triggerDate, modifiers, e);
+      } else {
+        onSelect?.(newDate, triggerDate, modifiers, e);
+      }
+      return newDate;
+    };
+    return {
+      selected,
+      select,
+      isSelected
+    };
+  }
+
+  // node_modules/react-day-picker/dist/esm/useSelection.js
+  function useSelection(props, dateLib) {
+    const single = useSingle(props, dateLib);
+    const multi = useMulti(props, dateLib);
+    const range = useRange(props, dateLib);
+    switch (props.mode) {
+      case "single":
+        return single;
+      case "multiple":
+        return multi;
+      case "range":
+        return range;
+      default:
+        return void 0;
+    }
+  }
+
+  // node_modules/react-day-picker/dist/esm/utils/toTimeZone.js
+  function toTimeZone(date, timeZone) {
+    if (date instanceof TZDate && date.timeZone === timeZone) {
+      return date;
+    }
+    return new TZDate(date, timeZone);
+  }
+
+  // node_modules/react-day-picker/dist/esm/utils/convertMatchersToTimeZone.js
+  function toZoneNoon(date, timeZone, noonSafe) {
+    if (!noonSafe)
+      return toTimeZone(date, timeZone);
+    const zoned = toTimeZone(date, timeZone);
+    const noonZoned = new TZDate(zoned.getFullYear(), zoned.getMonth(), zoned.getDate(), 12, 0, 0, timeZone);
+    return new Date(noonZoned.getTime());
+  }
+  function convertMatcher(matcher, timeZone, noonSafe) {
+    if (typeof matcher === "boolean" || typeof matcher === "function") {
+      return matcher;
+    }
+    if (matcher instanceof Date) {
+      return toZoneNoon(matcher, timeZone, noonSafe);
+    }
+    if (Array.isArray(matcher)) {
+      return matcher.map((value) => value instanceof Date ? toZoneNoon(value, timeZone, noonSafe) : value);
+    }
+    if (isDateRange(matcher)) {
+      return {
+        ...matcher,
+        from: matcher.from ? toTimeZone(matcher.from, timeZone) : matcher.from,
+        to: matcher.to ? toTimeZone(matcher.to, timeZone) : matcher.to
+      };
+    }
+    if (isDateInterval(matcher)) {
+      return {
+        before: toZoneNoon(matcher.before, timeZone, noonSafe),
+        after: toZoneNoon(matcher.after, timeZone, noonSafe)
+      };
+    }
+    if (isDateAfterType(matcher)) {
+      return {
+        after: toZoneNoon(matcher.after, timeZone, noonSafe)
+      };
+    }
+    if (isDateBeforeType(matcher)) {
+      return {
+        before: toZoneNoon(matcher.before, timeZone, noonSafe)
+      };
+    }
+    return matcher;
+  }
+  function convertMatchersToTimeZone(matchers, timeZone, noonSafe) {
+    if (!matchers) {
+      return matchers;
+    }
+    if (Array.isArray(matchers)) {
+      return matchers.map((matcher) => convertMatcher(matcher, timeZone, noonSafe));
+    }
+    return convertMatcher(matchers, timeZone, noonSafe);
+  }
+
+  // node_modules/react-day-picker/dist/esm/DayPicker.js
+  function DayPicker(initialProps) {
+    let props = initialProps;
+    const timeZone = props.timeZone;
+    if (timeZone) {
+      props = {
+        ...initialProps,
+        timeZone
+      };
+      if (props.today) {
+        props.today = toTimeZone(props.today, timeZone);
+      }
+      if (props.month) {
+        props.month = toTimeZone(props.month, timeZone);
+      }
+      if (props.defaultMonth) {
+        props.defaultMonth = toTimeZone(props.defaultMonth, timeZone);
+      }
+      if (props.startMonth) {
+        props.startMonth = toTimeZone(props.startMonth, timeZone);
+      }
+      if (props.endMonth) {
+        props.endMonth = toTimeZone(props.endMonth, timeZone);
+      }
+      if (props.mode === "single" && props.selected) {
+        props.selected = toTimeZone(props.selected, timeZone);
+      } else if (props.mode === "multiple" && props.selected) {
+        props.selected = props.selected?.map((date) => toTimeZone(date, timeZone));
+      } else if (props.mode === "range" && props.selected) {
+        props.selected = {
+          from: props.selected.from ? toTimeZone(props.selected.from, timeZone) : props.selected.from,
+          to: props.selected.to ? toTimeZone(props.selected.to, timeZone) : props.selected.to
+        };
+      }
+      if (props.disabled !== void 0) {
+        props.disabled = convertMatchersToTimeZone(props.disabled, timeZone);
+      }
+      if (props.hidden !== void 0) {
+        props.hidden = convertMatchersToTimeZone(props.hidden, timeZone);
+      }
+      if (props.modifiers) {
+        const nextModifiers = {};
+        Object.keys(props.modifiers).forEach((key) => {
+          nextModifiers[key] = convertMatchersToTimeZone(props.modifiers?.[key], timeZone);
+        });
+        props.modifiers = nextModifiers;
+      }
+    }
+    const { components, formatters: formatters2, labels, dateLib, locale, classNames } = (0, import_react36.useMemo)(() => {
+      const locale2 = { ...enUS2, ...props.locale };
+      const weekStartsOn = props.broadcastCalendar ? 1 : props.weekStartsOn;
+      const noonOverrides = props.noonSafe && props.timeZone ? createNoonOverrides(props.timeZone, {
+        weekStartsOn,
+        locale: locale2
+      }) : void 0;
+      const overrides = props.dateLib && noonOverrides ? { ...noonOverrides, ...props.dateLib } : props.dateLib ?? noonOverrides;
+      const dateLib2 = new DateLib({
+        locale: locale2,
+        weekStartsOn,
+        firstWeekContainsDate: props.firstWeekContainsDate,
+        useAdditionalWeekYearTokens: props.useAdditionalWeekYearTokens,
+        useAdditionalDayOfYearTokens: props.useAdditionalDayOfYearTokens,
+        timeZone: props.timeZone,
+        numerals: props.numerals
+      }, overrides);
+      return {
+        dateLib: dateLib2,
+        components: getComponents(props.components),
+        formatters: getFormatters(props.formatters),
+        labels: getLabels(props.labels, dateLib2.options),
+        locale: locale2,
+        classNames: { ...getDefaultClassNames(), ...props.classNames }
+      };
+    }, [
+      props.locale,
+      props.broadcastCalendar,
+      props.weekStartsOn,
+      props.firstWeekContainsDate,
+      props.useAdditionalWeekYearTokens,
+      props.useAdditionalDayOfYearTokens,
+      props.timeZone,
+      props.numerals,
+      props.dateLib,
+      props.noonSafe,
+      props.components,
+      props.formatters,
+      props.labels,
+      props.classNames
+    ]);
+    if (!props.today) {
+      props = { ...props, today: dateLib.today() };
+    }
+    const { captionLayout, mode, navLayout, numberOfMonths = 1, onDayBlur, onDayClick, onDayFocus, onDayKeyDown, onDayMouseEnter, onDayMouseLeave, onNextClick, onPrevClick, showWeekNumber, styles } = props;
+    const { formatCaption: formatCaption2, formatDay: formatDay2, formatMonthDropdown: formatMonthDropdown2, formatWeekNumber: formatWeekNumber2, formatWeekNumberHeader: formatWeekNumberHeader2, formatWeekdayName: formatWeekdayName2, formatYearDropdown: formatYearDropdown2 } = formatters2;
+    const calendar = useCalendar(props, dateLib);
+    const { days, months, navStart, navEnd, previousMonth, nextMonth, goToMonth } = calendar;
+    const getModifiers = createGetModifiers(days, props, navStart, navEnd, dateLib);
+    const { isSelected, select, selected: selectedValue } = useSelection(props, dateLib) ?? {};
+    const { blur, focused, isFocusTarget, moveFocus, setFocused } = useFocus(props, calendar, getModifiers, isSelected ?? (() => false), dateLib);
+    const { labelDayButton: labelDayButton2, labelGridcell: labelGridcell2, labelGrid: labelGrid2, labelMonthDropdown: labelMonthDropdown2, labelNav: labelNav2, labelPrevious: labelPrevious2, labelNext: labelNext2, labelWeekday: labelWeekday2, labelWeekNumber: labelWeekNumber2, labelWeekNumberHeader: labelWeekNumberHeader2, labelYearDropdown: labelYearDropdown2 } = labels;
+    const weekdays = (0, import_react36.useMemo)(() => getWeekdays(dateLib, props.ISOWeek, props.broadcastCalendar, props.today), [dateLib, props.ISOWeek, props.broadcastCalendar, props.today]);
+    const isInteractive = mode !== void 0 || onDayClick !== void 0;
+    const handlePreviousClick = (0, import_react36.useCallback)(() => {
+      if (!previousMonth)
+        return;
+      goToMonth(previousMonth);
+      onPrevClick?.(previousMonth);
+    }, [previousMonth, goToMonth, onPrevClick]);
+    const handleNextClick = (0, import_react36.useCallback)(() => {
+      if (!nextMonth)
+        return;
+      goToMonth(nextMonth);
+      onNextClick?.(nextMonth);
+    }, [goToMonth, nextMonth, onNextClick]);
+    const handleDayClick = (0, import_react36.useCallback)((day, m) => (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setFocused(day);
+      if (m.disabled) {
+        return;
+      }
+      select?.(day.date, m, e);
+      onDayClick?.(day.date, m, e);
+    }, [select, onDayClick, setFocused]);
+    const handleDayFocus = (0, import_react36.useCallback)((day, m) => (e) => {
+      setFocused(day);
+      onDayFocus?.(day.date, m, e);
+    }, [onDayFocus, setFocused]);
+    const handleDayBlur = (0, import_react36.useCallback)((day, m) => (e) => {
+      blur();
+      onDayBlur?.(day.date, m, e);
+    }, [blur, onDayBlur]);
+    const handleDayKeyDown = (0, import_react36.useCallback)((day, modifiers) => (e) => {
+      const keyMap = {
+        ArrowLeft: [
+          e.shiftKey ? "month" : "day",
+          props.dir === "rtl" ? "after" : "before"
+        ],
+        ArrowRight: [
+          e.shiftKey ? "month" : "day",
+          props.dir === "rtl" ? "before" : "after"
+        ],
+        ArrowDown: [e.shiftKey ? "year" : "week", "after"],
+        ArrowUp: [e.shiftKey ? "year" : "week", "before"],
+        PageUp: [e.shiftKey ? "year" : "month", "before"],
+        PageDown: [e.shiftKey ? "year" : "month", "after"],
+        Home: ["startOfWeek", "before"],
+        End: ["endOfWeek", "after"]
+      };
+      if (keyMap[e.key]) {
+        e.preventDefault();
+        e.stopPropagation();
+        const [moveBy, moveDir] = keyMap[e.key];
+        moveFocus(moveBy, moveDir);
+      }
+      onDayKeyDown?.(day.date, modifiers, e);
+    }, [moveFocus, onDayKeyDown, props.dir]);
+    const handleDayMouseEnter = (0, import_react36.useCallback)((day, modifiers) => (e) => {
+      onDayMouseEnter?.(day.date, modifiers, e);
+    }, [onDayMouseEnter]);
+    const handleDayMouseLeave = (0, import_react36.useCallback)((day, modifiers) => (e) => {
+      onDayMouseLeave?.(day.date, modifiers, e);
+    }, [onDayMouseLeave]);
+    const handleMonthChange = (0, import_react36.useCallback)((date) => (e) => {
+      const selectedMonth = Number(e.target.value);
+      const month = dateLib.setMonth(dateLib.startOfMonth(date), selectedMonth);
+      goToMonth(month);
+    }, [dateLib, goToMonth]);
+    const handleYearChange = (0, import_react36.useCallback)((date) => (e) => {
+      const selectedYear = Number(e.target.value);
+      const month = dateLib.setYear(dateLib.startOfMonth(date), selectedYear);
+      goToMonth(month);
+    }, [dateLib, goToMonth]);
+    const { className, style } = (0, import_react36.useMemo)(() => ({
+      className: [classNames[UI.Root], props.className].filter(Boolean).join(" "),
+      style: { ...styles?.[UI.Root], ...props.style }
+    }), [classNames, props.className, props.style, styles]);
+    const dataAttributes = getDataAttributes(props);
+    const rootElRef = (0, import_react36.useRef)(null);
+    useAnimation(rootElRef, Boolean(props.animate), {
+      classNames,
+      months,
+      focused,
+      dateLib
+    });
+    const contextValue = {
+      dayPickerProps: props,
+      selected: selectedValue,
+      select,
+      isSelected,
+      months,
+      nextMonth,
+      previousMonth,
+      goToMonth,
+      getModifiers,
+      components,
+      classNames,
+      styles,
+      labels,
+      formatters: formatters2
+    };
+    return import_react36.default.createElement(
+      dayPickerContext.Provider,
+      { value: contextValue },
+      import_react36.default.createElement(
+        components.Root,
+        { rootRef: props.animate ? rootElRef : void 0, className, style, dir: props.dir, id: props.id, lang: props.lang ?? locale.code, nonce: props.nonce, title: props.title, role: props.role, "aria-label": props["aria-label"], "aria-labelledby": props["aria-labelledby"], ...dataAttributes },
+        import_react36.default.createElement(
+          components.Months,
+          { className: classNames[UI.Months], style: styles?.[UI.Months] },
+          !props.hideNavigation && !navLayout && import_react36.default.createElement(components.Nav, { "data-animated-nav": props.animate ? "true" : void 0, className: classNames[UI.Nav], style: styles?.[UI.Nav], "aria-label": labelNav2(), onPreviousClick: handlePreviousClick, onNextClick: handleNextClick, previousMonth, nextMonth }),
+          months.map((calendarMonth, displayIndex) => {
+            return import_react36.default.createElement(
+              components.Month,
+              {
+                "data-animated-month": props.animate ? "true" : void 0,
+                className: classNames[UI.Month],
+                style: styles?.[UI.Month],
+                // biome-ignore lint/suspicious/noArrayIndexKey: breaks animation
+                key: displayIndex,
+                displayIndex,
+                calendarMonth
+              },
+              navLayout === "around" && !props.hideNavigation && displayIndex === 0 && import_react36.default.createElement(
+                components.PreviousMonthButton,
+                { type: "button", className: classNames[UI.PreviousMonthButton], tabIndex: previousMonth ? void 0 : -1, "aria-disabled": previousMonth ? void 0 : true, "aria-label": labelPrevious2(previousMonth), onClick: handlePreviousClick, "data-animated-button": props.animate ? "true" : void 0 },
+                import_react36.default.createElement(components.Chevron, { disabled: previousMonth ? void 0 : true, className: classNames[UI.Chevron], orientation: props.dir === "rtl" ? "right" : "left" })
+              ),
+              import_react36.default.createElement(components.MonthCaption, { "data-animated-caption": props.animate ? "true" : void 0, className: classNames[UI.MonthCaption], style: styles?.[UI.MonthCaption], calendarMonth, displayIndex }, captionLayout?.startsWith("dropdown") ? import_react36.default.createElement(
+                components.DropdownNav,
+                { className: classNames[UI.Dropdowns], style: styles?.[UI.Dropdowns] },
+                (() => {
+                  const monthControl = captionLayout === "dropdown" || captionLayout === "dropdown-months" ? import_react36.default.createElement(components.MonthsDropdown, { key: "month", className: classNames[UI.MonthsDropdown], "aria-label": labelMonthDropdown2(), classNames, components, disabled: Boolean(props.disableNavigation), onChange: handleMonthChange(calendarMonth.date), options: getMonthOptions(calendarMonth.date, navStart, navEnd, formatters2, dateLib), style: styles?.[UI.Dropdown], value: dateLib.getMonth(calendarMonth.date) }) : import_react36.default.createElement("span", { key: "month" }, formatMonthDropdown2(calendarMonth.date, dateLib));
+                  const yearControl = captionLayout === "dropdown" || captionLayout === "dropdown-years" ? import_react36.default.createElement(components.YearsDropdown, { key: "year", className: classNames[UI.YearsDropdown], "aria-label": labelYearDropdown2(dateLib.options), classNames, components, disabled: Boolean(props.disableNavigation), onChange: handleYearChange(calendarMonth.date), options: getYearOptions(navStart, navEnd, formatters2, dateLib, Boolean(props.reverseYears)), style: styles?.[UI.Dropdown], value: dateLib.getYear(calendarMonth.date) }) : import_react36.default.createElement("span", { key: "year" }, formatYearDropdown2(calendarMonth.date, dateLib));
+                  const controls = dateLib.getMonthYearOrder() === "year-first" ? [yearControl, monthControl] : [monthControl, yearControl];
+                  return controls;
+                })(),
+                import_react36.default.createElement("span", { role: "status", "aria-live": "polite", style: {
+                  border: 0,
+                  clip: "rect(0 0 0 0)",
+                  height: "1px",
+                  margin: "-1px",
+                  overflow: "hidden",
+                  padding: 0,
+                  position: "absolute",
+                  width: "1px",
+                  whiteSpace: "nowrap",
+                  wordWrap: "normal"
+                } }, formatCaption2(calendarMonth.date, dateLib.options, dateLib))
+              ) : import_react36.default.createElement(components.CaptionLabel, { className: classNames[UI.CaptionLabel], role: "status", "aria-live": "polite" }, formatCaption2(calendarMonth.date, dateLib.options, dateLib))),
+              navLayout === "around" && !props.hideNavigation && displayIndex === numberOfMonths - 1 && import_react36.default.createElement(
+                components.NextMonthButton,
+                { type: "button", className: classNames[UI.NextMonthButton], tabIndex: nextMonth ? void 0 : -1, "aria-disabled": nextMonth ? void 0 : true, "aria-label": labelNext2(nextMonth), onClick: handleNextClick, "data-animated-button": props.animate ? "true" : void 0 },
+                import_react36.default.createElement(components.Chevron, { disabled: nextMonth ? void 0 : true, className: classNames[UI.Chevron], orientation: props.dir === "rtl" ? "left" : "right" })
+              ),
+              displayIndex === numberOfMonths - 1 && navLayout === "after" && !props.hideNavigation && import_react36.default.createElement(components.Nav, { "data-animated-nav": props.animate ? "true" : void 0, className: classNames[UI.Nav], style: styles?.[UI.Nav], "aria-label": labelNav2(), onPreviousClick: handlePreviousClick, onNextClick: handleNextClick, previousMonth, nextMonth }),
+              import_react36.default.createElement(
+                components.MonthGrid,
+                { role: "grid", "aria-multiselectable": mode === "multiple" || mode === "range", "aria-label": labelGrid2(calendarMonth.date, dateLib.options, dateLib) || void 0, className: classNames[UI.MonthGrid], style: styles?.[UI.MonthGrid] },
+                !props.hideWeekdays && import_react36.default.createElement(
+                  components.Weekdays,
+                  { "data-animated-weekdays": props.animate ? "true" : void 0, className: classNames[UI.Weekdays], style: styles?.[UI.Weekdays] },
+                  showWeekNumber && import_react36.default.createElement(components.WeekNumberHeader, { "aria-label": labelWeekNumberHeader2(dateLib.options), className: classNames[UI.WeekNumberHeader], style: styles?.[UI.WeekNumberHeader], scope: "col" }, formatWeekNumberHeader2()),
+                  weekdays.map((weekday) => import_react36.default.createElement(components.Weekday, { "aria-label": labelWeekday2(weekday, dateLib.options, dateLib), className: classNames[UI.Weekday], key: String(weekday), style: styles?.[UI.Weekday], scope: "col" }, formatWeekdayName2(weekday, dateLib.options, dateLib)))
+                ),
+                import_react36.default.createElement(components.Weeks, { "data-animated-weeks": props.animate ? "true" : void 0, className: classNames[UI.Weeks], style: styles?.[UI.Weeks] }, calendarMonth.weeks.map((week) => {
+                  return import_react36.default.createElement(
+                    components.Week,
+                    { className: classNames[UI.Week], key: week.weekNumber, style: styles?.[UI.Week], week },
+                    showWeekNumber && import_react36.default.createElement(components.WeekNumber, { week, style: styles?.[UI.WeekNumber], "aria-label": labelWeekNumber2(week.weekNumber, {
+                      locale
+                    }), className: classNames[UI.WeekNumber], scope: "row", role: "rowheader" }, formatWeekNumber2(week.weekNumber, dateLib)),
+                    week.days.map((day) => {
+                      const { date } = day;
+                      const modifiers = getModifiers(day);
+                      modifiers[DayFlag.focused] = !modifiers.hidden && Boolean(focused?.isEqualTo(day));
+                      modifiers[SelectionState.selected] = isSelected?.(date) || modifiers.selected;
+                      if (isDateRange(selectedValue)) {
+                        const { from, to } = selectedValue;
+                        modifiers[SelectionState.range_start] = Boolean(from && to && dateLib.isSameDay(date, from));
+                        modifiers[SelectionState.range_end] = Boolean(from && to && dateLib.isSameDay(date, to));
+                        modifiers[SelectionState.range_middle] = rangeIncludesDate(selectedValue, date, true, dateLib);
+                      }
+                      const style2 = getStyleForModifiers(modifiers, styles, props.modifiersStyles);
+                      const className2 = getClassNamesForModifiers(modifiers, classNames, props.modifiersClassNames);
+                      const ariaLabel = !isInteractive && !modifiers.hidden ? labelGridcell2(date, modifiers, dateLib.options, dateLib) : void 0;
+                      return import_react36.default.createElement(components.Day, { key: `${day.isoDate}_${day.displayMonthId}`, day, modifiers, className: className2.join(" "), style: style2, role: "gridcell", "aria-selected": modifiers.selected || void 0, "aria-label": ariaLabel, "data-day": day.isoDate, "data-month": day.outside ? day.dateMonthId : void 0, "data-selected": modifiers.selected || void 0, "data-disabled": modifiers.disabled || void 0, "data-hidden": modifiers.hidden || void 0, "data-outside": day.outside || void 0, "data-focused": modifiers.focused || void 0, "data-today": modifiers.today || void 0 }, !modifiers.hidden && isInteractive ? import_react36.default.createElement(components.DayButton, { className: classNames[UI.DayButton], style: styles?.[UI.DayButton], type: "button", day, modifiers, disabled: !modifiers.focused && modifiers.disabled || void 0, "aria-disabled": modifiers.focused && modifiers.disabled || void 0, tabIndex: isFocusTarget(day) ? 0 : -1, "aria-label": labelDayButton2(date, modifiers, dateLib.options, dateLib), onClick: handleDayClick(day, modifiers), onBlur: handleDayBlur(day, modifiers), onFocus: handleDayFocus(day, modifiers), onKeyDown: handleDayKeyDown(day, modifiers), onMouseEnter: handleDayMouseEnter(day, modifiers), onMouseLeave: handleDayMouseLeave(day, modifiers) }, formatDay2(date, dateLib.options, dateLib)) : !modifiers.hidden && formatDay2(day.date, dateLib.options, dateLib));
+                    })
+                  );
+                }))
+              )
+            );
+          })
+        ),
+        props.footer && import_react36.default.createElement(components.Footer, { className: classNames[UI.Footer], style: styles?.[UI.Footer], role: "status", "aria-live": "polite" }, props.footer)
+      )
+    );
+  }
+
+  // node_modules/clsx/dist/clsx.mjs
+  function r(e) {
+    var t, f, n = "";
+    if ("string" == typeof e || "number" == typeof e)
+      n += e;
+    else if ("object" == typeof e)
+      if (Array.isArray(e)) {
+        var o = e.length;
+        for (t = 0; t < o; t++)
+          e[t] && (f = r(e[t])) && (n && (n += " "), n += f);
+      } else
+        for (f in e)
+          e[f] && (n && (n += " "), n += f);
+    return n;
+  }
+  function clsx() {
+    for (var e, t, f = 0, n = "", o = arguments.length; f < o; f++)
+      (e = arguments[f]) && (t = r(e)) && (n && (n += " "), n += t);
+    return n;
+  }
+
+  // node_modules/tailwind-merge/dist/bundle-mjs.mjs
+  var concatArrays = (array1, array2) => {
+    const combinedArray = new Array(array1.length + array2.length);
+    for (let i = 0; i < array1.length; i++) {
+      combinedArray[i] = array1[i];
+    }
+    for (let i = 0; i < array2.length; i++) {
+      combinedArray[array1.length + i] = array2[i];
+    }
+    return combinedArray;
+  };
+  var createClassValidatorObject = (classGroupId, validator) => ({
+    classGroupId,
+    validator
+  });
+  var createClassPartObject = (nextPart = /* @__PURE__ */ new Map(), validators3 = null, classGroupId) => ({
+    nextPart,
+    validators: validators3,
+    classGroupId
+  });
+  var CLASS_PART_SEPARATOR = "-";
+  var EMPTY_CONFLICTS = [];
+  var ARBITRARY_PROPERTY_PREFIX = "arbitrary..";
+  var createClassGroupUtils = (config) => {
+    const classMap = createClassMap(config);
+    const {
+      conflictingClassGroups,
+      conflictingClassGroupModifiers
+    } = config;
+    const getClassGroupId = (className) => {
+      if (className.startsWith("[") && className.endsWith("]")) {
+        return getGroupIdForArbitraryProperty(className);
+      }
+      const classParts = className.split(CLASS_PART_SEPARATOR);
+      const startIndex = classParts[0] === "" && classParts.length > 1 ? 1 : 0;
+      return getGroupRecursive(classParts, startIndex, classMap);
+    };
+    const getConflictingClassGroupIds = (classGroupId, hasPostfixModifier) => {
+      if (hasPostfixModifier) {
+        const modifierConflicts = conflictingClassGroupModifiers[classGroupId];
+        const baseConflicts = conflictingClassGroups[classGroupId];
+        if (modifierConflicts) {
+          if (baseConflicts) {
+            return concatArrays(baseConflicts, modifierConflicts);
+          }
+          return modifierConflicts;
+        }
+        return baseConflicts || EMPTY_CONFLICTS;
+      }
+      return conflictingClassGroups[classGroupId] || EMPTY_CONFLICTS;
+    };
+    return {
+      getClassGroupId,
+      getConflictingClassGroupIds
+    };
+  };
+  var getGroupRecursive = (classParts, startIndex, classPartObject) => {
+    const classPathsLength = classParts.length - startIndex;
+    if (classPathsLength === 0) {
+      return classPartObject.classGroupId;
+    }
+    const currentClassPart = classParts[startIndex];
+    const nextClassPartObject = classPartObject.nextPart.get(currentClassPart);
+    if (nextClassPartObject) {
+      const result = getGroupRecursive(classParts, startIndex + 1, nextClassPartObject);
+      if (result)
+        return result;
+    }
+    const validators3 = classPartObject.validators;
+    if (validators3 === null) {
+      return void 0;
+    }
+    const classRest = startIndex === 0 ? classParts.join(CLASS_PART_SEPARATOR) : classParts.slice(startIndex).join(CLASS_PART_SEPARATOR);
+    const validatorsLength = validators3.length;
+    for (let i = 0; i < validatorsLength; i++) {
+      const validatorObj = validators3[i];
+      if (validatorObj.validator(classRest)) {
+        return validatorObj.classGroupId;
+      }
+    }
+    return void 0;
+  };
+  var getGroupIdForArbitraryProperty = (className) => className.slice(1, -1).indexOf(":") === -1 ? void 0 : (() => {
+    const content = className.slice(1, -1);
+    const colonIndex = content.indexOf(":");
+    const property = content.slice(0, colonIndex);
+    return property ? ARBITRARY_PROPERTY_PREFIX + property : void 0;
+  })();
+  var createClassMap = (config) => {
+    const {
+      theme,
+      classGroups
+    } = config;
+    return processClassGroups(classGroups, theme);
+  };
+  var processClassGroups = (classGroups, theme) => {
+    const classMap = createClassPartObject();
+    for (const classGroupId in classGroups) {
+      const group = classGroups[classGroupId];
+      processClassesRecursively(group, classMap, classGroupId, theme);
+    }
+    return classMap;
+  };
+  var processClassesRecursively = (classGroup, classPartObject, classGroupId, theme) => {
+    const len = classGroup.length;
+    for (let i = 0; i < len; i++) {
+      const classDefinition = classGroup[i];
+      processClassDefinition(classDefinition, classPartObject, classGroupId, theme);
+    }
+  };
+  var processClassDefinition = (classDefinition, classPartObject, classGroupId, theme) => {
+    if (typeof classDefinition === "string") {
+      processStringDefinition(classDefinition, classPartObject, classGroupId);
+      return;
+    }
+    if (typeof classDefinition === "function") {
+      processFunctionDefinition(classDefinition, classPartObject, classGroupId, theme);
+      return;
+    }
+    processObjectDefinition(classDefinition, classPartObject, classGroupId, theme);
+  };
+  var processStringDefinition = (classDefinition, classPartObject, classGroupId) => {
+    const classPartObjectToEdit = classDefinition === "" ? classPartObject : getPart(classPartObject, classDefinition);
+    classPartObjectToEdit.classGroupId = classGroupId;
+  };
+  var processFunctionDefinition = (classDefinition, classPartObject, classGroupId, theme) => {
+    if (isThemeGetter(classDefinition)) {
+      processClassesRecursively(classDefinition(theme), classPartObject, classGroupId, theme);
+      return;
+    }
+    if (classPartObject.validators === null) {
+      classPartObject.validators = [];
+    }
+    classPartObject.validators.push(createClassValidatorObject(classGroupId, classDefinition));
+  };
+  var processObjectDefinition = (classDefinition, classPartObject, classGroupId, theme) => {
+    const entries = Object.entries(classDefinition);
+    const len = entries.length;
+    for (let i = 0; i < len; i++) {
+      const [key, value] = entries[i];
+      processClassesRecursively(value, getPart(classPartObject, key), classGroupId, theme);
+    }
+  };
+  var getPart = (classPartObject, path) => {
+    let current = classPartObject;
+    const parts = path.split(CLASS_PART_SEPARATOR);
+    const len = parts.length;
+    for (let i = 0; i < len; i++) {
+      const part = parts[i];
+      let next = current.nextPart.get(part);
+      if (!next) {
+        next = createClassPartObject();
+        current.nextPart.set(part, next);
+      }
+      current = next;
+    }
+    return current;
+  };
+  var isThemeGetter = (func) => "isThemeGetter" in func && func.isThemeGetter === true;
+  var createLruCache = (maxCacheSize) => {
+    if (maxCacheSize < 1) {
+      return {
+        get: () => void 0,
+        set: () => {
+        }
+      };
+    }
+    let cacheSize = 0;
+    let cache = /* @__PURE__ */ Object.create(null);
+    let previousCache = /* @__PURE__ */ Object.create(null);
+    const update = (key, value) => {
+      cache[key] = value;
+      cacheSize++;
+      if (cacheSize > maxCacheSize) {
+        cacheSize = 0;
+        previousCache = cache;
+        cache = /* @__PURE__ */ Object.create(null);
+      }
+    };
+    return {
+      get(key) {
+        let value = cache[key];
+        if (value !== void 0) {
+          return value;
+        }
+        if ((value = previousCache[key]) !== void 0) {
+          update(key, value);
+          return value;
+        }
+      },
+      set(key, value) {
+        if (key in cache) {
+          cache[key] = value;
+        } else {
+          update(key, value);
+        }
+      }
+    };
+  };
+  var IMPORTANT_MODIFIER = "!";
+  var MODIFIER_SEPARATOR = ":";
+  var EMPTY_MODIFIERS = [];
+  var createResultObject = (modifiers, hasImportantModifier, baseClassName, maybePostfixModifierPosition, isExternal) => ({
+    modifiers,
+    hasImportantModifier,
+    baseClassName,
+    maybePostfixModifierPosition,
+    isExternal
+  });
+  var createParseClassName = (config) => {
+    const {
+      prefix,
+      experimentalParseClassName
+    } = config;
+    let parseClassName = (className) => {
+      const modifiers = [];
+      let bracketDepth = 0;
+      let parenDepth = 0;
+      let modifierStart = 0;
+      let postfixModifierPosition;
+      const len = className.length;
+      for (let index2 = 0; index2 < len; index2++) {
+        const currentCharacter = className[index2];
+        if (bracketDepth === 0 && parenDepth === 0) {
+          if (currentCharacter === MODIFIER_SEPARATOR) {
+            modifiers.push(className.slice(modifierStart, index2));
+            modifierStart = index2 + 1;
+            continue;
+          }
+          if (currentCharacter === "/") {
+            postfixModifierPosition = index2;
+            continue;
+          }
+        }
+        if (currentCharacter === "[")
+          bracketDepth++;
+        else if (currentCharacter === "]")
+          bracketDepth--;
+        else if (currentCharacter === "(")
+          parenDepth++;
+        else if (currentCharacter === ")")
+          parenDepth--;
+      }
+      const baseClassNameWithImportantModifier = modifiers.length === 0 ? className : className.slice(modifierStart);
+      let baseClassName = baseClassNameWithImportantModifier;
+      let hasImportantModifier = false;
+      if (baseClassNameWithImportantModifier.endsWith(IMPORTANT_MODIFIER)) {
+        baseClassName = baseClassNameWithImportantModifier.slice(0, -1);
+        hasImportantModifier = true;
+      } else if (
+        /**
+         * In Tailwind CSS v3 the important modifier was at the start of the base class name. This is still supported for legacy reasons.
+         * @see https://github.com/dcastil/tailwind-merge/issues/513#issuecomment-2614029864
+         */
+        baseClassNameWithImportantModifier.startsWith(IMPORTANT_MODIFIER)
+      ) {
+        baseClassName = baseClassNameWithImportantModifier.slice(1);
+        hasImportantModifier = true;
+      }
+      const maybePostfixModifierPosition = postfixModifierPosition && postfixModifierPosition > modifierStart ? postfixModifierPosition - modifierStart : void 0;
+      return createResultObject(modifiers, hasImportantModifier, baseClassName, maybePostfixModifierPosition);
+    };
+    if (prefix) {
+      const fullPrefix = prefix + MODIFIER_SEPARATOR;
+      const parseClassNameOriginal = parseClassName;
+      parseClassName = (className) => className.startsWith(fullPrefix) ? parseClassNameOriginal(className.slice(fullPrefix.length)) : createResultObject(EMPTY_MODIFIERS, false, className, void 0, true);
+    }
+    if (experimentalParseClassName) {
+      const parseClassNameOriginal = parseClassName;
+      parseClassName = (className) => experimentalParseClassName({
+        className,
+        parseClassName: parseClassNameOriginal
+      });
+    }
+    return parseClassName;
+  };
+  var createSortModifiers = (config) => {
+    const modifierWeights = /* @__PURE__ */ new Map();
+    config.orderSensitiveModifiers.forEach((mod, index2) => {
+      modifierWeights.set(mod, 1e6 + index2);
+    });
+    return (modifiers) => {
+      const result = [];
+      let currentSegment = [];
+      for (let i = 0; i < modifiers.length; i++) {
+        const modifier = modifiers[i];
+        const isArbitrary = modifier[0] === "[";
+        const isOrderSensitive = modifierWeights.has(modifier);
+        if (isArbitrary || isOrderSensitive) {
+          if (currentSegment.length > 0) {
+            currentSegment.sort();
+            result.push(...currentSegment);
+            currentSegment = [];
+          }
+          result.push(modifier);
+        } else {
+          currentSegment.push(modifier);
+        }
+      }
+      if (currentSegment.length > 0) {
+        currentSegment.sort();
+        result.push(...currentSegment);
+      }
+      return result;
+    };
+  };
+  var createConfigUtils = (config) => ({
+    cache: createLruCache(config.cacheSize),
+    parseClassName: createParseClassName(config),
+    sortModifiers: createSortModifiers(config),
+    ...createClassGroupUtils(config)
+  });
+  var SPLIT_CLASSES_REGEX = /\s+/;
+  var mergeClassList = (classList, configUtils) => {
+    const {
+      parseClassName,
+      getClassGroupId,
+      getConflictingClassGroupIds,
+      sortModifiers
+    } = configUtils;
+    const classGroupsInConflict = [];
+    const classNames = classList.trim().split(SPLIT_CLASSES_REGEX);
+    let result = "";
+    for (let index2 = classNames.length - 1; index2 >= 0; index2 -= 1) {
+      const originalClassName = classNames[index2];
+      const {
+        isExternal,
+        modifiers,
+        hasImportantModifier,
+        baseClassName,
+        maybePostfixModifierPosition
+      } = parseClassName(originalClassName);
+      if (isExternal) {
+        result = originalClassName + (result.length > 0 ? " " + result : result);
+        continue;
+      }
+      let hasPostfixModifier = !!maybePostfixModifierPosition;
+      let classGroupId = getClassGroupId(hasPostfixModifier ? baseClassName.substring(0, maybePostfixModifierPosition) : baseClassName);
+      if (!classGroupId) {
+        if (!hasPostfixModifier) {
+          result = originalClassName + (result.length > 0 ? " " + result : result);
+          continue;
+        }
+        classGroupId = getClassGroupId(baseClassName);
+        if (!classGroupId) {
+          result = originalClassName + (result.length > 0 ? " " + result : result);
+          continue;
+        }
+        hasPostfixModifier = false;
+      }
+      const variantModifier = modifiers.length === 0 ? "" : modifiers.length === 1 ? modifiers[0] : sortModifiers(modifiers).join(":");
+      const modifierId = hasImportantModifier ? variantModifier + IMPORTANT_MODIFIER : variantModifier;
+      const classId = modifierId + classGroupId;
+      if (classGroupsInConflict.indexOf(classId) > -1) {
+        continue;
+      }
+      classGroupsInConflict.push(classId);
+      const conflictGroups = getConflictingClassGroupIds(classGroupId, hasPostfixModifier);
+      for (let i = 0; i < conflictGroups.length; ++i) {
+        const group = conflictGroups[i];
+        classGroupsInConflict.push(modifierId + group);
+      }
+      result = originalClassName + (result.length > 0 ? " " + result : result);
+    }
+    return result;
+  };
+  var twJoin = (...classLists) => {
+    let index2 = 0;
+    let argument;
+    let resolvedValue;
+    let string = "";
+    while (index2 < classLists.length) {
+      if (argument = classLists[index2++]) {
+        if (resolvedValue = toValue(argument)) {
+          string && (string += " ");
+          string += resolvedValue;
+        }
+      }
+    }
+    return string;
+  };
+  var toValue = (mix) => {
+    if (typeof mix === "string") {
+      return mix;
+    }
+    let resolvedValue;
+    let string = "";
+    for (let k = 0; k < mix.length; k++) {
+      if (mix[k]) {
+        if (resolvedValue = toValue(mix[k])) {
+          string && (string += " ");
+          string += resolvedValue;
+        }
+      }
+    }
+    return string;
+  };
+  var createTailwindMerge = (createConfigFirst, ...createConfigRest) => {
+    let configUtils;
+    let cacheGet;
+    let cacheSet;
+    let functionToCall;
+    const initTailwindMerge = (classList) => {
+      const config = createConfigRest.reduce((previousConfig, createConfigCurrent) => createConfigCurrent(previousConfig), createConfigFirst());
+      configUtils = createConfigUtils(config);
+      cacheGet = configUtils.cache.get;
+      cacheSet = configUtils.cache.set;
+      functionToCall = tailwindMerge;
+      return tailwindMerge(classList);
+    };
+    const tailwindMerge = (classList) => {
+      const cachedResult = cacheGet(classList);
+      if (cachedResult) {
+        return cachedResult;
+      }
+      const result = mergeClassList(classList, configUtils);
+      cacheSet(classList, result);
+      return result;
+    };
+    functionToCall = initTailwindMerge;
+    return (...args) => functionToCall(twJoin(...args));
+  };
+  var fallbackThemeArr = [];
+  var fromTheme = (key) => {
+    const themeGetter = (theme) => theme[key] || fallbackThemeArr;
+    themeGetter.isThemeGetter = true;
+    return themeGetter;
+  };
+  var arbitraryValueRegex = /^\[(?:(\w[\w-]*):)?(.+)\]$/i;
+  var arbitraryVariableRegex = /^\((?:(\w[\w-]*):)?(.+)\)$/i;
+  var fractionRegex = /^\d+(?:\.\d+)?\/\d+(?:\.\d+)?$/;
+  var tshirtUnitRegex = /^(\d+(\.\d+)?)?(xs|sm|md|lg|xl)$/;
+  var lengthUnitRegex = /\d+(%|px|r?em|[sdl]?v([hwib]|min|max)|pt|pc|in|cm|mm|cap|ch|ex|r?lh|cq(w|h|i|b|min|max))|\b(calc|min|max|clamp)\(.+\)|^0$/;
+  var colorFunctionRegex = /^(rgba?|hsla?|hwb|(ok)?(lab|lch)|color-mix)\(.+\)$/;
+  var shadowRegex = /^(inset_)?-?((\d+)?\.?(\d+)[a-z]+|0)_-?((\d+)?\.?(\d+)[a-z]+|0)/;
+  var imageRegex = /^(url|image|image-set|cross-fade|element|(repeating-)?(linear|radial|conic)-gradient)\(.+\)$/;
+  var isFraction = (value) => fractionRegex.test(value);
+  var isNumber2 = (value) => !!value && !Number.isNaN(Number(value));
+  var isInteger = (value) => !!value && Number.isInteger(Number(value));
+  var isPercent = (value) => value.endsWith("%") && isNumber2(value.slice(0, -1));
+  var isTshirtSize = (value) => tshirtUnitRegex.test(value);
+  var isAny = () => true;
+  var isLengthOnly = (value) => (
+    // `colorFunctionRegex` check is necessary because color functions can have percentages in them which which would be incorrectly classified as lengths.
+    // For example, `hsl(0 0% 0%)` would be classified as a length without this check.
+    // I could also use lookbehind assertion in `lengthUnitRegex` but that isn't supported widely enough.
+    lengthUnitRegex.test(value) && !colorFunctionRegex.test(value)
+  );
+  var isNever = () => false;
+  var isShadow = (value) => shadowRegex.test(value);
+  var isImage = (value) => imageRegex.test(value);
+  var isAnyNonArbitrary = (value) => !isArbitraryValue(value) && !isArbitraryVariable(value);
+  var isArbitrarySize = (value) => getIsArbitraryValue(value, isLabelSize, isNever);
+  var isArbitraryValue = (value) => arbitraryValueRegex.test(value);
+  var isArbitraryLength = (value) => getIsArbitraryValue(value, isLabelLength, isLengthOnly);
+  var isArbitraryNumber = (value) => getIsArbitraryValue(value, isLabelNumber, isNumber2);
+  var isArbitraryWeight = (value) => getIsArbitraryValue(value, isLabelWeight, isAny);
+  var isArbitraryFamilyName = (value) => getIsArbitraryValue(value, isLabelFamilyName, isNever);
+  var isArbitraryPosition = (value) => getIsArbitraryValue(value, isLabelPosition, isNever);
+  var isArbitraryImage = (value) => getIsArbitraryValue(value, isLabelImage, isImage);
+  var isArbitraryShadow = (value) => getIsArbitraryValue(value, isLabelShadow, isShadow);
+  var isArbitraryVariable = (value) => arbitraryVariableRegex.test(value);
+  var isArbitraryVariableLength = (value) => getIsArbitraryVariable(value, isLabelLength);
+  var isArbitraryVariableFamilyName = (value) => getIsArbitraryVariable(value, isLabelFamilyName);
+  var isArbitraryVariablePosition = (value) => getIsArbitraryVariable(value, isLabelPosition);
+  var isArbitraryVariableSize = (value) => getIsArbitraryVariable(value, isLabelSize);
+  var isArbitraryVariableImage = (value) => getIsArbitraryVariable(value, isLabelImage);
+  var isArbitraryVariableShadow = (value) => getIsArbitraryVariable(value, isLabelShadow, true);
+  var isArbitraryVariableWeight = (value) => getIsArbitraryVariable(value, isLabelWeight, true);
+  var getIsArbitraryValue = (value, testLabel, testValue) => {
+    const result = arbitraryValueRegex.exec(value);
+    if (result) {
+      if (result[1]) {
+        return testLabel(result[1]);
+      }
+      return testValue(result[2]);
+    }
+    return false;
+  };
+  var getIsArbitraryVariable = (value, testLabel, shouldMatchNoLabel = false) => {
+    const result = arbitraryVariableRegex.exec(value);
+    if (result) {
+      if (result[1]) {
+        return testLabel(result[1]);
+      }
+      return shouldMatchNoLabel;
+    }
+    return false;
+  };
+  var isLabelPosition = (label) => label === "position" || label === "percentage";
+  var isLabelImage = (label) => label === "image" || label === "url";
+  var isLabelSize = (label) => label === "length" || label === "size" || label === "bg-size";
+  var isLabelLength = (label) => label === "length";
+  var isLabelNumber = (label) => label === "number";
+  var isLabelFamilyName = (label) => label === "family-name";
+  var isLabelWeight = (label) => label === "number" || label === "weight";
+  var isLabelShadow = (label) => label === "shadow";
+  var getDefaultConfig = () => {
+    const themeColor = fromTheme("color");
+    const themeFont = fromTheme("font");
+    const themeText = fromTheme("text");
+    const themeFontWeight = fromTheme("font-weight");
+    const themeTracking = fromTheme("tracking");
+    const themeLeading = fromTheme("leading");
+    const themeBreakpoint = fromTheme("breakpoint");
+    const themeContainer = fromTheme("container");
+    const themeSpacing = fromTheme("spacing");
+    const themeRadius = fromTheme("radius");
+    const themeShadow = fromTheme("shadow");
+    const themeInsetShadow = fromTheme("inset-shadow");
+    const themeTextShadow = fromTheme("text-shadow");
+    const themeDropShadow = fromTheme("drop-shadow");
+    const themeBlur = fromTheme("blur");
+    const themePerspective = fromTheme("perspective");
+    const themeAspect = fromTheme("aspect");
+    const themeEase = fromTheme("ease");
+    const themeAnimate = fromTheme("animate");
+    const scaleBreak = () => ["auto", "avoid", "all", "avoid-page", "page", "left", "right", "column"];
+    const scalePosition = () => [
+      "center",
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "top-left",
+      // Deprecated since Tailwind CSS v4.1.0, see https://github.com/tailwindlabs/tailwindcss/pull/17378
+      "left-top",
+      "top-right",
+      // Deprecated since Tailwind CSS v4.1.0, see https://github.com/tailwindlabs/tailwindcss/pull/17378
+      "right-top",
+      "bottom-right",
+      // Deprecated since Tailwind CSS v4.1.0, see https://github.com/tailwindlabs/tailwindcss/pull/17378
+      "right-bottom",
+      "bottom-left",
+      // Deprecated since Tailwind CSS v4.1.0, see https://github.com/tailwindlabs/tailwindcss/pull/17378
+      "left-bottom"
+    ];
+    const scalePositionWithArbitrary = () => [...scalePosition(), isArbitraryVariable, isArbitraryValue];
+    const scaleOverflow = () => ["auto", "hidden", "clip", "visible", "scroll"];
+    const scaleOverscroll = () => ["auto", "contain", "none"];
+    const scaleUnambiguousSpacing = () => [isArbitraryVariable, isArbitraryValue, themeSpacing];
+    const scaleInset = () => [isFraction, "full", "auto", ...scaleUnambiguousSpacing()];
+    const scaleGridTemplateColsRows = () => [isInteger, "none", "subgrid", isArbitraryVariable, isArbitraryValue];
+    const scaleGridColRowStartAndEnd = () => ["auto", {
+      span: ["full", isInteger, isArbitraryVariable, isArbitraryValue]
+    }, isInteger, isArbitraryVariable, isArbitraryValue];
+    const scaleGridColRowStartOrEnd = () => [isInteger, "auto", isArbitraryVariable, isArbitraryValue];
+    const scaleGridAutoColsRows = () => ["auto", "min", "max", "fr", isArbitraryVariable, isArbitraryValue];
+    const scaleAlignPrimaryAxis = () => ["start", "end", "center", "between", "around", "evenly", "stretch", "baseline", "center-safe", "end-safe"];
+    const scaleAlignSecondaryAxis = () => ["start", "end", "center", "stretch", "center-safe", "end-safe"];
+    const scaleMargin = () => ["auto", ...scaleUnambiguousSpacing()];
+    const scaleSizing = () => [isFraction, "auto", "full", "dvw", "dvh", "lvw", "lvh", "svw", "svh", "min", "max", "fit", ...scaleUnambiguousSpacing()];
+    const scaleSizingInline = () => [isFraction, "screen", "full", "dvw", "lvw", "svw", "min", "max", "fit", ...scaleUnambiguousSpacing()];
+    const scaleSizingBlock = () => [isFraction, "screen", "full", "lh", "dvh", "lvh", "svh", "min", "max", "fit", ...scaleUnambiguousSpacing()];
+    const scaleColor = () => [themeColor, isArbitraryVariable, isArbitraryValue];
+    const scaleBgPosition = () => [...scalePosition(), isArbitraryVariablePosition, isArbitraryPosition, {
+      position: [isArbitraryVariable, isArbitraryValue]
+    }];
+    const scaleBgRepeat = () => ["no-repeat", {
+      repeat: ["", "x", "y", "space", "round"]
+    }];
+    const scaleBgSize = () => ["auto", "cover", "contain", isArbitraryVariableSize, isArbitrarySize, {
+      size: [isArbitraryVariable, isArbitraryValue]
+    }];
+    const scaleGradientStopPosition = () => [isPercent, isArbitraryVariableLength, isArbitraryLength];
+    const scaleRadius = () => [
+      // Deprecated since Tailwind CSS v4.0.0
+      "",
+      "none",
+      "full",
+      themeRadius,
+      isArbitraryVariable,
+      isArbitraryValue
+    ];
+    const scaleBorderWidth = () => ["", isNumber2, isArbitraryVariableLength, isArbitraryLength];
+    const scaleLineStyle = () => ["solid", "dashed", "dotted", "double"];
+    const scaleBlendMode = () => ["normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"];
+    const scaleMaskImagePosition = () => [isNumber2, isPercent, isArbitraryVariablePosition, isArbitraryPosition];
+    const scaleBlur = () => [
+      // Deprecated since Tailwind CSS v4.0.0
+      "",
+      "none",
+      themeBlur,
+      isArbitraryVariable,
+      isArbitraryValue
+    ];
+    const scaleRotate = () => ["none", isNumber2, isArbitraryVariable, isArbitraryValue];
+    const scaleScale = () => ["none", isNumber2, isArbitraryVariable, isArbitraryValue];
+    const scaleSkew = () => [isNumber2, isArbitraryVariable, isArbitraryValue];
+    const scaleTranslate = () => [isFraction, "full", ...scaleUnambiguousSpacing()];
+    return {
+      cacheSize: 500,
+      theme: {
+        animate: ["spin", "ping", "pulse", "bounce"],
+        aspect: ["video"],
+        blur: [isTshirtSize],
+        breakpoint: [isTshirtSize],
+        color: [isAny],
+        container: [isTshirtSize],
+        "drop-shadow": [isTshirtSize],
+        ease: ["in", "out", "in-out"],
+        font: [isAnyNonArbitrary],
+        "font-weight": ["thin", "extralight", "light", "normal", "medium", "semibold", "bold", "extrabold", "black"],
+        "inset-shadow": [isTshirtSize],
+        leading: ["none", "tight", "snug", "normal", "relaxed", "loose"],
+        perspective: ["dramatic", "near", "normal", "midrange", "distant", "none"],
+        radius: [isTshirtSize],
+        shadow: [isTshirtSize],
+        spacing: ["px", isNumber2],
+        text: [isTshirtSize],
+        "text-shadow": [isTshirtSize],
+        tracking: ["tighter", "tight", "normal", "wide", "wider", "widest"]
+      },
+      classGroups: {
+        // --------------
+        // --- Layout ---
+        // --------------
+        /**
+         * Aspect Ratio
+         * @see https://tailwindcss.com/docs/aspect-ratio
+         */
+        aspect: [{
+          aspect: ["auto", "square", isFraction, isArbitraryValue, isArbitraryVariable, themeAspect]
+        }],
+        /**
+         * Container
+         * @see https://tailwindcss.com/docs/container
+         * @deprecated since Tailwind CSS v4.0.0
+         */
+        container: ["container"],
+        /**
+         * Columns
+         * @see https://tailwindcss.com/docs/columns
+         */
+        columns: [{
+          columns: [isNumber2, isArbitraryValue, isArbitraryVariable, themeContainer]
+        }],
+        /**
+         * Break After
+         * @see https://tailwindcss.com/docs/break-after
+         */
+        "break-after": [{
+          "break-after": scaleBreak()
+        }],
+        /**
+         * Break Before
+         * @see https://tailwindcss.com/docs/break-before
+         */
+        "break-before": [{
+          "break-before": scaleBreak()
+        }],
+        /**
+         * Break Inside
+         * @see https://tailwindcss.com/docs/break-inside
+         */
+        "break-inside": [{
+          "break-inside": ["auto", "avoid", "avoid-page", "avoid-column"]
+        }],
+        /**
+         * Box Decoration Break
+         * @see https://tailwindcss.com/docs/box-decoration-break
+         */
+        "box-decoration": [{
+          "box-decoration": ["slice", "clone"]
+        }],
+        /**
+         * Box Sizing
+         * @see https://tailwindcss.com/docs/box-sizing
+         */
+        box: [{
+          box: ["border", "content"]
+        }],
+        /**
+         * Display
+         * @see https://tailwindcss.com/docs/display
+         */
+        display: ["block", "inline-block", "inline", "flex", "inline-flex", "table", "inline-table", "table-caption", "table-cell", "table-column", "table-column-group", "table-footer-group", "table-header-group", "table-row-group", "table-row", "flow-root", "grid", "inline-grid", "contents", "list-item", "hidden"],
+        /**
+         * Screen Reader Only
+         * @see https://tailwindcss.com/docs/display#screen-reader-only
+         */
+        sr: ["sr-only", "not-sr-only"],
+        /**
+         * Floats
+         * @see https://tailwindcss.com/docs/float
+         */
+        float: [{
+          float: ["right", "left", "none", "start", "end"]
+        }],
+        /**
+         * Clear
+         * @see https://tailwindcss.com/docs/clear
+         */
+        clear: [{
+          clear: ["left", "right", "both", "none", "start", "end"]
+        }],
+        /**
+         * Isolation
+         * @see https://tailwindcss.com/docs/isolation
+         */
+        isolation: ["isolate", "isolation-auto"],
+        /**
+         * Object Fit
+         * @see https://tailwindcss.com/docs/object-fit
+         */
+        "object-fit": [{
+          object: ["contain", "cover", "fill", "none", "scale-down"]
+        }],
+        /**
+         * Object Position
+         * @see https://tailwindcss.com/docs/object-position
+         */
+        "object-position": [{
+          object: scalePositionWithArbitrary()
+        }],
+        /**
+         * Overflow
+         * @see https://tailwindcss.com/docs/overflow
+         */
+        overflow: [{
+          overflow: scaleOverflow()
+        }],
+        /**
+         * Overflow X
+         * @see https://tailwindcss.com/docs/overflow
+         */
+        "overflow-x": [{
+          "overflow-x": scaleOverflow()
+        }],
+        /**
+         * Overflow Y
+         * @see https://tailwindcss.com/docs/overflow
+         */
+        "overflow-y": [{
+          "overflow-y": scaleOverflow()
+        }],
+        /**
+         * Overscroll Behavior
+         * @see https://tailwindcss.com/docs/overscroll-behavior
+         */
+        overscroll: [{
+          overscroll: scaleOverscroll()
+        }],
+        /**
+         * Overscroll Behavior X
+         * @see https://tailwindcss.com/docs/overscroll-behavior
+         */
+        "overscroll-x": [{
+          "overscroll-x": scaleOverscroll()
+        }],
+        /**
+         * Overscroll Behavior Y
+         * @see https://tailwindcss.com/docs/overscroll-behavior
+         */
+        "overscroll-y": [{
+          "overscroll-y": scaleOverscroll()
+        }],
+        /**
+         * Position
+         * @see https://tailwindcss.com/docs/position
+         */
+        position: ["static", "fixed", "absolute", "relative", "sticky"],
+        /**
+         * Inset
+         * @see https://tailwindcss.com/docs/top-right-bottom-left
+         */
+        inset: [{
+          inset: scaleInset()
+        }],
+        /**
+         * Inset Inline
+         * @see https://tailwindcss.com/docs/top-right-bottom-left
+         */
+        "inset-x": [{
+          "inset-x": scaleInset()
+        }],
+        /**
+         * Inset Block
+         * @see https://tailwindcss.com/docs/top-right-bottom-left
+         */
+        "inset-y": [{
+          "inset-y": scaleInset()
+        }],
+        /**
+         * Inset Inline Start
+         * @see https://tailwindcss.com/docs/top-right-bottom-left
+         * @todo class group will be renamed to `inset-s` in next major release
+         */
+        start: [{
+          "inset-s": scaleInset(),
+          /**
+           * @deprecated since Tailwind CSS v4.2.0 in favor of `inset-s-*` utilities.
+           * @see https://github.com/tailwindlabs/tailwindcss/pull/19613
+           */
+          start: scaleInset()
+        }],
+        /**
+         * Inset Inline End
+         * @see https://tailwindcss.com/docs/top-right-bottom-left
+         * @todo class group will be renamed to `inset-e` in next major release
+         */
+        end: [{
+          "inset-e": scaleInset(),
+          /**
+           * @deprecated since Tailwind CSS v4.2.0 in favor of `inset-e-*` utilities.
+           * @see https://github.com/tailwindlabs/tailwindcss/pull/19613
+           */
+          end: scaleInset()
+        }],
+        /**
+         * Inset Block Start
+         * @see https://tailwindcss.com/docs/top-right-bottom-left
+         */
+        "inset-bs": [{
+          "inset-bs": scaleInset()
+        }],
+        /**
+         * Inset Block End
+         * @see https://tailwindcss.com/docs/top-right-bottom-left
+         */
+        "inset-be": [{
+          "inset-be": scaleInset()
+        }],
+        /**
+         * Top
+         * @see https://tailwindcss.com/docs/top-right-bottom-left
+         */
+        top: [{
+          top: scaleInset()
+        }],
+        /**
+         * Right
+         * @see https://tailwindcss.com/docs/top-right-bottom-left
+         */
+        right: [{
+          right: scaleInset()
+        }],
+        /**
+         * Bottom
+         * @see https://tailwindcss.com/docs/top-right-bottom-left
+         */
+        bottom: [{
+          bottom: scaleInset()
+        }],
+        /**
+         * Left
+         * @see https://tailwindcss.com/docs/top-right-bottom-left
+         */
+        left: [{
+          left: scaleInset()
+        }],
+        /**
+         * Visibility
+         * @see https://tailwindcss.com/docs/visibility
+         */
+        visibility: ["visible", "invisible", "collapse"],
+        /**
+         * Z-Index
+         * @see https://tailwindcss.com/docs/z-index
+         */
+        z: [{
+          z: [isInteger, "auto", isArbitraryVariable, isArbitraryValue]
+        }],
+        // ------------------------
+        // --- Flexbox and Grid ---
+        // ------------------------
+        /**
+         * Flex Basis
+         * @see https://tailwindcss.com/docs/flex-basis
+         */
+        basis: [{
+          basis: [isFraction, "full", "auto", themeContainer, ...scaleUnambiguousSpacing()]
+        }],
+        /**
+         * Flex Direction
+         * @see https://tailwindcss.com/docs/flex-direction
+         */
+        "flex-direction": [{
+          flex: ["row", "row-reverse", "col", "col-reverse"]
+        }],
+        /**
+         * Flex Wrap
+         * @see https://tailwindcss.com/docs/flex-wrap
+         */
+        "flex-wrap": [{
+          flex: ["nowrap", "wrap", "wrap-reverse"]
+        }],
+        /**
+         * Flex
+         * @see https://tailwindcss.com/docs/flex
+         */
+        flex: [{
+          flex: [isNumber2, isFraction, "auto", "initial", "none", isArbitraryValue]
+        }],
+        /**
+         * Flex Grow
+         * @see https://tailwindcss.com/docs/flex-grow
+         */
+        grow: [{
+          grow: ["", isNumber2, isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Flex Shrink
+         * @see https://tailwindcss.com/docs/flex-shrink
+         */
+        shrink: [{
+          shrink: ["", isNumber2, isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Order
+         * @see https://tailwindcss.com/docs/order
+         */
+        order: [{
+          order: [isInteger, "first", "last", "none", isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Grid Template Columns
+         * @see https://tailwindcss.com/docs/grid-template-columns
+         */
+        "grid-cols": [{
+          "grid-cols": scaleGridTemplateColsRows()
+        }],
+        /**
+         * Grid Column Start / End
+         * @see https://tailwindcss.com/docs/grid-column
+         */
+        "col-start-end": [{
+          col: scaleGridColRowStartAndEnd()
+        }],
+        /**
+         * Grid Column Start
+         * @see https://tailwindcss.com/docs/grid-column
+         */
+        "col-start": [{
+          "col-start": scaleGridColRowStartOrEnd()
+        }],
+        /**
+         * Grid Column End
+         * @see https://tailwindcss.com/docs/grid-column
+         */
+        "col-end": [{
+          "col-end": scaleGridColRowStartOrEnd()
+        }],
+        /**
+         * Grid Template Rows
+         * @see https://tailwindcss.com/docs/grid-template-rows
+         */
+        "grid-rows": [{
+          "grid-rows": scaleGridTemplateColsRows()
+        }],
+        /**
+         * Grid Row Start / End
+         * @see https://tailwindcss.com/docs/grid-row
+         */
+        "row-start-end": [{
+          row: scaleGridColRowStartAndEnd()
+        }],
+        /**
+         * Grid Row Start
+         * @see https://tailwindcss.com/docs/grid-row
+         */
+        "row-start": [{
+          "row-start": scaleGridColRowStartOrEnd()
+        }],
+        /**
+         * Grid Row End
+         * @see https://tailwindcss.com/docs/grid-row
+         */
+        "row-end": [{
+          "row-end": scaleGridColRowStartOrEnd()
+        }],
+        /**
+         * Grid Auto Flow
+         * @see https://tailwindcss.com/docs/grid-auto-flow
+         */
+        "grid-flow": [{
+          "grid-flow": ["row", "col", "dense", "row-dense", "col-dense"]
+        }],
+        /**
+         * Grid Auto Columns
+         * @see https://tailwindcss.com/docs/grid-auto-columns
+         */
+        "auto-cols": [{
+          "auto-cols": scaleGridAutoColsRows()
+        }],
+        /**
+         * Grid Auto Rows
+         * @see https://tailwindcss.com/docs/grid-auto-rows
+         */
+        "auto-rows": [{
+          "auto-rows": scaleGridAutoColsRows()
+        }],
+        /**
+         * Gap
+         * @see https://tailwindcss.com/docs/gap
+         */
+        gap: [{
+          gap: scaleUnambiguousSpacing()
+        }],
+        /**
+         * Gap X
+         * @see https://tailwindcss.com/docs/gap
+         */
+        "gap-x": [{
+          "gap-x": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Gap Y
+         * @see https://tailwindcss.com/docs/gap
+         */
+        "gap-y": [{
+          "gap-y": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Justify Content
+         * @see https://tailwindcss.com/docs/justify-content
+         */
+        "justify-content": [{
+          justify: [...scaleAlignPrimaryAxis(), "normal"]
+        }],
+        /**
+         * Justify Items
+         * @see https://tailwindcss.com/docs/justify-items
+         */
+        "justify-items": [{
+          "justify-items": [...scaleAlignSecondaryAxis(), "normal"]
+        }],
+        /**
+         * Justify Self
+         * @see https://tailwindcss.com/docs/justify-self
+         */
+        "justify-self": [{
+          "justify-self": ["auto", ...scaleAlignSecondaryAxis()]
+        }],
+        /**
+         * Align Content
+         * @see https://tailwindcss.com/docs/align-content
+         */
+        "align-content": [{
+          content: ["normal", ...scaleAlignPrimaryAxis()]
+        }],
+        /**
+         * Align Items
+         * @see https://tailwindcss.com/docs/align-items
+         */
+        "align-items": [{
+          items: [...scaleAlignSecondaryAxis(), {
+            baseline: ["", "last"]
+          }]
+        }],
+        /**
+         * Align Self
+         * @see https://tailwindcss.com/docs/align-self
+         */
+        "align-self": [{
+          self: ["auto", ...scaleAlignSecondaryAxis(), {
+            baseline: ["", "last"]
+          }]
+        }],
+        /**
+         * Place Content
+         * @see https://tailwindcss.com/docs/place-content
+         */
+        "place-content": [{
+          "place-content": scaleAlignPrimaryAxis()
+        }],
+        /**
+         * Place Items
+         * @see https://tailwindcss.com/docs/place-items
+         */
+        "place-items": [{
+          "place-items": [...scaleAlignSecondaryAxis(), "baseline"]
+        }],
+        /**
+         * Place Self
+         * @see https://tailwindcss.com/docs/place-self
+         */
+        "place-self": [{
+          "place-self": ["auto", ...scaleAlignSecondaryAxis()]
+        }],
+        // Spacing
+        /**
+         * Padding
+         * @see https://tailwindcss.com/docs/padding
+         */
+        p: [{
+          p: scaleUnambiguousSpacing()
+        }],
+        /**
+         * Padding Inline
+         * @see https://tailwindcss.com/docs/padding
+         */
+        px: [{
+          px: scaleUnambiguousSpacing()
+        }],
+        /**
+         * Padding Block
+         * @see https://tailwindcss.com/docs/padding
+         */
+        py: [{
+          py: scaleUnambiguousSpacing()
+        }],
+        /**
+         * Padding Inline Start
+         * @see https://tailwindcss.com/docs/padding
+         */
+        ps: [{
+          ps: scaleUnambiguousSpacing()
+        }],
+        /**
+         * Padding Inline End
+         * @see https://tailwindcss.com/docs/padding
+         */
+        pe: [{
+          pe: scaleUnambiguousSpacing()
+        }],
+        /**
+         * Padding Block Start
+         * @see https://tailwindcss.com/docs/padding
+         */
+        pbs: [{
+          pbs: scaleUnambiguousSpacing()
+        }],
+        /**
+         * Padding Block End
+         * @see https://tailwindcss.com/docs/padding
+         */
+        pbe: [{
+          pbe: scaleUnambiguousSpacing()
+        }],
+        /**
+         * Padding Top
+         * @see https://tailwindcss.com/docs/padding
+         */
+        pt: [{
+          pt: scaleUnambiguousSpacing()
+        }],
+        /**
+         * Padding Right
+         * @see https://tailwindcss.com/docs/padding
+         */
+        pr: [{
+          pr: scaleUnambiguousSpacing()
+        }],
+        /**
+         * Padding Bottom
+         * @see https://tailwindcss.com/docs/padding
+         */
+        pb: [{
+          pb: scaleUnambiguousSpacing()
+        }],
+        /**
+         * Padding Left
+         * @see https://tailwindcss.com/docs/padding
+         */
+        pl: [{
+          pl: scaleUnambiguousSpacing()
+        }],
+        /**
+         * Margin
+         * @see https://tailwindcss.com/docs/margin
+         */
+        m: [{
+          m: scaleMargin()
+        }],
+        /**
+         * Margin Inline
+         * @see https://tailwindcss.com/docs/margin
+         */
+        mx: [{
+          mx: scaleMargin()
+        }],
+        /**
+         * Margin Block
+         * @see https://tailwindcss.com/docs/margin
+         */
+        my: [{
+          my: scaleMargin()
+        }],
+        /**
+         * Margin Inline Start
+         * @see https://tailwindcss.com/docs/margin
+         */
+        ms: [{
+          ms: scaleMargin()
+        }],
+        /**
+         * Margin Inline End
+         * @see https://tailwindcss.com/docs/margin
+         */
+        me: [{
+          me: scaleMargin()
+        }],
+        /**
+         * Margin Block Start
+         * @see https://tailwindcss.com/docs/margin
+         */
+        mbs: [{
+          mbs: scaleMargin()
+        }],
+        /**
+         * Margin Block End
+         * @see https://tailwindcss.com/docs/margin
+         */
+        mbe: [{
+          mbe: scaleMargin()
+        }],
+        /**
+         * Margin Top
+         * @see https://tailwindcss.com/docs/margin
+         */
+        mt: [{
+          mt: scaleMargin()
+        }],
+        /**
+         * Margin Right
+         * @see https://tailwindcss.com/docs/margin
+         */
+        mr: [{
+          mr: scaleMargin()
+        }],
+        /**
+         * Margin Bottom
+         * @see https://tailwindcss.com/docs/margin
+         */
+        mb: [{
+          mb: scaleMargin()
+        }],
+        /**
+         * Margin Left
+         * @see https://tailwindcss.com/docs/margin
+         */
+        ml: [{
+          ml: scaleMargin()
+        }],
+        /**
+         * Space Between X
+         * @see https://tailwindcss.com/docs/margin#adding-space-between-children
+         */
+        "space-x": [{
+          "space-x": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Space Between X Reverse
+         * @see https://tailwindcss.com/docs/margin#adding-space-between-children
+         */
+        "space-x-reverse": ["space-x-reverse"],
+        /**
+         * Space Between Y
+         * @see https://tailwindcss.com/docs/margin#adding-space-between-children
+         */
+        "space-y": [{
+          "space-y": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Space Between Y Reverse
+         * @see https://tailwindcss.com/docs/margin#adding-space-between-children
+         */
+        "space-y-reverse": ["space-y-reverse"],
+        // --------------
+        // --- Sizing ---
+        // --------------
+        /**
+         * Size
+         * @see https://tailwindcss.com/docs/width#setting-both-width-and-height
+         */
+        size: [{
+          size: scaleSizing()
+        }],
+        /**
+         * Inline Size
+         * @see https://tailwindcss.com/docs/width
+         */
+        "inline-size": [{
+          inline: ["auto", ...scaleSizingInline()]
+        }],
+        /**
+         * Min-Inline Size
+         * @see https://tailwindcss.com/docs/min-width
+         */
+        "min-inline-size": [{
+          "min-inline": ["auto", ...scaleSizingInline()]
+        }],
+        /**
+         * Max-Inline Size
+         * @see https://tailwindcss.com/docs/max-width
+         */
+        "max-inline-size": [{
+          "max-inline": ["none", ...scaleSizingInline()]
+        }],
+        /**
+         * Block Size
+         * @see https://tailwindcss.com/docs/height
+         */
+        "block-size": [{
+          block: ["auto", ...scaleSizingBlock()]
+        }],
+        /**
+         * Min-Block Size
+         * @see https://tailwindcss.com/docs/min-height
+         */
+        "min-block-size": [{
+          "min-block": ["auto", ...scaleSizingBlock()]
+        }],
+        /**
+         * Max-Block Size
+         * @see https://tailwindcss.com/docs/max-height
+         */
+        "max-block-size": [{
+          "max-block": ["none", ...scaleSizingBlock()]
+        }],
+        /**
+         * Width
+         * @see https://tailwindcss.com/docs/width
+         */
+        w: [{
+          w: [themeContainer, "screen", ...scaleSizing()]
+        }],
+        /**
+         * Min-Width
+         * @see https://tailwindcss.com/docs/min-width
+         */
+        "min-w": [{
+          "min-w": [
+            themeContainer,
+            "screen",
+            /** Deprecated. @see https://github.com/tailwindlabs/tailwindcss.com/issues/2027#issuecomment-2620152757 */
+            "none",
+            ...scaleSizing()
+          ]
+        }],
+        /**
+         * Max-Width
+         * @see https://tailwindcss.com/docs/max-width
+         */
+        "max-w": [{
+          "max-w": [
+            themeContainer,
+            "screen",
+            "none",
+            /** Deprecated since Tailwind CSS v4.0.0. @see https://github.com/tailwindlabs/tailwindcss.com/issues/2027#issuecomment-2620152757 */
+            "prose",
+            /** Deprecated since Tailwind CSS v4.0.0. @see https://github.com/tailwindlabs/tailwindcss.com/issues/2027#issuecomment-2620152757 */
+            {
+              screen: [themeBreakpoint]
+            },
+            ...scaleSizing()
+          ]
+        }],
+        /**
+         * Height
+         * @see https://tailwindcss.com/docs/height
+         */
+        h: [{
+          h: ["screen", "lh", ...scaleSizing()]
+        }],
+        /**
+         * Min-Height
+         * @see https://tailwindcss.com/docs/min-height
+         */
+        "min-h": [{
+          "min-h": ["screen", "lh", "none", ...scaleSizing()]
+        }],
+        /**
+         * Max-Height
+         * @see https://tailwindcss.com/docs/max-height
+         */
+        "max-h": [{
+          "max-h": ["screen", "lh", ...scaleSizing()]
+        }],
+        // ------------------
+        // --- Typography ---
+        // ------------------
+        /**
+         * Font Size
+         * @see https://tailwindcss.com/docs/font-size
+         */
+        "font-size": [{
+          text: ["base", themeText, isArbitraryVariableLength, isArbitraryLength]
+        }],
+        /**
+         * Font Smoothing
+         * @see https://tailwindcss.com/docs/font-smoothing
+         */
+        "font-smoothing": ["antialiased", "subpixel-antialiased"],
+        /**
+         * Font Style
+         * @see https://tailwindcss.com/docs/font-style
+         */
+        "font-style": ["italic", "not-italic"],
+        /**
+         * Font Weight
+         * @see https://tailwindcss.com/docs/font-weight
+         */
+        "font-weight": [{
+          font: [themeFontWeight, isArbitraryVariableWeight, isArbitraryWeight]
+        }],
+        /**
+         * Font Stretch
+         * @see https://tailwindcss.com/docs/font-stretch
+         */
+        "font-stretch": [{
+          "font-stretch": ["ultra-condensed", "extra-condensed", "condensed", "semi-condensed", "normal", "semi-expanded", "expanded", "extra-expanded", "ultra-expanded", isPercent, isArbitraryValue]
+        }],
+        /**
+         * Font Family
+         * @see https://tailwindcss.com/docs/font-family
+         */
+        "font-family": [{
+          font: [isArbitraryVariableFamilyName, isArbitraryFamilyName, themeFont]
+        }],
+        /**
+         * Font Feature Settings
+         * @see https://tailwindcss.com/docs/font-feature-settings
+         */
+        "font-features": [{
+          "font-features": [isArbitraryValue]
+        }],
+        /**
+         * Font Variant Numeric
+         * @see https://tailwindcss.com/docs/font-variant-numeric
+         */
+        "fvn-normal": ["normal-nums"],
+        /**
+         * Font Variant Numeric
+         * @see https://tailwindcss.com/docs/font-variant-numeric
+         */
+        "fvn-ordinal": ["ordinal"],
+        /**
+         * Font Variant Numeric
+         * @see https://tailwindcss.com/docs/font-variant-numeric
+         */
+        "fvn-slashed-zero": ["slashed-zero"],
+        /**
+         * Font Variant Numeric
+         * @see https://tailwindcss.com/docs/font-variant-numeric
+         */
+        "fvn-figure": ["lining-nums", "oldstyle-nums"],
+        /**
+         * Font Variant Numeric
+         * @see https://tailwindcss.com/docs/font-variant-numeric
+         */
+        "fvn-spacing": ["proportional-nums", "tabular-nums"],
+        /**
+         * Font Variant Numeric
+         * @see https://tailwindcss.com/docs/font-variant-numeric
+         */
+        "fvn-fraction": ["diagonal-fractions", "stacked-fractions"],
+        /**
+         * Letter Spacing
+         * @see https://tailwindcss.com/docs/letter-spacing
+         */
+        tracking: [{
+          tracking: [themeTracking, isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Line Clamp
+         * @see https://tailwindcss.com/docs/line-clamp
+         */
+        "line-clamp": [{
+          "line-clamp": [isNumber2, "none", isArbitraryVariable, isArbitraryNumber]
+        }],
+        /**
+         * Line Height
+         * @see https://tailwindcss.com/docs/line-height
+         */
+        leading: [{
+          leading: [
+            /** Deprecated since Tailwind CSS v4.0.0. @see https://github.com/tailwindlabs/tailwindcss.com/issues/2027#issuecomment-2620152757 */
+            themeLeading,
+            ...scaleUnambiguousSpacing()
+          ]
+        }],
+        /**
+         * List Style Image
+         * @see https://tailwindcss.com/docs/list-style-image
+         */
+        "list-image": [{
+          "list-image": ["none", isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * List Style Position
+         * @see https://tailwindcss.com/docs/list-style-position
+         */
+        "list-style-position": [{
+          list: ["inside", "outside"]
+        }],
+        /**
+         * List Style Type
+         * @see https://tailwindcss.com/docs/list-style-type
+         */
+        "list-style-type": [{
+          list: ["disc", "decimal", "none", isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Text Alignment
+         * @see https://tailwindcss.com/docs/text-align
+         */
+        "text-alignment": [{
+          text: ["left", "center", "right", "justify", "start", "end"]
+        }],
+        /**
+         * Placeholder Color
+         * @deprecated since Tailwind CSS v3.0.0
+         * @see https://v3.tailwindcss.com/docs/placeholder-color
+         */
+        "placeholder-color": [{
+          placeholder: scaleColor()
+        }],
+        /**
+         * Text Color
+         * @see https://tailwindcss.com/docs/text-color
+         */
+        "text-color": [{
+          text: scaleColor()
+        }],
+        /**
+         * Text Decoration
+         * @see https://tailwindcss.com/docs/text-decoration
+         */
+        "text-decoration": ["underline", "overline", "line-through", "no-underline"],
+        /**
+         * Text Decoration Style
+         * @see https://tailwindcss.com/docs/text-decoration-style
+         */
+        "text-decoration-style": [{
+          decoration: [...scaleLineStyle(), "wavy"]
+        }],
+        /**
+         * Text Decoration Thickness
+         * @see https://tailwindcss.com/docs/text-decoration-thickness
+         */
+        "text-decoration-thickness": [{
+          decoration: [isNumber2, "from-font", "auto", isArbitraryVariable, isArbitraryLength]
+        }],
+        /**
+         * Text Decoration Color
+         * @see https://tailwindcss.com/docs/text-decoration-color
+         */
+        "text-decoration-color": [{
+          decoration: scaleColor()
+        }],
+        /**
+         * Text Underline Offset
+         * @see https://tailwindcss.com/docs/text-underline-offset
+         */
+        "underline-offset": [{
+          "underline-offset": [isNumber2, "auto", isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Text Transform
+         * @see https://tailwindcss.com/docs/text-transform
+         */
+        "text-transform": ["uppercase", "lowercase", "capitalize", "normal-case"],
+        /**
+         * Text Overflow
+         * @see https://tailwindcss.com/docs/text-overflow
+         */
+        "text-overflow": ["truncate", "text-ellipsis", "text-clip"],
+        /**
+         * Text Wrap
+         * @see https://tailwindcss.com/docs/text-wrap
+         */
+        "text-wrap": [{
+          text: ["wrap", "nowrap", "balance", "pretty"]
+        }],
+        /**
+         * Text Indent
+         * @see https://tailwindcss.com/docs/text-indent
+         */
+        indent: [{
+          indent: scaleUnambiguousSpacing()
+        }],
+        /**
+         * Vertical Alignment
+         * @see https://tailwindcss.com/docs/vertical-align
+         */
+        "vertical-align": [{
+          align: ["baseline", "top", "middle", "bottom", "text-top", "text-bottom", "sub", "super", isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Whitespace
+         * @see https://tailwindcss.com/docs/whitespace
+         */
+        whitespace: [{
+          whitespace: ["normal", "nowrap", "pre", "pre-line", "pre-wrap", "break-spaces"]
+        }],
+        /**
+         * Word Break
+         * @see https://tailwindcss.com/docs/word-break
+         */
+        break: [{
+          break: ["normal", "words", "all", "keep"]
+        }],
+        /**
+         * Overflow Wrap
+         * @see https://tailwindcss.com/docs/overflow-wrap
+         */
+        wrap: [{
+          wrap: ["break-word", "anywhere", "normal"]
+        }],
+        /**
+         * Hyphens
+         * @see https://tailwindcss.com/docs/hyphens
+         */
+        hyphens: [{
+          hyphens: ["none", "manual", "auto"]
+        }],
+        /**
+         * Content
+         * @see https://tailwindcss.com/docs/content
+         */
+        content: [{
+          content: ["none", isArbitraryVariable, isArbitraryValue]
+        }],
+        // -------------------
+        // --- Backgrounds ---
+        // -------------------
+        /**
+         * Background Attachment
+         * @see https://tailwindcss.com/docs/background-attachment
+         */
+        "bg-attachment": [{
+          bg: ["fixed", "local", "scroll"]
+        }],
+        /**
+         * Background Clip
+         * @see https://tailwindcss.com/docs/background-clip
+         */
+        "bg-clip": [{
+          "bg-clip": ["border", "padding", "content", "text"]
+        }],
+        /**
+         * Background Origin
+         * @see https://tailwindcss.com/docs/background-origin
+         */
+        "bg-origin": [{
+          "bg-origin": ["border", "padding", "content"]
+        }],
+        /**
+         * Background Position
+         * @see https://tailwindcss.com/docs/background-position
+         */
+        "bg-position": [{
+          bg: scaleBgPosition()
+        }],
+        /**
+         * Background Repeat
+         * @see https://tailwindcss.com/docs/background-repeat
+         */
+        "bg-repeat": [{
+          bg: scaleBgRepeat()
+        }],
+        /**
+         * Background Size
+         * @see https://tailwindcss.com/docs/background-size
+         */
+        "bg-size": [{
+          bg: scaleBgSize()
+        }],
+        /**
+         * Background Image
+         * @see https://tailwindcss.com/docs/background-image
+         */
+        "bg-image": [{
+          bg: ["none", {
+            linear: [{
+              to: ["t", "tr", "r", "br", "b", "bl", "l", "tl"]
+            }, isInteger, isArbitraryVariable, isArbitraryValue],
+            radial: ["", isArbitraryVariable, isArbitraryValue],
+            conic: [isInteger, isArbitraryVariable, isArbitraryValue]
+          }, isArbitraryVariableImage, isArbitraryImage]
+        }],
+        /**
+         * Background Color
+         * @see https://tailwindcss.com/docs/background-color
+         */
+        "bg-color": [{
+          bg: scaleColor()
+        }],
+        /**
+         * Gradient Color Stops From Position
+         * @see https://tailwindcss.com/docs/gradient-color-stops
+         */
+        "gradient-from-pos": [{
+          from: scaleGradientStopPosition()
+        }],
+        /**
+         * Gradient Color Stops Via Position
+         * @see https://tailwindcss.com/docs/gradient-color-stops
+         */
+        "gradient-via-pos": [{
+          via: scaleGradientStopPosition()
+        }],
+        /**
+         * Gradient Color Stops To Position
+         * @see https://tailwindcss.com/docs/gradient-color-stops
+         */
+        "gradient-to-pos": [{
+          to: scaleGradientStopPosition()
+        }],
+        /**
+         * Gradient Color Stops From
+         * @see https://tailwindcss.com/docs/gradient-color-stops
+         */
+        "gradient-from": [{
+          from: scaleColor()
+        }],
+        /**
+         * Gradient Color Stops Via
+         * @see https://tailwindcss.com/docs/gradient-color-stops
+         */
+        "gradient-via": [{
+          via: scaleColor()
+        }],
+        /**
+         * Gradient Color Stops To
+         * @see https://tailwindcss.com/docs/gradient-color-stops
+         */
+        "gradient-to": [{
+          to: scaleColor()
+        }],
+        // ---------------
+        // --- Borders ---
+        // ---------------
+        /**
+         * Border Radius
+         * @see https://tailwindcss.com/docs/border-radius
+         */
+        rounded: [{
+          rounded: scaleRadius()
+        }],
+        /**
+         * Border Radius Start
+         * @see https://tailwindcss.com/docs/border-radius
+         */
+        "rounded-s": [{
+          "rounded-s": scaleRadius()
+        }],
+        /**
+         * Border Radius End
+         * @see https://tailwindcss.com/docs/border-radius
+         */
+        "rounded-e": [{
+          "rounded-e": scaleRadius()
+        }],
+        /**
+         * Border Radius Top
+         * @see https://tailwindcss.com/docs/border-radius
+         */
+        "rounded-t": [{
+          "rounded-t": scaleRadius()
+        }],
+        /**
+         * Border Radius Right
+         * @see https://tailwindcss.com/docs/border-radius
+         */
+        "rounded-r": [{
+          "rounded-r": scaleRadius()
+        }],
+        /**
+         * Border Radius Bottom
+         * @see https://tailwindcss.com/docs/border-radius
+         */
+        "rounded-b": [{
+          "rounded-b": scaleRadius()
+        }],
+        /**
+         * Border Radius Left
+         * @see https://tailwindcss.com/docs/border-radius
+         */
+        "rounded-l": [{
+          "rounded-l": scaleRadius()
+        }],
+        /**
+         * Border Radius Start Start
+         * @see https://tailwindcss.com/docs/border-radius
+         */
+        "rounded-ss": [{
+          "rounded-ss": scaleRadius()
+        }],
+        /**
+         * Border Radius Start End
+         * @see https://tailwindcss.com/docs/border-radius
+         */
+        "rounded-se": [{
+          "rounded-se": scaleRadius()
+        }],
+        /**
+         * Border Radius End End
+         * @see https://tailwindcss.com/docs/border-radius
+         */
+        "rounded-ee": [{
+          "rounded-ee": scaleRadius()
+        }],
+        /**
+         * Border Radius End Start
+         * @see https://tailwindcss.com/docs/border-radius
+         */
+        "rounded-es": [{
+          "rounded-es": scaleRadius()
+        }],
+        /**
+         * Border Radius Top Left
+         * @see https://tailwindcss.com/docs/border-radius
+         */
+        "rounded-tl": [{
+          "rounded-tl": scaleRadius()
+        }],
+        /**
+         * Border Radius Top Right
+         * @see https://tailwindcss.com/docs/border-radius
+         */
+        "rounded-tr": [{
+          "rounded-tr": scaleRadius()
+        }],
+        /**
+         * Border Radius Bottom Right
+         * @see https://tailwindcss.com/docs/border-radius
+         */
+        "rounded-br": [{
+          "rounded-br": scaleRadius()
+        }],
+        /**
+         * Border Radius Bottom Left
+         * @see https://tailwindcss.com/docs/border-radius
+         */
+        "rounded-bl": [{
+          "rounded-bl": scaleRadius()
+        }],
+        /**
+         * Border Width
+         * @see https://tailwindcss.com/docs/border-width
+         */
+        "border-w": [{
+          border: scaleBorderWidth()
+        }],
+        /**
+         * Border Width Inline
+         * @see https://tailwindcss.com/docs/border-width
+         */
+        "border-w-x": [{
+          "border-x": scaleBorderWidth()
+        }],
+        /**
+         * Border Width Block
+         * @see https://tailwindcss.com/docs/border-width
+         */
+        "border-w-y": [{
+          "border-y": scaleBorderWidth()
+        }],
+        /**
+         * Border Width Inline Start
+         * @see https://tailwindcss.com/docs/border-width
+         */
+        "border-w-s": [{
+          "border-s": scaleBorderWidth()
+        }],
+        /**
+         * Border Width Inline End
+         * @see https://tailwindcss.com/docs/border-width
+         */
+        "border-w-e": [{
+          "border-e": scaleBorderWidth()
+        }],
+        /**
+         * Border Width Block Start
+         * @see https://tailwindcss.com/docs/border-width
+         */
+        "border-w-bs": [{
+          "border-bs": scaleBorderWidth()
+        }],
+        /**
+         * Border Width Block End
+         * @see https://tailwindcss.com/docs/border-width
+         */
+        "border-w-be": [{
+          "border-be": scaleBorderWidth()
+        }],
+        /**
+         * Border Width Top
+         * @see https://tailwindcss.com/docs/border-width
+         */
+        "border-w-t": [{
+          "border-t": scaleBorderWidth()
+        }],
+        /**
+         * Border Width Right
+         * @see https://tailwindcss.com/docs/border-width
+         */
+        "border-w-r": [{
+          "border-r": scaleBorderWidth()
+        }],
+        /**
+         * Border Width Bottom
+         * @see https://tailwindcss.com/docs/border-width
+         */
+        "border-w-b": [{
+          "border-b": scaleBorderWidth()
+        }],
+        /**
+         * Border Width Left
+         * @see https://tailwindcss.com/docs/border-width
+         */
+        "border-w-l": [{
+          "border-l": scaleBorderWidth()
+        }],
+        /**
+         * Divide Width X
+         * @see https://tailwindcss.com/docs/border-width#between-children
+         */
+        "divide-x": [{
+          "divide-x": scaleBorderWidth()
+        }],
+        /**
+         * Divide Width X Reverse
+         * @see https://tailwindcss.com/docs/border-width#between-children
+         */
+        "divide-x-reverse": ["divide-x-reverse"],
+        /**
+         * Divide Width Y
+         * @see https://tailwindcss.com/docs/border-width#between-children
+         */
+        "divide-y": [{
+          "divide-y": scaleBorderWidth()
+        }],
+        /**
+         * Divide Width Y Reverse
+         * @see https://tailwindcss.com/docs/border-width#between-children
+         */
+        "divide-y-reverse": ["divide-y-reverse"],
+        /**
+         * Border Style
+         * @see https://tailwindcss.com/docs/border-style
+         */
+        "border-style": [{
+          border: [...scaleLineStyle(), "hidden", "none"]
+        }],
+        /**
+         * Divide Style
+         * @see https://tailwindcss.com/docs/border-style#setting-the-divider-style
+         */
+        "divide-style": [{
+          divide: [...scaleLineStyle(), "hidden", "none"]
+        }],
+        /**
+         * Border Color
+         * @see https://tailwindcss.com/docs/border-color
+         */
+        "border-color": [{
+          border: scaleColor()
+        }],
+        /**
+         * Border Color Inline
+         * @see https://tailwindcss.com/docs/border-color
+         */
+        "border-color-x": [{
+          "border-x": scaleColor()
+        }],
+        /**
+         * Border Color Block
+         * @see https://tailwindcss.com/docs/border-color
+         */
+        "border-color-y": [{
+          "border-y": scaleColor()
+        }],
+        /**
+         * Border Color Inline Start
+         * @see https://tailwindcss.com/docs/border-color
+         */
+        "border-color-s": [{
+          "border-s": scaleColor()
+        }],
+        /**
+         * Border Color Inline End
+         * @see https://tailwindcss.com/docs/border-color
+         */
+        "border-color-e": [{
+          "border-e": scaleColor()
+        }],
+        /**
+         * Border Color Block Start
+         * @see https://tailwindcss.com/docs/border-color
+         */
+        "border-color-bs": [{
+          "border-bs": scaleColor()
+        }],
+        /**
+         * Border Color Block End
+         * @see https://tailwindcss.com/docs/border-color
+         */
+        "border-color-be": [{
+          "border-be": scaleColor()
+        }],
+        /**
+         * Border Color Top
+         * @see https://tailwindcss.com/docs/border-color
+         */
+        "border-color-t": [{
+          "border-t": scaleColor()
+        }],
+        /**
+         * Border Color Right
+         * @see https://tailwindcss.com/docs/border-color
+         */
+        "border-color-r": [{
+          "border-r": scaleColor()
+        }],
+        /**
+         * Border Color Bottom
+         * @see https://tailwindcss.com/docs/border-color
+         */
+        "border-color-b": [{
+          "border-b": scaleColor()
+        }],
+        /**
+         * Border Color Left
+         * @see https://tailwindcss.com/docs/border-color
+         */
+        "border-color-l": [{
+          "border-l": scaleColor()
+        }],
+        /**
+         * Divide Color
+         * @see https://tailwindcss.com/docs/divide-color
+         */
+        "divide-color": [{
+          divide: scaleColor()
+        }],
+        /**
+         * Outline Style
+         * @see https://tailwindcss.com/docs/outline-style
+         */
+        "outline-style": [{
+          outline: [...scaleLineStyle(), "none", "hidden"]
+        }],
+        /**
+         * Outline Offset
+         * @see https://tailwindcss.com/docs/outline-offset
+         */
+        "outline-offset": [{
+          "outline-offset": [isNumber2, isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Outline Width
+         * @see https://tailwindcss.com/docs/outline-width
+         */
+        "outline-w": [{
+          outline: ["", isNumber2, isArbitraryVariableLength, isArbitraryLength]
+        }],
+        /**
+         * Outline Color
+         * @see https://tailwindcss.com/docs/outline-color
+         */
+        "outline-color": [{
+          outline: scaleColor()
+        }],
+        // ---------------
+        // --- Effects ---
+        // ---------------
+        /**
+         * Box Shadow
+         * @see https://tailwindcss.com/docs/box-shadow
+         */
+        shadow: [{
+          shadow: [
+            // Deprecated since Tailwind CSS v4.0.0
+            "",
+            "none",
+            themeShadow,
+            isArbitraryVariableShadow,
+            isArbitraryShadow
+          ]
+        }],
+        /**
+         * Box Shadow Color
+         * @see https://tailwindcss.com/docs/box-shadow#setting-the-shadow-color
+         */
+        "shadow-color": [{
+          shadow: scaleColor()
+        }],
+        /**
+         * Inset Box Shadow
+         * @see https://tailwindcss.com/docs/box-shadow#adding-an-inset-shadow
+         */
+        "inset-shadow": [{
+          "inset-shadow": ["none", themeInsetShadow, isArbitraryVariableShadow, isArbitraryShadow]
+        }],
+        /**
+         * Inset Box Shadow Color
+         * @see https://tailwindcss.com/docs/box-shadow#setting-the-inset-shadow-color
+         */
+        "inset-shadow-color": [{
+          "inset-shadow": scaleColor()
+        }],
+        /**
+         * Ring Width
+         * @see https://tailwindcss.com/docs/box-shadow#adding-a-ring
+         */
+        "ring-w": [{
+          ring: scaleBorderWidth()
+        }],
+        /**
+         * Ring Width Inset
+         * @see https://v3.tailwindcss.com/docs/ring-width#inset-rings
+         * @deprecated since Tailwind CSS v4.0.0
+         * @see https://github.com/tailwindlabs/tailwindcss/blob/v4.0.0/packages/tailwindcss/src/utilities.ts#L4158
+         */
+        "ring-w-inset": ["ring-inset"],
+        /**
+         * Ring Color
+         * @see https://tailwindcss.com/docs/box-shadow#setting-the-ring-color
+         */
+        "ring-color": [{
+          ring: scaleColor()
+        }],
+        /**
+         * Ring Offset Width
+         * @see https://v3.tailwindcss.com/docs/ring-offset-width
+         * @deprecated since Tailwind CSS v4.0.0
+         * @see https://github.com/tailwindlabs/tailwindcss/blob/v4.0.0/packages/tailwindcss/src/utilities.ts#L4158
+         */
+        "ring-offset-w": [{
+          "ring-offset": [isNumber2, isArbitraryLength]
+        }],
+        /**
+         * Ring Offset Color
+         * @see https://v3.tailwindcss.com/docs/ring-offset-color
+         * @deprecated since Tailwind CSS v4.0.0
+         * @see https://github.com/tailwindlabs/tailwindcss/blob/v4.0.0/packages/tailwindcss/src/utilities.ts#L4158
+         */
+        "ring-offset-color": [{
+          "ring-offset": scaleColor()
+        }],
+        /**
+         * Inset Ring Width
+         * @see https://tailwindcss.com/docs/box-shadow#adding-an-inset-ring
+         */
+        "inset-ring-w": [{
+          "inset-ring": scaleBorderWidth()
+        }],
+        /**
+         * Inset Ring Color
+         * @see https://tailwindcss.com/docs/box-shadow#setting-the-inset-ring-color
+         */
+        "inset-ring-color": [{
+          "inset-ring": scaleColor()
+        }],
+        /**
+         * Text Shadow
+         * @see https://tailwindcss.com/docs/text-shadow
+         */
+        "text-shadow": [{
+          "text-shadow": ["none", themeTextShadow, isArbitraryVariableShadow, isArbitraryShadow]
+        }],
+        /**
+         * Text Shadow Color
+         * @see https://tailwindcss.com/docs/text-shadow#setting-the-shadow-color
+         */
+        "text-shadow-color": [{
+          "text-shadow": scaleColor()
+        }],
+        /**
+         * Opacity
+         * @see https://tailwindcss.com/docs/opacity
+         */
+        opacity: [{
+          opacity: [isNumber2, isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Mix Blend Mode
+         * @see https://tailwindcss.com/docs/mix-blend-mode
+         */
+        "mix-blend": [{
+          "mix-blend": [...scaleBlendMode(), "plus-darker", "plus-lighter"]
+        }],
+        /**
+         * Background Blend Mode
+         * @see https://tailwindcss.com/docs/background-blend-mode
+         */
+        "bg-blend": [{
+          "bg-blend": scaleBlendMode()
+        }],
+        /**
+         * Mask Clip
+         * @see https://tailwindcss.com/docs/mask-clip
+         */
+        "mask-clip": [{
+          "mask-clip": ["border", "padding", "content", "fill", "stroke", "view"]
+        }, "mask-no-clip"],
+        /**
+         * Mask Composite
+         * @see https://tailwindcss.com/docs/mask-composite
+         */
+        "mask-composite": [{
+          mask: ["add", "subtract", "intersect", "exclude"]
+        }],
+        /**
+         * Mask Image
+         * @see https://tailwindcss.com/docs/mask-image
+         */
+        "mask-image-linear-pos": [{
+          "mask-linear": [isNumber2]
+        }],
+        "mask-image-linear-from-pos": [{
+          "mask-linear-from": scaleMaskImagePosition()
+        }],
+        "mask-image-linear-to-pos": [{
+          "mask-linear-to": scaleMaskImagePosition()
+        }],
+        "mask-image-linear-from-color": [{
+          "mask-linear-from": scaleColor()
+        }],
+        "mask-image-linear-to-color": [{
+          "mask-linear-to": scaleColor()
+        }],
+        "mask-image-t-from-pos": [{
+          "mask-t-from": scaleMaskImagePosition()
+        }],
+        "mask-image-t-to-pos": [{
+          "mask-t-to": scaleMaskImagePosition()
+        }],
+        "mask-image-t-from-color": [{
+          "mask-t-from": scaleColor()
+        }],
+        "mask-image-t-to-color": [{
+          "mask-t-to": scaleColor()
+        }],
+        "mask-image-r-from-pos": [{
+          "mask-r-from": scaleMaskImagePosition()
+        }],
+        "mask-image-r-to-pos": [{
+          "mask-r-to": scaleMaskImagePosition()
+        }],
+        "mask-image-r-from-color": [{
+          "mask-r-from": scaleColor()
+        }],
+        "mask-image-r-to-color": [{
+          "mask-r-to": scaleColor()
+        }],
+        "mask-image-b-from-pos": [{
+          "mask-b-from": scaleMaskImagePosition()
+        }],
+        "mask-image-b-to-pos": [{
+          "mask-b-to": scaleMaskImagePosition()
+        }],
+        "mask-image-b-from-color": [{
+          "mask-b-from": scaleColor()
+        }],
+        "mask-image-b-to-color": [{
+          "mask-b-to": scaleColor()
+        }],
+        "mask-image-l-from-pos": [{
+          "mask-l-from": scaleMaskImagePosition()
+        }],
+        "mask-image-l-to-pos": [{
+          "mask-l-to": scaleMaskImagePosition()
+        }],
+        "mask-image-l-from-color": [{
+          "mask-l-from": scaleColor()
+        }],
+        "mask-image-l-to-color": [{
+          "mask-l-to": scaleColor()
+        }],
+        "mask-image-x-from-pos": [{
+          "mask-x-from": scaleMaskImagePosition()
+        }],
+        "mask-image-x-to-pos": [{
+          "mask-x-to": scaleMaskImagePosition()
+        }],
+        "mask-image-x-from-color": [{
+          "mask-x-from": scaleColor()
+        }],
+        "mask-image-x-to-color": [{
+          "mask-x-to": scaleColor()
+        }],
+        "mask-image-y-from-pos": [{
+          "mask-y-from": scaleMaskImagePosition()
+        }],
+        "mask-image-y-to-pos": [{
+          "mask-y-to": scaleMaskImagePosition()
+        }],
+        "mask-image-y-from-color": [{
+          "mask-y-from": scaleColor()
+        }],
+        "mask-image-y-to-color": [{
+          "mask-y-to": scaleColor()
+        }],
+        "mask-image-radial": [{
+          "mask-radial": [isArbitraryVariable, isArbitraryValue]
+        }],
+        "mask-image-radial-from-pos": [{
+          "mask-radial-from": scaleMaskImagePosition()
+        }],
+        "mask-image-radial-to-pos": [{
+          "mask-radial-to": scaleMaskImagePosition()
+        }],
+        "mask-image-radial-from-color": [{
+          "mask-radial-from": scaleColor()
+        }],
+        "mask-image-radial-to-color": [{
+          "mask-radial-to": scaleColor()
+        }],
+        "mask-image-radial-shape": [{
+          "mask-radial": ["circle", "ellipse"]
+        }],
+        "mask-image-radial-size": [{
+          "mask-radial": [{
+            closest: ["side", "corner"],
+            farthest: ["side", "corner"]
+          }]
+        }],
+        "mask-image-radial-pos": [{
+          "mask-radial-at": scalePosition()
+        }],
+        "mask-image-conic-pos": [{
+          "mask-conic": [isNumber2]
+        }],
+        "mask-image-conic-from-pos": [{
+          "mask-conic-from": scaleMaskImagePosition()
+        }],
+        "mask-image-conic-to-pos": [{
+          "mask-conic-to": scaleMaskImagePosition()
+        }],
+        "mask-image-conic-from-color": [{
+          "mask-conic-from": scaleColor()
+        }],
+        "mask-image-conic-to-color": [{
+          "mask-conic-to": scaleColor()
+        }],
+        /**
+         * Mask Mode
+         * @see https://tailwindcss.com/docs/mask-mode
+         */
+        "mask-mode": [{
+          mask: ["alpha", "luminance", "match"]
+        }],
+        /**
+         * Mask Origin
+         * @see https://tailwindcss.com/docs/mask-origin
+         */
+        "mask-origin": [{
+          "mask-origin": ["border", "padding", "content", "fill", "stroke", "view"]
+        }],
+        /**
+         * Mask Position
+         * @see https://tailwindcss.com/docs/mask-position
+         */
+        "mask-position": [{
+          mask: scaleBgPosition()
+        }],
+        /**
+         * Mask Repeat
+         * @see https://tailwindcss.com/docs/mask-repeat
+         */
+        "mask-repeat": [{
+          mask: scaleBgRepeat()
+        }],
+        /**
+         * Mask Size
+         * @see https://tailwindcss.com/docs/mask-size
+         */
+        "mask-size": [{
+          mask: scaleBgSize()
+        }],
+        /**
+         * Mask Type
+         * @see https://tailwindcss.com/docs/mask-type
+         */
+        "mask-type": [{
+          "mask-type": ["alpha", "luminance"]
+        }],
+        /**
+         * Mask Image
+         * @see https://tailwindcss.com/docs/mask-image
+         */
+        "mask-image": [{
+          mask: ["none", isArbitraryVariable, isArbitraryValue]
+        }],
+        // ---------------
+        // --- Filters ---
+        // ---------------
+        /**
+         * Filter
+         * @see https://tailwindcss.com/docs/filter
+         */
+        filter: [{
+          filter: [
+            // Deprecated since Tailwind CSS v3.0.0
+            "",
+            "none",
+            isArbitraryVariable,
+            isArbitraryValue
+          ]
+        }],
+        /**
+         * Blur
+         * @see https://tailwindcss.com/docs/blur
+         */
+        blur: [{
+          blur: scaleBlur()
+        }],
+        /**
+         * Brightness
+         * @see https://tailwindcss.com/docs/brightness
+         */
+        brightness: [{
+          brightness: [isNumber2, isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Contrast
+         * @see https://tailwindcss.com/docs/contrast
+         */
+        contrast: [{
+          contrast: [isNumber2, isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Drop Shadow
+         * @see https://tailwindcss.com/docs/drop-shadow
+         */
+        "drop-shadow": [{
+          "drop-shadow": [
+            // Deprecated since Tailwind CSS v4.0.0
+            "",
+            "none",
+            themeDropShadow,
+            isArbitraryVariableShadow,
+            isArbitraryShadow
+          ]
+        }],
+        /**
+         * Drop Shadow Color
+         * @see https://tailwindcss.com/docs/filter-drop-shadow#setting-the-shadow-color
+         */
+        "drop-shadow-color": [{
+          "drop-shadow": scaleColor()
+        }],
+        /**
+         * Grayscale
+         * @see https://tailwindcss.com/docs/grayscale
+         */
+        grayscale: [{
+          grayscale: ["", isNumber2, isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Hue Rotate
+         * @see https://tailwindcss.com/docs/hue-rotate
+         */
+        "hue-rotate": [{
+          "hue-rotate": [isNumber2, isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Invert
+         * @see https://tailwindcss.com/docs/invert
+         */
+        invert: [{
+          invert: ["", isNumber2, isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Saturate
+         * @see https://tailwindcss.com/docs/saturate
+         */
+        saturate: [{
+          saturate: [isNumber2, isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Sepia
+         * @see https://tailwindcss.com/docs/sepia
+         */
+        sepia: [{
+          sepia: ["", isNumber2, isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Backdrop Filter
+         * @see https://tailwindcss.com/docs/backdrop-filter
+         */
+        "backdrop-filter": [{
+          "backdrop-filter": [
+            // Deprecated since Tailwind CSS v3.0.0
+            "",
+            "none",
+            isArbitraryVariable,
+            isArbitraryValue
+          ]
+        }],
+        /**
+         * Backdrop Blur
+         * @see https://tailwindcss.com/docs/backdrop-blur
+         */
+        "backdrop-blur": [{
+          "backdrop-blur": scaleBlur()
+        }],
+        /**
+         * Backdrop Brightness
+         * @see https://tailwindcss.com/docs/backdrop-brightness
+         */
+        "backdrop-brightness": [{
+          "backdrop-brightness": [isNumber2, isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Backdrop Contrast
+         * @see https://tailwindcss.com/docs/backdrop-contrast
+         */
+        "backdrop-contrast": [{
+          "backdrop-contrast": [isNumber2, isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Backdrop Grayscale
+         * @see https://tailwindcss.com/docs/backdrop-grayscale
+         */
+        "backdrop-grayscale": [{
+          "backdrop-grayscale": ["", isNumber2, isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Backdrop Hue Rotate
+         * @see https://tailwindcss.com/docs/backdrop-hue-rotate
+         */
+        "backdrop-hue-rotate": [{
+          "backdrop-hue-rotate": [isNumber2, isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Backdrop Invert
+         * @see https://tailwindcss.com/docs/backdrop-invert
+         */
+        "backdrop-invert": [{
+          "backdrop-invert": ["", isNumber2, isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Backdrop Opacity
+         * @see https://tailwindcss.com/docs/backdrop-opacity
+         */
+        "backdrop-opacity": [{
+          "backdrop-opacity": [isNumber2, isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Backdrop Saturate
+         * @see https://tailwindcss.com/docs/backdrop-saturate
+         */
+        "backdrop-saturate": [{
+          "backdrop-saturate": [isNumber2, isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Backdrop Sepia
+         * @see https://tailwindcss.com/docs/backdrop-sepia
+         */
+        "backdrop-sepia": [{
+          "backdrop-sepia": ["", isNumber2, isArbitraryVariable, isArbitraryValue]
+        }],
+        // --------------
+        // --- Tables ---
+        // --------------
+        /**
+         * Border Collapse
+         * @see https://tailwindcss.com/docs/border-collapse
+         */
+        "border-collapse": [{
+          border: ["collapse", "separate"]
+        }],
+        /**
+         * Border Spacing
+         * @see https://tailwindcss.com/docs/border-spacing
+         */
+        "border-spacing": [{
+          "border-spacing": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Border Spacing X
+         * @see https://tailwindcss.com/docs/border-spacing
+         */
+        "border-spacing-x": [{
+          "border-spacing-x": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Border Spacing Y
+         * @see https://tailwindcss.com/docs/border-spacing
+         */
+        "border-spacing-y": [{
+          "border-spacing-y": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Table Layout
+         * @see https://tailwindcss.com/docs/table-layout
+         */
+        "table-layout": [{
+          table: ["auto", "fixed"]
+        }],
+        /**
+         * Caption Side
+         * @see https://tailwindcss.com/docs/caption-side
+         */
+        caption: [{
+          caption: ["top", "bottom"]
+        }],
+        // ---------------------------------
+        // --- Transitions and Animation ---
+        // ---------------------------------
+        /**
+         * Transition Property
+         * @see https://tailwindcss.com/docs/transition-property
+         */
+        transition: [{
+          transition: ["", "all", "colors", "opacity", "shadow", "transform", "none", isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Transition Behavior
+         * @see https://tailwindcss.com/docs/transition-behavior
+         */
+        "transition-behavior": [{
+          transition: ["normal", "discrete"]
+        }],
+        /**
+         * Transition Duration
+         * @see https://tailwindcss.com/docs/transition-duration
+         */
+        duration: [{
+          duration: [isNumber2, "initial", isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Transition Timing Function
+         * @see https://tailwindcss.com/docs/transition-timing-function
+         */
+        ease: [{
+          ease: ["linear", "initial", themeEase, isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Transition Delay
+         * @see https://tailwindcss.com/docs/transition-delay
+         */
+        delay: [{
+          delay: [isNumber2, isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Animation
+         * @see https://tailwindcss.com/docs/animation
+         */
+        animate: [{
+          animate: ["none", themeAnimate, isArbitraryVariable, isArbitraryValue]
+        }],
+        // ------------------
+        // --- Transforms ---
+        // ------------------
+        /**
+         * Backface Visibility
+         * @see https://tailwindcss.com/docs/backface-visibility
+         */
+        backface: [{
+          backface: ["hidden", "visible"]
+        }],
+        /**
+         * Perspective
+         * @see https://tailwindcss.com/docs/perspective
+         */
+        perspective: [{
+          perspective: [themePerspective, isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Perspective Origin
+         * @see https://tailwindcss.com/docs/perspective-origin
+         */
+        "perspective-origin": [{
+          "perspective-origin": scalePositionWithArbitrary()
+        }],
+        /**
+         * Rotate
+         * @see https://tailwindcss.com/docs/rotate
+         */
+        rotate: [{
+          rotate: scaleRotate()
+        }],
+        /**
+         * Rotate X
+         * @see https://tailwindcss.com/docs/rotate
+         */
+        "rotate-x": [{
+          "rotate-x": scaleRotate()
+        }],
+        /**
+         * Rotate Y
+         * @see https://tailwindcss.com/docs/rotate
+         */
+        "rotate-y": [{
+          "rotate-y": scaleRotate()
+        }],
+        /**
+         * Rotate Z
+         * @see https://tailwindcss.com/docs/rotate
+         */
+        "rotate-z": [{
+          "rotate-z": scaleRotate()
+        }],
+        /**
+         * Scale
+         * @see https://tailwindcss.com/docs/scale
+         */
+        scale: [{
+          scale: scaleScale()
+        }],
+        /**
+         * Scale X
+         * @see https://tailwindcss.com/docs/scale
+         */
+        "scale-x": [{
+          "scale-x": scaleScale()
+        }],
+        /**
+         * Scale Y
+         * @see https://tailwindcss.com/docs/scale
+         */
+        "scale-y": [{
+          "scale-y": scaleScale()
+        }],
+        /**
+         * Scale Z
+         * @see https://tailwindcss.com/docs/scale
+         */
+        "scale-z": [{
+          "scale-z": scaleScale()
+        }],
+        /**
+         * Scale 3D
+         * @see https://tailwindcss.com/docs/scale
+         */
+        "scale-3d": ["scale-3d"],
+        /**
+         * Skew
+         * @see https://tailwindcss.com/docs/skew
+         */
+        skew: [{
+          skew: scaleSkew()
+        }],
+        /**
+         * Skew X
+         * @see https://tailwindcss.com/docs/skew
+         */
+        "skew-x": [{
+          "skew-x": scaleSkew()
+        }],
+        /**
+         * Skew Y
+         * @see https://tailwindcss.com/docs/skew
+         */
+        "skew-y": [{
+          "skew-y": scaleSkew()
+        }],
+        /**
+         * Transform
+         * @see https://tailwindcss.com/docs/transform
+         */
+        transform: [{
+          transform: [isArbitraryVariable, isArbitraryValue, "", "none", "gpu", "cpu"]
+        }],
+        /**
+         * Transform Origin
+         * @see https://tailwindcss.com/docs/transform-origin
+         */
+        "transform-origin": [{
+          origin: scalePositionWithArbitrary()
+        }],
+        /**
+         * Transform Style
+         * @see https://tailwindcss.com/docs/transform-style
+         */
+        "transform-style": [{
+          transform: ["3d", "flat"]
+        }],
+        /**
+         * Translate
+         * @see https://tailwindcss.com/docs/translate
+         */
+        translate: [{
+          translate: scaleTranslate()
+        }],
+        /**
+         * Translate X
+         * @see https://tailwindcss.com/docs/translate
+         */
+        "translate-x": [{
+          "translate-x": scaleTranslate()
+        }],
+        /**
+         * Translate Y
+         * @see https://tailwindcss.com/docs/translate
+         */
+        "translate-y": [{
+          "translate-y": scaleTranslate()
+        }],
+        /**
+         * Translate Z
+         * @see https://tailwindcss.com/docs/translate
+         */
+        "translate-z": [{
+          "translate-z": scaleTranslate()
+        }],
+        /**
+         * Translate None
+         * @see https://tailwindcss.com/docs/translate
+         */
+        "translate-none": ["translate-none"],
+        // ---------------------
+        // --- Interactivity ---
+        // ---------------------
+        /**
+         * Accent Color
+         * @see https://tailwindcss.com/docs/accent-color
+         */
+        accent: [{
+          accent: scaleColor()
+        }],
+        /**
+         * Appearance
+         * @see https://tailwindcss.com/docs/appearance
+         */
+        appearance: [{
+          appearance: ["none", "auto"]
+        }],
+        /**
+         * Caret Color
+         * @see https://tailwindcss.com/docs/just-in-time-mode#caret-color-utilities
+         */
+        "caret-color": [{
+          caret: scaleColor()
+        }],
+        /**
+         * Color Scheme
+         * @see https://tailwindcss.com/docs/color-scheme
+         */
+        "color-scheme": [{
+          scheme: ["normal", "dark", "light", "light-dark", "only-dark", "only-light"]
+        }],
+        /**
+         * Cursor
+         * @see https://tailwindcss.com/docs/cursor
+         */
+        cursor: [{
+          cursor: ["auto", "default", "pointer", "wait", "text", "move", "help", "not-allowed", "none", "context-menu", "progress", "cell", "crosshair", "vertical-text", "alias", "copy", "no-drop", "grab", "grabbing", "all-scroll", "col-resize", "row-resize", "n-resize", "e-resize", "s-resize", "w-resize", "ne-resize", "nw-resize", "se-resize", "sw-resize", "ew-resize", "ns-resize", "nesw-resize", "nwse-resize", "zoom-in", "zoom-out", isArbitraryVariable, isArbitraryValue]
+        }],
+        /**
+         * Field Sizing
+         * @see https://tailwindcss.com/docs/field-sizing
+         */
+        "field-sizing": [{
+          "field-sizing": ["fixed", "content"]
+        }],
+        /**
+         * Pointer Events
+         * @see https://tailwindcss.com/docs/pointer-events
+         */
+        "pointer-events": [{
+          "pointer-events": ["auto", "none"]
+        }],
+        /**
+         * Resize
+         * @see https://tailwindcss.com/docs/resize
+         */
+        resize: [{
+          resize: ["none", "", "y", "x"]
+        }],
+        /**
+         * Scroll Behavior
+         * @see https://tailwindcss.com/docs/scroll-behavior
+         */
+        "scroll-behavior": [{
+          scroll: ["auto", "smooth"]
+        }],
+        /**
+         * Scroll Margin
+         * @see https://tailwindcss.com/docs/scroll-margin
+         */
+        "scroll-m": [{
+          "scroll-m": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Scroll Margin Inline
+         * @see https://tailwindcss.com/docs/scroll-margin
+         */
+        "scroll-mx": [{
+          "scroll-mx": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Scroll Margin Block
+         * @see https://tailwindcss.com/docs/scroll-margin
+         */
+        "scroll-my": [{
+          "scroll-my": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Scroll Margin Inline Start
+         * @see https://tailwindcss.com/docs/scroll-margin
+         */
+        "scroll-ms": [{
+          "scroll-ms": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Scroll Margin Inline End
+         * @see https://tailwindcss.com/docs/scroll-margin
+         */
+        "scroll-me": [{
+          "scroll-me": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Scroll Margin Block Start
+         * @see https://tailwindcss.com/docs/scroll-margin
+         */
+        "scroll-mbs": [{
+          "scroll-mbs": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Scroll Margin Block End
+         * @see https://tailwindcss.com/docs/scroll-margin
+         */
+        "scroll-mbe": [{
+          "scroll-mbe": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Scroll Margin Top
+         * @see https://tailwindcss.com/docs/scroll-margin
+         */
+        "scroll-mt": [{
+          "scroll-mt": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Scroll Margin Right
+         * @see https://tailwindcss.com/docs/scroll-margin
+         */
+        "scroll-mr": [{
+          "scroll-mr": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Scroll Margin Bottom
+         * @see https://tailwindcss.com/docs/scroll-margin
+         */
+        "scroll-mb": [{
+          "scroll-mb": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Scroll Margin Left
+         * @see https://tailwindcss.com/docs/scroll-margin
+         */
+        "scroll-ml": [{
+          "scroll-ml": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Scroll Padding
+         * @see https://tailwindcss.com/docs/scroll-padding
+         */
+        "scroll-p": [{
+          "scroll-p": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Scroll Padding Inline
+         * @see https://tailwindcss.com/docs/scroll-padding
+         */
+        "scroll-px": [{
+          "scroll-px": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Scroll Padding Block
+         * @see https://tailwindcss.com/docs/scroll-padding
+         */
+        "scroll-py": [{
+          "scroll-py": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Scroll Padding Inline Start
+         * @see https://tailwindcss.com/docs/scroll-padding
+         */
+        "scroll-ps": [{
+          "scroll-ps": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Scroll Padding Inline End
+         * @see https://tailwindcss.com/docs/scroll-padding
+         */
+        "scroll-pe": [{
+          "scroll-pe": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Scroll Padding Block Start
+         * @see https://tailwindcss.com/docs/scroll-padding
+         */
+        "scroll-pbs": [{
+          "scroll-pbs": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Scroll Padding Block End
+         * @see https://tailwindcss.com/docs/scroll-padding
+         */
+        "scroll-pbe": [{
+          "scroll-pbe": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Scroll Padding Top
+         * @see https://tailwindcss.com/docs/scroll-padding
+         */
+        "scroll-pt": [{
+          "scroll-pt": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Scroll Padding Right
+         * @see https://tailwindcss.com/docs/scroll-padding
+         */
+        "scroll-pr": [{
+          "scroll-pr": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Scroll Padding Bottom
+         * @see https://tailwindcss.com/docs/scroll-padding
+         */
+        "scroll-pb": [{
+          "scroll-pb": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Scroll Padding Left
+         * @see https://tailwindcss.com/docs/scroll-padding
+         */
+        "scroll-pl": [{
+          "scroll-pl": scaleUnambiguousSpacing()
+        }],
+        /**
+         * Scroll Snap Align
+         * @see https://tailwindcss.com/docs/scroll-snap-align
+         */
+        "snap-align": [{
+          snap: ["start", "end", "center", "align-none"]
+        }],
+        /**
+         * Scroll Snap Stop
+         * @see https://tailwindcss.com/docs/scroll-snap-stop
+         */
+        "snap-stop": [{
+          snap: ["normal", "always"]
+        }],
+        /**
+         * Scroll Snap Type
+         * @see https://tailwindcss.com/docs/scroll-snap-type
+         */
+        "snap-type": [{
+          snap: ["none", "x", "y", "both"]
+        }],
+        /**
+         * Scroll Snap Type Strictness
+         * @see https://tailwindcss.com/docs/scroll-snap-type
+         */
+        "snap-strictness": [{
+          snap: ["mandatory", "proximity"]
+        }],
+        /**
+         * Touch Action
+         * @see https://tailwindcss.com/docs/touch-action
+         */
+        touch: [{
+          touch: ["auto", "none", "manipulation"]
+        }],
+        /**
+         * Touch Action X
+         * @see https://tailwindcss.com/docs/touch-action
+         */
+        "touch-x": [{
+          "touch-pan": ["x", "left", "right"]
+        }],
+        /**
+         * Touch Action Y
+         * @see https://tailwindcss.com/docs/touch-action
+         */
+        "touch-y": [{
+          "touch-pan": ["y", "up", "down"]
+        }],
+        /**
+         * Touch Action Pinch Zoom
+         * @see https://tailwindcss.com/docs/touch-action
+         */
+        "touch-pz": ["touch-pinch-zoom"],
+        /**
+         * User Select
+         * @see https://tailwindcss.com/docs/user-select
+         */
+        select: [{
+          select: ["none", "text", "all", "auto"]
+        }],
+        /**
+         * Will Change
+         * @see https://tailwindcss.com/docs/will-change
+         */
+        "will-change": [{
+          "will-change": ["auto", "scroll", "contents", "transform", isArbitraryVariable, isArbitraryValue]
+        }],
+        // -----------
+        // --- SVG ---
+        // -----------
+        /**
+         * Fill
+         * @see https://tailwindcss.com/docs/fill
+         */
+        fill: [{
+          fill: ["none", ...scaleColor()]
+        }],
+        /**
+         * Stroke Width
+         * @see https://tailwindcss.com/docs/stroke-width
+         */
+        "stroke-w": [{
+          stroke: [isNumber2, isArbitraryVariableLength, isArbitraryLength, isArbitraryNumber]
+        }],
+        /**
+         * Stroke
+         * @see https://tailwindcss.com/docs/stroke
+         */
+        stroke: [{
+          stroke: ["none", ...scaleColor()]
+        }],
+        // ---------------------
+        // --- Accessibility ---
+        // ---------------------
+        /**
+         * Forced Color Adjust
+         * @see https://tailwindcss.com/docs/forced-color-adjust
+         */
+        "forced-color-adjust": [{
+          "forced-color-adjust": ["auto", "none"]
+        }]
+      },
+      conflictingClassGroups: {
+        overflow: ["overflow-x", "overflow-y"],
+        overscroll: ["overscroll-x", "overscroll-y"],
+        inset: ["inset-x", "inset-y", "inset-bs", "inset-be", "start", "end", "top", "right", "bottom", "left"],
+        "inset-x": ["right", "left"],
+        "inset-y": ["top", "bottom"],
+        flex: ["basis", "grow", "shrink"],
+        gap: ["gap-x", "gap-y"],
+        p: ["px", "py", "ps", "pe", "pbs", "pbe", "pt", "pr", "pb", "pl"],
+        px: ["pr", "pl"],
+        py: ["pt", "pb"],
+        m: ["mx", "my", "ms", "me", "mbs", "mbe", "mt", "mr", "mb", "ml"],
+        mx: ["mr", "ml"],
+        my: ["mt", "mb"],
+        size: ["w", "h"],
+        "font-size": ["leading"],
+        "fvn-normal": ["fvn-ordinal", "fvn-slashed-zero", "fvn-figure", "fvn-spacing", "fvn-fraction"],
+        "fvn-ordinal": ["fvn-normal"],
+        "fvn-slashed-zero": ["fvn-normal"],
+        "fvn-figure": ["fvn-normal"],
+        "fvn-spacing": ["fvn-normal"],
+        "fvn-fraction": ["fvn-normal"],
+        "line-clamp": ["display", "overflow"],
+        rounded: ["rounded-s", "rounded-e", "rounded-t", "rounded-r", "rounded-b", "rounded-l", "rounded-ss", "rounded-se", "rounded-ee", "rounded-es", "rounded-tl", "rounded-tr", "rounded-br", "rounded-bl"],
+        "rounded-s": ["rounded-ss", "rounded-es"],
+        "rounded-e": ["rounded-se", "rounded-ee"],
+        "rounded-t": ["rounded-tl", "rounded-tr"],
+        "rounded-r": ["rounded-tr", "rounded-br"],
+        "rounded-b": ["rounded-br", "rounded-bl"],
+        "rounded-l": ["rounded-tl", "rounded-bl"],
+        "border-spacing": ["border-spacing-x", "border-spacing-y"],
+        "border-w": ["border-w-x", "border-w-y", "border-w-s", "border-w-e", "border-w-bs", "border-w-be", "border-w-t", "border-w-r", "border-w-b", "border-w-l"],
+        "border-w-x": ["border-w-r", "border-w-l"],
+        "border-w-y": ["border-w-t", "border-w-b"],
+        "border-color": ["border-color-x", "border-color-y", "border-color-s", "border-color-e", "border-color-bs", "border-color-be", "border-color-t", "border-color-r", "border-color-b", "border-color-l"],
+        "border-color-x": ["border-color-r", "border-color-l"],
+        "border-color-y": ["border-color-t", "border-color-b"],
+        translate: ["translate-x", "translate-y", "translate-none"],
+        "translate-none": ["translate", "translate-x", "translate-y", "translate-z"],
+        "scroll-m": ["scroll-mx", "scroll-my", "scroll-ms", "scroll-me", "scroll-mbs", "scroll-mbe", "scroll-mt", "scroll-mr", "scroll-mb", "scroll-ml"],
+        "scroll-mx": ["scroll-mr", "scroll-ml"],
+        "scroll-my": ["scroll-mt", "scroll-mb"],
+        "scroll-p": ["scroll-px", "scroll-py", "scroll-ps", "scroll-pe", "scroll-pbs", "scroll-pbe", "scroll-pt", "scroll-pr", "scroll-pb", "scroll-pl"],
+        "scroll-px": ["scroll-pr", "scroll-pl"],
+        "scroll-py": ["scroll-pt", "scroll-pb"],
+        touch: ["touch-x", "touch-y", "touch-pz"],
+        "touch-x": ["touch"],
+        "touch-y": ["touch"],
+        "touch-pz": ["touch"]
+      },
+      conflictingClassGroupModifiers: {
+        "font-size": ["leading"]
+      },
+      orderSensitiveModifiers: ["*", "**", "after", "backdrop", "before", "details-content", "file", "first-letter", "first-line", "marker", "placeholder", "selection"]
+    };
+  };
+  var twMerge = /* @__PURE__ */ createTailwindMerge(getDefaultConfig);
+
+  // app/javascript/lib/utils.js
+  function cn(...inputs) {
+    return twMerge(clsx(inputs));
+  }
+
+  // app/javascript/components/ui/calendar.jsx
   var import_jsx_runtime2 = __toESM(require_jsx_runtime());
+  function Calendar({
+    className,
+    classNames,
+    showOutsideDays = true,
+    ...props
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+      DayPicker,
+      {
+        showOutsideDays,
+        className: cn("p-4", className),
+        classNames: {
+          months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
+          month: "space-y-3",
+          caption: "grid grid-cols-3 items-center gap-4 pt-2 pb-3 px-2",
+          caption_label: "text-lg font-bold text-gray-900 text-center col-span-1",
+          nav: "col-span-1 flex justify-center",
+          nav_button: cn(
+            "h-9 w-9 p-0 rounded-lg border border-gray-200 bg-white text-gray-600 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-600 transition-all flex items-center justify-center",
+            "opacity-100"
+          ),
+          nav_button_previous: "order-first",
+          nav_button_next: "order-last",
+          table: "w-full border-collapse space-y-1",
+          head_row: "flex mb-2",
+          head_cell: "text-gray-600 rounded-md w-10 h-10 font-semibold text-sm flex items-center justify-center bg-gray-50 font-medium",
+          row: "flex w-full mt-1",
+          cell: "h-10 w-10 text-center text-sm p-0 relative",
+          day: "h-10 w-10 p-0 font-normal rounded-lg text-gray-700 hover:bg-blue-100 hover:text-gray-900 transition-colors",
+          day_range_end: "day-range-end",
+          day_selected: "bg-blue-600 text-white hover:bg-blue-700 focus:bg-blue-700 font-semibold rounded-lg",
+          day_today: "bg-blue-50 text-blue-600 font-bold border border-blue-200",
+          day_outside: "text-gray-400 opacity-60",
+          day_disabled: "text-gray-300 opacity-50",
+          day_range_middle: "bg-blue-50 text-gray-900",
+          day_hidden: "invisible",
+          ...classNames
+        },
+        components: {
+          IconLeft: ({ ...props2 }) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(ChevronLeft, { className: "h-4 w-4", ...props2 }),
+          IconRight: ({ ...props2 }) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(ChevronRight, { className: "h-4 w-4", ...props2 })
+        },
+        ...props
+      }
+    );
+  }
+  Calendar.displayName = "Calendar";
+
+  // app/javascript/components/ui/popover.jsx
+  var React79 = __toESM(require_react());
+
+  // node_modules/@radix-ui/react-popover/dist/index.mjs
+  var React78 = __toESM(require_react(), 1);
+
+  // node_modules/@radix-ui/primitive/dist/index.mjs
+  var canUseDOM = !!(typeof window !== "undefined" && window.document && window.document.createElement);
+  function composeEventHandlers(originalEventHandler, ourEventHandler, { checkForDefaultPrevented = true } = {}) {
+    return function handleEvent(event) {
+      originalEventHandler?.(event);
+      if (checkForDefaultPrevented === false || !event.defaultPrevented) {
+        return ourEventHandler?.(event);
+      }
+    };
+  }
+
+  // node_modules/@radix-ui/react-compose-refs/dist/index.mjs
+  var React43 = __toESM(require_react(), 1);
+  function setRef(ref, value) {
+    if (typeof ref === "function") {
+      return ref(value);
+    } else if (ref !== null && ref !== void 0) {
+      ref.current = value;
+    }
+  }
+  function composeRefs(...refs) {
+    return (node) => {
+      let hasCleanup = false;
+      const cleanups = refs.map((ref) => {
+        const cleanup = setRef(ref, node);
+        if (!hasCleanup && typeof cleanup == "function") {
+          hasCleanup = true;
+        }
+        return cleanup;
+      });
+      if (hasCleanup) {
+        return () => {
+          for (let i = 0; i < cleanups.length; i++) {
+            const cleanup = cleanups[i];
+            if (typeof cleanup == "function") {
+              cleanup();
+            } else {
+              setRef(refs[i], null);
+            }
+          }
+        };
+      }
+    };
+  }
+  function useComposedRefs(...refs) {
+    return React43.useCallback(composeRefs(...refs), refs);
+  }
+
+  // node_modules/@radix-ui/react-context/dist/index.mjs
+  var React44 = __toESM(require_react(), 1);
+  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
+  function createContextScope(scopeName, createContextScopeDeps = []) {
+    let defaultContexts = [];
+    function createContext32(rootComponentName, defaultContext) {
+      const BaseContext = React44.createContext(defaultContext);
+      const index2 = defaultContexts.length;
+      defaultContexts = [...defaultContexts, defaultContext];
+      const Provider = (props) => {
+        const { scope, children, ...context } = props;
+        const Context = scope?.[scopeName]?.[index2] || BaseContext;
+        const value = React44.useMemo(() => context, Object.values(context));
+        return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Context.Provider, { value, children });
+      };
+      Provider.displayName = rootComponentName + "Provider";
+      function useContext22(consumerName, scope) {
+        const Context = scope?.[scopeName]?.[index2] || BaseContext;
+        const context = React44.useContext(Context);
+        if (context)
+          return context;
+        if (defaultContext !== void 0)
+          return defaultContext;
+        throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
+      }
+      return [Provider, useContext22];
+    }
+    const createScope = () => {
+      const scopeContexts = defaultContexts.map((defaultContext) => {
+        return React44.createContext(defaultContext);
+      });
+      return function useScope(scope) {
+        const contexts = scope?.[scopeName] || scopeContexts;
+        return React44.useMemo(
+          () => ({ [`__scope${scopeName}`]: { ...scope, [scopeName]: contexts } }),
+          [scope, contexts]
+        );
+      };
+    };
+    createScope.scopeName = scopeName;
+    return [createContext32, composeContextScopes(createScope, ...createContextScopeDeps)];
+  }
+  function composeContextScopes(...scopes) {
+    const baseScope = scopes[0];
+    if (scopes.length === 1)
+      return baseScope;
+    const createScope = () => {
+      const scopeHooks = scopes.map((createScope2) => ({
+        useScope: createScope2(),
+        scopeName: createScope2.scopeName
+      }));
+      return function useComposedScopes(overrideScopes) {
+        const nextScopes = scopeHooks.reduce((nextScopes2, { useScope, scopeName }) => {
+          const scopeProps = useScope(overrideScopes);
+          const currentScope = scopeProps[`__scope${scopeName}`];
+          return { ...nextScopes2, ...currentScope };
+        }, {});
+        return React44.useMemo(() => ({ [`__scope${baseScope.scopeName}`]: nextScopes }), [nextScopes]);
+      };
+    };
+    createScope.scopeName = baseScope.scopeName;
+    return createScope;
+  }
+
+  // node_modules/@radix-ui/react-dismissable-layer/dist/index.mjs
+  var React49 = __toESM(require_react(), 1);
+
+  // node_modules/@radix-ui/react-dismissable-layer/node_modules/@radix-ui/react-primitive/dist/index.mjs
+  var React46 = __toESM(require_react(), 1);
+  var ReactDOM2 = __toESM(require_react_dom(), 1);
+
+  // node_modules/@radix-ui/react-dismissable-layer/node_modules/@radix-ui/react-slot/dist/index.mjs
+  var React45 = __toESM(require_react(), 1);
+  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
+  // @__NO_SIDE_EFFECTS__
+  function createSlot(ownerName) {
+    const SlotClone = /* @__PURE__ */ createSlotClone(ownerName);
+    const Slot2 = React45.forwardRef((props, forwardedRef) => {
+      const { children, ...slotProps } = props;
+      const childrenArray = React45.Children.toArray(children);
+      const slottable = childrenArray.find(isSlottable);
+      if (slottable) {
+        const newElement = slottable.props.children;
+        const newChildren = childrenArray.map((child) => {
+          if (child === slottable) {
+            if (React45.Children.count(newElement) > 1)
+              return React45.Children.only(null);
+            return React45.isValidElement(newElement) ? newElement.props.children : null;
+          } else {
+            return child;
+          }
+        });
+        return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(SlotClone, { ...slotProps, ref: forwardedRef, children: React45.isValidElement(newElement) ? React45.cloneElement(newElement, void 0, newChildren) : null });
+      }
+      return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(SlotClone, { ...slotProps, ref: forwardedRef, children });
+    });
+    Slot2.displayName = `${ownerName}.Slot`;
+    return Slot2;
+  }
+  // @__NO_SIDE_EFFECTS__
+  function createSlotClone(ownerName) {
+    const SlotClone = React45.forwardRef((props, forwardedRef) => {
+      const { children, ...slotProps } = props;
+      if (React45.isValidElement(children)) {
+        const childrenRef = getElementRef(children);
+        const props2 = mergeProps(slotProps, children.props);
+        if (children.type !== React45.Fragment) {
+          props2.ref = forwardedRef ? composeRefs(forwardedRef, childrenRef) : childrenRef;
+        }
+        return React45.cloneElement(children, props2);
+      }
+      return React45.Children.count(children) > 1 ? React45.Children.only(null) : null;
+    });
+    SlotClone.displayName = `${ownerName}.SlotClone`;
+    return SlotClone;
+  }
+  var SLOTTABLE_IDENTIFIER = Symbol("radix.slottable");
+  function isSlottable(child) {
+    return React45.isValidElement(child) && typeof child.type === "function" && "__radixId" in child.type && child.type.__radixId === SLOTTABLE_IDENTIFIER;
+  }
+  function mergeProps(slotProps, childProps) {
+    const overrideProps = { ...childProps };
+    for (const propName in childProps) {
+      const slotPropValue = slotProps[propName];
+      const childPropValue = childProps[propName];
+      const isHandler = /^on[A-Z]/.test(propName);
+      if (isHandler) {
+        if (slotPropValue && childPropValue) {
+          overrideProps[propName] = (...args) => {
+            const result = childPropValue(...args);
+            slotPropValue(...args);
+            return result;
+          };
+        } else if (slotPropValue) {
+          overrideProps[propName] = slotPropValue;
+        }
+      } else if (propName === "style") {
+        overrideProps[propName] = { ...slotPropValue, ...childPropValue };
+      } else if (propName === "className") {
+        overrideProps[propName] = [slotPropValue, childPropValue].filter(Boolean).join(" ");
+      }
+    }
+    return { ...slotProps, ...overrideProps };
+  }
+  function getElementRef(element) {
+    let getter = Object.getOwnPropertyDescriptor(element.props, "ref")?.get;
+    let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+    if (mayWarn) {
+      return element.ref;
+    }
+    getter = Object.getOwnPropertyDescriptor(element, "ref")?.get;
+    mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+    if (mayWarn) {
+      return element.props.ref;
+    }
+    return element.props.ref || element.ref;
+  }
+
+  // node_modules/@radix-ui/react-dismissable-layer/node_modules/@radix-ui/react-primitive/dist/index.mjs
+  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
+  var NODES = [
+    "a",
+    "button",
+    "div",
+    "form",
+    "h2",
+    "h3",
+    "img",
+    "input",
+    "label",
+    "li",
+    "nav",
+    "ol",
+    "p",
+    "select",
+    "span",
+    "svg",
+    "ul"
+  ];
+  var Primitive = NODES.reduce((primitive, node) => {
+    const Slot2 = createSlot(`Primitive.${node}`);
+    const Node2 = React46.forwardRef((props, forwardedRef) => {
+      const { asChild, ...primitiveProps } = props;
+      const Comp = asChild ? Slot2 : node;
+      if (typeof window !== "undefined") {
+        window[Symbol.for("radix-ui")] = true;
+      }
+      return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Comp, { ...primitiveProps, ref: forwardedRef });
+    });
+    Node2.displayName = `Primitive.${node}`;
+    return { ...primitive, [node]: Node2 };
+  }, {});
+  function dispatchDiscreteCustomEvent(target, event) {
+    if (target)
+      ReactDOM2.flushSync(() => target.dispatchEvent(event));
+  }
+
+  // node_modules/@radix-ui/react-use-callback-ref/dist/index.mjs
+  var React47 = __toESM(require_react(), 1);
+  function useCallbackRef(callback) {
+    const callbackRef = React47.useRef(callback);
+    React47.useEffect(() => {
+      callbackRef.current = callback;
+    });
+    return React47.useMemo(() => (...args) => callbackRef.current?.(...args), []);
+  }
+
+  // node_modules/@radix-ui/react-use-escape-keydown/dist/index.mjs
+  var React48 = __toESM(require_react(), 1);
+  function useEscapeKeydown(onEscapeKeyDownProp, ownerDocument = globalThis?.document) {
+    const onEscapeKeyDown = useCallbackRef(onEscapeKeyDownProp);
+    React48.useEffect(() => {
+      const handleKeyDown = (event) => {
+        if (event.key === "Escape") {
+          onEscapeKeyDown(event);
+        }
+      };
+      ownerDocument.addEventListener("keydown", handleKeyDown, { capture: true });
+      return () => ownerDocument.removeEventListener("keydown", handleKeyDown, { capture: true });
+    }, [onEscapeKeyDown, ownerDocument]);
+  }
+
+  // node_modules/@radix-ui/react-dismissable-layer/dist/index.mjs
+  var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
+  var DISMISSABLE_LAYER_NAME = "DismissableLayer";
+  var CONTEXT_UPDATE = "dismissableLayer.update";
+  var POINTER_DOWN_OUTSIDE = "dismissableLayer.pointerDownOutside";
+  var FOCUS_OUTSIDE = "dismissableLayer.focusOutside";
+  var originalBodyPointerEvents;
+  var DismissableLayerContext = React49.createContext({
+    layers: /* @__PURE__ */ new Set(),
+    layersWithOutsidePointerEventsDisabled: /* @__PURE__ */ new Set(),
+    branches: /* @__PURE__ */ new Set()
+  });
+  var DismissableLayer = React49.forwardRef(
+    (props, forwardedRef) => {
+      const {
+        disableOutsidePointerEvents = false,
+        onEscapeKeyDown,
+        onPointerDownOutside,
+        onFocusOutside,
+        onInteractOutside,
+        onDismiss,
+        ...layerProps
+      } = props;
+      const context = React49.useContext(DismissableLayerContext);
+      const [node, setNode] = React49.useState(null);
+      const ownerDocument = node?.ownerDocument ?? globalThis?.document;
+      const [, force] = React49.useState({});
+      const composedRefs = useComposedRefs(forwardedRef, (node2) => setNode(node2));
+      const layers = Array.from(context.layers);
+      const [highestLayerWithOutsidePointerEventsDisabled] = [...context.layersWithOutsidePointerEventsDisabled].slice(-1);
+      const highestLayerWithOutsidePointerEventsDisabledIndex = layers.indexOf(highestLayerWithOutsidePointerEventsDisabled);
+      const index2 = node ? layers.indexOf(node) : -1;
+      const isBodyPointerEventsDisabled = context.layersWithOutsidePointerEventsDisabled.size > 0;
+      const isPointerEventsEnabled = index2 >= highestLayerWithOutsidePointerEventsDisabledIndex;
+      const pointerDownOutside = usePointerDownOutside((event) => {
+        const target = event.target;
+        const isPointerDownOnBranch = [...context.branches].some((branch) => branch.contains(target));
+        if (!isPointerEventsEnabled || isPointerDownOnBranch)
+          return;
+        onPointerDownOutside?.(event);
+        onInteractOutside?.(event);
+        if (!event.defaultPrevented)
+          onDismiss?.();
+      }, ownerDocument);
+      const focusOutside = useFocusOutside((event) => {
+        const target = event.target;
+        const isFocusInBranch = [...context.branches].some((branch) => branch.contains(target));
+        if (isFocusInBranch)
+          return;
+        onFocusOutside?.(event);
+        onInteractOutside?.(event);
+        if (!event.defaultPrevented)
+          onDismiss?.();
+      }, ownerDocument);
+      useEscapeKeydown((event) => {
+        const isHighestLayer = index2 === context.layers.size - 1;
+        if (!isHighestLayer)
+          return;
+        onEscapeKeyDown?.(event);
+        if (!event.defaultPrevented && onDismiss) {
+          event.preventDefault();
+          onDismiss();
+        }
+      }, ownerDocument);
+      React49.useEffect(() => {
+        if (!node)
+          return;
+        if (disableOutsidePointerEvents) {
+          if (context.layersWithOutsidePointerEventsDisabled.size === 0) {
+            originalBodyPointerEvents = ownerDocument.body.style.pointerEvents;
+            ownerDocument.body.style.pointerEvents = "none";
+          }
+          context.layersWithOutsidePointerEventsDisabled.add(node);
+        }
+        context.layers.add(node);
+        dispatchUpdate();
+        return () => {
+          if (disableOutsidePointerEvents && context.layersWithOutsidePointerEventsDisabled.size === 1) {
+            ownerDocument.body.style.pointerEvents = originalBodyPointerEvents;
+          }
+        };
+      }, [node, ownerDocument, disableOutsidePointerEvents, context]);
+      React49.useEffect(() => {
+        return () => {
+          if (!node)
+            return;
+          context.layers.delete(node);
+          context.layersWithOutsidePointerEventsDisabled.delete(node);
+          dispatchUpdate();
+        };
+      }, [node, context]);
+      React49.useEffect(() => {
+        const handleUpdate = () => force({});
+        document.addEventListener(CONTEXT_UPDATE, handleUpdate);
+        return () => document.removeEventListener(CONTEXT_UPDATE, handleUpdate);
+      }, []);
+      return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+        Primitive.div,
+        {
+          ...layerProps,
+          ref: composedRefs,
+          style: {
+            pointerEvents: isBodyPointerEventsDisabled ? isPointerEventsEnabled ? "auto" : "none" : void 0,
+            ...props.style
+          },
+          onFocusCapture: composeEventHandlers(props.onFocusCapture, focusOutside.onFocusCapture),
+          onBlurCapture: composeEventHandlers(props.onBlurCapture, focusOutside.onBlurCapture),
+          onPointerDownCapture: composeEventHandlers(
+            props.onPointerDownCapture,
+            pointerDownOutside.onPointerDownCapture
+          )
+        }
+      );
+    }
+  );
+  DismissableLayer.displayName = DISMISSABLE_LAYER_NAME;
+  var BRANCH_NAME = "DismissableLayerBranch";
+  var DismissableLayerBranch = React49.forwardRef((props, forwardedRef) => {
+    const context = React49.useContext(DismissableLayerContext);
+    const ref = React49.useRef(null);
+    const composedRefs = useComposedRefs(forwardedRef, ref);
+    React49.useEffect(() => {
+      const node = ref.current;
+      if (node) {
+        context.branches.add(node);
+        return () => {
+          context.branches.delete(node);
+        };
+      }
+    }, [context.branches]);
+    return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(Primitive.div, { ...props, ref: composedRefs });
+  });
+  DismissableLayerBranch.displayName = BRANCH_NAME;
+  function usePointerDownOutside(onPointerDownOutside, ownerDocument = globalThis?.document) {
+    const handlePointerDownOutside = useCallbackRef(onPointerDownOutside);
+    const isPointerInsideReactTreeRef = React49.useRef(false);
+    const handleClickRef = React49.useRef(() => {
+    });
+    React49.useEffect(() => {
+      const handlePointerDown = (event) => {
+        if (event.target && !isPointerInsideReactTreeRef.current) {
+          let handleAndDispatchPointerDownOutsideEvent2 = function() {
+            handleAndDispatchCustomEvent(
+              POINTER_DOWN_OUTSIDE,
+              handlePointerDownOutside,
+              eventDetail,
+              { discrete: true }
+            );
+          };
+          var handleAndDispatchPointerDownOutsideEvent = handleAndDispatchPointerDownOutsideEvent2;
+          const eventDetail = { originalEvent: event };
+          if (event.pointerType === "touch") {
+            ownerDocument.removeEventListener("click", handleClickRef.current);
+            handleClickRef.current = handleAndDispatchPointerDownOutsideEvent2;
+            ownerDocument.addEventListener("click", handleClickRef.current, { once: true });
+          } else {
+            handleAndDispatchPointerDownOutsideEvent2();
+          }
+        } else {
+          ownerDocument.removeEventListener("click", handleClickRef.current);
+        }
+        isPointerInsideReactTreeRef.current = false;
+      };
+      const timerId = window.setTimeout(() => {
+        ownerDocument.addEventListener("pointerdown", handlePointerDown);
+      }, 0);
+      return () => {
+        window.clearTimeout(timerId);
+        ownerDocument.removeEventListener("pointerdown", handlePointerDown);
+        ownerDocument.removeEventListener("click", handleClickRef.current);
+      };
+    }, [ownerDocument, handlePointerDownOutside]);
+    return {
+      // ensures we check React component tree (not just DOM tree)
+      onPointerDownCapture: () => isPointerInsideReactTreeRef.current = true
+    };
+  }
+  function useFocusOutside(onFocusOutside, ownerDocument = globalThis?.document) {
+    const handleFocusOutside = useCallbackRef(onFocusOutside);
+    const isFocusInsideReactTreeRef = React49.useRef(false);
+    React49.useEffect(() => {
+      const handleFocus = (event) => {
+        if (event.target && !isFocusInsideReactTreeRef.current) {
+          const eventDetail = { originalEvent: event };
+          handleAndDispatchCustomEvent(FOCUS_OUTSIDE, handleFocusOutside, eventDetail, {
+            discrete: false
+          });
+        }
+      };
+      ownerDocument.addEventListener("focusin", handleFocus);
+      return () => ownerDocument.removeEventListener("focusin", handleFocus);
+    }, [ownerDocument, handleFocusOutside]);
+    return {
+      onFocusCapture: () => isFocusInsideReactTreeRef.current = true,
+      onBlurCapture: () => isFocusInsideReactTreeRef.current = false
+    };
+  }
+  function dispatchUpdate() {
+    const event = new CustomEvent(CONTEXT_UPDATE);
+    document.dispatchEvent(event);
+  }
+  function handleAndDispatchCustomEvent(name, handler, detail, { discrete }) {
+    const target = detail.originalEvent.target;
+    const event = new CustomEvent(name, { bubbles: false, cancelable: true, detail });
+    if (handler)
+      target.addEventListener(name, handler, { once: true });
+    if (discrete) {
+      dispatchDiscreteCustomEvent(target, event);
+    } else {
+      target.dispatchEvent(event);
+    }
+  }
+
+  // node_modules/@radix-ui/react-focus-guards/dist/index.mjs
+  var React50 = __toESM(require_react(), 1);
+  var count = 0;
+  function useFocusGuards() {
+    React50.useEffect(() => {
+      const edgeGuards = document.querySelectorAll("[data-radix-focus-guard]");
+      document.body.insertAdjacentElement("afterbegin", edgeGuards[0] ?? createFocusGuard());
+      document.body.insertAdjacentElement("beforeend", edgeGuards[1] ?? createFocusGuard());
+      count++;
+      return () => {
+        if (count === 1) {
+          document.querySelectorAll("[data-radix-focus-guard]").forEach((node) => node.remove());
+        }
+        count--;
+      };
+    }, []);
+  }
+  function createFocusGuard() {
+    const element = document.createElement("span");
+    element.setAttribute("data-radix-focus-guard", "");
+    element.tabIndex = 0;
+    element.style.outline = "none";
+    element.style.opacity = "0";
+    element.style.position = "fixed";
+    element.style.pointerEvents = "none";
+    return element;
+  }
+
+  // node_modules/@radix-ui/react-focus-scope/dist/index.mjs
+  var React53 = __toESM(require_react(), 1);
+
+  // node_modules/@radix-ui/react-focus-scope/node_modules/@radix-ui/react-primitive/dist/index.mjs
+  var React52 = __toESM(require_react(), 1);
+  var ReactDOM3 = __toESM(require_react_dom(), 1);
+
+  // node_modules/@radix-ui/react-focus-scope/node_modules/@radix-ui/react-slot/dist/index.mjs
+  var React51 = __toESM(require_react(), 1);
+  var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
+  // @__NO_SIDE_EFFECTS__
+  function createSlot2(ownerName) {
+    const SlotClone = /* @__PURE__ */ createSlotClone2(ownerName);
+    const Slot2 = React51.forwardRef((props, forwardedRef) => {
+      const { children, ...slotProps } = props;
+      const childrenArray = React51.Children.toArray(children);
+      const slottable = childrenArray.find(isSlottable2);
+      if (slottable) {
+        const newElement = slottable.props.children;
+        const newChildren = childrenArray.map((child) => {
+          if (child === slottable) {
+            if (React51.Children.count(newElement) > 1)
+              return React51.Children.only(null);
+            return React51.isValidElement(newElement) ? newElement.props.children : null;
+          } else {
+            return child;
+          }
+        });
+        return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(SlotClone, { ...slotProps, ref: forwardedRef, children: React51.isValidElement(newElement) ? React51.cloneElement(newElement, void 0, newChildren) : null });
+      }
+      return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(SlotClone, { ...slotProps, ref: forwardedRef, children });
+    });
+    Slot2.displayName = `${ownerName}.Slot`;
+    return Slot2;
+  }
+  // @__NO_SIDE_EFFECTS__
+  function createSlotClone2(ownerName) {
+    const SlotClone = React51.forwardRef((props, forwardedRef) => {
+      const { children, ...slotProps } = props;
+      if (React51.isValidElement(children)) {
+        const childrenRef = getElementRef2(children);
+        const props2 = mergeProps2(slotProps, children.props);
+        if (children.type !== React51.Fragment) {
+          props2.ref = forwardedRef ? composeRefs(forwardedRef, childrenRef) : childrenRef;
+        }
+        return React51.cloneElement(children, props2);
+      }
+      return React51.Children.count(children) > 1 ? React51.Children.only(null) : null;
+    });
+    SlotClone.displayName = `${ownerName}.SlotClone`;
+    return SlotClone;
+  }
+  var SLOTTABLE_IDENTIFIER2 = Symbol("radix.slottable");
+  function isSlottable2(child) {
+    return React51.isValidElement(child) && typeof child.type === "function" && "__radixId" in child.type && child.type.__radixId === SLOTTABLE_IDENTIFIER2;
+  }
+  function mergeProps2(slotProps, childProps) {
+    const overrideProps = { ...childProps };
+    for (const propName in childProps) {
+      const slotPropValue = slotProps[propName];
+      const childPropValue = childProps[propName];
+      const isHandler = /^on[A-Z]/.test(propName);
+      if (isHandler) {
+        if (slotPropValue && childPropValue) {
+          overrideProps[propName] = (...args) => {
+            const result = childPropValue(...args);
+            slotPropValue(...args);
+            return result;
+          };
+        } else if (slotPropValue) {
+          overrideProps[propName] = slotPropValue;
+        }
+      } else if (propName === "style") {
+        overrideProps[propName] = { ...slotPropValue, ...childPropValue };
+      } else if (propName === "className") {
+        overrideProps[propName] = [slotPropValue, childPropValue].filter(Boolean).join(" ");
+      }
+    }
+    return { ...slotProps, ...overrideProps };
+  }
+  function getElementRef2(element) {
+    let getter = Object.getOwnPropertyDescriptor(element.props, "ref")?.get;
+    let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+    if (mayWarn) {
+      return element.ref;
+    }
+    getter = Object.getOwnPropertyDescriptor(element, "ref")?.get;
+    mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+    if (mayWarn) {
+      return element.props.ref;
+    }
+    return element.props.ref || element.ref;
+  }
+
+  // node_modules/@radix-ui/react-focus-scope/node_modules/@radix-ui/react-primitive/dist/index.mjs
+  var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
+  var NODES2 = [
+    "a",
+    "button",
+    "div",
+    "form",
+    "h2",
+    "h3",
+    "img",
+    "input",
+    "label",
+    "li",
+    "nav",
+    "ol",
+    "p",
+    "select",
+    "span",
+    "svg",
+    "ul"
+  ];
+  var Primitive2 = NODES2.reduce((primitive, node) => {
+    const Slot2 = createSlot2(`Primitive.${node}`);
+    const Node2 = React52.forwardRef((props, forwardedRef) => {
+      const { asChild, ...primitiveProps } = props;
+      const Comp = asChild ? Slot2 : node;
+      if (typeof window !== "undefined") {
+        window[Symbol.for("radix-ui")] = true;
+      }
+      return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Comp, { ...primitiveProps, ref: forwardedRef });
+    });
+    Node2.displayName = `Primitive.${node}`;
+    return { ...primitive, [node]: Node2 };
+  }, {});
+
+  // node_modules/@radix-ui/react-focus-scope/dist/index.mjs
+  var import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1);
+  var AUTOFOCUS_ON_MOUNT = "focusScope.autoFocusOnMount";
+  var AUTOFOCUS_ON_UNMOUNT = "focusScope.autoFocusOnUnmount";
+  var EVENT_OPTIONS = { bubbles: false, cancelable: true };
+  var FOCUS_SCOPE_NAME = "FocusScope";
+  var FocusScope = React53.forwardRef((props, forwardedRef) => {
+    const {
+      loop = false,
+      trapped = false,
+      onMountAutoFocus: onMountAutoFocusProp,
+      onUnmountAutoFocus: onUnmountAutoFocusProp,
+      ...scopeProps
+    } = props;
+    const [container, setContainer] = React53.useState(null);
+    const onMountAutoFocus = useCallbackRef(onMountAutoFocusProp);
+    const onUnmountAutoFocus = useCallbackRef(onUnmountAutoFocusProp);
+    const lastFocusedElementRef = React53.useRef(null);
+    const composedRefs = useComposedRefs(forwardedRef, (node) => setContainer(node));
+    const focusScope = React53.useRef({
+      paused: false,
+      pause() {
+        this.paused = true;
+      },
+      resume() {
+        this.paused = false;
+      }
+    }).current;
+    React53.useEffect(() => {
+      if (trapped) {
+        let handleFocusIn2 = function(event) {
+          if (focusScope.paused || !container)
+            return;
+          const target = event.target;
+          if (container.contains(target)) {
+            lastFocusedElementRef.current = target;
+          } else {
+            focus(lastFocusedElementRef.current, { select: true });
+          }
+        }, handleFocusOut2 = function(event) {
+          if (focusScope.paused || !container)
+            return;
+          const relatedTarget = event.relatedTarget;
+          if (relatedTarget === null)
+            return;
+          if (!container.contains(relatedTarget)) {
+            focus(lastFocusedElementRef.current, { select: true });
+          }
+        }, handleMutations2 = function(mutations) {
+          const focusedElement = document.activeElement;
+          if (focusedElement !== document.body)
+            return;
+          for (const mutation of mutations) {
+            if (mutation.removedNodes.length > 0)
+              focus(container);
+          }
+        };
+        var handleFocusIn = handleFocusIn2, handleFocusOut = handleFocusOut2, handleMutations = handleMutations2;
+        document.addEventListener("focusin", handleFocusIn2);
+        document.addEventListener("focusout", handleFocusOut2);
+        const mutationObserver = new MutationObserver(handleMutations2);
+        if (container)
+          mutationObserver.observe(container, { childList: true, subtree: true });
+        return () => {
+          document.removeEventListener("focusin", handleFocusIn2);
+          document.removeEventListener("focusout", handleFocusOut2);
+          mutationObserver.disconnect();
+        };
+      }
+    }, [trapped, container, focusScope.paused]);
+    React53.useEffect(() => {
+      if (container) {
+        focusScopesStack.add(focusScope);
+        const previouslyFocusedElement = document.activeElement;
+        const hasFocusedCandidate = container.contains(previouslyFocusedElement);
+        if (!hasFocusedCandidate) {
+          const mountEvent = new CustomEvent(AUTOFOCUS_ON_MOUNT, EVENT_OPTIONS);
+          container.addEventListener(AUTOFOCUS_ON_MOUNT, onMountAutoFocus);
+          container.dispatchEvent(mountEvent);
+          if (!mountEvent.defaultPrevented) {
+            focusFirst(removeLinks(getTabbableCandidates(container)), { select: true });
+            if (document.activeElement === previouslyFocusedElement) {
+              focus(container);
+            }
+          }
+        }
+        return () => {
+          container.removeEventListener(AUTOFOCUS_ON_MOUNT, onMountAutoFocus);
+          setTimeout(() => {
+            const unmountEvent = new CustomEvent(AUTOFOCUS_ON_UNMOUNT, EVENT_OPTIONS);
+            container.addEventListener(AUTOFOCUS_ON_UNMOUNT, onUnmountAutoFocus);
+            container.dispatchEvent(unmountEvent);
+            if (!unmountEvent.defaultPrevented) {
+              focus(previouslyFocusedElement ?? document.body, { select: true });
+            }
+            container.removeEventListener(AUTOFOCUS_ON_UNMOUNT, onUnmountAutoFocus);
+            focusScopesStack.remove(focusScope);
+          }, 0);
+        };
+      }
+    }, [container, onMountAutoFocus, onUnmountAutoFocus, focusScope]);
+    const handleKeyDown = React53.useCallback(
+      (event) => {
+        if (!loop && !trapped)
+          return;
+        if (focusScope.paused)
+          return;
+        const isTabKey = event.key === "Tab" && !event.altKey && !event.ctrlKey && !event.metaKey;
+        const focusedElement = document.activeElement;
+        if (isTabKey && focusedElement) {
+          const container2 = event.currentTarget;
+          const [first, last] = getTabbableEdges(container2);
+          const hasTabbableElementsInside = first && last;
+          if (!hasTabbableElementsInside) {
+            if (focusedElement === container2)
+              event.preventDefault();
+          } else {
+            if (!event.shiftKey && focusedElement === last) {
+              event.preventDefault();
+              if (loop)
+                focus(first, { select: true });
+            } else if (event.shiftKey && focusedElement === first) {
+              event.preventDefault();
+              if (loop)
+                focus(last, { select: true });
+            }
+          }
+        }
+      },
+      [loop, trapped, focusScope.paused]
+    );
+    return /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(Primitive2.div, { tabIndex: -1, ...scopeProps, ref: composedRefs, onKeyDown: handleKeyDown });
+  });
+  FocusScope.displayName = FOCUS_SCOPE_NAME;
+  function focusFirst(candidates, { select = false } = {}) {
+    const previouslyFocusedElement = document.activeElement;
+    for (const candidate of candidates) {
+      focus(candidate, { select });
+      if (document.activeElement !== previouslyFocusedElement)
+        return;
+    }
+  }
+  function getTabbableEdges(container) {
+    const candidates = getTabbableCandidates(container);
+    const first = findVisible(candidates, container);
+    const last = findVisible(candidates.reverse(), container);
+    return [first, last];
+  }
+  function getTabbableCandidates(container) {
+    const nodes = [];
+    const walker = document.createTreeWalker(container, NodeFilter.SHOW_ELEMENT, {
+      acceptNode: (node) => {
+        const isHiddenInput = node.tagName === "INPUT" && node.type === "hidden";
+        if (node.disabled || node.hidden || isHiddenInput)
+          return NodeFilter.FILTER_SKIP;
+        return node.tabIndex >= 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+      }
+    });
+    while (walker.nextNode())
+      nodes.push(walker.currentNode);
+    return nodes;
+  }
+  function findVisible(elements, container) {
+    for (const element of elements) {
+      if (!isHidden(element, { upTo: container }))
+        return element;
+    }
+  }
+  function isHidden(node, { upTo }) {
+    if (getComputedStyle(node).visibility === "hidden")
+      return true;
+    while (node) {
+      if (upTo !== void 0 && node === upTo)
+        return false;
+      if (getComputedStyle(node).display === "none")
+        return true;
+      node = node.parentElement;
+    }
+    return false;
+  }
+  function isSelectableInput(element) {
+    return element instanceof HTMLInputElement && "select" in element;
+  }
+  function focus(element, { select = false } = {}) {
+    if (element && element.focus) {
+      const previouslyFocusedElement = document.activeElement;
+      element.focus({ preventScroll: true });
+      if (element !== previouslyFocusedElement && isSelectableInput(element) && select)
+        element.select();
+    }
+  }
+  var focusScopesStack = createFocusScopesStack();
+  function createFocusScopesStack() {
+    let stack = [];
+    return {
+      add(focusScope) {
+        const activeFocusScope = stack[0];
+        if (focusScope !== activeFocusScope) {
+          activeFocusScope?.pause();
+        }
+        stack = arrayRemove(stack, focusScope);
+        stack.unshift(focusScope);
+      },
+      remove(focusScope) {
+        stack = arrayRemove(stack, focusScope);
+        stack[0]?.resume();
+      }
+    };
+  }
+  function arrayRemove(array, item) {
+    const updatedArray = [...array];
+    const index2 = updatedArray.indexOf(item);
+    if (index2 !== -1) {
+      updatedArray.splice(index2, 1);
+    }
+    return updatedArray;
+  }
+  function removeLinks(items) {
+    return items.filter((item) => item.tagName !== "A");
+  }
+
+  // node_modules/@radix-ui/react-id/dist/index.mjs
+  var React55 = __toESM(require_react(), 1);
+
+  // node_modules/@radix-ui/react-use-layout-effect/dist/index.mjs
+  var React54 = __toESM(require_react(), 1);
+  var useLayoutEffect22 = globalThis?.document ? React54.useLayoutEffect : () => {
+  };
+
+  // node_modules/@radix-ui/react-id/dist/index.mjs
+  var useReactId = React55[" useId ".trim().toString()] || (() => void 0);
+  var count2 = 0;
+  function useId(deterministicId) {
+    const [id, setId] = React55.useState(useReactId());
+    useLayoutEffect22(() => {
+      if (!deterministicId)
+        setId((reactId) => reactId ?? String(count2++));
+    }, [deterministicId]);
+    return deterministicId || (id ? `radix-${id}` : "");
+  }
+
+  // node_modules/@radix-ui/react-popper/dist/index.mjs
+  var React63 = __toESM(require_react(), 1);
+
+  // node_modules/@floating-ui/utils/dist/floating-ui.utils.mjs
+  var sides = ["top", "right", "bottom", "left"];
+  var min2 = Math.min;
+  var max2 = Math.max;
+  var round = Math.round;
+  var floor = Math.floor;
+  var createCoords = (v) => ({
+    x: v,
+    y: v
+  });
+  var oppositeSideMap = {
+    left: "right",
+    right: "left",
+    bottom: "top",
+    top: "bottom"
+  };
+  function clamp(start, value, end) {
+    return max2(start, min2(value, end));
+  }
+  function evaluate(value, param) {
+    return typeof value === "function" ? value(param) : value;
+  }
+  function getSide(placement) {
+    return placement.split("-")[0];
+  }
+  function getAlignment(placement) {
+    return placement.split("-")[1];
+  }
+  function getOppositeAxis(axis) {
+    return axis === "x" ? "y" : "x";
+  }
+  function getAxisLength(axis) {
+    return axis === "y" ? "height" : "width";
+  }
+  function getSideAxis(placement) {
+    const firstChar = placement[0];
+    return firstChar === "t" || firstChar === "b" ? "y" : "x";
+  }
+  function getAlignmentAxis(placement) {
+    return getOppositeAxis(getSideAxis(placement));
+  }
+  function getAlignmentSides(placement, rects, rtl) {
+    if (rtl === void 0) {
+      rtl = false;
+    }
+    const alignment = getAlignment(placement);
+    const alignmentAxis = getAlignmentAxis(placement);
+    const length = getAxisLength(alignmentAxis);
+    let mainAlignmentSide = alignmentAxis === "x" ? alignment === (rtl ? "end" : "start") ? "right" : "left" : alignment === "start" ? "bottom" : "top";
+    if (rects.reference[length] > rects.floating[length]) {
+      mainAlignmentSide = getOppositePlacement(mainAlignmentSide);
+    }
+    return [mainAlignmentSide, getOppositePlacement(mainAlignmentSide)];
+  }
+  function getExpandedPlacements(placement) {
+    const oppositePlacement = getOppositePlacement(placement);
+    return [getOppositeAlignmentPlacement(placement), oppositePlacement, getOppositeAlignmentPlacement(oppositePlacement)];
+  }
+  function getOppositeAlignmentPlacement(placement) {
+    return placement.includes("start") ? placement.replace("start", "end") : placement.replace("end", "start");
+  }
+  var lrPlacement = ["left", "right"];
+  var rlPlacement = ["right", "left"];
+  var tbPlacement = ["top", "bottom"];
+  var btPlacement = ["bottom", "top"];
+  function getSideList(side, isStart, rtl) {
+    switch (side) {
+      case "top":
+      case "bottom":
+        if (rtl)
+          return isStart ? rlPlacement : lrPlacement;
+        return isStart ? lrPlacement : rlPlacement;
+      case "left":
+      case "right":
+        return isStart ? tbPlacement : btPlacement;
+      default:
+        return [];
+    }
+  }
+  function getOppositeAxisPlacements(placement, flipAlignment, direction, rtl) {
+    const alignment = getAlignment(placement);
+    let list = getSideList(getSide(placement), direction === "start", rtl);
+    if (alignment) {
+      list = list.map((side) => side + "-" + alignment);
+      if (flipAlignment) {
+        list = list.concat(list.map(getOppositeAlignmentPlacement));
+      }
+    }
+    return list;
+  }
+  function getOppositePlacement(placement) {
+    const side = getSide(placement);
+    return oppositeSideMap[side] + placement.slice(side.length);
+  }
+  function expandPaddingObject(padding) {
+    return {
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+      ...padding
+    };
+  }
+  function getPaddingObject(padding) {
+    return typeof padding !== "number" ? expandPaddingObject(padding) : {
+      top: padding,
+      right: padding,
+      bottom: padding,
+      left: padding
+    };
+  }
+  function rectToClientRect(rect) {
+    const {
+      x,
+      y,
+      width,
+      height
+    } = rect;
+    return {
+      width,
+      height,
+      top: y,
+      left: x,
+      right: x + width,
+      bottom: y + height,
+      x,
+      y
+    };
+  }
+
+  // node_modules/@floating-ui/core/dist/floating-ui.core.mjs
+  function computeCoordsFromPlacement(_ref, placement, rtl) {
+    let {
+      reference,
+      floating
+    } = _ref;
+    const sideAxis = getSideAxis(placement);
+    const alignmentAxis = getAlignmentAxis(placement);
+    const alignLength = getAxisLength(alignmentAxis);
+    const side = getSide(placement);
+    const isVertical = sideAxis === "y";
+    const commonX = reference.x + reference.width / 2 - floating.width / 2;
+    const commonY = reference.y + reference.height / 2 - floating.height / 2;
+    const commonAlign = reference[alignLength] / 2 - floating[alignLength] / 2;
+    let coords;
+    switch (side) {
+      case "top":
+        coords = {
+          x: commonX,
+          y: reference.y - floating.height
+        };
+        break;
+      case "bottom":
+        coords = {
+          x: commonX,
+          y: reference.y + reference.height
+        };
+        break;
+      case "right":
+        coords = {
+          x: reference.x + reference.width,
+          y: commonY
+        };
+        break;
+      case "left":
+        coords = {
+          x: reference.x - floating.width,
+          y: commonY
+        };
+        break;
+      default:
+        coords = {
+          x: reference.x,
+          y: reference.y
+        };
+    }
+    switch (getAlignment(placement)) {
+      case "start":
+        coords[alignmentAxis] -= commonAlign * (rtl && isVertical ? -1 : 1);
+        break;
+      case "end":
+        coords[alignmentAxis] += commonAlign * (rtl && isVertical ? -1 : 1);
+        break;
+    }
+    return coords;
+  }
+  async function detectOverflow(state, options) {
+    var _await$platform$isEle;
+    if (options === void 0) {
+      options = {};
+    }
+    const {
+      x,
+      y,
+      platform: platform2,
+      rects,
+      elements,
+      strategy
+    } = state;
+    const {
+      boundary = "clippingAncestors",
+      rootBoundary = "viewport",
+      elementContext = "floating",
+      altBoundary = false,
+      padding = 0
+    } = evaluate(options, state);
+    const paddingObject = getPaddingObject(padding);
+    const altContext = elementContext === "floating" ? "reference" : "floating";
+    const element = elements[altBoundary ? altContext : elementContext];
+    const clippingClientRect = rectToClientRect(await platform2.getClippingRect({
+      element: ((_await$platform$isEle = await (platform2.isElement == null ? void 0 : platform2.isElement(element))) != null ? _await$platform$isEle : true) ? element : element.contextElement || await (platform2.getDocumentElement == null ? void 0 : platform2.getDocumentElement(elements.floating)),
+      boundary,
+      rootBoundary,
+      strategy
+    }));
+    const rect = elementContext === "floating" ? {
+      x,
+      y,
+      width: rects.floating.width,
+      height: rects.floating.height
+    } : rects.reference;
+    const offsetParent = await (platform2.getOffsetParent == null ? void 0 : platform2.getOffsetParent(elements.floating));
+    const offsetScale = await (platform2.isElement == null ? void 0 : platform2.isElement(offsetParent)) ? await (platform2.getScale == null ? void 0 : platform2.getScale(offsetParent)) || {
+      x: 1,
+      y: 1
+    } : {
+      x: 1,
+      y: 1
+    };
+    const elementClientRect = rectToClientRect(platform2.convertOffsetParentRelativeRectToViewportRelativeRect ? await platform2.convertOffsetParentRelativeRectToViewportRelativeRect({
+      elements,
+      rect,
+      offsetParent,
+      strategy
+    }) : rect);
+    return {
+      top: (clippingClientRect.top - elementClientRect.top + paddingObject.top) / offsetScale.y,
+      bottom: (elementClientRect.bottom - clippingClientRect.bottom + paddingObject.bottom) / offsetScale.y,
+      left: (clippingClientRect.left - elementClientRect.left + paddingObject.left) / offsetScale.x,
+      right: (elementClientRect.right - clippingClientRect.right + paddingObject.right) / offsetScale.x
+    };
+  }
+  var MAX_RESET_COUNT = 50;
+  var computePosition = async (reference, floating, config) => {
+    const {
+      placement = "bottom",
+      strategy = "absolute",
+      middleware = [],
+      platform: platform2
+    } = config;
+    const platformWithDetectOverflow = platform2.detectOverflow ? platform2 : {
+      ...platform2,
+      detectOverflow
+    };
+    const rtl = await (platform2.isRTL == null ? void 0 : platform2.isRTL(floating));
+    let rects = await platform2.getElementRects({
+      reference,
+      floating,
+      strategy
+    });
+    let {
+      x,
+      y
+    } = computeCoordsFromPlacement(rects, placement, rtl);
+    let statefulPlacement = placement;
+    let resetCount = 0;
+    const middlewareData = {};
+    for (let i = 0; i < middleware.length; i++) {
+      const currentMiddleware = middleware[i];
+      if (!currentMiddleware) {
+        continue;
+      }
+      const {
+        name,
+        fn
+      } = currentMiddleware;
+      const {
+        x: nextX,
+        y: nextY,
+        data,
+        reset
+      } = await fn({
+        x,
+        y,
+        initialPlacement: placement,
+        placement: statefulPlacement,
+        strategy,
+        middlewareData,
+        rects,
+        platform: platformWithDetectOverflow,
+        elements: {
+          reference,
+          floating
+        }
+      });
+      x = nextX != null ? nextX : x;
+      y = nextY != null ? nextY : y;
+      middlewareData[name] = {
+        ...middlewareData[name],
+        ...data
+      };
+      if (reset && resetCount < MAX_RESET_COUNT) {
+        resetCount++;
+        if (typeof reset === "object") {
+          if (reset.placement) {
+            statefulPlacement = reset.placement;
+          }
+          if (reset.rects) {
+            rects = reset.rects === true ? await platform2.getElementRects({
+              reference,
+              floating,
+              strategy
+            }) : reset.rects;
+          }
+          ({
+            x,
+            y
+          } = computeCoordsFromPlacement(rects, statefulPlacement, rtl));
+        }
+        i = -1;
+      }
+    }
+    return {
+      x,
+      y,
+      placement: statefulPlacement,
+      strategy,
+      middlewareData
+    };
+  };
+  var arrow = (options) => ({
+    name: "arrow",
+    options,
+    async fn(state) {
+      const {
+        x,
+        y,
+        placement,
+        rects,
+        platform: platform2,
+        elements,
+        middlewareData
+      } = state;
+      const {
+        element,
+        padding = 0
+      } = evaluate(options, state) || {};
+      if (element == null) {
+        return {};
+      }
+      const paddingObject = getPaddingObject(padding);
+      const coords = {
+        x,
+        y
+      };
+      const axis = getAlignmentAxis(placement);
+      const length = getAxisLength(axis);
+      const arrowDimensions = await platform2.getDimensions(element);
+      const isYAxis = axis === "y";
+      const minProp = isYAxis ? "top" : "left";
+      const maxProp = isYAxis ? "bottom" : "right";
+      const clientProp = isYAxis ? "clientHeight" : "clientWidth";
+      const endDiff = rects.reference[length] + rects.reference[axis] - coords[axis] - rects.floating[length];
+      const startDiff = coords[axis] - rects.reference[axis];
+      const arrowOffsetParent = await (platform2.getOffsetParent == null ? void 0 : platform2.getOffsetParent(element));
+      let clientSize = arrowOffsetParent ? arrowOffsetParent[clientProp] : 0;
+      if (!clientSize || !await (platform2.isElement == null ? void 0 : platform2.isElement(arrowOffsetParent))) {
+        clientSize = elements.floating[clientProp] || rects.floating[length];
+      }
+      const centerToReference = endDiff / 2 - startDiff / 2;
+      const largestPossiblePadding = clientSize / 2 - arrowDimensions[length] / 2 - 1;
+      const minPadding = min2(paddingObject[minProp], largestPossiblePadding);
+      const maxPadding = min2(paddingObject[maxProp], largestPossiblePadding);
+      const min$1 = minPadding;
+      const max3 = clientSize - arrowDimensions[length] - maxPadding;
+      const center = clientSize / 2 - arrowDimensions[length] / 2 + centerToReference;
+      const offset4 = clamp(min$1, center, max3);
+      const shouldAddOffset = !middlewareData.arrow && getAlignment(placement) != null && center !== offset4 && rects.reference[length] / 2 - (center < min$1 ? minPadding : maxPadding) - arrowDimensions[length] / 2 < 0;
+      const alignmentOffset = shouldAddOffset ? center < min$1 ? center - min$1 : center - max3 : 0;
+      return {
+        [axis]: coords[axis] + alignmentOffset,
+        data: {
+          [axis]: offset4,
+          centerOffset: center - offset4 - alignmentOffset,
+          ...shouldAddOffset && {
+            alignmentOffset
+          }
+        },
+        reset: shouldAddOffset
+      };
+    }
+  });
+  var flip = function(options) {
+    if (options === void 0) {
+      options = {};
+    }
+    return {
+      name: "flip",
+      options,
+      async fn(state) {
+        var _middlewareData$arrow, _middlewareData$flip;
+        const {
+          placement,
+          middlewareData,
+          rects,
+          initialPlacement,
+          platform: platform2,
+          elements
+        } = state;
+        const {
+          mainAxis: checkMainAxis = true,
+          crossAxis: checkCrossAxis = true,
+          fallbackPlacements: specifiedFallbackPlacements,
+          fallbackStrategy = "bestFit",
+          fallbackAxisSideDirection = "none",
+          flipAlignment = true,
+          ...detectOverflowOptions
+        } = evaluate(options, state);
+        if ((_middlewareData$arrow = middlewareData.arrow) != null && _middlewareData$arrow.alignmentOffset) {
+          return {};
+        }
+        const side = getSide(placement);
+        const initialSideAxis = getSideAxis(initialPlacement);
+        const isBasePlacement = getSide(initialPlacement) === initialPlacement;
+        const rtl = await (platform2.isRTL == null ? void 0 : platform2.isRTL(elements.floating));
+        const fallbackPlacements = specifiedFallbackPlacements || (isBasePlacement || !flipAlignment ? [getOppositePlacement(initialPlacement)] : getExpandedPlacements(initialPlacement));
+        const hasFallbackAxisSideDirection = fallbackAxisSideDirection !== "none";
+        if (!specifiedFallbackPlacements && hasFallbackAxisSideDirection) {
+          fallbackPlacements.push(...getOppositeAxisPlacements(initialPlacement, flipAlignment, fallbackAxisSideDirection, rtl));
+        }
+        const placements2 = [initialPlacement, ...fallbackPlacements];
+        const overflow = await platform2.detectOverflow(state, detectOverflowOptions);
+        const overflows = [];
+        let overflowsData = ((_middlewareData$flip = middlewareData.flip) == null ? void 0 : _middlewareData$flip.overflows) || [];
+        if (checkMainAxis) {
+          overflows.push(overflow[side]);
+        }
+        if (checkCrossAxis) {
+          const sides2 = getAlignmentSides(placement, rects, rtl);
+          overflows.push(overflow[sides2[0]], overflow[sides2[1]]);
+        }
+        overflowsData = [...overflowsData, {
+          placement,
+          overflows
+        }];
+        if (!overflows.every((side2) => side2 <= 0)) {
+          var _middlewareData$flip2, _overflowsData$filter;
+          const nextIndex = (((_middlewareData$flip2 = middlewareData.flip) == null ? void 0 : _middlewareData$flip2.index) || 0) + 1;
+          const nextPlacement = placements2[nextIndex];
+          if (nextPlacement) {
+            const ignoreCrossAxisOverflow = checkCrossAxis === "alignment" ? initialSideAxis !== getSideAxis(nextPlacement) : false;
+            if (!ignoreCrossAxisOverflow || // We leave the current main axis only if every placement on that axis
+            // overflows the main axis.
+            overflowsData.every((d) => getSideAxis(d.placement) === initialSideAxis ? d.overflows[0] > 0 : true)) {
+              return {
+                data: {
+                  index: nextIndex,
+                  overflows: overflowsData
+                },
+                reset: {
+                  placement: nextPlacement
+                }
+              };
+            }
+          }
+          let resetPlacement = (_overflowsData$filter = overflowsData.filter((d) => d.overflows[0] <= 0).sort((a, b) => a.overflows[1] - b.overflows[1])[0]) == null ? void 0 : _overflowsData$filter.placement;
+          if (!resetPlacement) {
+            switch (fallbackStrategy) {
+              case "bestFit": {
+                var _overflowsData$filter2;
+                const placement2 = (_overflowsData$filter2 = overflowsData.filter((d) => {
+                  if (hasFallbackAxisSideDirection) {
+                    const currentSideAxis = getSideAxis(d.placement);
+                    return currentSideAxis === initialSideAxis || // Create a bias to the `y` side axis due to horizontal
+                    // reading directions favoring greater width.
+                    currentSideAxis === "y";
+                  }
+                  return true;
+                }).map((d) => [d.placement, d.overflows.filter((overflow2) => overflow2 > 0).reduce((acc, overflow2) => acc + overflow2, 0)]).sort((a, b) => a[1] - b[1])[0]) == null ? void 0 : _overflowsData$filter2[0];
+                if (placement2) {
+                  resetPlacement = placement2;
+                }
+                break;
+              }
+              case "initialPlacement":
+                resetPlacement = initialPlacement;
+                break;
+            }
+          }
+          if (placement !== resetPlacement) {
+            return {
+              reset: {
+                placement: resetPlacement
+              }
+            };
+          }
+        }
+        return {};
+      }
+    };
+  };
+  function getSideOffsets(overflow, rect) {
+    return {
+      top: overflow.top - rect.height,
+      right: overflow.right - rect.width,
+      bottom: overflow.bottom - rect.height,
+      left: overflow.left - rect.width
+    };
+  }
+  function isAnySideFullyClipped(overflow) {
+    return sides.some((side) => overflow[side] >= 0);
+  }
+  var hide = function(options) {
+    if (options === void 0) {
+      options = {};
+    }
+    return {
+      name: "hide",
+      options,
+      async fn(state) {
+        const {
+          rects,
+          platform: platform2
+        } = state;
+        const {
+          strategy = "referenceHidden",
+          ...detectOverflowOptions
+        } = evaluate(options, state);
+        switch (strategy) {
+          case "referenceHidden": {
+            const overflow = await platform2.detectOverflow(state, {
+              ...detectOverflowOptions,
+              elementContext: "reference"
+            });
+            const offsets = getSideOffsets(overflow, rects.reference);
+            return {
+              data: {
+                referenceHiddenOffsets: offsets,
+                referenceHidden: isAnySideFullyClipped(offsets)
+              }
+            };
+          }
+          case "escaped": {
+            const overflow = await platform2.detectOverflow(state, {
+              ...detectOverflowOptions,
+              altBoundary: true
+            });
+            const offsets = getSideOffsets(overflow, rects.floating);
+            return {
+              data: {
+                escapedOffsets: offsets,
+                escaped: isAnySideFullyClipped(offsets)
+              }
+            };
+          }
+          default: {
+            return {};
+          }
+        }
+      }
+    };
+  };
+  var originSides = /* @__PURE__ */ new Set(["left", "top"]);
+  async function convertValueToCoords(state, options) {
+    const {
+      placement,
+      platform: platform2,
+      elements
+    } = state;
+    const rtl = await (platform2.isRTL == null ? void 0 : platform2.isRTL(elements.floating));
+    const side = getSide(placement);
+    const alignment = getAlignment(placement);
+    const isVertical = getSideAxis(placement) === "y";
+    const mainAxisMulti = originSides.has(side) ? -1 : 1;
+    const crossAxisMulti = rtl && isVertical ? -1 : 1;
+    const rawValue = evaluate(options, state);
+    let {
+      mainAxis,
+      crossAxis,
+      alignmentAxis
+    } = typeof rawValue === "number" ? {
+      mainAxis: rawValue,
+      crossAxis: 0,
+      alignmentAxis: null
+    } : {
+      mainAxis: rawValue.mainAxis || 0,
+      crossAxis: rawValue.crossAxis || 0,
+      alignmentAxis: rawValue.alignmentAxis
+    };
+    if (alignment && typeof alignmentAxis === "number") {
+      crossAxis = alignment === "end" ? alignmentAxis * -1 : alignmentAxis;
+    }
+    return isVertical ? {
+      x: crossAxis * crossAxisMulti,
+      y: mainAxis * mainAxisMulti
+    } : {
+      x: mainAxis * mainAxisMulti,
+      y: crossAxis * crossAxisMulti
+    };
+  }
+  var offset = function(options) {
+    if (options === void 0) {
+      options = 0;
+    }
+    return {
+      name: "offset",
+      options,
+      async fn(state) {
+        var _middlewareData$offse, _middlewareData$arrow;
+        const {
+          x,
+          y,
+          placement,
+          middlewareData
+        } = state;
+        const diffCoords = await convertValueToCoords(state, options);
+        if (placement === ((_middlewareData$offse = middlewareData.offset) == null ? void 0 : _middlewareData$offse.placement) && (_middlewareData$arrow = middlewareData.arrow) != null && _middlewareData$arrow.alignmentOffset) {
+          return {};
+        }
+        return {
+          x: x + diffCoords.x,
+          y: y + diffCoords.y,
+          data: {
+            ...diffCoords,
+            placement
+          }
+        };
+      }
+    };
+  };
+  var shift = function(options) {
+    if (options === void 0) {
+      options = {};
+    }
+    return {
+      name: "shift",
+      options,
+      async fn(state) {
+        const {
+          x,
+          y,
+          placement,
+          platform: platform2
+        } = state;
+        const {
+          mainAxis: checkMainAxis = true,
+          crossAxis: checkCrossAxis = false,
+          limiter = {
+            fn: (_ref) => {
+              let {
+                x: x2,
+                y: y2
+              } = _ref;
+              return {
+                x: x2,
+                y: y2
+              };
+            }
+          },
+          ...detectOverflowOptions
+        } = evaluate(options, state);
+        const coords = {
+          x,
+          y
+        };
+        const overflow = await platform2.detectOverflow(state, detectOverflowOptions);
+        const crossAxis = getSideAxis(getSide(placement));
+        const mainAxis = getOppositeAxis(crossAxis);
+        let mainAxisCoord = coords[mainAxis];
+        let crossAxisCoord = coords[crossAxis];
+        if (checkMainAxis) {
+          const minSide = mainAxis === "y" ? "top" : "left";
+          const maxSide = mainAxis === "y" ? "bottom" : "right";
+          const min3 = mainAxisCoord + overflow[minSide];
+          const max3 = mainAxisCoord - overflow[maxSide];
+          mainAxisCoord = clamp(min3, mainAxisCoord, max3);
+        }
+        if (checkCrossAxis) {
+          const minSide = crossAxis === "y" ? "top" : "left";
+          const maxSide = crossAxis === "y" ? "bottom" : "right";
+          const min3 = crossAxisCoord + overflow[minSide];
+          const max3 = crossAxisCoord - overflow[maxSide];
+          crossAxisCoord = clamp(min3, crossAxisCoord, max3);
+        }
+        const limitedCoords = limiter.fn({
+          ...state,
+          [mainAxis]: mainAxisCoord,
+          [crossAxis]: crossAxisCoord
+        });
+        return {
+          ...limitedCoords,
+          data: {
+            x: limitedCoords.x - x,
+            y: limitedCoords.y - y,
+            enabled: {
+              [mainAxis]: checkMainAxis,
+              [crossAxis]: checkCrossAxis
+            }
+          }
+        };
+      }
+    };
+  };
+  var limitShift = function(options) {
+    if (options === void 0) {
+      options = {};
+    }
+    return {
+      options,
+      fn(state) {
+        const {
+          x,
+          y,
+          placement,
+          rects,
+          middlewareData
+        } = state;
+        const {
+          offset: offset4 = 0,
+          mainAxis: checkMainAxis = true,
+          crossAxis: checkCrossAxis = true
+        } = evaluate(options, state);
+        const coords = {
+          x,
+          y
+        };
+        const crossAxis = getSideAxis(placement);
+        const mainAxis = getOppositeAxis(crossAxis);
+        let mainAxisCoord = coords[mainAxis];
+        let crossAxisCoord = coords[crossAxis];
+        const rawOffset = evaluate(offset4, state);
+        const computedOffset = typeof rawOffset === "number" ? {
+          mainAxis: rawOffset,
+          crossAxis: 0
+        } : {
+          mainAxis: 0,
+          crossAxis: 0,
+          ...rawOffset
+        };
+        if (checkMainAxis) {
+          const len = mainAxis === "y" ? "height" : "width";
+          const limitMin = rects.reference[mainAxis] - rects.floating[len] + computedOffset.mainAxis;
+          const limitMax = rects.reference[mainAxis] + rects.reference[len] - computedOffset.mainAxis;
+          if (mainAxisCoord < limitMin) {
+            mainAxisCoord = limitMin;
+          } else if (mainAxisCoord > limitMax) {
+            mainAxisCoord = limitMax;
+          }
+        }
+        if (checkCrossAxis) {
+          var _middlewareData$offse, _middlewareData$offse2;
+          const len = mainAxis === "y" ? "width" : "height";
+          const isOriginSide = originSides.has(getSide(placement));
+          const limitMin = rects.reference[crossAxis] - rects.floating[len] + (isOriginSide ? ((_middlewareData$offse = middlewareData.offset) == null ? void 0 : _middlewareData$offse[crossAxis]) || 0 : 0) + (isOriginSide ? 0 : computedOffset.crossAxis);
+          const limitMax = rects.reference[crossAxis] + rects.reference[len] + (isOriginSide ? 0 : ((_middlewareData$offse2 = middlewareData.offset) == null ? void 0 : _middlewareData$offse2[crossAxis]) || 0) - (isOriginSide ? computedOffset.crossAxis : 0);
+          if (crossAxisCoord < limitMin) {
+            crossAxisCoord = limitMin;
+          } else if (crossAxisCoord > limitMax) {
+            crossAxisCoord = limitMax;
+          }
+        }
+        return {
+          [mainAxis]: mainAxisCoord,
+          [crossAxis]: crossAxisCoord
+        };
+      }
+    };
+  };
+  var size = function(options) {
+    if (options === void 0) {
+      options = {};
+    }
+    return {
+      name: "size",
+      options,
+      async fn(state) {
+        var _state$middlewareData, _state$middlewareData2;
+        const {
+          placement,
+          rects,
+          platform: platform2,
+          elements
+        } = state;
+        const {
+          apply = () => {
+          },
+          ...detectOverflowOptions
+        } = evaluate(options, state);
+        const overflow = await platform2.detectOverflow(state, detectOverflowOptions);
+        const side = getSide(placement);
+        const alignment = getAlignment(placement);
+        const isYAxis = getSideAxis(placement) === "y";
+        const {
+          width,
+          height
+        } = rects.floating;
+        let heightSide;
+        let widthSide;
+        if (side === "top" || side === "bottom") {
+          heightSide = side;
+          widthSide = alignment === (await (platform2.isRTL == null ? void 0 : platform2.isRTL(elements.floating)) ? "start" : "end") ? "left" : "right";
+        } else {
+          widthSide = side;
+          heightSide = alignment === "end" ? "top" : "bottom";
+        }
+        const maximumClippingHeight = height - overflow.top - overflow.bottom;
+        const maximumClippingWidth = width - overflow.left - overflow.right;
+        const overflowAvailableHeight = min2(height - overflow[heightSide], maximumClippingHeight);
+        const overflowAvailableWidth = min2(width - overflow[widthSide], maximumClippingWidth);
+        const noShift = !state.middlewareData.shift;
+        let availableHeight = overflowAvailableHeight;
+        let availableWidth = overflowAvailableWidth;
+        if ((_state$middlewareData = state.middlewareData.shift) != null && _state$middlewareData.enabled.x) {
+          availableWidth = maximumClippingWidth;
+        }
+        if ((_state$middlewareData2 = state.middlewareData.shift) != null && _state$middlewareData2.enabled.y) {
+          availableHeight = maximumClippingHeight;
+        }
+        if (noShift && !alignment) {
+          const xMin = max2(overflow.left, 0);
+          const xMax = max2(overflow.right, 0);
+          const yMin = max2(overflow.top, 0);
+          const yMax = max2(overflow.bottom, 0);
+          if (isYAxis) {
+            availableWidth = width - 2 * (xMin !== 0 || xMax !== 0 ? xMin + xMax : max2(overflow.left, overflow.right));
+          } else {
+            availableHeight = height - 2 * (yMin !== 0 || yMax !== 0 ? yMin + yMax : max2(overflow.top, overflow.bottom));
+          }
+        }
+        await apply({
+          ...state,
+          availableWidth,
+          availableHeight
+        });
+        const nextDimensions = await platform2.getDimensions(elements.floating);
+        if (width !== nextDimensions.width || height !== nextDimensions.height) {
+          return {
+            reset: {
+              rects: true
+            }
+          };
+        }
+        return {};
+      }
+    };
+  };
+
+  // node_modules/@floating-ui/utils/dist/floating-ui.utils.dom.mjs
+  function hasWindow() {
+    return typeof window !== "undefined";
+  }
+  function getNodeName(node) {
+    if (isNode(node)) {
+      return (node.nodeName || "").toLowerCase();
+    }
+    return "#document";
+  }
+  function getWindow(node) {
+    var _node$ownerDocument;
+    return (node == null || (_node$ownerDocument = node.ownerDocument) == null ? void 0 : _node$ownerDocument.defaultView) || window;
+  }
+  function getDocumentElement(node) {
+    var _ref;
+    return (_ref = (isNode(node) ? node.ownerDocument : node.document) || window.document) == null ? void 0 : _ref.documentElement;
+  }
+  function isNode(value) {
+    if (!hasWindow()) {
+      return false;
+    }
+    return value instanceof Node || value instanceof getWindow(value).Node;
+  }
+  function isElement(value) {
+    if (!hasWindow()) {
+      return false;
+    }
+    return value instanceof Element || value instanceof getWindow(value).Element;
+  }
+  function isHTMLElement(value) {
+    if (!hasWindow()) {
+      return false;
+    }
+    return value instanceof HTMLElement || value instanceof getWindow(value).HTMLElement;
+  }
+  function isShadowRoot(value) {
+    if (!hasWindow() || typeof ShadowRoot === "undefined") {
+      return false;
+    }
+    return value instanceof ShadowRoot || value instanceof getWindow(value).ShadowRoot;
+  }
+  function isOverflowElement(element) {
+    const {
+      overflow,
+      overflowX,
+      overflowY,
+      display
+    } = getComputedStyle2(element);
+    return /auto|scroll|overlay|hidden|clip/.test(overflow + overflowY + overflowX) && display !== "inline" && display !== "contents";
+  }
+  function isTableElement(element) {
+    return /^(table|td|th)$/.test(getNodeName(element));
+  }
+  function isTopLayer(element) {
+    try {
+      if (element.matches(":popover-open")) {
+        return true;
+      }
+    } catch (_e) {
+    }
+    try {
+      return element.matches(":modal");
+    } catch (_e) {
+      return false;
+    }
+  }
+  var willChangeRe = /transform|translate|scale|rotate|perspective|filter/;
+  var containRe = /paint|layout|strict|content/;
+  var isNotNone = (value) => !!value && value !== "none";
+  var isWebKitValue;
+  function isContainingBlock(elementOrCss) {
+    const css = isElement(elementOrCss) ? getComputedStyle2(elementOrCss) : elementOrCss;
+    return isNotNone(css.transform) || isNotNone(css.translate) || isNotNone(css.scale) || isNotNone(css.rotate) || isNotNone(css.perspective) || !isWebKit() && (isNotNone(css.backdropFilter) || isNotNone(css.filter)) || willChangeRe.test(css.willChange || "") || containRe.test(css.contain || "");
+  }
+  function getContainingBlock(element) {
+    let currentNode = getParentNode(element);
+    while (isHTMLElement(currentNode) && !isLastTraversableNode(currentNode)) {
+      if (isContainingBlock(currentNode)) {
+        return currentNode;
+      } else if (isTopLayer(currentNode)) {
+        return null;
+      }
+      currentNode = getParentNode(currentNode);
+    }
+    return null;
+  }
+  function isWebKit() {
+    if (isWebKitValue == null) {
+      isWebKitValue = typeof CSS !== "undefined" && CSS.supports && CSS.supports("-webkit-backdrop-filter", "none");
+    }
+    return isWebKitValue;
+  }
+  function isLastTraversableNode(node) {
+    return /^(html|body|#document)$/.test(getNodeName(node));
+  }
+  function getComputedStyle2(element) {
+    return getWindow(element).getComputedStyle(element);
+  }
+  function getNodeScroll(element) {
+    if (isElement(element)) {
+      return {
+        scrollLeft: element.scrollLeft,
+        scrollTop: element.scrollTop
+      };
+    }
+    return {
+      scrollLeft: element.scrollX,
+      scrollTop: element.scrollY
+    };
+  }
+  function getParentNode(node) {
+    if (getNodeName(node) === "html") {
+      return node;
+    }
+    const result = (
+      // Step into the shadow DOM of the parent of a slotted node.
+      node.assignedSlot || // DOM Element detected.
+      node.parentNode || // ShadowRoot detected.
+      isShadowRoot(node) && node.host || // Fallback.
+      getDocumentElement(node)
+    );
+    return isShadowRoot(result) ? result.host : result;
+  }
+  function getNearestOverflowAncestor(node) {
+    const parentNode = getParentNode(node);
+    if (isLastTraversableNode(parentNode)) {
+      return node.ownerDocument ? node.ownerDocument.body : node.body;
+    }
+    if (isHTMLElement(parentNode) && isOverflowElement(parentNode)) {
+      return parentNode;
+    }
+    return getNearestOverflowAncestor(parentNode);
+  }
+  function getOverflowAncestors(node, list, traverseIframes) {
+    var _node$ownerDocument2;
+    if (list === void 0) {
+      list = [];
+    }
+    if (traverseIframes === void 0) {
+      traverseIframes = true;
+    }
+    const scrollableAncestor = getNearestOverflowAncestor(node);
+    const isBody = scrollableAncestor === ((_node$ownerDocument2 = node.ownerDocument) == null ? void 0 : _node$ownerDocument2.body);
+    const win = getWindow(scrollableAncestor);
+    if (isBody) {
+      const frameElement = getFrameElement(win);
+      return list.concat(win, win.visualViewport || [], isOverflowElement(scrollableAncestor) ? scrollableAncestor : [], frameElement && traverseIframes ? getOverflowAncestors(frameElement) : []);
+    } else {
+      return list.concat(scrollableAncestor, getOverflowAncestors(scrollableAncestor, [], traverseIframes));
+    }
+  }
+  function getFrameElement(win) {
+    return win.parent && Object.getPrototypeOf(win.parent) ? win.frameElement : null;
+  }
+
+  // node_modules/@floating-ui/dom/dist/floating-ui.dom.mjs
+  function getCssDimensions(element) {
+    const css = getComputedStyle2(element);
+    let width = parseFloat(css.width) || 0;
+    let height = parseFloat(css.height) || 0;
+    const hasOffset = isHTMLElement(element);
+    const offsetWidth = hasOffset ? element.offsetWidth : width;
+    const offsetHeight = hasOffset ? element.offsetHeight : height;
+    const shouldFallback = round(width) !== offsetWidth || round(height) !== offsetHeight;
+    if (shouldFallback) {
+      width = offsetWidth;
+      height = offsetHeight;
+    }
+    return {
+      width,
+      height,
+      $: shouldFallback
+    };
+  }
+  function unwrapElement(element) {
+    return !isElement(element) ? element.contextElement : element;
+  }
+  function getScale(element) {
+    const domElement = unwrapElement(element);
+    if (!isHTMLElement(domElement)) {
+      return createCoords(1);
+    }
+    const rect = domElement.getBoundingClientRect();
+    const {
+      width,
+      height,
+      $
+    } = getCssDimensions(domElement);
+    let x = ($ ? round(rect.width) : rect.width) / width;
+    let y = ($ ? round(rect.height) : rect.height) / height;
+    if (!x || !Number.isFinite(x)) {
+      x = 1;
+    }
+    if (!y || !Number.isFinite(y)) {
+      y = 1;
+    }
+    return {
+      x,
+      y
+    };
+  }
+  var noOffsets = /* @__PURE__ */ createCoords(0);
+  function getVisualOffsets(element) {
+    const win = getWindow(element);
+    if (!isWebKit() || !win.visualViewport) {
+      return noOffsets;
+    }
+    return {
+      x: win.visualViewport.offsetLeft,
+      y: win.visualViewport.offsetTop
+    };
+  }
+  function shouldAddVisualOffsets(element, isFixed, floatingOffsetParent) {
+    if (isFixed === void 0) {
+      isFixed = false;
+    }
+    if (!floatingOffsetParent || isFixed && floatingOffsetParent !== getWindow(element)) {
+      return false;
+    }
+    return isFixed;
+  }
+  function getBoundingClientRect(element, includeScale, isFixedStrategy, offsetParent) {
+    if (includeScale === void 0) {
+      includeScale = false;
+    }
+    if (isFixedStrategy === void 0) {
+      isFixedStrategy = false;
+    }
+    const clientRect = element.getBoundingClientRect();
+    const domElement = unwrapElement(element);
+    let scale = createCoords(1);
+    if (includeScale) {
+      if (offsetParent) {
+        if (isElement(offsetParent)) {
+          scale = getScale(offsetParent);
+        }
+      } else {
+        scale = getScale(element);
+      }
+    }
+    const visualOffsets = shouldAddVisualOffsets(domElement, isFixedStrategy, offsetParent) ? getVisualOffsets(domElement) : createCoords(0);
+    let x = (clientRect.left + visualOffsets.x) / scale.x;
+    let y = (clientRect.top + visualOffsets.y) / scale.y;
+    let width = clientRect.width / scale.x;
+    let height = clientRect.height / scale.y;
+    if (domElement) {
+      const win = getWindow(domElement);
+      const offsetWin = offsetParent && isElement(offsetParent) ? getWindow(offsetParent) : offsetParent;
+      let currentWin = win;
+      let currentIFrame = getFrameElement(currentWin);
+      while (currentIFrame && offsetParent && offsetWin !== currentWin) {
+        const iframeScale = getScale(currentIFrame);
+        const iframeRect = currentIFrame.getBoundingClientRect();
+        const css = getComputedStyle2(currentIFrame);
+        const left = iframeRect.left + (currentIFrame.clientLeft + parseFloat(css.paddingLeft)) * iframeScale.x;
+        const top = iframeRect.top + (currentIFrame.clientTop + parseFloat(css.paddingTop)) * iframeScale.y;
+        x *= iframeScale.x;
+        y *= iframeScale.y;
+        width *= iframeScale.x;
+        height *= iframeScale.y;
+        x += left;
+        y += top;
+        currentWin = getWindow(currentIFrame);
+        currentIFrame = getFrameElement(currentWin);
+      }
+    }
+    return rectToClientRect({
+      width,
+      height,
+      x,
+      y
+    });
+  }
+  function getWindowScrollBarX(element, rect) {
+    const leftScroll = getNodeScroll(element).scrollLeft;
+    if (!rect) {
+      return getBoundingClientRect(getDocumentElement(element)).left + leftScroll;
+    }
+    return rect.left + leftScroll;
+  }
+  function getHTMLOffset(documentElement, scroll) {
+    const htmlRect = documentElement.getBoundingClientRect();
+    const x = htmlRect.left + scroll.scrollLeft - getWindowScrollBarX(documentElement, htmlRect);
+    const y = htmlRect.top + scroll.scrollTop;
+    return {
+      x,
+      y
+    };
+  }
+  function convertOffsetParentRelativeRectToViewportRelativeRect(_ref) {
+    let {
+      elements,
+      rect,
+      offsetParent,
+      strategy
+    } = _ref;
+    const isFixed = strategy === "fixed";
+    const documentElement = getDocumentElement(offsetParent);
+    const topLayer = elements ? isTopLayer(elements.floating) : false;
+    if (offsetParent === documentElement || topLayer && isFixed) {
+      return rect;
+    }
+    let scroll = {
+      scrollLeft: 0,
+      scrollTop: 0
+    };
+    let scale = createCoords(1);
+    const offsets = createCoords(0);
+    const isOffsetParentAnElement = isHTMLElement(offsetParent);
+    if (isOffsetParentAnElement || !isOffsetParentAnElement && !isFixed) {
+      if (getNodeName(offsetParent) !== "body" || isOverflowElement(documentElement)) {
+        scroll = getNodeScroll(offsetParent);
+      }
+      if (isOffsetParentAnElement) {
+        const offsetRect = getBoundingClientRect(offsetParent);
+        scale = getScale(offsetParent);
+        offsets.x = offsetRect.x + offsetParent.clientLeft;
+        offsets.y = offsetRect.y + offsetParent.clientTop;
+      }
+    }
+    const htmlOffset = documentElement && !isOffsetParentAnElement && !isFixed ? getHTMLOffset(documentElement, scroll) : createCoords(0);
+    return {
+      width: rect.width * scale.x,
+      height: rect.height * scale.y,
+      x: rect.x * scale.x - scroll.scrollLeft * scale.x + offsets.x + htmlOffset.x,
+      y: rect.y * scale.y - scroll.scrollTop * scale.y + offsets.y + htmlOffset.y
+    };
+  }
+  function getClientRects(element) {
+    return Array.from(element.getClientRects());
+  }
+  function getDocumentRect(element) {
+    const html = getDocumentElement(element);
+    const scroll = getNodeScroll(element);
+    const body = element.ownerDocument.body;
+    const width = max2(html.scrollWidth, html.clientWidth, body.scrollWidth, body.clientWidth);
+    const height = max2(html.scrollHeight, html.clientHeight, body.scrollHeight, body.clientHeight);
+    let x = -scroll.scrollLeft + getWindowScrollBarX(element);
+    const y = -scroll.scrollTop;
+    if (getComputedStyle2(body).direction === "rtl") {
+      x += max2(html.clientWidth, body.clientWidth) - width;
+    }
+    return {
+      width,
+      height,
+      x,
+      y
+    };
+  }
+  var SCROLLBAR_MAX = 25;
+  function getViewportRect(element, strategy) {
+    const win = getWindow(element);
+    const html = getDocumentElement(element);
+    const visualViewport = win.visualViewport;
+    let width = html.clientWidth;
+    let height = html.clientHeight;
+    let x = 0;
+    let y = 0;
+    if (visualViewport) {
+      width = visualViewport.width;
+      height = visualViewport.height;
+      const visualViewportBased = isWebKit();
+      if (!visualViewportBased || visualViewportBased && strategy === "fixed") {
+        x = visualViewport.offsetLeft;
+        y = visualViewport.offsetTop;
+      }
+    }
+    const windowScrollbarX = getWindowScrollBarX(html);
+    if (windowScrollbarX <= 0) {
+      const doc = html.ownerDocument;
+      const body = doc.body;
+      const bodyStyles = getComputedStyle(body);
+      const bodyMarginInline = doc.compatMode === "CSS1Compat" ? parseFloat(bodyStyles.marginLeft) + parseFloat(bodyStyles.marginRight) || 0 : 0;
+      const clippingStableScrollbarWidth = Math.abs(html.clientWidth - body.clientWidth - bodyMarginInline);
+      if (clippingStableScrollbarWidth <= SCROLLBAR_MAX) {
+        width -= clippingStableScrollbarWidth;
+      }
+    } else if (windowScrollbarX <= SCROLLBAR_MAX) {
+      width += windowScrollbarX;
+    }
+    return {
+      width,
+      height,
+      x,
+      y
+    };
+  }
+  function getInnerBoundingClientRect(element, strategy) {
+    const clientRect = getBoundingClientRect(element, true, strategy === "fixed");
+    const top = clientRect.top + element.clientTop;
+    const left = clientRect.left + element.clientLeft;
+    const scale = isHTMLElement(element) ? getScale(element) : createCoords(1);
+    const width = element.clientWidth * scale.x;
+    const height = element.clientHeight * scale.y;
+    const x = left * scale.x;
+    const y = top * scale.y;
+    return {
+      width,
+      height,
+      x,
+      y
+    };
+  }
+  function getClientRectFromClippingAncestor(element, clippingAncestor, strategy) {
+    let rect;
+    if (clippingAncestor === "viewport") {
+      rect = getViewportRect(element, strategy);
+    } else if (clippingAncestor === "document") {
+      rect = getDocumentRect(getDocumentElement(element));
+    } else if (isElement(clippingAncestor)) {
+      rect = getInnerBoundingClientRect(clippingAncestor, strategy);
+    } else {
+      const visualOffsets = getVisualOffsets(element);
+      rect = {
+        x: clippingAncestor.x - visualOffsets.x,
+        y: clippingAncestor.y - visualOffsets.y,
+        width: clippingAncestor.width,
+        height: clippingAncestor.height
+      };
+    }
+    return rectToClientRect(rect);
+  }
+  function hasFixedPositionAncestor(element, stopNode) {
+    const parentNode = getParentNode(element);
+    if (parentNode === stopNode || !isElement(parentNode) || isLastTraversableNode(parentNode)) {
+      return false;
+    }
+    return getComputedStyle2(parentNode).position === "fixed" || hasFixedPositionAncestor(parentNode, stopNode);
+  }
+  function getClippingElementAncestors(element, cache) {
+    const cachedResult = cache.get(element);
+    if (cachedResult) {
+      return cachedResult;
+    }
+    let result = getOverflowAncestors(element, [], false).filter((el) => isElement(el) && getNodeName(el) !== "body");
+    let currentContainingBlockComputedStyle = null;
+    const elementIsFixed = getComputedStyle2(element).position === "fixed";
+    let currentNode = elementIsFixed ? getParentNode(element) : element;
+    while (isElement(currentNode) && !isLastTraversableNode(currentNode)) {
+      const computedStyle = getComputedStyle2(currentNode);
+      const currentNodeIsContaining = isContainingBlock(currentNode);
+      if (!currentNodeIsContaining && computedStyle.position === "fixed") {
+        currentContainingBlockComputedStyle = null;
+      }
+      const shouldDropCurrentNode = elementIsFixed ? !currentNodeIsContaining && !currentContainingBlockComputedStyle : !currentNodeIsContaining && computedStyle.position === "static" && !!currentContainingBlockComputedStyle && (currentContainingBlockComputedStyle.position === "absolute" || currentContainingBlockComputedStyle.position === "fixed") || isOverflowElement(currentNode) && !currentNodeIsContaining && hasFixedPositionAncestor(element, currentNode);
+      if (shouldDropCurrentNode) {
+        result = result.filter((ancestor) => ancestor !== currentNode);
+      } else {
+        currentContainingBlockComputedStyle = computedStyle;
+      }
+      currentNode = getParentNode(currentNode);
+    }
+    cache.set(element, result);
+    return result;
+  }
+  function getClippingRect(_ref) {
+    let {
+      element,
+      boundary,
+      rootBoundary,
+      strategy
+    } = _ref;
+    const elementClippingAncestors = boundary === "clippingAncestors" ? isTopLayer(element) ? [] : getClippingElementAncestors(element, this._c) : [].concat(boundary);
+    const clippingAncestors = [...elementClippingAncestors, rootBoundary];
+    const firstRect = getClientRectFromClippingAncestor(element, clippingAncestors[0], strategy);
+    let top = firstRect.top;
+    let right = firstRect.right;
+    let bottom = firstRect.bottom;
+    let left = firstRect.left;
+    for (let i = 1; i < clippingAncestors.length; i++) {
+      const rect = getClientRectFromClippingAncestor(element, clippingAncestors[i], strategy);
+      top = max2(rect.top, top);
+      right = min2(rect.right, right);
+      bottom = min2(rect.bottom, bottom);
+      left = max2(rect.left, left);
+    }
+    return {
+      width: right - left,
+      height: bottom - top,
+      x: left,
+      y: top
+    };
+  }
+  function getDimensions(element) {
+    const {
+      width,
+      height
+    } = getCssDimensions(element);
+    return {
+      width,
+      height
+    };
+  }
+  function getRectRelativeToOffsetParent(element, offsetParent, strategy) {
+    const isOffsetParentAnElement = isHTMLElement(offsetParent);
+    const documentElement = getDocumentElement(offsetParent);
+    const isFixed = strategy === "fixed";
+    const rect = getBoundingClientRect(element, true, isFixed, offsetParent);
+    let scroll = {
+      scrollLeft: 0,
+      scrollTop: 0
+    };
+    const offsets = createCoords(0);
+    function setLeftRTLScrollbarOffset() {
+      offsets.x = getWindowScrollBarX(documentElement);
+    }
+    if (isOffsetParentAnElement || !isOffsetParentAnElement && !isFixed) {
+      if (getNodeName(offsetParent) !== "body" || isOverflowElement(documentElement)) {
+        scroll = getNodeScroll(offsetParent);
+      }
+      if (isOffsetParentAnElement) {
+        const offsetRect = getBoundingClientRect(offsetParent, true, isFixed, offsetParent);
+        offsets.x = offsetRect.x + offsetParent.clientLeft;
+        offsets.y = offsetRect.y + offsetParent.clientTop;
+      } else if (documentElement) {
+        setLeftRTLScrollbarOffset();
+      }
+    }
+    if (isFixed && !isOffsetParentAnElement && documentElement) {
+      setLeftRTLScrollbarOffset();
+    }
+    const htmlOffset = documentElement && !isOffsetParentAnElement && !isFixed ? getHTMLOffset(documentElement, scroll) : createCoords(0);
+    const x = rect.left + scroll.scrollLeft - offsets.x - htmlOffset.x;
+    const y = rect.top + scroll.scrollTop - offsets.y - htmlOffset.y;
+    return {
+      x,
+      y,
+      width: rect.width,
+      height: rect.height
+    };
+  }
+  function isStaticPositioned(element) {
+    return getComputedStyle2(element).position === "static";
+  }
+  function getTrueOffsetParent(element, polyfill) {
+    if (!isHTMLElement(element) || getComputedStyle2(element).position === "fixed") {
+      return null;
+    }
+    if (polyfill) {
+      return polyfill(element);
+    }
+    let rawOffsetParent = element.offsetParent;
+    if (getDocumentElement(element) === rawOffsetParent) {
+      rawOffsetParent = rawOffsetParent.ownerDocument.body;
+    }
+    return rawOffsetParent;
+  }
+  function getOffsetParent(element, polyfill) {
+    const win = getWindow(element);
+    if (isTopLayer(element)) {
+      return win;
+    }
+    if (!isHTMLElement(element)) {
+      let svgOffsetParent = getParentNode(element);
+      while (svgOffsetParent && !isLastTraversableNode(svgOffsetParent)) {
+        if (isElement(svgOffsetParent) && !isStaticPositioned(svgOffsetParent)) {
+          return svgOffsetParent;
+        }
+        svgOffsetParent = getParentNode(svgOffsetParent);
+      }
+      return win;
+    }
+    let offsetParent = getTrueOffsetParent(element, polyfill);
+    while (offsetParent && isTableElement(offsetParent) && isStaticPositioned(offsetParent)) {
+      offsetParent = getTrueOffsetParent(offsetParent, polyfill);
+    }
+    if (offsetParent && isLastTraversableNode(offsetParent) && isStaticPositioned(offsetParent) && !isContainingBlock(offsetParent)) {
+      return win;
+    }
+    return offsetParent || getContainingBlock(element) || win;
+  }
+  var getElementRects = async function(data) {
+    const getOffsetParentFn = this.getOffsetParent || getOffsetParent;
+    const getDimensionsFn = this.getDimensions;
+    const floatingDimensions = await getDimensionsFn(data.floating);
+    return {
+      reference: getRectRelativeToOffsetParent(data.reference, await getOffsetParentFn(data.floating), data.strategy),
+      floating: {
+        x: 0,
+        y: 0,
+        width: floatingDimensions.width,
+        height: floatingDimensions.height
+      }
+    };
+  };
+  function isRTL(element) {
+    return getComputedStyle2(element).direction === "rtl";
+  }
+  var platform = {
+    convertOffsetParentRelativeRectToViewportRelativeRect,
+    getDocumentElement,
+    getClippingRect,
+    getOffsetParent,
+    getElementRects,
+    getClientRects,
+    getDimensions,
+    getScale,
+    isElement,
+    isRTL
+  };
+  function rectsAreEqual(a, b) {
+    return a.x === b.x && a.y === b.y && a.width === b.width && a.height === b.height;
+  }
+  function observeMove(element, onMove) {
+    let io = null;
+    let timeoutId;
+    const root = getDocumentElement(element);
+    function cleanup() {
+      var _io;
+      clearTimeout(timeoutId);
+      (_io = io) == null || _io.disconnect();
+      io = null;
+    }
+    function refresh(skip, threshold) {
+      if (skip === void 0) {
+        skip = false;
+      }
+      if (threshold === void 0) {
+        threshold = 1;
+      }
+      cleanup();
+      const elementRectForRootMargin = element.getBoundingClientRect();
+      const {
+        left,
+        top,
+        width,
+        height
+      } = elementRectForRootMargin;
+      if (!skip) {
+        onMove();
+      }
+      if (!width || !height) {
+        return;
+      }
+      const insetTop = floor(top);
+      const insetRight = floor(root.clientWidth - (left + width));
+      const insetBottom = floor(root.clientHeight - (top + height));
+      const insetLeft = floor(left);
+      const rootMargin = -insetTop + "px " + -insetRight + "px " + -insetBottom + "px " + -insetLeft + "px";
+      const options = {
+        rootMargin,
+        threshold: max2(0, min2(1, threshold)) || 1
+      };
+      let isFirstUpdate = true;
+      function handleObserve(entries) {
+        const ratio = entries[0].intersectionRatio;
+        if (ratio !== threshold) {
+          if (!isFirstUpdate) {
+            return refresh();
+          }
+          if (!ratio) {
+            timeoutId = setTimeout(() => {
+              refresh(false, 1e-7);
+            }, 1e3);
+          } else {
+            refresh(false, ratio);
+          }
+        }
+        if (ratio === 1 && !rectsAreEqual(elementRectForRootMargin, element.getBoundingClientRect())) {
+          refresh();
+        }
+        isFirstUpdate = false;
+      }
+      try {
+        io = new IntersectionObserver(handleObserve, {
+          ...options,
+          // Handle <iframe>s
+          root: root.ownerDocument
+        });
+      } catch (_e) {
+        io = new IntersectionObserver(handleObserve, options);
+      }
+      io.observe(element);
+    }
+    refresh(true);
+    return cleanup;
+  }
+  function autoUpdate(reference, floating, update, options) {
+    if (options === void 0) {
+      options = {};
+    }
+    const {
+      ancestorScroll = true,
+      ancestorResize = true,
+      elementResize = typeof ResizeObserver === "function",
+      layoutShift = typeof IntersectionObserver === "function",
+      animationFrame = false
+    } = options;
+    const referenceEl = unwrapElement(reference);
+    const ancestors = ancestorScroll || ancestorResize ? [...referenceEl ? getOverflowAncestors(referenceEl) : [], ...floating ? getOverflowAncestors(floating) : []] : [];
+    ancestors.forEach((ancestor) => {
+      ancestorScroll && ancestor.addEventListener("scroll", update, {
+        passive: true
+      });
+      ancestorResize && ancestor.addEventListener("resize", update);
+    });
+    const cleanupIo = referenceEl && layoutShift ? observeMove(referenceEl, update) : null;
+    let reobserveFrame = -1;
+    let resizeObserver = null;
+    if (elementResize) {
+      resizeObserver = new ResizeObserver((_ref) => {
+        let [firstEntry] = _ref;
+        if (firstEntry && firstEntry.target === referenceEl && resizeObserver && floating) {
+          resizeObserver.unobserve(floating);
+          cancelAnimationFrame(reobserveFrame);
+          reobserveFrame = requestAnimationFrame(() => {
+            var _resizeObserver;
+            (_resizeObserver = resizeObserver) == null || _resizeObserver.observe(floating);
+          });
+        }
+        update();
+      });
+      if (referenceEl && !animationFrame) {
+        resizeObserver.observe(referenceEl);
+      }
+      if (floating) {
+        resizeObserver.observe(floating);
+      }
+    }
+    let frameId;
+    let prevRefRect = animationFrame ? getBoundingClientRect(reference) : null;
+    if (animationFrame) {
+      frameLoop();
+    }
+    function frameLoop() {
+      const nextRefRect = getBoundingClientRect(reference);
+      if (prevRefRect && !rectsAreEqual(prevRefRect, nextRefRect)) {
+        update();
+      }
+      prevRefRect = nextRefRect;
+      frameId = requestAnimationFrame(frameLoop);
+    }
+    update();
+    return () => {
+      var _resizeObserver2;
+      ancestors.forEach((ancestor) => {
+        ancestorScroll && ancestor.removeEventListener("scroll", update);
+        ancestorResize && ancestor.removeEventListener("resize", update);
+      });
+      cleanupIo == null || cleanupIo();
+      (_resizeObserver2 = resizeObserver) == null || _resizeObserver2.disconnect();
+      resizeObserver = null;
+      if (animationFrame) {
+        cancelAnimationFrame(frameId);
+      }
+    };
+  }
+  var offset2 = offset;
+  var shift2 = shift;
+  var flip2 = flip;
+  var size2 = size;
+  var hide2 = hide;
+  var arrow2 = arrow;
+  var limitShift2 = limitShift;
+  var computePosition2 = (reference, floating, options) => {
+    const cache = /* @__PURE__ */ new Map();
+    const mergedOptions = {
+      platform,
+      ...options
+    };
+    const platformWithCache = {
+      ...mergedOptions.platform,
+      _c: cache
+    };
+    return computePosition(reference, floating, {
+      ...mergedOptions,
+      platform: platformWithCache
+    });
+  };
+
+  // node_modules/@floating-ui/react-dom/dist/floating-ui.react-dom.mjs
+  var React56 = __toESM(require_react(), 1);
+  var import_react37 = __toESM(require_react(), 1);
+  var ReactDOM4 = __toESM(require_react_dom(), 1);
+  var isClient = typeof document !== "undefined";
+  var noop2 = function noop3() {
+  };
+  var index = isClient ? import_react37.useLayoutEffect : noop2;
+  function deepEqual(a, b) {
+    if (a === b) {
+      return true;
+    }
+    if (typeof a !== typeof b) {
+      return false;
+    }
+    if (typeof a === "function" && a.toString() === b.toString()) {
+      return true;
+    }
+    let length;
+    let i;
+    let keys;
+    if (a && b && typeof a === "object") {
+      if (Array.isArray(a)) {
+        length = a.length;
+        if (length !== b.length)
+          return false;
+        for (i = length; i-- !== 0; ) {
+          if (!deepEqual(a[i], b[i])) {
+            return false;
+          }
+        }
+        return true;
+      }
+      keys = Object.keys(a);
+      length = keys.length;
+      if (length !== Object.keys(b).length) {
+        return false;
+      }
+      for (i = length; i-- !== 0; ) {
+        if (!{}.hasOwnProperty.call(b, keys[i])) {
+          return false;
+        }
+      }
+      for (i = length; i-- !== 0; ) {
+        const key = keys[i];
+        if (key === "_owner" && a.$$typeof) {
+          continue;
+        }
+        if (!deepEqual(a[key], b[key])) {
+          return false;
+        }
+      }
+      return true;
+    }
+    return a !== a && b !== b;
+  }
+  function getDPR(element) {
+    if (typeof window === "undefined") {
+      return 1;
+    }
+    const win = element.ownerDocument.defaultView || window;
+    return win.devicePixelRatio || 1;
+  }
+  function roundByDPR(element, value) {
+    const dpr = getDPR(element);
+    return Math.round(value * dpr) / dpr;
+  }
+  function useLatestRef(value) {
+    const ref = React56.useRef(value);
+    index(() => {
+      ref.current = value;
+    });
+    return ref;
+  }
+  function useFloating(options) {
+    if (options === void 0) {
+      options = {};
+    }
+    const {
+      placement = "bottom",
+      strategy = "absolute",
+      middleware = [],
+      platform: platform2,
+      elements: {
+        reference: externalReference,
+        floating: externalFloating
+      } = {},
+      transform = true,
+      whileElementsMounted,
+      open
+    } = options;
+    const [data, setData] = React56.useState({
+      x: 0,
+      y: 0,
+      strategy,
+      placement,
+      middlewareData: {},
+      isPositioned: false
+    });
+    const [latestMiddleware, setLatestMiddleware] = React56.useState(middleware);
+    if (!deepEqual(latestMiddleware, middleware)) {
+      setLatestMiddleware(middleware);
+    }
+    const [_reference, _setReference] = React56.useState(null);
+    const [_floating, _setFloating] = React56.useState(null);
+    const setReference = React56.useCallback((node) => {
+      if (node !== referenceRef.current) {
+        referenceRef.current = node;
+        _setReference(node);
+      }
+    }, []);
+    const setFloating = React56.useCallback((node) => {
+      if (node !== floatingRef.current) {
+        floatingRef.current = node;
+        _setFloating(node);
+      }
+    }, []);
+    const referenceEl = externalReference || _reference;
+    const floatingEl = externalFloating || _floating;
+    const referenceRef = React56.useRef(null);
+    const floatingRef = React56.useRef(null);
+    const dataRef = React56.useRef(data);
+    const hasWhileElementsMounted = whileElementsMounted != null;
+    const whileElementsMountedRef = useLatestRef(whileElementsMounted);
+    const platformRef = useLatestRef(platform2);
+    const openRef = useLatestRef(open);
+    const update = React56.useCallback(() => {
+      if (!referenceRef.current || !floatingRef.current) {
+        return;
+      }
+      const config = {
+        placement,
+        strategy,
+        middleware: latestMiddleware
+      };
+      if (platformRef.current) {
+        config.platform = platformRef.current;
+      }
+      computePosition2(referenceRef.current, floatingRef.current, config).then((data2) => {
+        const fullData = {
+          ...data2,
+          // The floating element's position may be recomputed while it's closed
+          // but still mounted (such as when transitioning out). To ensure
+          // `isPositioned` will be `false` initially on the next open, avoid
+          // setting it to `true` when `open === false` (must be specified).
+          isPositioned: openRef.current !== false
+        };
+        if (isMountedRef.current && !deepEqual(dataRef.current, fullData)) {
+          dataRef.current = fullData;
+          ReactDOM4.flushSync(() => {
+            setData(fullData);
+          });
+        }
+      });
+    }, [latestMiddleware, placement, strategy, platformRef, openRef]);
+    index(() => {
+      if (open === false && dataRef.current.isPositioned) {
+        dataRef.current.isPositioned = false;
+        setData((data2) => ({
+          ...data2,
+          isPositioned: false
+        }));
+      }
+    }, [open]);
+    const isMountedRef = React56.useRef(false);
+    index(() => {
+      isMountedRef.current = true;
+      return () => {
+        isMountedRef.current = false;
+      };
+    }, []);
+    index(() => {
+      if (referenceEl)
+        referenceRef.current = referenceEl;
+      if (floatingEl)
+        floatingRef.current = floatingEl;
+      if (referenceEl && floatingEl) {
+        if (whileElementsMountedRef.current) {
+          return whileElementsMountedRef.current(referenceEl, floatingEl, update);
+        }
+        update();
+      }
+    }, [referenceEl, floatingEl, update, whileElementsMountedRef, hasWhileElementsMounted]);
+    const refs = React56.useMemo(() => ({
+      reference: referenceRef,
+      floating: floatingRef,
+      setReference,
+      setFloating
+    }), [setReference, setFloating]);
+    const elements = React56.useMemo(() => ({
+      reference: referenceEl,
+      floating: floatingEl
+    }), [referenceEl, floatingEl]);
+    const floatingStyles = React56.useMemo(() => {
+      const initialStyles = {
+        position: strategy,
+        left: 0,
+        top: 0
+      };
+      if (!elements.floating) {
+        return initialStyles;
+      }
+      const x = roundByDPR(elements.floating, data.x);
+      const y = roundByDPR(elements.floating, data.y);
+      if (transform) {
+        return {
+          ...initialStyles,
+          transform: "translate(" + x + "px, " + y + "px)",
+          ...getDPR(elements.floating) >= 1.5 && {
+            willChange: "transform"
+          }
+        };
+      }
+      return {
+        position: strategy,
+        left: x,
+        top: y
+      };
+    }, [strategy, transform, elements.floating, data.x, data.y]);
+    return React56.useMemo(() => ({
+      ...data,
+      update,
+      refs,
+      elements,
+      floatingStyles
+    }), [data, update, refs, elements, floatingStyles]);
+  }
+  var arrow$1 = (options) => {
+    function isRef(value) {
+      return {}.hasOwnProperty.call(value, "current");
+    }
+    return {
+      name: "arrow",
+      options,
+      fn(state) {
+        const {
+          element,
+          padding
+        } = typeof options === "function" ? options(state) : options;
+        if (element && isRef(element)) {
+          if (element.current != null) {
+            return arrow2({
+              element: element.current,
+              padding
+            }).fn(state);
+          }
+          return {};
+        }
+        if (element) {
+          return arrow2({
+            element,
+            padding
+          }).fn(state);
+        }
+        return {};
+      }
+    };
+  };
+  var offset3 = (options, deps) => {
+    const result = offset2(options);
+    return {
+      name: result.name,
+      fn: result.fn,
+      options: [options, deps]
+    };
+  };
+  var shift3 = (options, deps) => {
+    const result = shift2(options);
+    return {
+      name: result.name,
+      fn: result.fn,
+      options: [options, deps]
+    };
+  };
+  var limitShift3 = (options, deps) => {
+    const result = limitShift2(options);
+    return {
+      fn: result.fn,
+      options: [options, deps]
+    };
+  };
+  var flip3 = (options, deps) => {
+    const result = flip2(options);
+    return {
+      name: result.name,
+      fn: result.fn,
+      options: [options, deps]
+    };
+  };
+  var size3 = (options, deps) => {
+    const result = size2(options);
+    return {
+      name: result.name,
+      fn: result.fn,
+      options: [options, deps]
+    };
+  };
+  var hide3 = (options, deps) => {
+    const result = hide2(options);
+    return {
+      name: result.name,
+      fn: result.fn,
+      options: [options, deps]
+    };
+  };
+  var arrow3 = (options, deps) => {
+    const result = arrow$1(options);
+    return {
+      name: result.name,
+      fn: result.fn,
+      options: [options, deps]
+    };
+  };
+
+  // node_modules/@radix-ui/react-arrow/dist/index.mjs
+  var React59 = __toESM(require_react(), 1);
+
+  // node_modules/@radix-ui/react-arrow/node_modules/@radix-ui/react-primitive/dist/index.mjs
+  var React58 = __toESM(require_react(), 1);
+  var ReactDOM5 = __toESM(require_react_dom(), 1);
+
+  // node_modules/@radix-ui/react-arrow/node_modules/@radix-ui/react-slot/dist/index.mjs
+  var React57 = __toESM(require_react(), 1);
+  var import_jsx_runtime10 = __toESM(require_jsx_runtime(), 1);
+  // @__NO_SIDE_EFFECTS__
+  function createSlot3(ownerName) {
+    const SlotClone = /* @__PURE__ */ createSlotClone3(ownerName);
+    const Slot2 = React57.forwardRef((props, forwardedRef) => {
+      const { children, ...slotProps } = props;
+      const childrenArray = React57.Children.toArray(children);
+      const slottable = childrenArray.find(isSlottable3);
+      if (slottable) {
+        const newElement = slottable.props.children;
+        const newChildren = childrenArray.map((child) => {
+          if (child === slottable) {
+            if (React57.Children.count(newElement) > 1)
+              return React57.Children.only(null);
+            return React57.isValidElement(newElement) ? newElement.props.children : null;
+          } else {
+            return child;
+          }
+        });
+        return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(SlotClone, { ...slotProps, ref: forwardedRef, children: React57.isValidElement(newElement) ? React57.cloneElement(newElement, void 0, newChildren) : null });
+      }
+      return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(SlotClone, { ...slotProps, ref: forwardedRef, children });
+    });
+    Slot2.displayName = `${ownerName}.Slot`;
+    return Slot2;
+  }
+  // @__NO_SIDE_EFFECTS__
+  function createSlotClone3(ownerName) {
+    const SlotClone = React57.forwardRef((props, forwardedRef) => {
+      const { children, ...slotProps } = props;
+      if (React57.isValidElement(children)) {
+        const childrenRef = getElementRef3(children);
+        const props2 = mergeProps3(slotProps, children.props);
+        if (children.type !== React57.Fragment) {
+          props2.ref = forwardedRef ? composeRefs(forwardedRef, childrenRef) : childrenRef;
+        }
+        return React57.cloneElement(children, props2);
+      }
+      return React57.Children.count(children) > 1 ? React57.Children.only(null) : null;
+    });
+    SlotClone.displayName = `${ownerName}.SlotClone`;
+    return SlotClone;
+  }
+  var SLOTTABLE_IDENTIFIER3 = Symbol("radix.slottable");
+  function isSlottable3(child) {
+    return React57.isValidElement(child) && typeof child.type === "function" && "__radixId" in child.type && child.type.__radixId === SLOTTABLE_IDENTIFIER3;
+  }
+  function mergeProps3(slotProps, childProps) {
+    const overrideProps = { ...childProps };
+    for (const propName in childProps) {
+      const slotPropValue = slotProps[propName];
+      const childPropValue = childProps[propName];
+      const isHandler = /^on[A-Z]/.test(propName);
+      if (isHandler) {
+        if (slotPropValue && childPropValue) {
+          overrideProps[propName] = (...args) => {
+            const result = childPropValue(...args);
+            slotPropValue(...args);
+            return result;
+          };
+        } else if (slotPropValue) {
+          overrideProps[propName] = slotPropValue;
+        }
+      } else if (propName === "style") {
+        overrideProps[propName] = { ...slotPropValue, ...childPropValue };
+      } else if (propName === "className") {
+        overrideProps[propName] = [slotPropValue, childPropValue].filter(Boolean).join(" ");
+      }
+    }
+    return { ...slotProps, ...overrideProps };
+  }
+  function getElementRef3(element) {
+    let getter = Object.getOwnPropertyDescriptor(element.props, "ref")?.get;
+    let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+    if (mayWarn) {
+      return element.ref;
+    }
+    getter = Object.getOwnPropertyDescriptor(element, "ref")?.get;
+    mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+    if (mayWarn) {
+      return element.props.ref;
+    }
+    return element.props.ref || element.ref;
+  }
+
+  // node_modules/@radix-ui/react-arrow/node_modules/@radix-ui/react-primitive/dist/index.mjs
+  var import_jsx_runtime11 = __toESM(require_jsx_runtime(), 1);
+  var NODES3 = [
+    "a",
+    "button",
+    "div",
+    "form",
+    "h2",
+    "h3",
+    "img",
+    "input",
+    "label",
+    "li",
+    "nav",
+    "ol",
+    "p",
+    "select",
+    "span",
+    "svg",
+    "ul"
+  ];
+  var Primitive3 = NODES3.reduce((primitive, node) => {
+    const Slot2 = createSlot3(`Primitive.${node}`);
+    const Node2 = React58.forwardRef((props, forwardedRef) => {
+      const { asChild, ...primitiveProps } = props;
+      const Comp = asChild ? Slot2 : node;
+      if (typeof window !== "undefined") {
+        window[Symbol.for("radix-ui")] = true;
+      }
+      return /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(Comp, { ...primitiveProps, ref: forwardedRef });
+    });
+    Node2.displayName = `Primitive.${node}`;
+    return { ...primitive, [node]: Node2 };
+  }, {});
+
+  // node_modules/@radix-ui/react-arrow/dist/index.mjs
+  var import_jsx_runtime12 = __toESM(require_jsx_runtime(), 1);
+  var NAME = "Arrow";
+  var Arrow = React59.forwardRef((props, forwardedRef) => {
+    const { children, width = 10, height = 5, ...arrowProps } = props;
+    return /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
+      Primitive3.svg,
+      {
+        ...arrowProps,
+        ref: forwardedRef,
+        width,
+        height,
+        viewBox: "0 0 30 10",
+        preserveAspectRatio: "none",
+        children: props.asChild ? children : /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("polygon", { points: "0,0 30,0 15,10" })
+      }
+    );
+  });
+  Arrow.displayName = NAME;
+  var Root2 = Arrow;
+
+  // node_modules/@radix-ui/react-popper/node_modules/@radix-ui/react-primitive/dist/index.mjs
+  var React61 = __toESM(require_react(), 1);
+  var ReactDOM6 = __toESM(require_react_dom(), 1);
+
+  // node_modules/@radix-ui/react-popper/node_modules/@radix-ui/react-slot/dist/index.mjs
+  var React60 = __toESM(require_react(), 1);
+  var import_jsx_runtime13 = __toESM(require_jsx_runtime(), 1);
+  // @__NO_SIDE_EFFECTS__
+  function createSlot4(ownerName) {
+    const SlotClone = /* @__PURE__ */ createSlotClone4(ownerName);
+    const Slot2 = React60.forwardRef((props, forwardedRef) => {
+      const { children, ...slotProps } = props;
+      const childrenArray = React60.Children.toArray(children);
+      const slottable = childrenArray.find(isSlottable4);
+      if (slottable) {
+        const newElement = slottable.props.children;
+        const newChildren = childrenArray.map((child) => {
+          if (child === slottable) {
+            if (React60.Children.count(newElement) > 1)
+              return React60.Children.only(null);
+            return React60.isValidElement(newElement) ? newElement.props.children : null;
+          } else {
+            return child;
+          }
+        });
+        return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(SlotClone, { ...slotProps, ref: forwardedRef, children: React60.isValidElement(newElement) ? React60.cloneElement(newElement, void 0, newChildren) : null });
+      }
+      return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(SlotClone, { ...slotProps, ref: forwardedRef, children });
+    });
+    Slot2.displayName = `${ownerName}.Slot`;
+    return Slot2;
+  }
+  // @__NO_SIDE_EFFECTS__
+  function createSlotClone4(ownerName) {
+    const SlotClone = React60.forwardRef((props, forwardedRef) => {
+      const { children, ...slotProps } = props;
+      if (React60.isValidElement(children)) {
+        const childrenRef = getElementRef4(children);
+        const props2 = mergeProps4(slotProps, children.props);
+        if (children.type !== React60.Fragment) {
+          props2.ref = forwardedRef ? composeRefs(forwardedRef, childrenRef) : childrenRef;
+        }
+        return React60.cloneElement(children, props2);
+      }
+      return React60.Children.count(children) > 1 ? React60.Children.only(null) : null;
+    });
+    SlotClone.displayName = `${ownerName}.SlotClone`;
+    return SlotClone;
+  }
+  var SLOTTABLE_IDENTIFIER4 = Symbol("radix.slottable");
+  function isSlottable4(child) {
+    return React60.isValidElement(child) && typeof child.type === "function" && "__radixId" in child.type && child.type.__radixId === SLOTTABLE_IDENTIFIER4;
+  }
+  function mergeProps4(slotProps, childProps) {
+    const overrideProps = { ...childProps };
+    for (const propName in childProps) {
+      const slotPropValue = slotProps[propName];
+      const childPropValue = childProps[propName];
+      const isHandler = /^on[A-Z]/.test(propName);
+      if (isHandler) {
+        if (slotPropValue && childPropValue) {
+          overrideProps[propName] = (...args) => {
+            const result = childPropValue(...args);
+            slotPropValue(...args);
+            return result;
+          };
+        } else if (slotPropValue) {
+          overrideProps[propName] = slotPropValue;
+        }
+      } else if (propName === "style") {
+        overrideProps[propName] = { ...slotPropValue, ...childPropValue };
+      } else if (propName === "className") {
+        overrideProps[propName] = [slotPropValue, childPropValue].filter(Boolean).join(" ");
+      }
+    }
+    return { ...slotProps, ...overrideProps };
+  }
+  function getElementRef4(element) {
+    let getter = Object.getOwnPropertyDescriptor(element.props, "ref")?.get;
+    let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+    if (mayWarn) {
+      return element.ref;
+    }
+    getter = Object.getOwnPropertyDescriptor(element, "ref")?.get;
+    mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+    if (mayWarn) {
+      return element.props.ref;
+    }
+    return element.props.ref || element.ref;
+  }
+
+  // node_modules/@radix-ui/react-popper/node_modules/@radix-ui/react-primitive/dist/index.mjs
+  var import_jsx_runtime14 = __toESM(require_jsx_runtime(), 1);
+  var NODES4 = [
+    "a",
+    "button",
+    "div",
+    "form",
+    "h2",
+    "h3",
+    "img",
+    "input",
+    "label",
+    "li",
+    "nav",
+    "ol",
+    "p",
+    "select",
+    "span",
+    "svg",
+    "ul"
+  ];
+  var Primitive4 = NODES4.reduce((primitive, node) => {
+    const Slot2 = createSlot4(`Primitive.${node}`);
+    const Node2 = React61.forwardRef((props, forwardedRef) => {
+      const { asChild, ...primitiveProps } = props;
+      const Comp = asChild ? Slot2 : node;
+      if (typeof window !== "undefined") {
+        window[Symbol.for("radix-ui")] = true;
+      }
+      return /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(Comp, { ...primitiveProps, ref: forwardedRef });
+    });
+    Node2.displayName = `Primitive.${node}`;
+    return { ...primitive, [node]: Node2 };
+  }, {});
+
+  // node_modules/@radix-ui/react-use-size/dist/index.mjs
+  var React62 = __toESM(require_react(), 1);
+  function useSize(element) {
+    const [size4, setSize] = React62.useState(void 0);
+    useLayoutEffect22(() => {
+      if (element) {
+        setSize({ width: element.offsetWidth, height: element.offsetHeight });
+        const resizeObserver = new ResizeObserver((entries) => {
+          if (!Array.isArray(entries)) {
+            return;
+          }
+          if (!entries.length) {
+            return;
+          }
+          const entry = entries[0];
+          let width;
+          let height;
+          if ("borderBoxSize" in entry) {
+            const borderSizeEntry = entry["borderBoxSize"];
+            const borderSize = Array.isArray(borderSizeEntry) ? borderSizeEntry[0] : borderSizeEntry;
+            width = borderSize["inlineSize"];
+            height = borderSize["blockSize"];
+          } else {
+            width = element.offsetWidth;
+            height = element.offsetHeight;
+          }
+          setSize({ width, height });
+        });
+        resizeObserver.observe(element, { box: "border-box" });
+        return () => resizeObserver.unobserve(element);
+      } else {
+        setSize(void 0);
+      }
+    }, [element]);
+    return size4;
+  }
+
+  // node_modules/@radix-ui/react-popper/dist/index.mjs
+  var import_jsx_runtime15 = __toESM(require_jsx_runtime(), 1);
+  var POPPER_NAME = "Popper";
+  var [createPopperContext, createPopperScope] = createContextScope(POPPER_NAME);
+  var [PopperProvider, usePopperContext] = createPopperContext(POPPER_NAME);
+  var Popper = (props) => {
+    const { __scopePopper, children } = props;
+    const [anchor, setAnchor] = React63.useState(null);
+    return /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(PopperProvider, { scope: __scopePopper, anchor, onAnchorChange: setAnchor, children });
+  };
+  Popper.displayName = POPPER_NAME;
+  var ANCHOR_NAME = "PopperAnchor";
+  var PopperAnchor = React63.forwardRef(
+    (props, forwardedRef) => {
+      const { __scopePopper, virtualRef, ...anchorProps } = props;
+      const context = usePopperContext(ANCHOR_NAME, __scopePopper);
+      const ref = React63.useRef(null);
+      const composedRefs = useComposedRefs(forwardedRef, ref);
+      const anchorRef = React63.useRef(null);
+      React63.useEffect(() => {
+        const previousAnchor = anchorRef.current;
+        anchorRef.current = virtualRef?.current || ref.current;
+        if (previousAnchor !== anchorRef.current) {
+          context.onAnchorChange(anchorRef.current);
+        }
+      });
+      return virtualRef ? null : /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(Primitive4.div, { ...anchorProps, ref: composedRefs });
+    }
+  );
+  PopperAnchor.displayName = ANCHOR_NAME;
+  var CONTENT_NAME = "PopperContent";
+  var [PopperContentProvider, useContentContext] = createPopperContext(CONTENT_NAME);
+  var PopperContent = React63.forwardRef(
+    (props, forwardedRef) => {
+      const {
+        __scopePopper,
+        side = "bottom",
+        sideOffset = 0,
+        align = "center",
+        alignOffset = 0,
+        arrowPadding = 0,
+        avoidCollisions = true,
+        collisionBoundary = [],
+        collisionPadding: collisionPaddingProp = 0,
+        sticky = "partial",
+        hideWhenDetached = false,
+        updatePositionStrategy = "optimized",
+        onPlaced,
+        ...contentProps
+      } = props;
+      const context = usePopperContext(CONTENT_NAME, __scopePopper);
+      const [content, setContent] = React63.useState(null);
+      const composedRefs = useComposedRefs(forwardedRef, (node) => setContent(node));
+      const [arrow4, setArrow] = React63.useState(null);
+      const arrowSize = useSize(arrow4);
+      const arrowWidth = arrowSize?.width ?? 0;
+      const arrowHeight = arrowSize?.height ?? 0;
+      const desiredPlacement = side + (align !== "center" ? "-" + align : "");
+      const collisionPadding = typeof collisionPaddingProp === "number" ? collisionPaddingProp : { top: 0, right: 0, bottom: 0, left: 0, ...collisionPaddingProp };
+      const boundary = Array.isArray(collisionBoundary) ? collisionBoundary : [collisionBoundary];
+      const hasExplicitBoundaries = boundary.length > 0;
+      const detectOverflowOptions = {
+        padding: collisionPadding,
+        boundary: boundary.filter(isNotNull),
+        // with `strategy: 'fixed'`, this is the only way to get it to respect boundaries
+        altBoundary: hasExplicitBoundaries
+      };
+      const { refs, floatingStyles, placement, isPositioned, middlewareData } = useFloating({
+        // default to `fixed` strategy so users don't have to pick and we also avoid focus scroll issues
+        strategy: "fixed",
+        placement: desiredPlacement,
+        whileElementsMounted: (...args) => {
+          const cleanup = autoUpdate(...args, {
+            animationFrame: updatePositionStrategy === "always"
+          });
+          return cleanup;
+        },
+        elements: {
+          reference: context.anchor
+        },
+        middleware: [
+          offset3({ mainAxis: sideOffset + arrowHeight, alignmentAxis: alignOffset }),
+          avoidCollisions && shift3({
+            mainAxis: true,
+            crossAxis: false,
+            limiter: sticky === "partial" ? limitShift3() : void 0,
+            ...detectOverflowOptions
+          }),
+          avoidCollisions && flip3({ ...detectOverflowOptions }),
+          size3({
+            ...detectOverflowOptions,
+            apply: ({ elements, rects, availableWidth, availableHeight }) => {
+              const { width: anchorWidth, height: anchorHeight } = rects.reference;
+              const contentStyle = elements.floating.style;
+              contentStyle.setProperty("--radix-popper-available-width", `${availableWidth}px`);
+              contentStyle.setProperty("--radix-popper-available-height", `${availableHeight}px`);
+              contentStyle.setProperty("--radix-popper-anchor-width", `${anchorWidth}px`);
+              contentStyle.setProperty("--radix-popper-anchor-height", `${anchorHeight}px`);
+            }
+          }),
+          arrow4 && arrow3({ element: arrow4, padding: arrowPadding }),
+          transformOrigin({ arrowWidth, arrowHeight }),
+          hideWhenDetached && hide3({ strategy: "referenceHidden", ...detectOverflowOptions })
+        ]
+      });
+      const [placedSide, placedAlign] = getSideAndAlignFromPlacement(placement);
+      const handlePlaced = useCallbackRef(onPlaced);
+      useLayoutEffect22(() => {
+        if (isPositioned) {
+          handlePlaced?.();
+        }
+      }, [isPositioned, handlePlaced]);
+      const arrowX = middlewareData.arrow?.x;
+      const arrowY = middlewareData.arrow?.y;
+      const cannotCenterArrow = middlewareData.arrow?.centerOffset !== 0;
+      const [contentZIndex, setContentZIndex] = React63.useState();
+      useLayoutEffect22(() => {
+        if (content)
+          setContentZIndex(window.getComputedStyle(content).zIndex);
+      }, [content]);
+      return /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
+        "div",
+        {
+          ref: refs.setFloating,
+          "data-radix-popper-content-wrapper": "",
+          style: {
+            ...floatingStyles,
+            transform: isPositioned ? floatingStyles.transform : "translate(0, -200%)",
+            // keep off the page when measuring
+            minWidth: "max-content",
+            zIndex: contentZIndex,
+            ["--radix-popper-transform-origin"]: [
+              middlewareData.transformOrigin?.x,
+              middlewareData.transformOrigin?.y
+            ].join(" "),
+            // hide the content if using the hide middleware and should be hidden
+            // set visibility to hidden and disable pointer events so the UI behaves
+            // as if the PopperContent isn't there at all
+            ...middlewareData.hide?.referenceHidden && {
+              visibility: "hidden",
+              pointerEvents: "none"
+            }
+          },
+          dir: props.dir,
+          children: /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
+            PopperContentProvider,
+            {
+              scope: __scopePopper,
+              placedSide,
+              onArrowChange: setArrow,
+              arrowX,
+              arrowY,
+              shouldHideArrow: cannotCenterArrow,
+              children: /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
+                Primitive4.div,
+                {
+                  "data-side": placedSide,
+                  "data-align": placedAlign,
+                  ...contentProps,
+                  ref: composedRefs,
+                  style: {
+                    ...contentProps.style,
+                    // if the PopperContent hasn't been placed yet (not all measurements done)
+                    // we prevent animations so that users's animation don't kick in too early referring wrong sides
+                    animation: !isPositioned ? "none" : void 0
+                  }
+                }
+              )
+            }
+          )
+        }
+      );
+    }
+  );
+  PopperContent.displayName = CONTENT_NAME;
+  var ARROW_NAME = "PopperArrow";
+  var OPPOSITE_SIDE = {
+    top: "bottom",
+    right: "left",
+    bottom: "top",
+    left: "right"
+  };
+  var PopperArrow = React63.forwardRef(function PopperArrow2(props, forwardedRef) {
+    const { __scopePopper, ...arrowProps } = props;
+    const contentContext = useContentContext(ARROW_NAME, __scopePopper);
+    const baseSide = OPPOSITE_SIDE[contentContext.placedSide];
+    return (
+      // we have to use an extra wrapper because `ResizeObserver` (used by `useSize`)
+      // doesn't report size as we'd expect on SVG elements.
+      // it reports their bounding box which is effectively the largest path inside the SVG.
+      /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
+        "span",
+        {
+          ref: contentContext.onArrowChange,
+          style: {
+            position: "absolute",
+            left: contentContext.arrowX,
+            top: contentContext.arrowY,
+            [baseSide]: 0,
+            transformOrigin: {
+              top: "",
+              right: "0 0",
+              bottom: "center 0",
+              left: "100% 0"
+            }[contentContext.placedSide],
+            transform: {
+              top: "translateY(100%)",
+              right: "translateY(50%) rotate(90deg) translateX(-50%)",
+              bottom: `rotate(180deg)`,
+              left: "translateY(50%) rotate(-90deg) translateX(50%)"
+            }[contentContext.placedSide],
+            visibility: contentContext.shouldHideArrow ? "hidden" : void 0
+          },
+          children: /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
+            Root2,
+            {
+              ...arrowProps,
+              ref: forwardedRef,
+              style: {
+                ...arrowProps.style,
+                // ensures the element can be measured correctly (mostly for if SVG)
+                display: "block"
+              }
+            }
+          )
+        }
+      )
+    );
+  });
+  PopperArrow.displayName = ARROW_NAME;
+  function isNotNull(value) {
+    return value !== null;
+  }
+  var transformOrigin = (options) => ({
+    name: "transformOrigin",
+    options,
+    fn(data) {
+      const { placement, rects, middlewareData } = data;
+      const cannotCenterArrow = middlewareData.arrow?.centerOffset !== 0;
+      const isArrowHidden = cannotCenterArrow;
+      const arrowWidth = isArrowHidden ? 0 : options.arrowWidth;
+      const arrowHeight = isArrowHidden ? 0 : options.arrowHeight;
+      const [placedSide, placedAlign] = getSideAndAlignFromPlacement(placement);
+      const noArrowAlign = { start: "0%", center: "50%", end: "100%" }[placedAlign];
+      const arrowXCenter = (middlewareData.arrow?.x ?? 0) + arrowWidth / 2;
+      const arrowYCenter = (middlewareData.arrow?.y ?? 0) + arrowHeight / 2;
+      let x = "";
+      let y = "";
+      if (placedSide === "bottom") {
+        x = isArrowHidden ? noArrowAlign : `${arrowXCenter}px`;
+        y = `${-arrowHeight}px`;
+      } else if (placedSide === "top") {
+        x = isArrowHidden ? noArrowAlign : `${arrowXCenter}px`;
+        y = `${rects.floating.height + arrowHeight}px`;
+      } else if (placedSide === "right") {
+        x = `${-arrowHeight}px`;
+        y = isArrowHidden ? noArrowAlign : `${arrowYCenter}px`;
+      } else if (placedSide === "left") {
+        x = `${rects.floating.width + arrowHeight}px`;
+        y = isArrowHidden ? noArrowAlign : `${arrowYCenter}px`;
+      }
+      return { data: { x, y } };
+    }
+  });
+  function getSideAndAlignFromPlacement(placement) {
+    const [side, align = "center"] = placement.split("-");
+    return [side, align];
+  }
+  var Root22 = Popper;
+  var Anchor = PopperAnchor;
+  var Content = PopperContent;
+  var Arrow2 = PopperArrow;
+
+  // node_modules/@radix-ui/react-portal/dist/index.mjs
+  var React66 = __toESM(require_react(), 1);
+  var import_react_dom2 = __toESM(require_react_dom(), 1);
+
+  // node_modules/@radix-ui/react-portal/node_modules/@radix-ui/react-primitive/dist/index.mjs
+  var React65 = __toESM(require_react(), 1);
+  var ReactDOM7 = __toESM(require_react_dom(), 1);
+
+  // node_modules/@radix-ui/react-portal/node_modules/@radix-ui/react-slot/dist/index.mjs
+  var React64 = __toESM(require_react(), 1);
+  var import_jsx_runtime16 = __toESM(require_jsx_runtime(), 1);
+  // @__NO_SIDE_EFFECTS__
+  function createSlot5(ownerName) {
+    const SlotClone = /* @__PURE__ */ createSlotClone5(ownerName);
+    const Slot2 = React64.forwardRef((props, forwardedRef) => {
+      const { children, ...slotProps } = props;
+      const childrenArray = React64.Children.toArray(children);
+      const slottable = childrenArray.find(isSlottable5);
+      if (slottable) {
+        const newElement = slottable.props.children;
+        const newChildren = childrenArray.map((child) => {
+          if (child === slottable) {
+            if (React64.Children.count(newElement) > 1)
+              return React64.Children.only(null);
+            return React64.isValidElement(newElement) ? newElement.props.children : null;
+          } else {
+            return child;
+          }
+        });
+        return /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(SlotClone, { ...slotProps, ref: forwardedRef, children: React64.isValidElement(newElement) ? React64.cloneElement(newElement, void 0, newChildren) : null });
+      }
+      return /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(SlotClone, { ...slotProps, ref: forwardedRef, children });
+    });
+    Slot2.displayName = `${ownerName}.Slot`;
+    return Slot2;
+  }
+  // @__NO_SIDE_EFFECTS__
+  function createSlotClone5(ownerName) {
+    const SlotClone = React64.forwardRef((props, forwardedRef) => {
+      const { children, ...slotProps } = props;
+      if (React64.isValidElement(children)) {
+        const childrenRef = getElementRef5(children);
+        const props2 = mergeProps5(slotProps, children.props);
+        if (children.type !== React64.Fragment) {
+          props2.ref = forwardedRef ? composeRefs(forwardedRef, childrenRef) : childrenRef;
+        }
+        return React64.cloneElement(children, props2);
+      }
+      return React64.Children.count(children) > 1 ? React64.Children.only(null) : null;
+    });
+    SlotClone.displayName = `${ownerName}.SlotClone`;
+    return SlotClone;
+  }
+  var SLOTTABLE_IDENTIFIER5 = Symbol("radix.slottable");
+  function isSlottable5(child) {
+    return React64.isValidElement(child) && typeof child.type === "function" && "__radixId" in child.type && child.type.__radixId === SLOTTABLE_IDENTIFIER5;
+  }
+  function mergeProps5(slotProps, childProps) {
+    const overrideProps = { ...childProps };
+    for (const propName in childProps) {
+      const slotPropValue = slotProps[propName];
+      const childPropValue = childProps[propName];
+      const isHandler = /^on[A-Z]/.test(propName);
+      if (isHandler) {
+        if (slotPropValue && childPropValue) {
+          overrideProps[propName] = (...args) => {
+            const result = childPropValue(...args);
+            slotPropValue(...args);
+            return result;
+          };
+        } else if (slotPropValue) {
+          overrideProps[propName] = slotPropValue;
+        }
+      } else if (propName === "style") {
+        overrideProps[propName] = { ...slotPropValue, ...childPropValue };
+      } else if (propName === "className") {
+        overrideProps[propName] = [slotPropValue, childPropValue].filter(Boolean).join(" ");
+      }
+    }
+    return { ...slotProps, ...overrideProps };
+  }
+  function getElementRef5(element) {
+    let getter = Object.getOwnPropertyDescriptor(element.props, "ref")?.get;
+    let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+    if (mayWarn) {
+      return element.ref;
+    }
+    getter = Object.getOwnPropertyDescriptor(element, "ref")?.get;
+    mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+    if (mayWarn) {
+      return element.props.ref;
+    }
+    return element.props.ref || element.ref;
+  }
+
+  // node_modules/@radix-ui/react-portal/node_modules/@radix-ui/react-primitive/dist/index.mjs
+  var import_jsx_runtime17 = __toESM(require_jsx_runtime(), 1);
+  var NODES5 = [
+    "a",
+    "button",
+    "div",
+    "form",
+    "h2",
+    "h3",
+    "img",
+    "input",
+    "label",
+    "li",
+    "nav",
+    "ol",
+    "p",
+    "select",
+    "span",
+    "svg",
+    "ul"
+  ];
+  var Primitive5 = NODES5.reduce((primitive, node) => {
+    const Slot2 = createSlot5(`Primitive.${node}`);
+    const Node2 = React65.forwardRef((props, forwardedRef) => {
+      const { asChild, ...primitiveProps } = props;
+      const Comp = asChild ? Slot2 : node;
+      if (typeof window !== "undefined") {
+        window[Symbol.for("radix-ui")] = true;
+      }
+      return /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(Comp, { ...primitiveProps, ref: forwardedRef });
+    });
+    Node2.displayName = `Primitive.${node}`;
+    return { ...primitive, [node]: Node2 };
+  }, {});
+
+  // node_modules/@radix-ui/react-portal/dist/index.mjs
+  var import_jsx_runtime18 = __toESM(require_jsx_runtime(), 1);
+  var PORTAL_NAME = "Portal";
+  var Portal = React66.forwardRef((props, forwardedRef) => {
+    const { container: containerProp, ...portalProps } = props;
+    const [mounted, setMounted] = React66.useState(false);
+    useLayoutEffect22(() => setMounted(true), []);
+    const container = containerProp || mounted && globalThis?.document?.body;
+    return container ? import_react_dom2.default.createPortal(/* @__PURE__ */ (0, import_jsx_runtime18.jsx)(Primitive5.div, { ...portalProps, ref: forwardedRef }), container) : null;
+  });
+  Portal.displayName = PORTAL_NAME;
+
+  // node_modules/@radix-ui/react-presence/dist/index.mjs
+  var React210 = __toESM(require_react(), 1);
+  var React67 = __toESM(require_react(), 1);
+  function useStateMachine(initialState, machine) {
+    return React67.useReducer((state, event) => {
+      const nextState = machine[state][event];
+      return nextState ?? state;
+    }, initialState);
+  }
+  var Presence = (props) => {
+    const { present, children } = props;
+    const presence = usePresence(present);
+    const child = typeof children === "function" ? children({ present: presence.isPresent }) : React210.Children.only(children);
+    const ref = useComposedRefs(presence.ref, getElementRef6(child));
+    const forceMount = typeof children === "function";
+    return forceMount || presence.isPresent ? React210.cloneElement(child, { ref }) : null;
+  };
+  Presence.displayName = "Presence";
+  function usePresence(present) {
+    const [node, setNode] = React210.useState();
+    const stylesRef = React210.useRef(null);
+    const prevPresentRef = React210.useRef(present);
+    const prevAnimationNameRef = React210.useRef("none");
+    const initialState = present ? "mounted" : "unmounted";
+    const [state, send] = useStateMachine(initialState, {
+      mounted: {
+        UNMOUNT: "unmounted",
+        ANIMATION_OUT: "unmountSuspended"
+      },
+      unmountSuspended: {
+        MOUNT: "mounted",
+        ANIMATION_END: "unmounted"
+      },
+      unmounted: {
+        MOUNT: "mounted"
+      }
+    });
+    React210.useEffect(() => {
+      const currentAnimationName = getAnimationName(stylesRef.current);
+      prevAnimationNameRef.current = state === "mounted" ? currentAnimationName : "none";
+    }, [state]);
+    useLayoutEffect22(() => {
+      const styles = stylesRef.current;
+      const wasPresent = prevPresentRef.current;
+      const hasPresentChanged = wasPresent !== present;
+      if (hasPresentChanged) {
+        const prevAnimationName = prevAnimationNameRef.current;
+        const currentAnimationName = getAnimationName(styles);
+        if (present) {
+          send("MOUNT");
+        } else if (currentAnimationName === "none" || styles?.display === "none") {
+          send("UNMOUNT");
+        } else {
+          const isAnimating = prevAnimationName !== currentAnimationName;
+          if (wasPresent && isAnimating) {
+            send("ANIMATION_OUT");
+          } else {
+            send("UNMOUNT");
+          }
+        }
+        prevPresentRef.current = present;
+      }
+    }, [present, send]);
+    useLayoutEffect22(() => {
+      if (node) {
+        let timeoutId;
+        const ownerWindow = node.ownerDocument.defaultView ?? window;
+        const handleAnimationEnd = (event) => {
+          const currentAnimationName = getAnimationName(stylesRef.current);
+          const isCurrentAnimation = currentAnimationName.includes(CSS.escape(event.animationName));
+          if (event.target === node && isCurrentAnimation) {
+            send("ANIMATION_END");
+            if (!prevPresentRef.current) {
+              const currentFillMode = node.style.animationFillMode;
+              node.style.animationFillMode = "forwards";
+              timeoutId = ownerWindow.setTimeout(() => {
+                if (node.style.animationFillMode === "forwards") {
+                  node.style.animationFillMode = currentFillMode;
+                }
+              });
+            }
+          }
+        };
+        const handleAnimationStart = (event) => {
+          if (event.target === node) {
+            prevAnimationNameRef.current = getAnimationName(stylesRef.current);
+          }
+        };
+        node.addEventListener("animationstart", handleAnimationStart);
+        node.addEventListener("animationcancel", handleAnimationEnd);
+        node.addEventListener("animationend", handleAnimationEnd);
+        return () => {
+          ownerWindow.clearTimeout(timeoutId);
+          node.removeEventListener("animationstart", handleAnimationStart);
+          node.removeEventListener("animationcancel", handleAnimationEnd);
+          node.removeEventListener("animationend", handleAnimationEnd);
+        };
+      } else {
+        send("ANIMATION_END");
+      }
+    }, [node, send]);
+    return {
+      isPresent: ["mounted", "unmountSuspended"].includes(state),
+      ref: React210.useCallback((node2) => {
+        stylesRef.current = node2 ? getComputedStyle(node2) : null;
+        setNode(node2);
+      }, [])
+    };
+  }
+  function getAnimationName(styles) {
+    return styles?.animationName || "none";
+  }
+  function getElementRef6(element) {
+    let getter = Object.getOwnPropertyDescriptor(element.props, "ref")?.get;
+    let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+    if (mayWarn) {
+      return element.ref;
+    }
+    getter = Object.getOwnPropertyDescriptor(element, "ref")?.get;
+    mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+    if (mayWarn) {
+      return element.props.ref;
+    }
+    return element.props.ref || element.ref;
+  }
+
+  // node_modules/@radix-ui/react-popover/node_modules/@radix-ui/react-primitive/dist/index.mjs
+  var React69 = __toESM(require_react(), 1);
+  var ReactDOM9 = __toESM(require_react_dom(), 1);
+
+  // node_modules/@radix-ui/react-popover/node_modules/@radix-ui/react-slot/dist/index.mjs
+  var React68 = __toESM(require_react(), 1);
+  var import_jsx_runtime19 = __toESM(require_jsx_runtime(), 1);
+  // @__NO_SIDE_EFFECTS__
+  function createSlot6(ownerName) {
+    const SlotClone = /* @__PURE__ */ createSlotClone6(ownerName);
+    const Slot2 = React68.forwardRef((props, forwardedRef) => {
+      const { children, ...slotProps } = props;
+      const childrenArray = React68.Children.toArray(children);
+      const slottable = childrenArray.find(isSlottable6);
+      if (slottable) {
+        const newElement = slottable.props.children;
+        const newChildren = childrenArray.map((child) => {
+          if (child === slottable) {
+            if (React68.Children.count(newElement) > 1)
+              return React68.Children.only(null);
+            return React68.isValidElement(newElement) ? newElement.props.children : null;
+          } else {
+            return child;
+          }
+        });
+        return /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(SlotClone, { ...slotProps, ref: forwardedRef, children: React68.isValidElement(newElement) ? React68.cloneElement(newElement, void 0, newChildren) : null });
+      }
+      return /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(SlotClone, { ...slotProps, ref: forwardedRef, children });
+    });
+    Slot2.displayName = `${ownerName}.Slot`;
+    return Slot2;
+  }
+  // @__NO_SIDE_EFFECTS__
+  function createSlotClone6(ownerName) {
+    const SlotClone = React68.forwardRef((props, forwardedRef) => {
+      const { children, ...slotProps } = props;
+      if (React68.isValidElement(children)) {
+        const childrenRef = getElementRef7(children);
+        const props2 = mergeProps6(slotProps, children.props);
+        if (children.type !== React68.Fragment) {
+          props2.ref = forwardedRef ? composeRefs(forwardedRef, childrenRef) : childrenRef;
+        }
+        return React68.cloneElement(children, props2);
+      }
+      return React68.Children.count(children) > 1 ? React68.Children.only(null) : null;
+    });
+    SlotClone.displayName = `${ownerName}.SlotClone`;
+    return SlotClone;
+  }
+  var SLOTTABLE_IDENTIFIER6 = Symbol("radix.slottable");
+  function isSlottable6(child) {
+    return React68.isValidElement(child) && typeof child.type === "function" && "__radixId" in child.type && child.type.__radixId === SLOTTABLE_IDENTIFIER6;
+  }
+  function mergeProps6(slotProps, childProps) {
+    const overrideProps = { ...childProps };
+    for (const propName in childProps) {
+      const slotPropValue = slotProps[propName];
+      const childPropValue = childProps[propName];
+      const isHandler = /^on[A-Z]/.test(propName);
+      if (isHandler) {
+        if (slotPropValue && childPropValue) {
+          overrideProps[propName] = (...args) => {
+            const result = childPropValue(...args);
+            slotPropValue(...args);
+            return result;
+          };
+        } else if (slotPropValue) {
+          overrideProps[propName] = slotPropValue;
+        }
+      } else if (propName === "style") {
+        overrideProps[propName] = { ...slotPropValue, ...childPropValue };
+      } else if (propName === "className") {
+        overrideProps[propName] = [slotPropValue, childPropValue].filter(Boolean).join(" ");
+      }
+    }
+    return { ...slotProps, ...overrideProps };
+  }
+  function getElementRef7(element) {
+    let getter = Object.getOwnPropertyDescriptor(element.props, "ref")?.get;
+    let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+    if (mayWarn) {
+      return element.ref;
+    }
+    getter = Object.getOwnPropertyDescriptor(element, "ref")?.get;
+    mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+    if (mayWarn) {
+      return element.props.ref;
+    }
+    return element.props.ref || element.ref;
+  }
+
+  // node_modules/@radix-ui/react-popover/node_modules/@radix-ui/react-primitive/dist/index.mjs
+  var import_jsx_runtime20 = __toESM(require_jsx_runtime(), 1);
+  var NODES6 = [
+    "a",
+    "button",
+    "div",
+    "form",
+    "h2",
+    "h3",
+    "img",
+    "input",
+    "label",
+    "li",
+    "nav",
+    "ol",
+    "p",
+    "select",
+    "span",
+    "svg",
+    "ul"
+  ];
+  var Primitive6 = NODES6.reduce((primitive, node) => {
+    const Slot2 = createSlot6(`Primitive.${node}`);
+    const Node2 = React69.forwardRef((props, forwardedRef) => {
+      const { asChild, ...primitiveProps } = props;
+      const Comp = asChild ? Slot2 : node;
+      if (typeof window !== "undefined") {
+        window[Symbol.for("radix-ui")] = true;
+      }
+      return /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(Comp, { ...primitiveProps, ref: forwardedRef });
+    });
+    Node2.displayName = `Primitive.${node}`;
+    return { ...primitive, [node]: Node2 };
+  }, {});
+
+  // node_modules/@radix-ui/react-use-controllable-state/dist/index.mjs
+  var React70 = __toESM(require_react(), 1);
+  var React211 = __toESM(require_react(), 1);
+  var useInsertionEffect = React70[" useInsertionEffect ".trim().toString()] || useLayoutEffect22;
+  function useControllableState({
+    prop,
+    defaultProp,
+    onChange = () => {
+    },
+    caller
+  }) {
+    const [uncontrolledProp, setUncontrolledProp, onChangeRef] = useUncontrolledState({
+      defaultProp,
+      onChange
+    });
+    const isControlled = prop !== void 0;
+    const value = isControlled ? prop : uncontrolledProp;
+    if (true) {
+      const isControlledRef = React70.useRef(prop !== void 0);
+      React70.useEffect(() => {
+        const wasControlled = isControlledRef.current;
+        if (wasControlled !== isControlled) {
+          const from = wasControlled ? "controlled" : "uncontrolled";
+          const to = isControlled ? "controlled" : "uncontrolled";
+          console.warn(
+            `${caller} is changing from ${from} to ${to}. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.`
+          );
+        }
+        isControlledRef.current = isControlled;
+      }, [isControlled, caller]);
+    }
+    const setValue = React70.useCallback(
+      (nextValue) => {
+        if (isControlled) {
+          const value2 = isFunction3(nextValue) ? nextValue(prop) : nextValue;
+          if (value2 !== prop) {
+            onChangeRef.current?.(value2);
+          }
+        } else {
+          setUncontrolledProp(nextValue);
+        }
+      },
+      [isControlled, prop, setUncontrolledProp, onChangeRef]
+    );
+    return [value, setValue];
+  }
+  function useUncontrolledState({
+    defaultProp,
+    onChange
+  }) {
+    const [value, setValue] = React70.useState(defaultProp);
+    const prevValueRef = React70.useRef(value);
+    const onChangeRef = React70.useRef(onChange);
+    useInsertionEffect(() => {
+      onChangeRef.current = onChange;
+    }, [onChange]);
+    React70.useEffect(() => {
+      if (prevValueRef.current !== value) {
+        onChangeRef.current?.(value);
+        prevValueRef.current = value;
+      }
+    }, [value, prevValueRef]);
+    return [value, setValue, onChangeRef];
+  }
+  function isFunction3(value) {
+    return typeof value === "function";
+  }
+  var SYNC_STATE = Symbol("RADIX:SYNC_STATE");
+
+  // node_modules/aria-hidden/dist/es2015/index.js
+  var getDefaultParent = function(originalTarget) {
+    if (typeof document === "undefined") {
+      return null;
+    }
+    var sampleTarget = Array.isArray(originalTarget) ? originalTarget[0] : originalTarget;
+    return sampleTarget.ownerDocument.body;
+  };
+  var counterMap = /* @__PURE__ */ new WeakMap();
+  var uncontrolledNodes = /* @__PURE__ */ new WeakMap();
+  var markerMap = {};
+  var lockCount = 0;
+  var unwrapHost = function(node) {
+    return node && (node.host || unwrapHost(node.parentNode));
+  };
+  var correctTargets = function(parent, targets) {
+    return targets.map(function(target) {
+      if (parent.contains(target)) {
+        return target;
+      }
+      var correctedTarget = unwrapHost(target);
+      if (correctedTarget && parent.contains(correctedTarget)) {
+        return correctedTarget;
+      }
+      console.error("aria-hidden", target, "in not contained inside", parent, ". Doing nothing");
+      return null;
+    }).filter(function(x) {
+      return Boolean(x);
+    });
+  };
+  var applyAttributeToOthers = function(originalTarget, parentNode, markerName, controlAttribute) {
+    var targets = correctTargets(parentNode, Array.isArray(originalTarget) ? originalTarget : [originalTarget]);
+    if (!markerMap[markerName]) {
+      markerMap[markerName] = /* @__PURE__ */ new WeakMap();
+    }
+    var markerCounter = markerMap[markerName];
+    var hiddenNodes = [];
+    var elementsToKeep = /* @__PURE__ */ new Set();
+    var elementsToStop = new Set(targets);
+    var keep = function(el) {
+      if (!el || elementsToKeep.has(el)) {
+        return;
+      }
+      elementsToKeep.add(el);
+      keep(el.parentNode);
+    };
+    targets.forEach(keep);
+    var deep = function(parent) {
+      if (!parent || elementsToStop.has(parent)) {
+        return;
+      }
+      Array.prototype.forEach.call(parent.children, function(node) {
+        if (elementsToKeep.has(node)) {
+          deep(node);
+        } else {
+          try {
+            var attr = node.getAttribute(controlAttribute);
+            var alreadyHidden = attr !== null && attr !== "false";
+            var counterValue = (counterMap.get(node) || 0) + 1;
+            var markerValue = (markerCounter.get(node) || 0) + 1;
+            counterMap.set(node, counterValue);
+            markerCounter.set(node, markerValue);
+            hiddenNodes.push(node);
+            if (counterValue === 1 && alreadyHidden) {
+              uncontrolledNodes.set(node, true);
+            }
+            if (markerValue === 1) {
+              node.setAttribute(markerName, "true");
+            }
+            if (!alreadyHidden) {
+              node.setAttribute(controlAttribute, "true");
+            }
+          } catch (e) {
+            console.error("aria-hidden: cannot operate on ", node, e);
+          }
+        }
+      });
+    };
+    deep(parentNode);
+    elementsToKeep.clear();
+    lockCount++;
+    return function() {
+      hiddenNodes.forEach(function(node) {
+        var counterValue = counterMap.get(node) - 1;
+        var markerValue = markerCounter.get(node) - 1;
+        counterMap.set(node, counterValue);
+        markerCounter.set(node, markerValue);
+        if (!counterValue) {
+          if (!uncontrolledNodes.has(node)) {
+            node.removeAttribute(controlAttribute);
+          }
+          uncontrolledNodes.delete(node);
+        }
+        if (!markerValue) {
+          node.removeAttribute(markerName);
+        }
+      });
+      lockCount--;
+      if (!lockCount) {
+        counterMap = /* @__PURE__ */ new WeakMap();
+        counterMap = /* @__PURE__ */ new WeakMap();
+        uncontrolledNodes = /* @__PURE__ */ new WeakMap();
+        markerMap = {};
+      }
+    };
+  };
+  var hideOthers = function(originalTarget, parentNode, markerName) {
+    if (markerName === void 0) {
+      markerName = "data-aria-hidden";
+    }
+    var targets = Array.from(Array.isArray(originalTarget) ? originalTarget : [originalTarget]);
+    var activeParentNode = parentNode || getDefaultParent(originalTarget);
+    if (!activeParentNode) {
+      return function() {
+        return null;
+      };
+    }
+    targets.push.apply(targets, Array.from(activeParentNode.querySelectorAll("[aria-live], script")));
+    return applyAttributeToOthers(targets, activeParentNode, markerName, "aria-hidden");
+  };
+
+  // node_modules/tslib/tslib.es6.mjs
+  var __assign = function() {
+    __assign = Object.assign || function __assign2(t) {
+      for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s)
+          if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+      }
+      return t;
+    };
+    return __assign.apply(this, arguments);
+  };
+  function __rest(s, e) {
+    var t = {};
+    for (var p in s)
+      if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+      for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+        if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+          t[p[i]] = s[p[i]];
+      }
+    return t;
+  }
+  function __spreadArray(to, from, pack) {
+    if (pack || arguments.length === 2)
+      for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+          if (!ar)
+            ar = Array.prototype.slice.call(from, 0, i);
+          ar[i] = from[i];
+        }
+      }
+    return to.concat(ar || Array.prototype.slice.call(from));
+  }
+
+  // node_modules/react-remove-scroll/dist/es2015/Combination.js
+  var React77 = __toESM(require_react());
+
+  // node_modules/react-remove-scroll/dist/es2015/UI.js
+  var React73 = __toESM(require_react());
+
+  // node_modules/react-remove-scroll-bar/dist/es2015/constants.js
+  var zeroRightClassName = "right-scroll-bar-position";
+  var fullWidthClassName = "width-before-scroll-bar";
+  var noScrollbarsClassName = "with-scroll-bars-hidden";
+  var removedBarSizeVariable = "--removed-body-scroll-bar-size";
+
+  // node_modules/use-callback-ref/dist/es2015/assignRef.js
+  function assignRef(ref, value) {
+    if (typeof ref === "function") {
+      ref(value);
+    } else if (ref) {
+      ref.current = value;
+    }
+    return ref;
+  }
+
+  // node_modules/use-callback-ref/dist/es2015/useRef.js
+  var import_react38 = __toESM(require_react());
+  function useCallbackRef2(initialValue, callback) {
+    var ref = (0, import_react38.useState)(function() {
+      return {
+        // value
+        value: initialValue,
+        // last callback
+        callback,
+        // "memoized" public interface
+        facade: {
+          get current() {
+            return ref.value;
+          },
+          set current(value) {
+            var last = ref.value;
+            if (last !== value) {
+              ref.value = value;
+              ref.callback(value, last);
+            }
+          }
+        }
+      };
+    })[0];
+    ref.callback = callback;
+    return ref.facade;
+  }
+
+  // node_modules/use-callback-ref/dist/es2015/useMergeRef.js
+  var React71 = __toESM(require_react());
+  var useIsomorphicLayoutEffect2 = typeof window !== "undefined" ? React71.useLayoutEffect : React71.useEffect;
+  var currentValues = /* @__PURE__ */ new WeakMap();
+  function useMergeRefs(refs, defaultValue) {
+    var callbackRef = useCallbackRef2(defaultValue || null, function(newValue) {
+      return refs.forEach(function(ref) {
+        return assignRef(ref, newValue);
+      });
+    });
+    useIsomorphicLayoutEffect2(function() {
+      var oldValue = currentValues.get(callbackRef);
+      if (oldValue) {
+        var prevRefs_1 = new Set(oldValue);
+        var nextRefs_1 = new Set(refs);
+        var current_1 = callbackRef.current;
+        prevRefs_1.forEach(function(ref) {
+          if (!nextRefs_1.has(ref)) {
+            assignRef(ref, null);
+          }
+        });
+        nextRefs_1.forEach(function(ref) {
+          if (!prevRefs_1.has(ref)) {
+            assignRef(ref, current_1);
+          }
+        });
+      }
+      currentValues.set(callbackRef, refs);
+    }, [refs]);
+    return callbackRef;
+  }
+
+  // node_modules/use-sidecar/dist/es2015/medium.js
+  function ItoI(a) {
+    return a;
+  }
+  function innerCreateMedium(defaults2, middleware) {
+    if (middleware === void 0) {
+      middleware = ItoI;
+    }
+    var buffer = [];
+    var assigned = false;
+    var medium = {
+      read: function() {
+        if (assigned) {
+          throw new Error("Sidecar: could not `read` from an `assigned` medium. `read` could be used only with `useMedium`.");
+        }
+        if (buffer.length) {
+          return buffer[buffer.length - 1];
+        }
+        return defaults2;
+      },
+      useMedium: function(data) {
+        var item = middleware(data, assigned);
+        buffer.push(item);
+        return function() {
+          buffer = buffer.filter(function(x) {
+            return x !== item;
+          });
+        };
+      },
+      assignSyncMedium: function(cb) {
+        assigned = true;
+        while (buffer.length) {
+          var cbs = buffer;
+          buffer = [];
+          cbs.forEach(cb);
+        }
+        buffer = {
+          push: function(x) {
+            return cb(x);
+          },
+          filter: function() {
+            return buffer;
+          }
+        };
+      },
+      assignMedium: function(cb) {
+        assigned = true;
+        var pendingQueue = [];
+        if (buffer.length) {
+          var cbs = buffer;
+          buffer = [];
+          cbs.forEach(cb);
+          pendingQueue = buffer;
+        }
+        var executeQueue = function() {
+          var cbs2 = pendingQueue;
+          pendingQueue = [];
+          cbs2.forEach(cb);
+        };
+        var cycle = function() {
+          return Promise.resolve().then(executeQueue);
+        };
+        cycle();
+        buffer = {
+          push: function(x) {
+            pendingQueue.push(x);
+            cycle();
+          },
+          filter: function(filter2) {
+            pendingQueue = pendingQueue.filter(filter2);
+            return buffer;
+          }
+        };
+      }
+    };
+    return medium;
+  }
+  function createSidecarMedium(options) {
+    if (options === void 0) {
+      options = {};
+    }
+    var medium = innerCreateMedium(null);
+    medium.options = __assign({ async: true, ssr: false }, options);
+    return medium;
+  }
+
+  // node_modules/use-sidecar/dist/es2015/exports.js
+  var React72 = __toESM(require_react());
+  var SideCar = function(_a) {
+    var sideCar = _a.sideCar, rest = __rest(_a, ["sideCar"]);
+    if (!sideCar) {
+      throw new Error("Sidecar: please provide `sideCar` property to import the right car");
+    }
+    var Target = sideCar.read();
+    if (!Target) {
+      throw new Error("Sidecar medium not found");
+    }
+    return React72.createElement(Target, __assign({}, rest));
+  };
+  SideCar.isSideCarExport = true;
+  function exportSidecar(medium, exported) {
+    medium.useMedium(exported);
+    return SideCar;
+  }
+
+  // node_modules/react-remove-scroll/dist/es2015/medium.js
+  var effectCar = createSidecarMedium();
+
+  // node_modules/react-remove-scroll/dist/es2015/UI.js
+  var nothing = function() {
+    return;
+  };
+  var RemoveScroll = React73.forwardRef(function(props, parentRef) {
+    var ref = React73.useRef(null);
+    var _a = React73.useState({
+      onScrollCapture: nothing,
+      onWheelCapture: nothing,
+      onTouchMoveCapture: nothing
+    }), callbacks = _a[0], setCallbacks = _a[1];
+    var forwardProps = props.forwardProps, children = props.children, className = props.className, removeScrollBar = props.removeScrollBar, enabled = props.enabled, shards = props.shards, sideCar = props.sideCar, noRelative = props.noRelative, noIsolation = props.noIsolation, inert = props.inert, allowPinchZoom = props.allowPinchZoom, _b = props.as, Container = _b === void 0 ? "div" : _b, gapMode = props.gapMode, rest = __rest(props, ["forwardProps", "children", "className", "removeScrollBar", "enabled", "shards", "sideCar", "noRelative", "noIsolation", "inert", "allowPinchZoom", "as", "gapMode"]);
+    var SideCar2 = sideCar;
+    var containerRef = useMergeRefs([ref, parentRef]);
+    var containerProps = __assign(__assign({}, rest), callbacks);
+    return React73.createElement(
+      React73.Fragment,
+      null,
+      enabled && React73.createElement(SideCar2, { sideCar: effectCar, removeScrollBar, shards, noRelative, noIsolation, inert, setCallbacks, allowPinchZoom: !!allowPinchZoom, lockRef: ref, gapMode }),
+      forwardProps ? React73.cloneElement(React73.Children.only(children), __assign(__assign({}, containerProps), { ref: containerRef })) : React73.createElement(Container, __assign({}, containerProps, { className, ref: containerRef }), children)
+    );
+  });
+  RemoveScroll.defaultProps = {
+    enabled: true,
+    removeScrollBar: true,
+    inert: false
+  };
+  RemoveScroll.classNames = {
+    fullWidth: fullWidthClassName,
+    zeroRight: zeroRightClassName
+  };
+
+  // node_modules/react-remove-scroll/dist/es2015/SideEffect.js
+  var React76 = __toESM(require_react());
+
+  // node_modules/react-remove-scroll-bar/dist/es2015/component.js
+  var React75 = __toESM(require_react());
+
+  // node_modules/react-style-singleton/dist/es2015/hook.js
+  var React74 = __toESM(require_react());
+
+  // node_modules/get-nonce/dist/es2015/index.js
+  var currentNonce;
+  var getNonce = function() {
+    if (currentNonce) {
+      return currentNonce;
+    }
+    if (typeof __webpack_nonce__ !== "undefined") {
+      return __webpack_nonce__;
+    }
+    return void 0;
+  };
+
+  // node_modules/react-style-singleton/dist/es2015/singleton.js
+  function makeStyleTag() {
+    if (!document)
+      return null;
+    var tag = document.createElement("style");
+    tag.type = "text/css";
+    var nonce = getNonce();
+    if (nonce) {
+      tag.setAttribute("nonce", nonce);
+    }
+    return tag;
+  }
+  function injectStyles(tag, css) {
+    if (tag.styleSheet) {
+      tag.styleSheet.cssText = css;
+    } else {
+      tag.appendChild(document.createTextNode(css));
+    }
+  }
+  function insertStyleTag(tag) {
+    var head = document.head || document.getElementsByTagName("head")[0];
+    head.appendChild(tag);
+  }
+  var stylesheetSingleton = function() {
+    var counter = 0;
+    var stylesheet = null;
+    return {
+      add: function(style) {
+        if (counter == 0) {
+          if (stylesheet = makeStyleTag()) {
+            injectStyles(stylesheet, style);
+            insertStyleTag(stylesheet);
+          }
+        }
+        counter++;
+      },
+      remove: function() {
+        counter--;
+        if (!counter && stylesheet) {
+          stylesheet.parentNode && stylesheet.parentNode.removeChild(stylesheet);
+          stylesheet = null;
+        }
+      }
+    };
+  };
+
+  // node_modules/react-style-singleton/dist/es2015/hook.js
+  var styleHookSingleton = function() {
+    var sheet = stylesheetSingleton();
+    return function(styles, isDynamic) {
+      React74.useEffect(function() {
+        sheet.add(styles);
+        return function() {
+          sheet.remove();
+        };
+      }, [styles && isDynamic]);
+    };
+  };
+
+  // node_modules/react-style-singleton/dist/es2015/component.js
+  var styleSingleton = function() {
+    var useStyle = styleHookSingleton();
+    var Sheet = function(_a) {
+      var styles = _a.styles, dynamic = _a.dynamic;
+      useStyle(styles, dynamic);
+      return null;
+    };
+    return Sheet;
+  };
+
+  // node_modules/react-remove-scroll-bar/dist/es2015/utils.js
+  var zeroGap = {
+    left: 0,
+    top: 0,
+    right: 0,
+    gap: 0
+  };
+  var parse = function(x) {
+    return parseInt(x || "", 10) || 0;
+  };
+  var getOffset = function(gapMode) {
+    var cs = window.getComputedStyle(document.body);
+    var left = cs[gapMode === "padding" ? "paddingLeft" : "marginLeft"];
+    var top = cs[gapMode === "padding" ? "paddingTop" : "marginTop"];
+    var right = cs[gapMode === "padding" ? "paddingRight" : "marginRight"];
+    return [parse(left), parse(top), parse(right)];
+  };
+  var getGapWidth = function(gapMode) {
+    if (gapMode === void 0) {
+      gapMode = "margin";
+    }
+    if (typeof window === "undefined") {
+      return zeroGap;
+    }
+    var offsets = getOffset(gapMode);
+    var documentWidth = document.documentElement.clientWidth;
+    var windowWidth = window.innerWidth;
+    return {
+      left: offsets[0],
+      top: offsets[1],
+      right: offsets[2],
+      gap: Math.max(0, windowWidth - documentWidth + offsets[2] - offsets[0])
+    };
+  };
+
+  // node_modules/react-remove-scroll-bar/dist/es2015/component.js
+  var Style = styleSingleton();
+  var lockAttribute = "data-scroll-locked";
+  var getStyles = function(_a, allowRelative, gapMode, important) {
+    var left = _a.left, top = _a.top, right = _a.right, gap = _a.gap;
+    if (gapMode === void 0) {
+      gapMode = "margin";
+    }
+    return "\n  .".concat(noScrollbarsClassName, " {\n   overflow: hidden ").concat(important, ";\n   padding-right: ").concat(gap, "px ").concat(important, ";\n  }\n  body[").concat(lockAttribute, "] {\n    overflow: hidden ").concat(important, ";\n    overscroll-behavior: contain;\n    ").concat([
+      allowRelative && "position: relative ".concat(important, ";"),
+      gapMode === "margin" && "\n    padding-left: ".concat(left, "px;\n    padding-top: ").concat(top, "px;\n    padding-right: ").concat(right, "px;\n    margin-left:0;\n    margin-top:0;\n    margin-right: ").concat(gap, "px ").concat(important, ";\n    "),
+      gapMode === "padding" && "padding-right: ".concat(gap, "px ").concat(important, ";")
+    ].filter(Boolean).join(""), "\n  }\n  \n  .").concat(zeroRightClassName, " {\n    right: ").concat(gap, "px ").concat(important, ";\n  }\n  \n  .").concat(fullWidthClassName, " {\n    margin-right: ").concat(gap, "px ").concat(important, ";\n  }\n  \n  .").concat(zeroRightClassName, " .").concat(zeroRightClassName, " {\n    right: 0 ").concat(important, ";\n  }\n  \n  .").concat(fullWidthClassName, " .").concat(fullWidthClassName, " {\n    margin-right: 0 ").concat(important, ";\n  }\n  \n  body[").concat(lockAttribute, "] {\n    ").concat(removedBarSizeVariable, ": ").concat(gap, "px;\n  }\n");
+  };
+  var getCurrentUseCounter = function() {
+    var counter = parseInt(document.body.getAttribute(lockAttribute) || "0", 10);
+    return isFinite(counter) ? counter : 0;
+  };
+  var useLockAttribute = function() {
+    React75.useEffect(function() {
+      document.body.setAttribute(lockAttribute, (getCurrentUseCounter() + 1).toString());
+      return function() {
+        var newCounter = getCurrentUseCounter() - 1;
+        if (newCounter <= 0) {
+          document.body.removeAttribute(lockAttribute);
+        } else {
+          document.body.setAttribute(lockAttribute, newCounter.toString());
+        }
+      };
+    }, []);
+  };
+  var RemoveScrollBar = function(_a) {
+    var noRelative = _a.noRelative, noImportant = _a.noImportant, _b = _a.gapMode, gapMode = _b === void 0 ? "margin" : _b;
+    useLockAttribute();
+    var gap = React75.useMemo(function() {
+      return getGapWidth(gapMode);
+    }, [gapMode]);
+    return React75.createElement(Style, { styles: getStyles(gap, !noRelative, gapMode, !noImportant ? "!important" : "") });
+  };
+
+  // node_modules/react-remove-scroll/dist/es2015/aggresiveCapture.js
+  var passiveSupported = false;
+  if (typeof window !== "undefined") {
+    try {
+      options = Object.defineProperty({}, "passive", {
+        get: function() {
+          passiveSupported = true;
+          return true;
+        }
+      });
+      window.addEventListener("test", options, options);
+      window.removeEventListener("test", options, options);
+    } catch (err) {
+      passiveSupported = false;
+    }
+  }
+  var options;
+  var nonPassive = passiveSupported ? { passive: false } : false;
+
+  // node_modules/react-remove-scroll/dist/es2015/handleScroll.js
+  var alwaysContainsScroll = function(node) {
+    return node.tagName === "TEXTAREA";
+  };
+  var elementCanBeScrolled = function(node, overflow) {
+    if (!(node instanceof Element)) {
+      return false;
+    }
+    var styles = window.getComputedStyle(node);
+    return (
+      // not-not-scrollable
+      styles[overflow] !== "hidden" && // contains scroll inside self
+      !(styles.overflowY === styles.overflowX && !alwaysContainsScroll(node) && styles[overflow] === "visible")
+    );
+  };
+  var elementCouldBeVScrolled = function(node) {
+    return elementCanBeScrolled(node, "overflowY");
+  };
+  var elementCouldBeHScrolled = function(node) {
+    return elementCanBeScrolled(node, "overflowX");
+  };
+  var locationCouldBeScrolled = function(axis, node) {
+    var ownerDocument = node.ownerDocument;
+    var current = node;
+    do {
+      if (typeof ShadowRoot !== "undefined" && current instanceof ShadowRoot) {
+        current = current.host;
+      }
+      var isScrollable = elementCouldBeScrolled(axis, current);
+      if (isScrollable) {
+        var _a = getScrollVariables(axis, current), scrollHeight = _a[1], clientHeight = _a[2];
+        if (scrollHeight > clientHeight) {
+          return true;
+        }
+      }
+      current = current.parentNode;
+    } while (current && current !== ownerDocument.body);
+    return false;
+  };
+  var getVScrollVariables = function(_a) {
+    var scrollTop = _a.scrollTop, scrollHeight = _a.scrollHeight, clientHeight = _a.clientHeight;
+    return [
+      scrollTop,
+      scrollHeight,
+      clientHeight
+    ];
+  };
+  var getHScrollVariables = function(_a) {
+    var scrollLeft = _a.scrollLeft, scrollWidth = _a.scrollWidth, clientWidth = _a.clientWidth;
+    return [
+      scrollLeft,
+      scrollWidth,
+      clientWidth
+    ];
+  };
+  var elementCouldBeScrolled = function(axis, node) {
+    return axis === "v" ? elementCouldBeVScrolled(node) : elementCouldBeHScrolled(node);
+  };
+  var getScrollVariables = function(axis, node) {
+    return axis === "v" ? getVScrollVariables(node) : getHScrollVariables(node);
+  };
+  var getDirectionFactor = function(axis, direction) {
+    return axis === "h" && direction === "rtl" ? -1 : 1;
+  };
+  var handleScroll = function(axis, endTarget, event, sourceDelta, noOverscroll) {
+    var directionFactor = getDirectionFactor(axis, window.getComputedStyle(endTarget).direction);
+    var delta = directionFactor * sourceDelta;
+    var target = event.target;
+    var targetInLock = endTarget.contains(target);
+    var shouldCancelScroll = false;
+    var isDeltaPositive = delta > 0;
+    var availableScroll = 0;
+    var availableScrollTop = 0;
+    do {
+      if (!target) {
+        break;
+      }
+      var _a = getScrollVariables(axis, target), position = _a[0], scroll_1 = _a[1], capacity = _a[2];
+      var elementScroll = scroll_1 - capacity - directionFactor * position;
+      if (position || elementScroll) {
+        if (elementCouldBeScrolled(axis, target)) {
+          availableScroll += elementScroll;
+          availableScrollTop += position;
+        }
+      }
+      var parent_1 = target.parentNode;
+      target = parent_1 && parent_1.nodeType === Node.DOCUMENT_FRAGMENT_NODE ? parent_1.host : parent_1;
+    } while (
+      // portaled content
+      !targetInLock && target !== document.body || // self content
+      targetInLock && (endTarget.contains(target) || endTarget === target)
+    );
+    if (isDeltaPositive && (noOverscroll && Math.abs(availableScroll) < 1 || !noOverscroll && delta > availableScroll)) {
+      shouldCancelScroll = true;
+    } else if (!isDeltaPositive && (noOverscroll && Math.abs(availableScrollTop) < 1 || !noOverscroll && -delta > availableScrollTop)) {
+      shouldCancelScroll = true;
+    }
+    return shouldCancelScroll;
+  };
+
+  // node_modules/react-remove-scroll/dist/es2015/SideEffect.js
+  var getTouchXY = function(event) {
+    return "changedTouches" in event ? [event.changedTouches[0].clientX, event.changedTouches[0].clientY] : [0, 0];
+  };
+  var getDeltaXY = function(event) {
+    return [event.deltaX, event.deltaY];
+  };
+  var extractRef = function(ref) {
+    return ref && "current" in ref ? ref.current : ref;
+  };
+  var deltaCompare = function(x, y) {
+    return x[0] === y[0] && x[1] === y[1];
+  };
+  var generateStyle = function(id) {
+    return "\n  .block-interactivity-".concat(id, " {pointer-events: none;}\n  .allow-interactivity-").concat(id, " {pointer-events: all;}\n");
+  };
+  var idCounter = 0;
+  var lockStack = [];
+  function RemoveScrollSideCar(props) {
+    var shouldPreventQueue = React76.useRef([]);
+    var touchStartRef = React76.useRef([0, 0]);
+    var activeAxis = React76.useRef();
+    var id = React76.useState(idCounter++)[0];
+    var Style2 = React76.useState(styleSingleton)[0];
+    var lastProps = React76.useRef(props);
+    React76.useEffect(function() {
+      lastProps.current = props;
+    }, [props]);
+    React76.useEffect(function() {
+      if (props.inert) {
+        document.body.classList.add("block-interactivity-".concat(id));
+        var allow_1 = __spreadArray([props.lockRef.current], (props.shards || []).map(extractRef), true).filter(Boolean);
+        allow_1.forEach(function(el) {
+          return el.classList.add("allow-interactivity-".concat(id));
+        });
+        return function() {
+          document.body.classList.remove("block-interactivity-".concat(id));
+          allow_1.forEach(function(el) {
+            return el.classList.remove("allow-interactivity-".concat(id));
+          });
+        };
+      }
+      return;
+    }, [props.inert, props.lockRef.current, props.shards]);
+    var shouldCancelEvent = React76.useCallback(function(event, parent) {
+      if ("touches" in event && event.touches.length === 2 || event.type === "wheel" && event.ctrlKey) {
+        return !lastProps.current.allowPinchZoom;
+      }
+      var touch = getTouchXY(event);
+      var touchStart = touchStartRef.current;
+      var deltaX = "deltaX" in event ? event.deltaX : touchStart[0] - touch[0];
+      var deltaY = "deltaY" in event ? event.deltaY : touchStart[1] - touch[1];
+      var currentAxis;
+      var target = event.target;
+      var moveDirection = Math.abs(deltaX) > Math.abs(deltaY) ? "h" : "v";
+      if ("touches" in event && moveDirection === "h" && target.type === "range") {
+        return false;
+      }
+      var selection = window.getSelection();
+      var anchorNode = selection && selection.anchorNode;
+      var isTouchingSelection = anchorNode ? anchorNode === target || anchorNode.contains(target) : false;
+      if (isTouchingSelection) {
+        return false;
+      }
+      var canBeScrolledInMainDirection = locationCouldBeScrolled(moveDirection, target);
+      if (!canBeScrolledInMainDirection) {
+        return true;
+      }
+      if (canBeScrolledInMainDirection) {
+        currentAxis = moveDirection;
+      } else {
+        currentAxis = moveDirection === "v" ? "h" : "v";
+        canBeScrolledInMainDirection = locationCouldBeScrolled(moveDirection, target);
+      }
+      if (!canBeScrolledInMainDirection) {
+        return false;
+      }
+      if (!activeAxis.current && "changedTouches" in event && (deltaX || deltaY)) {
+        activeAxis.current = currentAxis;
+      }
+      if (!currentAxis) {
+        return true;
+      }
+      var cancelingAxis = activeAxis.current || currentAxis;
+      return handleScroll(cancelingAxis, parent, event, cancelingAxis === "h" ? deltaX : deltaY, true);
+    }, []);
+    var shouldPrevent = React76.useCallback(function(_event) {
+      var event = _event;
+      if (!lockStack.length || lockStack[lockStack.length - 1] !== Style2) {
+        return;
+      }
+      var delta = "deltaY" in event ? getDeltaXY(event) : getTouchXY(event);
+      var sourceEvent = shouldPreventQueue.current.filter(function(e) {
+        return e.name === event.type && (e.target === event.target || event.target === e.shadowParent) && deltaCompare(e.delta, delta);
+      })[0];
+      if (sourceEvent && sourceEvent.should) {
+        if (event.cancelable) {
+          event.preventDefault();
+        }
+        return;
+      }
+      if (!sourceEvent) {
+        var shardNodes = (lastProps.current.shards || []).map(extractRef).filter(Boolean).filter(function(node) {
+          return node.contains(event.target);
+        });
+        var shouldStop = shardNodes.length > 0 ? shouldCancelEvent(event, shardNodes[0]) : !lastProps.current.noIsolation;
+        if (shouldStop) {
+          if (event.cancelable) {
+            event.preventDefault();
+          }
+        }
+      }
+    }, []);
+    var shouldCancel = React76.useCallback(function(name, delta, target, should) {
+      var event = { name, delta, target, should, shadowParent: getOutermostShadowParent(target) };
+      shouldPreventQueue.current.push(event);
+      setTimeout(function() {
+        shouldPreventQueue.current = shouldPreventQueue.current.filter(function(e) {
+          return e !== event;
+        });
+      }, 1);
+    }, []);
+    var scrollTouchStart = React76.useCallback(function(event) {
+      touchStartRef.current = getTouchXY(event);
+      activeAxis.current = void 0;
+    }, []);
+    var scrollWheel = React76.useCallback(function(event) {
+      shouldCancel(event.type, getDeltaXY(event), event.target, shouldCancelEvent(event, props.lockRef.current));
+    }, []);
+    var scrollTouchMove = React76.useCallback(function(event) {
+      shouldCancel(event.type, getTouchXY(event), event.target, shouldCancelEvent(event, props.lockRef.current));
+    }, []);
+    React76.useEffect(function() {
+      lockStack.push(Style2);
+      props.setCallbacks({
+        onScrollCapture: scrollWheel,
+        onWheelCapture: scrollWheel,
+        onTouchMoveCapture: scrollTouchMove
+      });
+      document.addEventListener("wheel", shouldPrevent, nonPassive);
+      document.addEventListener("touchmove", shouldPrevent, nonPassive);
+      document.addEventListener("touchstart", scrollTouchStart, nonPassive);
+      return function() {
+        lockStack = lockStack.filter(function(inst) {
+          return inst !== Style2;
+        });
+        document.removeEventListener("wheel", shouldPrevent, nonPassive);
+        document.removeEventListener("touchmove", shouldPrevent, nonPassive);
+        document.removeEventListener("touchstart", scrollTouchStart, nonPassive);
+      };
+    }, []);
+    var removeScrollBar = props.removeScrollBar, inert = props.inert;
+    return React76.createElement(
+      React76.Fragment,
+      null,
+      inert ? React76.createElement(Style2, { styles: generateStyle(id) }) : null,
+      removeScrollBar ? React76.createElement(RemoveScrollBar, { noRelative: props.noRelative, gapMode: props.gapMode }) : null
+    );
+  }
+  function getOutermostShadowParent(node) {
+    var shadowParent = null;
+    while (node !== null) {
+      if (node instanceof ShadowRoot) {
+        shadowParent = node.host;
+        node = node.host;
+      }
+      node = node.parentNode;
+    }
+    return shadowParent;
+  }
+
+  // node_modules/react-remove-scroll/dist/es2015/sidecar.js
+  var sidecar_default = exportSidecar(effectCar, RemoveScrollSideCar);
+
+  // node_modules/react-remove-scroll/dist/es2015/Combination.js
+  var ReactRemoveScroll = React77.forwardRef(function(props, ref) {
+    return React77.createElement(RemoveScroll, __assign({}, props, { ref, sideCar: sidecar_default }));
+  });
+  ReactRemoveScroll.classNames = RemoveScroll.classNames;
+  var Combination_default = ReactRemoveScroll;
+
+  // node_modules/@radix-ui/react-popover/dist/index.mjs
+  var import_jsx_runtime21 = __toESM(require_jsx_runtime(), 1);
+  var POPOVER_NAME = "Popover";
+  var [createPopoverContext, createPopoverScope] = createContextScope(POPOVER_NAME, [
+    createPopperScope
+  ]);
+  var usePopperScope = createPopperScope();
+  var [PopoverProvider, usePopoverContext] = createPopoverContext(POPOVER_NAME);
+  var Popover = (props) => {
+    const {
+      __scopePopover,
+      children,
+      open: openProp,
+      defaultOpen,
+      onOpenChange,
+      modal = false
+    } = props;
+    const popperScope = usePopperScope(__scopePopover);
+    const triggerRef = React78.useRef(null);
+    const [hasCustomAnchor, setHasCustomAnchor] = React78.useState(false);
+    const [open, setOpen] = useControllableState({
+      prop: openProp,
+      defaultProp: defaultOpen ?? false,
+      onChange: onOpenChange,
+      caller: POPOVER_NAME
+    });
+    return /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(Root22, { ...popperScope, children: /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
+      PopoverProvider,
+      {
+        scope: __scopePopover,
+        contentId: useId(),
+        triggerRef,
+        open,
+        onOpenChange: setOpen,
+        onOpenToggle: React78.useCallback(() => setOpen((prevOpen) => !prevOpen), [setOpen]),
+        hasCustomAnchor,
+        onCustomAnchorAdd: React78.useCallback(() => setHasCustomAnchor(true), []),
+        onCustomAnchorRemove: React78.useCallback(() => setHasCustomAnchor(false), []),
+        modal,
+        children
+      }
+    ) });
+  };
+  Popover.displayName = POPOVER_NAME;
+  var ANCHOR_NAME2 = "PopoverAnchor";
+  var PopoverAnchor = React78.forwardRef(
+    (props, forwardedRef) => {
+      const { __scopePopover, ...anchorProps } = props;
+      const context = usePopoverContext(ANCHOR_NAME2, __scopePopover);
+      const popperScope = usePopperScope(__scopePopover);
+      const { onCustomAnchorAdd, onCustomAnchorRemove } = context;
+      React78.useEffect(() => {
+        onCustomAnchorAdd();
+        return () => onCustomAnchorRemove();
+      }, [onCustomAnchorAdd, onCustomAnchorRemove]);
+      return /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(Anchor, { ...popperScope, ...anchorProps, ref: forwardedRef });
+    }
+  );
+  PopoverAnchor.displayName = ANCHOR_NAME2;
+  var TRIGGER_NAME = "PopoverTrigger";
+  var PopoverTrigger = React78.forwardRef(
+    (props, forwardedRef) => {
+      const { __scopePopover, ...triggerProps } = props;
+      const context = usePopoverContext(TRIGGER_NAME, __scopePopover);
+      const popperScope = usePopperScope(__scopePopover);
+      const composedTriggerRef = useComposedRefs(forwardedRef, context.triggerRef);
+      const trigger = /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
+        Primitive6.button,
+        {
+          type: "button",
+          "aria-haspopup": "dialog",
+          "aria-expanded": context.open,
+          "aria-controls": context.contentId,
+          "data-state": getState(context.open),
+          ...triggerProps,
+          ref: composedTriggerRef,
+          onClick: composeEventHandlers(props.onClick, context.onOpenToggle)
+        }
+      );
+      return context.hasCustomAnchor ? trigger : /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(Anchor, { asChild: true, ...popperScope, children: trigger });
+    }
+  );
+  PopoverTrigger.displayName = TRIGGER_NAME;
+  var PORTAL_NAME2 = "PopoverPortal";
+  var [PortalProvider, usePortalContext] = createPopoverContext(PORTAL_NAME2, {
+    forceMount: void 0
+  });
+  var PopoverPortal = (props) => {
+    const { __scopePopover, forceMount, children, container } = props;
+    const context = usePopoverContext(PORTAL_NAME2, __scopePopover);
+    return /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(PortalProvider, { scope: __scopePopover, forceMount, children: /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(Presence, { present: forceMount || context.open, children: /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(Portal, { asChild: true, container, children }) }) });
+  };
+  PopoverPortal.displayName = PORTAL_NAME2;
+  var CONTENT_NAME2 = "PopoverContent";
+  var PopoverContent = React78.forwardRef(
+    (props, forwardedRef) => {
+      const portalContext = usePortalContext(CONTENT_NAME2, props.__scopePopover);
+      const { forceMount = portalContext.forceMount, ...contentProps } = props;
+      const context = usePopoverContext(CONTENT_NAME2, props.__scopePopover);
+      return /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(Presence, { present: forceMount || context.open, children: context.modal ? /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(PopoverContentModal, { ...contentProps, ref: forwardedRef }) : /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(PopoverContentNonModal, { ...contentProps, ref: forwardedRef }) });
+    }
+  );
+  PopoverContent.displayName = CONTENT_NAME2;
+  var Slot = createSlot6("PopoverContent.RemoveScroll");
+  var PopoverContentModal = React78.forwardRef(
+    (props, forwardedRef) => {
+      const context = usePopoverContext(CONTENT_NAME2, props.__scopePopover);
+      const contentRef = React78.useRef(null);
+      const composedRefs = useComposedRefs(forwardedRef, contentRef);
+      const isRightClickOutsideRef = React78.useRef(false);
+      React78.useEffect(() => {
+        const content = contentRef.current;
+        if (content)
+          return hideOthers(content);
+      }, []);
+      return /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(Combination_default, { as: Slot, allowPinchZoom: true, children: /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
+        PopoverContentImpl,
+        {
+          ...props,
+          ref: composedRefs,
+          trapFocus: context.open,
+          disableOutsidePointerEvents: true,
+          onCloseAutoFocus: composeEventHandlers(props.onCloseAutoFocus, (event) => {
+            event.preventDefault();
+            if (!isRightClickOutsideRef.current)
+              context.triggerRef.current?.focus();
+          }),
+          onPointerDownOutside: composeEventHandlers(
+            props.onPointerDownOutside,
+            (event) => {
+              const originalEvent = event.detail.originalEvent;
+              const ctrlLeftClick = originalEvent.button === 0 && originalEvent.ctrlKey === true;
+              const isRightClick = originalEvent.button === 2 || ctrlLeftClick;
+              isRightClickOutsideRef.current = isRightClick;
+            },
+            { checkForDefaultPrevented: false }
+          ),
+          onFocusOutside: composeEventHandlers(
+            props.onFocusOutside,
+            (event) => event.preventDefault(),
+            { checkForDefaultPrevented: false }
+          )
+        }
+      ) });
+    }
+  );
+  var PopoverContentNonModal = React78.forwardRef(
+    (props, forwardedRef) => {
+      const context = usePopoverContext(CONTENT_NAME2, props.__scopePopover);
+      const hasInteractedOutsideRef = React78.useRef(false);
+      const hasPointerDownOutsideRef = React78.useRef(false);
+      return /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
+        PopoverContentImpl,
+        {
+          ...props,
+          ref: forwardedRef,
+          trapFocus: false,
+          disableOutsidePointerEvents: false,
+          onCloseAutoFocus: (event) => {
+            props.onCloseAutoFocus?.(event);
+            if (!event.defaultPrevented) {
+              if (!hasInteractedOutsideRef.current)
+                context.triggerRef.current?.focus();
+              event.preventDefault();
+            }
+            hasInteractedOutsideRef.current = false;
+            hasPointerDownOutsideRef.current = false;
+          },
+          onInteractOutside: (event) => {
+            props.onInteractOutside?.(event);
+            if (!event.defaultPrevented) {
+              hasInteractedOutsideRef.current = true;
+              if (event.detail.originalEvent.type === "pointerdown") {
+                hasPointerDownOutsideRef.current = true;
+              }
+            }
+            const target = event.target;
+            const targetIsTrigger = context.triggerRef.current?.contains(target);
+            if (targetIsTrigger)
+              event.preventDefault();
+            if (event.detail.originalEvent.type === "focusin" && hasPointerDownOutsideRef.current) {
+              event.preventDefault();
+            }
+          }
+        }
+      );
+    }
+  );
+  var PopoverContentImpl = React78.forwardRef(
+    (props, forwardedRef) => {
+      const {
+        __scopePopover,
+        trapFocus,
+        onOpenAutoFocus,
+        onCloseAutoFocus,
+        disableOutsidePointerEvents,
+        onEscapeKeyDown,
+        onPointerDownOutside,
+        onFocusOutside,
+        onInteractOutside,
+        ...contentProps
+      } = props;
+      const context = usePopoverContext(CONTENT_NAME2, __scopePopover);
+      const popperScope = usePopperScope(__scopePopover);
+      useFocusGuards();
+      return /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
+        FocusScope,
+        {
+          asChild: true,
+          loop: true,
+          trapped: trapFocus,
+          onMountAutoFocus: onOpenAutoFocus,
+          onUnmountAutoFocus: onCloseAutoFocus,
+          children: /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
+            DismissableLayer,
+            {
+              asChild: true,
+              disableOutsidePointerEvents,
+              onInteractOutside,
+              onEscapeKeyDown,
+              onPointerDownOutside,
+              onFocusOutside,
+              onDismiss: () => context.onOpenChange(false),
+              children: /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
+                Content,
+                {
+                  "data-state": getState(context.open),
+                  role: "dialog",
+                  id: context.contentId,
+                  ...popperScope,
+                  ...contentProps,
+                  ref: forwardedRef,
+                  style: {
+                    ...contentProps.style,
+                    // re-namespace exposed content custom properties
+                    ...{
+                      "--radix-popover-content-transform-origin": "var(--radix-popper-transform-origin)",
+                      "--radix-popover-content-available-width": "var(--radix-popper-available-width)",
+                      "--radix-popover-content-available-height": "var(--radix-popper-available-height)",
+                      "--radix-popover-trigger-width": "var(--radix-popper-anchor-width)",
+                      "--radix-popover-trigger-height": "var(--radix-popper-anchor-height)"
+                    }
+                  }
+                }
+              )
+            }
+          )
+        }
+      );
+    }
+  );
+  var CLOSE_NAME = "PopoverClose";
+  var PopoverClose = React78.forwardRef(
+    (props, forwardedRef) => {
+      const { __scopePopover, ...closeProps } = props;
+      const context = usePopoverContext(CLOSE_NAME, __scopePopover);
+      return /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
+        Primitive6.button,
+        {
+          type: "button",
+          ...closeProps,
+          ref: forwardedRef,
+          onClick: composeEventHandlers(props.onClick, () => context.onOpenChange(false))
+        }
+      );
+    }
+  );
+  PopoverClose.displayName = CLOSE_NAME;
+  var ARROW_NAME2 = "PopoverArrow";
+  var PopoverArrow = React78.forwardRef(
+    (props, forwardedRef) => {
+      const { __scopePopover, ...arrowProps } = props;
+      const popperScope = usePopperScope(__scopePopover);
+      return /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(Arrow2, { ...popperScope, ...arrowProps, ref: forwardedRef });
+    }
+  );
+  PopoverArrow.displayName = ARROW_NAME2;
+  function getState(open) {
+    return open ? "open" : "closed";
+  }
+  var Root23 = Popover;
+  var Trigger = PopoverTrigger;
+  var Portal2 = PopoverPortal;
+  var Content2 = PopoverContent;
+
+  // app/javascript/components/ui/popover.jsx
+  var import_jsx_runtime22 = __toESM(require_jsx_runtime());
+  var Popover2 = Root23;
+  var PopoverTrigger2 = Trigger;
+  var PopoverContent2 = React79.forwardRef(
+    ({ className, align = "center", side = "bottom", sideOffset = 4, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(Portal2, { children: /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(
+      Content2,
+      {
+        ref,
+        align,
+        side,
+        sideOffset,
+        className: cn(
+          "z-50 w-auto rounded-xl border border-gray-200 bg-white text-gray-900 shadow-lg outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+          className
+        ),
+        ...props
+      }
+    ) })
+  );
+  PopoverContent2.displayName = "PopoverContent";
+
+  // app/javascript/components/pages/Dashboard.jsx
+  var import_jsx_runtime23 = __toESM(require_jsx_runtime());
   function Dashboard() {
-    const [works, setWorks] = (0, import_react2.useState)([]);
-    const [members, setMembers] = (0, import_react2.useState)([]);
-    const [histories, setHistories] = (0, import_react2.useState)([]);
-    const [selectedDate, setSelectedDate] = (0, import_react2.useState)(/* @__PURE__ */ new Date());
-    const [loading, setLoading] = (0, import_react2.useState)(true);
-    const [shuffling, setShuffling] = (0, import_react2.useState)(null);
-    (0, import_react2.useEffect)(() => {
+    const [works, setWorks] = (0, import_react39.useState)([]);
+    const [members, setMembers] = (0, import_react39.useState)([]);
+    const [histories, setHistories] = (0, import_react39.useState)([]);
+    const [selectedDate, setSelectedDate] = (0, import_react39.useState)(/* @__PURE__ */ new Date());
+    const [loading, setLoading] = (0, import_react39.useState)(true);
+    const [shuffling, setShuffling] = (0, import_react39.useState)(null);
+    const [showCalendar, setShowCalendar] = (0, import_react39.useState)(false);
+    (0, import_react39.useEffect)(() => {
       fetchData();
     }, [selectedDate]);
     const fetchData = async () => {
@@ -29751,127 +43033,149 @@ ${summary}`);
       return date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
     };
     if (loading) {
-      return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "text-center py-12 text-gray-600", children: "\u8AAD\u307F\u8FBC\u307F\u4E2D..." });
+      return /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("div", { className: "text-center py-12 text-gray-600", children: "\u8AAD\u307F\u8FBC\u307F\u4E2D..." });
     }
     const activeMembers = members.filter((m) => !m.archive).length;
-    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "space-y-6", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "card bg-gradient-to-r from-primary-50 to-blue-50 border-2 border-primary-200", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex items-center justify-between gap-4 flex-wrap", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)("div", { className: "space-y-6", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("div", { className: "card bg-gradient-to-r from-primary-50 to-blue-50 border-2 border-primary-200", children: /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)("div", { className: "flex items-center justify-center gap-3 flex-wrap", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(
           "button",
           {
             onClick: handlePrevDay,
             className: "btn-secondary flex items-center p-2",
             title: "\u524D\u306E\u65E5",
-            children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(ChevronLeftIcon_default, { className: "h-5 w-5" })
+            children: /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(ChevronLeftIcon_default, { className: "h-5 w-5" })
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex items-center space-x-2", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(CalendarIcon_default, { className: "h-6 w-6 text-primary-600" }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "text-2xl font-bold text-gray-900 min-w-64 text-center", children: formatDate(selectedDate) }),
-          !isToday(selectedDate) && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)("div", { className: "flex items-center space-x-2", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)(Popover2, { open: showCalendar, onOpenChange: setShowCalendar, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(PopoverTrigger2, { asChild: true, children: /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(
+              "button",
+              {
+                className: "text-primary-600 hover:text-primary-700 transition-colors flex-shrink-0",
+                title: "\u30AB\u30EC\u30F3\u30C0\u30FC\u3092\u8868\u793A",
+                children: /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(CalendarIcon_default, { className: "h-6 w-6" })
+              }
+            ) }),
+            /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(PopoverContent2, { className: "w-auto p-0", side: "bottom", align: "center", children: /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(
+              Calendar,
+              {
+                mode: "single",
+                selected: selectedDate,
+                onSelect: (date) => {
+                  setSelectedDate(date);
+                  setShowCalendar(false);
+                },
+                locale: ja_default,
+                disabled: () => false
+              }
+            ) })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("span", { className: "text-xl font-bold text-gray-900 whitespace-nowrap", children: formatDate(selectedDate) }),
+          !isToday(selectedDate) && /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(
             "button",
             {
               onClick: handleToday,
-              className: "text-sm px-3 py-1 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors font-medium",
+              className: "text-sm px-2 py-1 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors font-medium flex-shrink-0",
               children: "\u4ECA\u65E5"
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(
           "button",
           {
             onClick: handleShuffleAllWorks,
             disabled: shuffling === "all" || works.length === 0 || members.length === 0,
             className: `btn-primary flex items-center justify-center transition-all duration-200 ${shuffling === "all" ? "opacity-75 cursor-wait" : ""} ${works.length === 0 || members.length === 0 ? "opacity-50 cursor-not-allowed" : ""}`,
-            children: shuffling === "all" ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "animate-spin mr-2", children: "\u23F3" }),
+            children: shuffling === "all" ? /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)(import_jsx_runtime23.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("span", { className: "animate-spin mr-2", children: "\u23F3" }),
               "\u51E6\u7406\u4E2D..."
-            ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(SparklesIcon_default, { className: "h-5 w-5 mr-2" }),
-              "\u4E00\u62EC\u30B7\u30E3\u30C3\u30D5\u30EB"
+            ] }) : /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)(import_jsx_runtime23.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(SparklesIcon_default, { className: "h-5 w-5 mr-2" }),
+              "\u30B7\u30E3\u30C3\u30D5\u30EB"
             ] })
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(
           "button",
           {
             onClick: handleNextDay,
             className: "btn-secondary flex items-center p-2",
             title: "\u6B21\u306E\u65E5",
-            children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(ChevronRightIcon_default, { className: "h-5 w-5" })
+            children: /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(ChevronRightIcon_default, { className: "h-5 w-5" })
           }
         )
       ] }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "card bg-gradient-to-br from-primary-50 to-primary-100 border border-primary-200", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex items-center justify-between", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex-1", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-sm font-medium text-primary-600 uppercase tracking-wide", children: "\u5F53\u756A\u6570" }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-4xl font-bold text-primary-900 mt-2", children: works.length }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-xs text-primary-600 mt-2", children: "\u500B\u306E\u5F53\u756A\u304C\u767B\u9332\u3055\u308C\u3066\u3044\u307E\u3059" })
+      /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("div", { className: "card bg-gradient-to-br from-primary-50 to-primary-100 border border-primary-200", children: /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)("div", { className: "flex items-center justify-between", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)("div", { className: "flex-1", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("p", { className: "text-sm font-medium text-primary-600 uppercase tracking-wide", children: "\u5F53\u756A\u6570" }),
+            /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("p", { className: "text-4xl font-bold text-primary-900 mt-2", children: works.length }),
+            /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("p", { className: "text-xs text-primary-600 mt-2", children: "\u500B\u306E\u5F53\u756A\u304C\u767B\u9332\u3055\u308C\u3066\u3044\u307E\u3059" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "flex-shrink-0", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "flex items-center justify-center h-14 w-14 rounded-lg bg-primary-200", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(ClipboardDocumentListIcon_default, { className: "h-8 w-8 text-primary-700" }) }) })
+          /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("div", { className: "flex-shrink-0", children: /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("div", { className: "flex items-center justify-center h-14 w-14 rounded-lg bg-primary-200", children: /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(ClipboardDocumentListIcon_default, { className: "h-8 w-8 text-primary-700" }) }) })
         ] }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "card bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex items-center justify-between", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex-1", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-sm font-medium text-blue-600 uppercase tracking-wide", children: "\u30E1\u30F3\u30D0\u30FC\u6570" }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-4xl font-bold text-blue-900 mt-2", children: members.length }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-xs text-blue-600 mt-2", children: "\u4EBA\u304C\u53C2\u52A0\u3057\u3066\u3044\u307E\u3059" })
+        /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("div", { className: "card bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200", children: /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)("div", { className: "flex items-center justify-between", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)("div", { className: "flex-1", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("p", { className: "text-sm font-medium text-blue-600 uppercase tracking-wide", children: "\u30E1\u30F3\u30D0\u30FC\u6570" }),
+            /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("p", { className: "text-4xl font-bold text-blue-900 mt-2", children: members.length }),
+            /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("p", { className: "text-xs text-blue-600 mt-2", children: "\u4EBA\u304C\u53C2\u52A0\u3057\u3066\u3044\u307E\u3059" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "flex-shrink-0", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "flex items-center justify-center h-14 w-14 rounded-lg bg-blue-200", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(UserGroupIcon_default, { className: "h-8 w-8 text-blue-700" }) }) })
+          /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("div", { className: "flex-shrink-0", children: /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("div", { className: "flex items-center justify-center h-14 w-14 rounded-lg bg-blue-200", children: /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(UserGroupIcon_default, { className: "h-8 w-8 text-blue-700" }) }) })
         ] }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "card bg-gradient-to-br from-green-50 to-green-100 border border-green-200", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex items-center justify-between", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex-1", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-sm font-medium text-green-600 uppercase tracking-wide", children: "\u6D3B\u52D5\u4E2D" }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-4xl font-bold text-green-900 mt-2", children: activeMembers }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-xs text-green-600 mt-2", children: "\u4EBA\u304C\u6D3B\u52D5\u4E2D\u3067\u3059" })
+        /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("div", { className: "card bg-gradient-to-br from-green-50 to-green-100 border border-green-200", children: /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)("div", { className: "flex items-center justify-between", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)("div", { className: "flex-1", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("p", { className: "text-sm font-medium text-green-600 uppercase tracking-wide", children: "\u6D3B\u52D5\u4E2D" }),
+            /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("p", { className: "text-4xl font-bold text-green-900 mt-2", children: activeMembers }),
+            /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("p", { className: "text-xs text-green-600 mt-2", children: "\u4EBA\u304C\u6D3B\u52D5\u4E2D\u3067\u3059" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "flex-shrink-0", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "flex items-center justify-center h-14 w-14 rounded-lg bg-green-200", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(CheckCircleIcon_default, { className: "h-8 w-8 text-green-700" }) }) })
+          /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("div", { className: "flex-shrink-0", children: /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("div", { className: "flex items-center justify-center h-14 w-14 rounded-lg bg-green-200", children: /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(CheckCircleIcon_default, { className: "h-8 w-8 text-green-700" }) }) })
         ] }) })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "card", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "mb-6", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex items-center", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(SparklesIcon_default, { className: "h-6 w-6 text-primary-600 mr-2" }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("h2", { className: "text-2xl font-bold text-gray-900", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)("div", { className: "card", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("div", { className: "mb-6", children: /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)("div", { className: "flex items-center", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(SparklesIcon_default, { className: "h-6 w-6 text-primary-600 mr-2" }),
+          /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)("h2", { className: "text-2xl font-bold text-gray-900", children: [
             formatDate(selectedDate),
             "\u306E\u5F53\u756A"
           ] })
         ] }) }),
-        works.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "text-center py-12", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-gray-500 text-lg", children: "\u5F53\u756A\u304C\u767B\u9332\u3055\u308C\u3066\u3044\u307E\u305B\u3093" }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-gray-400 text-sm mt-2", children: "\u300C\u5F53\u756A\u300D\u30DA\u30FC\u30B8\u304B\u3089\u8FFD\u52A0\u3057\u3066\u304F\u3060\u3055\u3044" })
-        ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "space-y-4", children: works.map((work) => {
+        works.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)("div", { className: "text-center py-12", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("p", { className: "text-gray-500 text-lg", children: "\u5F53\u756A\u304C\u767B\u9332\u3055\u308C\u3066\u3044\u307E\u305B\u3093" }),
+          /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("p", { className: "text-gray-400 text-sm mt-2", children: "\u300C\u5F53\u756A\u300D\u30DA\u30FC\u30B8\u304B\u3089\u8FFD\u52A0\u3057\u3066\u304F\u3060\u3055\u3044" })
+        ] }) : /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("div", { className: "space-y-4", children: works.map((work) => {
           const todayAssignments = getTodayAssignedMembers(work.id);
-          return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
+          return /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)(
             "div",
             {
               className: "border border-gray-200 rounded-xl p-5 bg-gradient-to-r from-gray-50 to-gray-25 hover:shadow-md transition-all",
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "flex items-center mb-2", children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "h-3 w-3 bg-primary-600 rounded-full mr-3" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "text-lg font-semibold text-gray-900", children: work.name })
+                /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("div", { className: "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4", children: /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)("div", { children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)("div", { className: "flex items-center mb-2", children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("div", { className: "h-3 w-3 bg-primary-600 rounded-full mr-3" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("h3", { className: "text-lg font-semibold text-gray-900", children: work.name })
                   ] }),
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-700", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)("span", { className: "inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-700", children: [
                     "\u4ECA\u65E5\u306E\u5272\u308A\u5F53\u3066: ",
                     todayAssignments.length,
                     "\u4EBA"
                   ] })
                 ] }) }),
-                todayAssignments.length > 0 ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "border-t border-gray-200 pt-4", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-sm font-semibold text-gray-600 mb-3", children: "\u672C\u65E5\u306E\u5272\u308A\u5F53\u3066\u30E1\u30F3\u30D0\u30FC:" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3", children: todayAssignments.map((assignment) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                todayAssignments.length > 0 ? /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)("div", { className: "border-t border-gray-200 pt-4", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("p", { className: "text-sm font-semibold text-gray-600 mb-3", children: "\u672C\u65E5\u306E\u5272\u308A\u5F53\u3066\u30E1\u30F3\u30D0\u30FC:" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("div", { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3", children: todayAssignments.map((assignment) => /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(
                     "div",
                     {
                       onClick: () => handleDeleteMember(assignment.id),
                       className: "p-4 bg-white border-2 border-primary-300 rounded-lg hover:bg-red-50 hover:border-red-400 cursor-pointer transition-all flex items-center justify-center",
-                      children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "font-semibold text-gray-900 text-center", children: [
+                      children: /* @__PURE__ */ (0, import_jsx_runtime23.jsxs)("p", { className: "font-semibold text-gray-900 text-center", children: [
                         assignment.member?.family_name,
                         assignment.member?.given_name
                       ] })
                     },
                     assignment.id
                   )) })
-                ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "border-t border-gray-200 pt-4", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text-sm text-gray-500 text-center py-2", children: "\u672C\u65E5\u306E\u5272\u308A\u5F53\u3066\u30E1\u30F3\u30D0\u30FC\u306F\u3044\u307E\u305B\u3093\u3002\u30B7\u30E3\u30C3\u30D5\u30EB\u30DC\u30BF\u30F3\u3067\u5272\u308A\u5F53\u3066\u3092\u3057\u3066\u304F\u3060\u3055\u3044\u3002" }) })
+                ] }) : /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("div", { className: "border-t border-gray-200 pt-4", children: /* @__PURE__ */ (0, import_jsx_runtime23.jsx)("p", { className: "text-sm text-gray-500 text-center py-2", children: "\u672C\u65E5\u306E\u5272\u308A\u5F53\u3066\u30E1\u30F3\u30D0\u30FC\u306F\u3044\u307E\u305B\u3093\u3002\u30B7\u30E3\u30C3\u30D5\u30EB\u30DC\u30BF\u30F3\u3067\u5272\u308A\u5F53\u3066\u3092\u3057\u3066\u304F\u3060\u3055\u3044\u3002" }) })
               ]
             },
             work.id
@@ -29882,18 +43186,18 @@ ${summary}`);
   }
 
   // app/javascript/components/pages/Members.jsx
-  var import_react3 = __toESM(require_react());
-  var import_jsx_runtime3 = __toESM(require_jsx_runtime());
+  var import_react40 = __toESM(require_react());
+  var import_jsx_runtime24 = __toESM(require_jsx_runtime());
   function Members() {
-    const [members, setMembers] = (0, import_react3.useState)([]);
-    const [loading, setLoading] = (0, import_react3.useState)(true);
-    const [showForm, setShowForm] = (0, import_react3.useState)(false);
-    const [formData, setFormData] = (0, import_react3.useState)({
+    const [members, setMembers] = (0, import_react40.useState)([]);
+    const [loading, setLoading] = (0, import_react40.useState)(true);
+    const [showForm, setShowForm] = (0, import_react40.useState)(false);
+    const [formData, setFormData] = (0, import_react40.useState)({
       family_name: "",
       given_name: "",
       kana_name: ""
     });
-    (0, import_react3.useEffect)(() => {
+    (0, import_react40.useEffect)(() => {
       fetchMembers();
     }, []);
     const fetchMembers = async () => {
@@ -29927,11 +43231,11 @@ ${summary}`);
       }
     };
     if (loading)
-      return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "text-center py-12", children: "\u8AAD\u307F\u8FBC\u307F\u4E2D..." });
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "space-y-6", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "flex items-center justify-between", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h2", { className: "text-2xl font-bold text-gray-900", children: "\u30E1\u30F3\u30D0\u30FC\u7BA1\u7406" }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      return /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("div", { className: "text-center py-12", children: "\u8AAD\u307F\u8FBC\u307F\u4E2D..." });
+    return /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("div", { className: "space-y-6", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("div", { className: "flex items-center justify-between", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("h2", { className: "text-2xl font-bold text-gray-900", children: "\u30E1\u30F3\u30D0\u30FC\u7BA1\u7406" }),
+        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
           "button",
           {
             onClick: () => setShowForm(!showForm),
@@ -29940,10 +43244,10 @@ ${summary}`);
           }
         )
       ] }),
-      showForm && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "card", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("form", { onSubmit: handleSubmit, className: "space-y-4", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("label", { className: "block text-sm font-medium text-gray-700", children: "\u82D7\u5B57" }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      showForm && /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("div", { className: "card", children: /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("form", { onSubmit: handleSubmit, className: "space-y-4", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("label", { className: "block text-sm font-medium text-gray-700", children: "\u82D7\u5B57" }),
+          /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
             "input",
             {
               type: "text",
@@ -29954,9 +43258,9 @@ ${summary}`);
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("label", { className: "block text-sm font-medium text-gray-700", children: "\u540D\u524D" }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("label", { className: "block text-sm font-medium text-gray-700", children: "\u540D\u524D" }),
+          /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
             "input",
             {
               type: "text",
@@ -29967,9 +43271,9 @@ ${summary}`);
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("label", { className: "block text-sm font-medium text-gray-700", children: "\u304B\u306A\u540D" }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("label", { className: "block text-sm font-medium text-gray-700", children: "\u304B\u306A\u540D" }),
+          /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
             "input",
             {
               type: "text",
@@ -29980,18 +43284,18 @@ ${summary}`);
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "submit", className: "btn-primary w-full", children: "\u8FFD\u52A0" })
+        /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("button", { type: "submit", className: "btn-primary w-full", children: "\u8FFD\u52A0" })
       ] }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4", children: members.map((member) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "card", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "flex items-start justify-between", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("h3", { className: "font-semibold text-gray-900", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4", children: members.map((member) => /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("div", { className: "card", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("div", { className: "flex items-start justify-between", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime24.jsxs)("h3", { className: "font-semibold text-gray-900", children: [
               member.family_name,
               member.given_name
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "text-sm text-gray-500", children: member.kana_name })
+            /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("p", { className: "text-sm text-gray-500", children: member.kana_name })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
             "button",
             {
               onClick: () => handleDelete(member.id),
@@ -30000,24 +43304,24 @@ ${summary}`);
             }
           )
         ] }),
-        member.archive && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "badge-danger mt-2", children: "\u30A2\u30FC\u30AB\u30A4\u30D6\u4E2D" })
+        member.archive && /* @__PURE__ */ (0, import_jsx_runtime24.jsx)("span", { className: "badge-danger mt-2", children: "\u30A2\u30FC\u30AB\u30A4\u30D6\u4E2D" })
       ] }, member.id)) })
     ] });
   }
 
   // app/javascript/components/pages/Works.jsx
-  var import_react4 = __toESM(require_react());
-  var import_jsx_runtime4 = __toESM(require_jsx_runtime());
+  var import_react41 = __toESM(require_react());
+  var import_jsx_runtime25 = __toESM(require_jsx_runtime());
   function Works() {
-    const [works, setWorks] = (0, import_react4.useState)([]);
-    const [members, setMembers] = (0, import_react4.useState)([]);
-    const [loading, setLoading] = (0, import_react4.useState)(true);
-    const [showForm, setShowForm] = (0, import_react4.useState)(false);
-    const [formData, setFormData] = (0, import_react4.useState)({
+    const [works, setWorks] = (0, import_react41.useState)([]);
+    const [members, setMembers] = (0, import_react41.useState)([]);
+    const [loading, setLoading] = (0, import_react41.useState)(true);
+    const [showForm, setShowForm] = (0, import_react41.useState)(false);
+    const [formData, setFormData] = (0, import_react41.useState)({
       name: "",
       multiple: 1
     });
-    (0, import_react4.useEffect)(() => {
+    (0, import_react41.useEffect)(() => {
       fetchData();
     }, []);
     const fetchData = async () => {
@@ -30055,16 +43359,16 @@ ${summary}`);
       }
     };
     if (loading)
-      return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "text-center py-12", children: "\u8AAD\u307F\u8FBC\u307F\u4E2D..." });
-    return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "space-y-6", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "flex items-center justify-between", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h2", { className: "text-2xl font-bold text-gray-900", children: "\u5F53\u756A\u7BA1\u7406" }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("button", { onClick: () => setShowForm(!showForm), className: "btn-primary", children: showForm ? "\u30AD\u30E3\u30F3\u30BB\u30EB" : "\u65B0\u898F\u8FFD\u52A0" })
+      return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { className: "text-center py-12", children: "\u8AAD\u307F\u8FBC\u307F\u4E2D..." });
+    return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { className: "space-y-6", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { className: "flex items-center justify-between", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("h2", { className: "text-2xl font-bold text-gray-900", children: "\u5F53\u756A\u7BA1\u7406" }),
+        /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("button", { onClick: () => setShowForm(!showForm), className: "btn-primary", children: showForm ? "\u30AD\u30E3\u30F3\u30BB\u30EB" : "\u65B0\u898F\u8FFD\u52A0" })
       ] }),
-      showForm && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "card", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("form", { onSubmit: handleSubmit, className: "space-y-4", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("label", { className: "block text-sm font-medium text-gray-700", children: "\u5F53\u756A\u540D" }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+      showForm && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { className: "card", children: /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("form", { onSubmit: handleSubmit, className: "space-y-4", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("label", { className: "block text-sm font-medium text-gray-700", children: "\u5F53\u756A\u540D" }),
+          /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
             "input",
             {
               type: "text",
@@ -30075,9 +43379,9 @@ ${summary}`);
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("label", { className: "block text-sm font-medium text-gray-700", children: "\u8907\u6570\u5272\u308A\u5F53\u3066\u6570" }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("label", { className: "block text-sm font-medium text-gray-700", children: "\u8907\u6570\u5272\u308A\u5F53\u3066\u6570" }),
+          /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
             "input",
             {
               type: "number",
@@ -30091,25 +43395,25 @@ ${summary}`);
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("button", { type: "submit", className: "btn-primary w-full", children: "\u8FFD\u52A0" })
+        /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("button", { type: "submit", className: "btn-primary w-full", children: "\u8FFD\u52A0" })
       ] }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "space-y-4", children: works.map((work) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "card", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "flex items-start justify-between", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "flex-1", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h3", { className: "text-lg font-semibold text-gray-900", children: work.name }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "mt-2 space-y-1", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("p", { className: "text-sm text-gray-600", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { className: "space-y-4", children: works.map((work) => /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { className: "card", children: /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { className: "flex items-start justify-between", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { className: "flex-1", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("h3", { className: "text-lg font-semibold text-gray-900", children: work.name }),
+          /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { className: "mt-2 space-y-1", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("p", { className: "text-sm text-gray-600", children: [
               "\u30E1\u30F3\u30D0\u30FC: ",
               work.members?.length || 0,
               "\u4EBA"
             ] }),
-            work.multiple && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("p", { className: "text-sm text-gray-600", children: [
+            work.multiple && /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("p", { className: "text-sm text-gray-600", children: [
               "\u8907\u6570\u5272\u308A\u5F53\u3066: ",
               work.multiple,
               "\u4EBA"
             ] })
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
           "button",
           {
             onClick: () => handleDelete(work.id),
@@ -30122,13 +43426,13 @@ ${summary}`);
   }
 
   // app/javascript/components/pages/History.jsx
-  var import_react5 = __toESM(require_react());
-  var import_jsx_runtime5 = __toESM(require_jsx_runtime());
+  var import_react42 = __toESM(require_react());
+  var import_jsx_runtime26 = __toESM(require_jsx_runtime());
   function History() {
-    const [histories, setHistories] = (0, import_react5.useState)([]);
-    const [loading, setLoading] = (0, import_react5.useState)(true);
-    const [selectedMonth, setSelectedMonth] = (0, import_react5.useState)(/* @__PURE__ */ new Date());
-    (0, import_react5.useEffect)(() => {
+    const [histories, setHistories] = (0, import_react42.useState)([]);
+    const [loading, setLoading] = (0, import_react42.useState)(true);
+    const [selectedMonth, setSelectedMonth] = (0, import_react42.useState)(/* @__PURE__ */ new Date());
+    (0, import_react42.useEffect)(() => {
       fetchHistories();
     }, [selectedMonth]);
     const fetchHistories = async () => {
@@ -30162,12 +43466,12 @@ ${summary}`);
       return acc;
     }, {});
     if (loading)
-      return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "text-center py-12", children: "\u8AAD\u307F\u8FBC\u307F\u4E2D..." });
-    return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "space-y-6", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "flex items-center justify-between", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h2", { className: "text-2xl font-bold text-gray-900", children: "\u5C65\u6B74\u7BA1\u7406" }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "flex items-center space-x-4", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+      return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { className: "text-center py-12", children: "\u8AAD\u307F\u8FBC\u307F\u4E2D..." });
+    return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { className: "space-y-6", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { className: "flex items-center justify-between", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("h2", { className: "text-2xl font-bold text-gray-900", children: "\u5C65\u6B74\u7BA1\u7406" }),
+        /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { className: "flex items-center space-x-4", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
             "button",
             {
               onClick: () => setSelectedMonth(
@@ -30177,13 +43481,13 @@ ${summary}`);
               children: "\u2190"
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "font-medium", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("span", { className: "font-medium", children: [
             selectedMonth.getFullYear(),
             "\u5E74",
             selectedMonth.getMonth() + 1,
             "\u6708"
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
             "button",
             {
               onClick: () => setSelectedMonth(
@@ -30195,21 +43499,21 @@ ${summary}`);
           )
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "space-y-4", children: Object.entries(groupedHistories).map(([date, dayHistories]) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "card", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { className: "font-semibold text-gray-900 mb-3", children: date }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "space-y-2", children: dayHistories.map((history) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+      /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { className: "space-y-4", children: Object.entries(groupedHistories).map(([date, dayHistories]) => /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { className: "card", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("h3", { className: "font-semibold text-gray-900 mb-3", children: date }),
+        /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { className: "space-y-2", children: dayHistories.map((history) => /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)(
           "div",
           {
             className: "flex items-center justify-between p-3 bg-gray-50 rounded",
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "font-medium text-gray-900", children: history.work?.name }),
-                /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("p", { className: "text-sm text-gray-600", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("p", { className: "font-medium text-gray-900", children: history.work?.name }),
+                /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("p", { className: "text-sm text-gray-600", children: [
                   history.member?.family_name,
                   history.member?.given_name
                 ] })
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
                 "button",
                 {
                   onClick: () => handleDelete(history.id),
@@ -30222,17 +43526,17 @@ ${summary}`);
           history.id
         )) })
       ] }, date)) }),
-      histories.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "text-center py-12 text-gray-500", children: "\u8A18\u9332\u304C\u3042\u308A\u307E\u305B\u3093" })
+      histories.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { className: "text-center py-12 text-gray-500", children: "\u8A18\u9332\u304C\u3042\u308A\u307E\u305B\u3093" })
     ] });
   }
 
   // app/javascript/components/pages/Settings.jsx
-  var import_react6 = __toESM(require_react());
-  var import_jsx_runtime6 = __toESM(require_jsx_runtime());
+  var import_react43 = __toESM(require_react());
+  var import_jsx_runtime27 = __toESM(require_jsx_runtime());
   function Settings() {
-    const [resetDate, setResetDate] = (0, import_react6.useState)("");
-    const [weekMode, setWeekMode] = (0, import_react6.useState)(false);
-    const [saving, setSaving] = (0, import_react6.useState)(false);
+    const [resetDate, setResetDate] = (0, import_react43.useState)("");
+    const [weekMode, setWeekMode] = (0, import_react43.useState)(false);
+    const [saving, setSaving] = (0, import_react43.useState)(false);
     const handleResetDateChange = async (e) => {
       const date = e.target.value;
       setResetDate(date);
@@ -30261,14 +43565,14 @@ ${summary}`);
         setSaving(false);
       }
     };
-    return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "space-y-6 max-w-2xl", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h2", { className: "text-2xl font-bold text-gray-900", children: "\u8A2D\u5B9A" }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "card", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { className: "text-lg font-semibold text-gray-900 mb-4", children: "\u30B7\u30E3\u30C3\u30D5\u30EB\u8A2D\u5B9A" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "space-y-4", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("label", { className: "block text-sm font-medium text-gray-700 mb-2", children: "\u30EA\u30BB\u30C3\u30C8\u65E5\u4ED8" }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { className: "space-y-6 max-w-2xl", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("h2", { className: "text-2xl font-bold text-gray-900", children: "\u8A2D\u5B9A" }),
+      /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { className: "card", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("h3", { className: "text-lg font-semibold text-gray-900 mb-4", children: "\u30B7\u30E3\u30C3\u30D5\u30EB\u8A2D\u5B9A" }),
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { className: "space-y-4", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("label", { className: "block text-sm font-medium text-gray-700 mb-2", children: "\u30EA\u30BB\u30C3\u30C8\u65E5\u4ED8" }),
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
               "input",
               {
                 type: "date",
@@ -30278,10 +43582,10 @@ ${summary}`);
                 disabled: saving
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-sm text-gray-500 mt-2", children: "\u6307\u5B9A\u3057\u305F\u65E5\u4ED8\u3067\u5F53\u756A\u5272\u308A\u5F53\u3066\u306E\u5C65\u6B74\u304C\u30EA\u30BB\u30C3\u30C8\u3055\u308C\u307E\u3059" })
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("p", { className: "text-sm text-gray-500 mt-2", children: "\u6307\u5B9A\u3057\u305F\u65E5\u4ED8\u3067\u5F53\u756A\u5272\u308A\u5F53\u3066\u306E\u5C65\u6B74\u304C\u30EA\u30BB\u30C3\u30C8\u3055\u308C\u307E\u3059" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "flex items-center space-x-3", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { className: "flex items-center space-x-3", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
               "input",
               {
                 type: "checkbox",
@@ -30292,48 +43596,48 @@ ${summary}`);
                 className: "w-4 h-4 rounded"
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("label", { htmlFor: "week_mode", className: "text-sm font-medium text-gray-700", children: "\u9031\u9593\u30E2\u30FC\u30C9" })
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("label", { htmlFor: "week_mode", className: "text-sm font-medium text-gray-700", children: "\u9031\u9593\u30E2\u30FC\u30C9" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-sm text-gray-500", children: "\u30AA\u30F3\u306E\u5834\u5408\u3001\u66DC\u65E5\u3054\u3068\u306E\u5F53\u756A\u5272\u308A\u5F53\u3066\u3092\u7BA1\u7406\u3057\u307E\u3059" })
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("p", { className: "text-sm text-gray-500", children: "\u30AA\u30F3\u306E\u5834\u5408\u3001\u66DC\u65E5\u3054\u3068\u306E\u5F53\u756A\u5272\u308A\u5F53\u3066\u3092\u7BA1\u7406\u3057\u307E\u3059" })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "card", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { className: "text-lg font-semibold text-gray-900 mb-4", children: "\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "btn-secondary w-full", children: "\u30C7\u30FC\u30BF\u3092\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-sm text-gray-500 mt-2", children: "\u73FE\u5728\u306E\u3059\u3079\u3066\u306E\u30C7\u30FC\u30BF\u3092CSV\u30D5\u30A1\u30A4\u30EB\u3067\u30C0\u30A6\u30F3\u30ED\u30FC\u30C9\u3057\u307E\u3059" })
+      /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { className: "card", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("h3", { className: "text-lg font-semibold text-gray-900 mb-4", children: "\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7" }),
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("button", { className: "btn-secondary w-full", children: "\u30C7\u30FC\u30BF\u3092\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8" }),
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("p", { className: "text-sm text-gray-500 mt-2", children: "\u73FE\u5728\u306E\u3059\u3079\u3066\u306E\u30C7\u30FC\u30BF\u3092CSV\u30D5\u30A1\u30A4\u30EB\u3067\u30C0\u30A6\u30F3\u30ED\u30FC\u30C9\u3057\u307E\u3059" })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "card", style: { backgroundColor: "#fef2f2", borderColor: "#fecaca", borderWidth: "1px" }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { className: "text-lg font-semibold", style: { color: "#7f1d1d" }, children: "\u5371\u967A\u306A\u30A2\u30AF\u30B7\u30E7\u30F3" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "btn-danger w-full", children: "\u3059\u3079\u3066\u306E\u30C7\u30FC\u30BF\u3092\u524A\u9664" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-sm text-red-700 mt-2", children: "\u8B66\u544A: \u3053\u306E\u64CD\u4F5C\u306F\u3084\u308A\u76F4\u305B\u307E\u305B\u3093\u3002\u3059\u3079\u3066\u306E\u30C7\u30FC\u30BF\u304C\u524A\u9664\u3055\u308C\u307E\u3059\u3002" })
+      /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { className: "card", style: { backgroundColor: "#fef2f2", borderColor: "#fecaca", borderWidth: "1px" }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("h3", { className: "text-lg font-semibold", style: { color: "#7f1d1d" }, children: "\u5371\u967A\u306A\u30A2\u30AF\u30B7\u30E7\u30F3" }),
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("button", { className: "btn-danger w-full", children: "\u3059\u3079\u3066\u306E\u30C7\u30FC\u30BF\u3092\u524A\u9664" }),
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("p", { className: "text-sm text-red-700 mt-2", children: "\u8B66\u544A: \u3053\u306E\u64CD\u4F5C\u306F\u3084\u308A\u76F4\u305B\u307E\u305B\u3093\u3002\u3059\u3079\u3066\u306E\u30C7\u30FC\u30BF\u304C\u524A\u9664\u3055\u308C\u307E\u3059\u3002" })
       ] })
     ] });
   }
 
   // app/javascript/components/App.jsx
-  var import_jsx_runtime7 = __toESM(require_jsx_runtime());
+  var import_jsx_runtime28 = __toESM(require_jsx_runtime());
   function App() {
-    const [loading, setLoading] = (0, import_react7.useState)(true);
-    (0, import_react7.useEffect)(() => {
+    const [loading, setLoading] = (0, import_react44.useState)(true);
+    (0, import_react44.useEffect)(() => {
       setLoading(false);
     }, []);
     if (loading) {
-      return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "flex items-center justify-center min-h-screen", children: "\u8AAD\u307F\u8FBC\u307F\u4E2D..." });
+      return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("div", { className: "flex items-center justify-center min-h-screen", children: "\u8AAD\u307F\u8FBC\u307F\u4E2D..." });
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(BrowserRouter, { future: { v7_startTransition: true, v7_relativeSplatPath: true }, children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Layout, { children: /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(Routes, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Route, { path: "/", element: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Dashboard, {}) }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Route, { path: "/members", element: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Members, {}) }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Route, { path: "/works", element: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Works, {}) }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Route, { path: "/history", element: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(History, {}) }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Route, { path: "/settings", element: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Settings, {}) })
+    return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(BrowserRouter, { future: { v7_startTransition: true, v7_relativeSplatPath: true }, children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(Layout, { children: /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)(Routes, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(Route, { path: "/", element: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(Dashboard, {}) }),
+      /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(Route, { path: "/members", element: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(Members, {}) }),
+      /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(Route, { path: "/works", element: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(Works, {}) }),
+      /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(Route, { path: "/history", element: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(History, {}) }),
+      /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(Route, { path: "/settings", element: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(Settings, {}) })
     ] }) }) });
   }
 
   // app/javascript/packs/index.jsx
-  var import_jsx_runtime8 = __toESM(require_jsx_runtime());
+  var import_jsx_runtime29 = __toESM(require_jsx_runtime());
   document.addEventListener("DOMContentLoaded", () => {
     const root = import_client.default.createRoot(document.getElementById("root"));
-    root.render(/* @__PURE__ */ (0, import_jsx_runtime8.jsx)(App, {}));
+    root.render(/* @__PURE__ */ (0, import_jsx_runtime29.jsx)(App, {}));
   });
 })();
 /*! Bundled license information:
@@ -30429,5 +43733,101 @@ react-router-dom/dist/index.js:
    * LICENSE.md file in the root directory of this source tree.
    *
    * @license MIT
+   *)
+
+lucide-react/dist/esm/shared/src/utils/mergeClasses.js:
+  (**
+   * @license lucide-react v1.7.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
+   *)
+
+lucide-react/dist/esm/shared/src/utils/toKebabCase.js:
+  (**
+   * @license lucide-react v1.7.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
+   *)
+
+lucide-react/dist/esm/shared/src/utils/toCamelCase.js:
+  (**
+   * @license lucide-react v1.7.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
+   *)
+
+lucide-react/dist/esm/shared/src/utils/toPascalCase.js:
+  (**
+   * @license lucide-react v1.7.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
+   *)
+
+lucide-react/dist/esm/defaultAttributes.js:
+  (**
+   * @license lucide-react v1.7.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
+   *)
+
+lucide-react/dist/esm/shared/src/utils/hasA11yProp.js:
+  (**
+   * @license lucide-react v1.7.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
+   *)
+
+lucide-react/dist/esm/context.js:
+  (**
+   * @license lucide-react v1.7.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
+   *)
+
+lucide-react/dist/esm/Icon.js:
+  (**
+   * @license lucide-react v1.7.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
+   *)
+
+lucide-react/dist/esm/createLucideIcon.js:
+  (**
+   * @license lucide-react v1.7.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
+   *)
+
+lucide-react/dist/esm/icons/chevron-left.js:
+  (**
+   * @license lucide-react v1.7.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
+   *)
+
+lucide-react/dist/esm/icons/chevron-right.js:
+  (**
+   * @license lucide-react v1.7.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
+   *)
+
+lucide-react/dist/esm/lucide-react.js:
+  (**
+   * @license lucide-react v1.7.0 - ISC
+   *
+   * This source code is licensed under the ISC license.
+   * See the LICENSE file in the root directory of this source tree.
    *)
 */

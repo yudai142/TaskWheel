@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import { Calendar } from '../ui/calendar'
+import { Popover, PopoverTrigger, PopoverContent } from '../ui/popover'
+import ja from 'date-fns/locale/ja'
 import { ChevronLeftIcon, ChevronRightIcon, CalendarIcon, ClipboardDocumentListIcon, UserGroupIcon, CheckCircleIcon, SparklesIcon } from '@heroicons/react/24/outline'
 
 export default function Dashboard() {
@@ -9,6 +12,7 @@ export default function Dashboard() {
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [loading, setLoading] = useState(true)
   const [shuffling, setShuffling] = useState(null)
+  const [showCalendar, setShowCalendar] = useState(false)
 
   useEffect(() => {
     fetchData()
@@ -211,7 +215,7 @@ export default function Dashboard() {
     <div className="space-y-6">
       {/* Date Navigation Header */}
       <div className="card bg-gradient-to-r from-primary-50 to-blue-50 border-2 border-primary-200">
-        <div className="flex items-center justify-between gap-4 flex-wrap">
+        <div className="flex items-center justify-center gap-3 flex-wrap">
           <button
             onClick={handlePrevDay}
             className="btn-secondary flex items-center p-2"
@@ -219,20 +223,43 @@ export default function Dashboard() {
           >
             <ChevronLeftIcon className="h-5 w-5" />
           </button>
+
           <div className="flex items-center space-x-2">
-            <CalendarIcon className="h-6 w-6 text-primary-600" />
-            <span className="text-2xl font-bold text-gray-900 min-w-64 text-center">
+            <Popover open={showCalendar} onOpenChange={setShowCalendar}>
+              <PopoverTrigger asChild>
+                <button
+                  className="text-primary-600 hover:text-primary-700 transition-colors flex-shrink-0"
+                  title="カレンダーを表示"
+                >
+                  <CalendarIcon className="h-6 w-6" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" side="bottom" align="center">
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={(date) => {
+                    setSelectedDate(date)
+                    setShowCalendar(false)
+                  }}
+                  locale={ja}
+                  disabled={() => false}
+                />
+              </PopoverContent>
+            </Popover>
+            <span className="text-xl font-bold text-gray-900 whitespace-nowrap">
               {formatDate(selectedDate)}
             </span>
             {!isToday(selectedDate) && (
               <button
                 onClick={handleToday}
-                className="text-sm px-3 py-1 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors font-medium"
+                className="text-sm px-2 py-1 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors font-medium flex-shrink-0"
               >
                 今日
               </button>
             )}
           </div>
+
           <button
             onClick={handleShuffleAllWorks}
             disabled={shuffling === 'all' || works.length === 0 || members.length === 0}
@@ -248,10 +275,11 @@ export default function Dashboard() {
             ) : (
               <>
                 <SparklesIcon className="h-5 w-5 mr-2" />
-                一括シャッフル
+                シャッフル
               </>
             )}
           </button>
+
           <button
             onClick={handleNextDay}
             className="btn-secondary flex items-center p-2"
