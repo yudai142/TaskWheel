@@ -3,27 +3,36 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@headlessui/react": "^1.7.0",
+    "@heroicons/react": "^2.0.0",
+    "@radix-ui/react-popover": "^1.1.15",
+    "@radix-ui/react-primitive": "^2.1.4",
+    "@radix-ui/react-slot": "^1.2.4",
     "@rails/actioncable": "^7.1.0",
     "@rails/activestorage": "^7.1.0",
     "@rails/ujs": "^7.1.0",
+    "axios": "^1.6.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "lucide-react": "^1.7.0",
     "react": "^18.2.0",
+    "react-day-picker": "^9.14.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.20.0",
-    "axios": "^1.6.0",
-    "@headlessui/react": "^1.7.0",
-    "@heroicons/react": "^2.0.0"
+    "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
-    "esbuild": "^0.20.0",
-    "tailwindcss": "^3.4.0",
     "autoprefixer": "^10.4.16",
+    "esbuild": "^0.20.0",
     "postcss": "^8.4.32",
-    "postcss-import": "^15.1.0"
+    "postcss-import": "^15.1.0",
+    "tailwindcss": "^3.4.0"
   },
   "scripts": {
     "build": "esbuild app/javascript/packs/index.jsx --bundle --outfile=public/builds/application.js --jsx=automatic",
     "build:css": "tailwindcss -i ./app/javascript/stylesheets/tailwind.css -o ./public/builds/application.css --minify",
     "dev": "esbuild app/javascript/packs/index.jsx --bundle --outfile=public/builds/application.js --jsx=automatic --watch=forever",
-    "dev:css": "tailwindcss -i ./app/javascript/stylesheets/tailwind.css -o ./public/builds/application.css --watch"
+    "dev:css": "tailwindcss -i ./app/javascript/stylesheets/tailwind.css -o ./public/builds/application.css --watch --poll"
   }
 }
