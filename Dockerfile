@@ -56,7 +56,8 @@ RUN chmod +x /app/docker-entrypoint-prod.sh
 ENV RAILS_ENV=production \
     NODE_ENV=production \
     RAILS_LOG_TO_STDOUT=true \
-    RAILS_SERVE_STATIC_FILES=true
+    RAILS_SERVE_STATIC_FILES=true \
+    VITE_RUBY_SKIP_COMPATIBILITY_CHECK=true
 
 EXPOSE 3000
 
