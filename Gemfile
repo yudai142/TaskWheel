@@ -34,3 +34,5 @@ group :development do
   gem "web-console"
   gem "rack-mini-profiler"
 end
+
+gem "vite_rails", "~> 3.10"
