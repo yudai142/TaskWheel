@@ -7,11 +7,10 @@ import Works from './pages/Works'
 import History from './pages/History'
 import Settings from './pages/Settings'
 
-export default function App() {
-  const [loading, setLoading] = useState(true)
+export default function App(): JSX.Element {
+  const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
-    // 初期化処理
     setLoading(false)
   }, [])
 
@@ -33,4 +32,3 @@ export default function App() {
     </Router>
   )
 }
-

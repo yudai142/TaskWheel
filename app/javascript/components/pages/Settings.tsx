@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 
-export default function Settings() {
-  const [resetDate, setResetDate] = useState('')
-  const [weekMode, setWeekMode] = useState(false)
-  const [saving, setSaving] = useState(false)
+export default function Settings(): JSX.Element {
+  const [resetDate, setResetDate] = useState<string>('')
+  const [weekMode, setWeekMode] = useState<boolean>(false)
+  const [saving, setSaving] = useState<boolean>(false)
 
-  const handleResetDateChange = async (e) => {
+  const handleResetDateChange = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     const date = e.target.value
     setResetDate(date)
 
@@ -18,20 +18,20 @@ export default function Settings() {
         shuffle_option: { reset_date: date },
       })
       alert('リセット日付を更新しました')
-    } catch (error) {
+    } catch {
       alert('更新に失敗しました')
     } finally {
       setSaving(false)
     }
   }
 
-  const handleWeekModeToggle = async () => {
+  const handleWeekModeToggle = async (): Promise<void> => {
     setSaving(true)
     try {
       setWeekMode(!weekMode)
       // TODO: Implement week mode toggle API
       alert('週間モードを更新しました')
-    } catch (error) {
+    } catch {
       alert('更新に失敗しました')
     } finally {
       setSaving(false)
@@ -43,14 +43,10 @@ export default function Settings() {
       <h2 className="text-2xl font-bold text-gray-900">設定</h2>
 
       <div className="card">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          シャッフル設定
-        </h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">シャッフル設定</h3>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              リセット日付
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">リセット日付</label>
             <input
               type="date"
               className="input-field"
@@ -83,24 +79,16 @@ export default function Settings() {
       </div>
 
       <div className="card">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          バックアップ
-        </h3>
-        <button className="btn-secondary w-full">
-          データをエクスポート
-        </button>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">バックアップ</h3>
+        <button className="btn-secondary w-full">データをエクスポート</button>
         <p className="text-sm text-gray-500 mt-2">
           現在のすべてのデータをCSVファイルでダウンロードします
         </p>
       </div>
 
-      <div className="card" style={{ backgroundColor: '#fef2f2', borderColor: '#fecaca', borderWidth: '1px' }}>
-        <h3 className="text-lg font-semibold" style={{ color: '#7f1d1d' }}>
-          危険なアクション
-        </h3>
-        <button className="btn-danger w-full">
-          すべてのデータを削除
-        </button>
+      <div className="card bg-red-50 border border-red-200">
+        <h3 className="text-lg font-semibold text-red-900">危険なアクション</h3>
+        <button className="btn-danger w-full">すべてのデータを削除</button>
         <p className="text-sm text-red-700 mt-2">
           警告: この操作はやり直せません。すべてのデータが削除されます。
         </p>

@@ -4,6 +4,7 @@ import RubyPlugin from 'vite-plugin-ruby'
 export default defineConfig({
   plugins: [
     {
+      // entrypoints/application.js contains JSX — treat it as JSX
       name: 'treat-js-as-jsx',
       async transform(code, id) {
         if (!id.match(/app\/javascript\/.*\.js$/)) return null

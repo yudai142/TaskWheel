@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import type { Member } from '../../types'
 
-export default function Members() {
-  const [members, setMembers] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [showForm, setShowForm] = useState(false)
-  const [formData, setFormData] = useState({
+interface MemberFormData {
+  family_name: string
+  given_name: string
+  kana_name: string
+}
+
+export default function Members(): JSX.Element {
+  const [members, setMembers] = useState<Member[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+  const [showForm, setShowForm] = useState<boolean>(false)
+  const [formData, setFormData] = useState<MemberFormData>({
     family_name: '',
     given_name: '',
     kana_name: '',
@@ -15,35 +22,35 @@ export default function Members() {
     fetchMembers()
   }, [])
 
-  const fetchMembers = async () => {
+  const fetchMembers = async (): Promise<void> => {
     try {
-      const response = await axios.get('/api/v1/members')
+      const response = await axios.get<Member[]>('/api/v1/members')
       setMembers(response.data)
-    } catch (error) {
+    } catch {
       // Error fetching members
     } finally {
       setLoading(false)
     }
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
     try {
       await axios.post('/api/v1/members', { member: formData })
       setFormData({ family_name: '', given_name: '', kana_name: '' })
       setShowForm(false)
       fetchMembers()
-    } catch (error) {
+    } catch {
       alert('メンバーの追加に失敗しました')
     }
   }
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: number): Promise<void> => {
     if (!window.confirm('このメンバーを削除しますか？')) return
     try {
       await axios.delete(`/api/v1/members/${id}`)
       fetchMembers()
-    } catch (error) {
+    } catch {
       alert('削除に失敗しました')
     }
   }
@@ -54,10 +61,7 @@ export default function Members() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900">メンバー管理</h2>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="btn-primary"
-        >
+        <button onClick={() => setShowForm(!showForm)} className="btn-primary">
           {showForm ? 'キャンセル' : '新規追加'}
         </button>
       </div>
@@ -71,9 +75,7 @@ export default function Members() {
                 type="text"
                 className="input-field"
                 value={formData.family_name}
-                onChange={(e) =>
-                  setFormData({ ...formData, family_name: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, family_name: e.target.value })}
                 required
               />
             </div>
@@ -83,9 +85,7 @@ export default function Members() {
                 type="text"
                 className="input-field"
                 value={formData.given_name}
-                onChange={(e) =>
-                  setFormData({ ...formData, given_name: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, given_name: e.target.value })}
                 required
               />
             </div>
@@ -95,9 +95,7 @@ export default function Members() {
                 type="text"
                 className="input-field"
                 value={formData.kana_name}
-                onChange={(e) =>
-                  setFormData({ ...formData, kana_name: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, kana_name: e.target.value })}
                 required
               />
             </div>
@@ -126,9 +124,7 @@ export default function Members() {
                 ×
               </button>
             </div>
-            {member.archive && (
-              <span className="badge-danger mt-2">アーカイブ中</span>
-            )}
+            {member.archive && <span className="badge-danger mt-2">アーカイブ中</span>}
           </div>
         ))}
       </div>

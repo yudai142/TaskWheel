@@ -2,52 +2,66 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
-import { ChevronLeftIcon, ChevronRightIcon, CalendarIcon, ClipboardDocumentListIcon, UserGroupIcon, CheckCircleIcon, SparklesIcon } from '@heroicons/react/24/outline'
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  CalendarIcon,
+  ClipboardDocumentListIcon,
+  UserGroupIcon,
+  CheckCircleIcon,
+  SparklesIcon,
+} from '@heroicons/react/24/outline'
+import type { Member, Work, History } from '../../types'
 
-export default function Dashboard() {
-  const [works, setWorks] = useState([])
-  const [members, setMembers] = useState([])
-  const [histories, setHistories] = useState([])
-  const [selectedDate, setSelectedDate] = useState(new Date())
-  const [loading, setLoading] = useState(true)
-  const [shuffling, setShuffling] = useState(null)
-  const [showCalendar, setShowCalendar] = useState(false)
+interface AssignedMember {
+  work: string
+  member: string
+}
+
+export default function Dashboard(): JSX.Element {
+  const [works, setWorks] = useState<Work[]>([])
+  const [members, setMembers] = useState<Member[]>([])
+  const [histories, setHistories] = useState<History[]>([])
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date())
+  const [loading, setLoading] = useState<boolean>(true)
+  const [shuffling, setShuffling] = useState<number | 'all' | null>(null)
+  const [showCalendar, setShowCalendar] = useState<boolean>(false)
 
   useEffect(() => {
     fetchData()
   }, [selectedDate])
 
-  const fetchData = async () => {
+  const fetchData = async (): Promise<void> => {
     try {
       const year = selectedDate.getFullYear()
       const month = selectedDate.getMonth() + 1
       const day = selectedDate.getDate()
-      
+
       const [worksRes, membersRes, historiesRes] = await Promise.all([
-        axios.get('/api/v1/works'),
-        axios.get('/api/v1/members'),
-        axios.get('/api/v1/histories', {
+        axios.get<Work[]>('/api/v1/works'),
+        axios.get<Member[]>('/api/v1/members'),
+        axios.get<History[]>('/api/v1/histories', {
           params: { year, month, day },
         }),
       ])
       setWorks(worksRes.data)
       setMembers(membersRes.data)
       setHistories(historiesRes.data)
-    } catch (error) {
+    } catch {
       // Error fetching data
     } finally {
       setLoading(false)
     }
   }
 
-  const handleShuffle = async (workId) => {
+  const handleShuffle = async (workId: number): Promise<void> => {
     setShuffling(workId)
     try {
       const year = selectedDate.getFullYear()
       const month = selectedDate.getMonth() + 1
       const day = selectedDate.getDate()
 
-      const response = await axios.post('/api/v1/works/shuffle', {
+      const response = await axios.post<{ member: Member }>('/api/v1/works/shuffle', {
         work_id: workId,
         year,
         month,
@@ -56,14 +70,15 @@ export default function Dashboard() {
       alert(`${response.data.member.given_name}さんに決定しました！`)
       fetchData()
     } catch (error) {
-      const msg = error.response?.data?.error || 'シャッフルに失敗しました'
+      const axiosError = error as { response?: { data?: { error?: string } } }
+      const msg = axiosError.response?.data?.error || 'シャッフルに失敗しました'
       alert(msg)
     } finally {
       setShuffling(null)
     }
   }
 
-  const handleShuffleAllWorks = async () => {
+  const handleShuffleAllWorks = async (): Promise<void> => {
     if (works.length === 0) {
       alert('当番が登録されていません')
       return
@@ -72,14 +87,14 @@ export default function Dashboard() {
     setShuffling('all')
     try {
       let successCount = 0
-      let assignedMembers = []
+      const assignedMembers: AssignedMember[] = []
       const year = selectedDate.getFullYear()
       const month = selectedDate.getMonth() + 1
       const day = selectedDate.getDate()
 
       for (const work of works) {
         try {
-          const response = await axios.post('/api/v1/works/shuffle', {
+          const response = await axios.post<{ member: Member }>('/api/v1/works/shuffle', {
             work_id: work.id,
             year,
             month,
@@ -91,7 +106,8 @@ export default function Dashboard() {
             member: `${response.data.member.family_name}${response.data.member.given_name}`,
           })
         } catch (error) {
-          const msg = error.response?.data?.error
+          const axiosError = error as { response?: { data?: { error?: string } } }
+          const msg = axiosError.response?.data?.error
           if (msg) {
             assignedMembers.push({ work: work.name, member: `(スキップ: ${msg})` })
           }
@@ -99,38 +115,34 @@ export default function Dashboard() {
       }
 
       if (successCount > 0) {
-        // 同じメンバーの重複を除去
         await removeDuplicateAssignments()
 
-        const summary = assignedMembers
-          .map((a) => `${a.work}→${a.member}`)
-          .join('\n')
+        const summary = assignedMembers.map((a) => `${a.work}→${a.member}`).join('\n')
         alert(`${successCount}個の当番を割り当てました！\n\n${summary}`)
         fetchData()
       } else {
         alert('割り当てに失敗しました')
       }
-    } catch (error) {
+    } catch {
       alert('一括シャッフルに失敗しました')
     } finally {
       setShuffling(null)
     }
   }
 
-  const removeDuplicateAssignments = async () => {
+  const removeDuplicateAssignments = async (): Promise<void> => {
     try {
       const year = selectedDate.getFullYear()
       const month = selectedDate.getMonth() + 1
       const day = selectedDate.getDate()
 
-      const historiesRes = await axios.get('/api/v1/histories', {
+      const historiesRes = await axios.get<History[]>('/api/v1/histories', {
         params: { year, month, day },
       })
 
       const todayHistories = historiesRes.data
-      const memberCounts = {}
+      const memberCounts: Record<number, number[]> = {}
 
-      // メンバーごとの割り当て数をカウント
       todayHistories.forEach((h) => {
         if (!memberCounts[h.member_id]) {
           memberCounts[h.member_id] = []
@@ -138,55 +150,54 @@ export default function Dashboard() {
         memberCounts[h.member_id].push(h.id)
       })
 
-      // 重複しているメンバーの場合、最初の1つ以外を削除
       for (const memberId in memberCounts) {
-        if (memberCounts[memberId].length > 1) {
-          const idsToDelete = memberCounts[memberId].slice(1)
+        if (memberCounts[Number(memberId)].length > 1) {
+          const idsToDelete = memberCounts[Number(memberId)].slice(1)
           for (const historyId of idsToDelete) {
             try {
               await axios.delete(`/api/v1/histories/${historyId}`)
-            } catch (error) {
+            } catch {
               // 削除に失敗した場合はスキップ
             }
           }
         }
       }
-    } catch (error) {
+    } catch {
       // 重複除去に失敗した場合はスキップ
     }
   }
 
-  const handleDeleteMember = async (historyId) => {
+  const handleDeleteMember = async (historyId: number): Promise<void> => {
     if (!window.confirm('この割り当てを削除しますか？')) return
     try {
       await axios.delete(`/api/v1/histories/${historyId}`)
       fetchData()
-    } catch (error) {
+    } catch {
       alert('削除に失敗しました')
     }
   }
 
-  const getTodayAssignedMembers = (workId) => {
+  const getTodayAssignedMembers = (workId: number): History[] => {
     return histories.filter((h) => h.work_id === workId)
   }
 
-  const handlePrevDay = () => {
+  const handlePrevDay = (): void => {
     const prevDate = new Date(selectedDate)
     prevDate.setDate(prevDate.getDate() - 1)
     setSelectedDate(prevDate)
   }
 
-  const handleNextDay = () => {
+  const handleNextDay = (): void => {
     const nextDate = new Date(selectedDate)
     nextDate.setDate(nextDate.getDate() + 1)
     setSelectedDate(nextDate)
   }
 
-  const handleToday = () => {
+  const handleToday = (): void => {
     setSelectedDate(new Date())
   }
 
-  const formatDate = (date) => {
+  const formatDate = (date: Date): string => {
     return date.toLocaleDateString('ja-JP', {
       year: 'numeric',
       month: 'long',
@@ -195,7 +206,7 @@ export default function Dashboard() {
     })
   }
 
-  const isToday = (date) => {
+  const isToday = (date: Date): boolean => {
     const today = new Date()
     return (
       date.getDate() === today.getDate() &&
@@ -240,9 +251,11 @@ export default function Dashboard() {
                 <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 z-50 bg-white rounded-xl shadow-2xl border border-indigo-100 p-2">
                   <Calendar
                     value={selectedDate}
-                    onChange={(date) => {
-                      setSelectedDate(date)
-                      setShowCalendar(false)
+                    onChange={(value) => {
+                      if (value instanceof Date) {
+                        setSelectedDate(value)
+                        setShowCalendar(false)
+                      }
                     }}
                     locale="ja-JP"
                     className="react-calendar-custom"
@@ -295,7 +308,6 @@ export default function Dashboard() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
-        {/* Works Count Card */}
         <div className="card bg-gradient-to-br from-primary-50 to-primary-100 border border-primary-200">
           <div className="flex items-center justify-between">
             <div className="flex-1">
@@ -311,7 +323,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Members Count Card */}
         <div className="card bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200">
           <div className="flex items-center justify-between">
             <div className="flex-1">
@@ -327,7 +338,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Active Members Card */}
         <div className="card bg-gradient-to-br from-green-50 to-green-100 border border-green-200">
           <div className="flex items-center justify-between">
             <div className="flex-1">
@@ -379,7 +389,6 @@ export default function Dashboard() {
                     </div>
                   </div>
 
-                  {/* Today's Assigned Members */}
                   {todayAssignments.length > 0 ? (
                     <div className="border-t border-gray-200 pt-4">
                       <p className="text-sm font-semibold text-gray-600 mb-3">

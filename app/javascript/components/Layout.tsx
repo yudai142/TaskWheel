@@ -10,10 +10,20 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 
-export default function Layout({ children }) {
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+interface NavItem {
+  name: string
+  href: string
+  icon: React.FC<React.SVGProps<SVGSVGElement>>
+}
 
-  const navigation = [
+interface LayoutProps {
+  children: React.ReactNode
+}
+
+export default function Layout({ children }: LayoutProps): JSX.Element {
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true)
+
+  const navigation: NavItem[] = [
     { name: 'ダッシュボード', href: '/', icon: HomeIcon },
     { name: 'メンバー', href: '/members', icon: UserGroupIcon },
     { name: '当番', href: '/works', icon: ClipboardDocumentListIcon },
