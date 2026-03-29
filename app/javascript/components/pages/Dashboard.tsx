@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
@@ -10,12 +10,18 @@ import {
   UserGroupIcon,
   CheckCircleIcon,
   SparklesIcon,
+  XMarkIcon,
 } from '@heroicons/react/24/outline'
 import type { Member, Work, History } from '../../types'
 
 interface AssignedMember {
   work: string
   member: string
+}
+
+interface Notification {
+  message: string
+  type: 'success' | 'error'
 }
 
 export default function Dashboard(): JSX.Element {
@@ -26,6 +32,12 @@ export default function Dashboard(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(true)
   const [shuffling, setShuffling] = useState<number | 'all' | null>(null)
   const [showCalendar, setShowCalendar] = useState<boolean>(false)
+  const [notification, setNotification] = useState<Notification | null>(null)
+
+  const showNotification = useCallback((message: string, type: 'success' | 'error' = 'success') => {
+    setNotification({ message, type })
+    setTimeout(() => setNotification(null), 4000)
+  }, [])
 
   useEffect(() => {
     fetchData()
@@ -67,12 +79,12 @@ export default function Dashboard(): JSX.Element {
         month,
         day,
       })
-      alert(`${response.data.member.given_name}さんに決定しました！`)
+      showNotification(`${response.data.member.given_name}さんに決定しました！`)
       fetchData()
     } catch (error) {
       const axiosError = error as { response?: { data?: { error?: string } } }
       const msg = axiosError.response?.data?.error || 'シャッフルに失敗しました'
-      alert(msg)
+      showNotification(msg, 'error')
     } finally {
       setShuffling(null)
     }
@@ -80,7 +92,7 @@ export default function Dashboard(): JSX.Element {
 
   const handleShuffleAllWorks = async (): Promise<void> => {
     if (works.length === 0) {
-      alert('当番が登録されていません')
+      showNotification('当番が登録されていません', 'error')
       return
     }
 
@@ -117,14 +129,14 @@ export default function Dashboard(): JSX.Element {
       if (successCount > 0) {
         await removeDuplicateAssignments()
 
-        const summary = assignedMembers.map((a) => `${a.work}→${a.member}`).join('\n')
-        alert(`${successCount}個の当番を割り当てました！\n\n${summary}`)
+        const summary = assignedMembers.map((a) => `${a.work} → ${a.member}`).join('\n')
+        showNotification(`${successCount}個の当番を割り当てました！\n\n${summary}`)
         fetchData()
       } else {
-        alert('割り当てに失敗しました')
+        showNotification('割り当てに失敗しました', 'error')
       }
     } catch {
-      alert('一括シャッフルに失敗しました')
+      showNotification('一括シャッフルに失敗しました', 'error')
     } finally {
       setShuffling(null)
     }
@@ -173,7 +185,7 @@ export default function Dashboard(): JSX.Element {
       await axios.delete(`/api/v1/histories/${historyId}`)
       fetchData()
     } catch {
-      alert('削除に失敗しました')
+      showNotification('削除に失敗しました', 'error')
     }
   }
 
@@ -223,6 +235,29 @@ export default function Dashboard(): JSX.Element {
 
   return (
     <div className="space-y-6">
+      {/* Notification Popup */}
+      {notification && (
+        <div className="fixed top-6 right-6 z-50 max-w-sm w-full animate-fade-in">
+          <div
+            className={`rounded-xl shadow-lg p-4 flex items-start gap-3 border ${
+              notification.type === 'success'
+                ? 'bg-green-50 border-green-300 text-green-900'
+                : 'bg-red-50 border-red-300 text-red-900'
+            }`}
+          >
+            <div className="flex-1 whitespace-pre-wrap text-sm font-medium">
+              {notification.message}
+            </div>
+            <button
+              onClick={() => setNotification(null)}
+              className="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <XMarkIcon className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Date Navigation Header */}
       <div className="card bg-gradient-to-r from-primary-50 to-blue-50 border-2 border-primary-200">
         <div className="flex items-center justify-center gap-3 flex-wrap">
