@@ -27,6 +27,7 @@ services:
       - bundle_cache:/usr/local/bundle
     ports:
       - "3000:3000"
+      - "5173:5173"
     depends_on:
       db:
         condition: service_healthy
@@ -34,6 +35,8 @@ services:
       DATABASE_URL: postgresql://postgres:password@db:5432/duty_shuffle_development
       RAILS_ENV: development
       NODE_ENV: development
+      VITE_RUBY_HOST: 0.0.0.0
+      VITE_RUBY_SKIP_COMPATIBILITY_CHECK: "true"
     stdin_open: true
     tty: true
 

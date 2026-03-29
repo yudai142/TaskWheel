@@ -122,6 +122,7 @@ GEM
       reline (>= 0.3.8)
     diff-lcs (1.6.2)
     drb (2.2.3)
+    dry-cli (1.4.1)
     erb (6.0.2)
     erubi (1.13.1)
     factory_bot (6.5.6)
@@ -199,6 +200,8 @@ GEM
       rack (>= 3.0.14)
     rack-mini-profiler (4.0.1)
       rack (>= 1.2.0)
+    rack-proxy (0.7.7)
+      rack
     rack-session (2.1.1)
       base64 (>= 0.1.0)
       rack (>= 3.0.0)
@@ -282,6 +285,15 @@ GEM
       concurrent-ruby (~> 1.0)
     tzinfo-data (1.2026.1)
       tzinfo (>= 1.0.0)
+    vite_rails (3.10.0)
+      railties (>= 5.1, < 9)
+      vite_ruby (~> 3.0, >= 3.2.2)
+    vite_ruby (3.10.1)
+      dry-cli (>= 0.7, < 2)
+      logger (~> 1.6)
+      mutex_m
+      rack-proxy (~> 0.6, >= 0.6.1)
+      zeitwerk (~> 2.2)
     web-console (4.2.1)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
@@ -315,6 +327,7 @@ DEPENDENCIES
   stimulus-rails
   turbo-rails
   tzinfo-data
+  vite_rails (~> 3.10)
   web-console
 
 RUBY VERSION

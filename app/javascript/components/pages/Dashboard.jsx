@@ -365,7 +365,7 @@ export default function Dashboard() {
               return (
                 <div
                   key={work.id}
-                  className="border border-gray-200 rounded-xl p-5 bg-gradient-to-r from-gray-50 to-gray-25 hover:shadow-md transition-all"
+                  className="border border-gray-200 rounded-xl p-5 bg-gradient-to-r from-gray-50 to-gray-100 hover:shadow-md transition-all"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
                     <div>

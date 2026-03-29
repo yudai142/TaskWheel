@@ -3,6 +3,6 @@
 
 class PagesController < ApplicationController
   def index
-    render :index
+    render :index, formats: [:html]
   end
 end

@@ -2,6 +2,7 @@
   "name": "duty-shuffle-rails",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@headlessui/react": "^1.7.0",
     "@heroicons/react": "^2.0.0",
@@ -18,15 +19,13 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.16",
-    "esbuild": "^0.20.0",
     "postcss": "^8.4.32",
     "postcss-import": "^15.1.0",
-    "tailwindcss": "^3.4.0"
+    "tailwindcss": "^3.4.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "vite": "^5.0.0",
+    "vite-plugin-ruby": "^5.0.0"
   },
   "scripts": {
-    "build": "esbuild app/javascript/packs/index.jsx --bundle --outfile=public/builds/application.js --jsx=automatic",
-    "build:css": "tailwindcss -i ./app/javascript/stylesheets/tailwind.css -o ./public/builds/application.css --minify",
-    "dev": "esbuild app/javascript/packs/index.jsx --bundle --outfile=public/builds/application.js --jsx=automatic --watch=forever",
-    "dev:css": "tailwindcss -i ./app/javascript/stylesheets/tailwind.css -o ./public/builds/application.css --watch --poll"
   }
 }
