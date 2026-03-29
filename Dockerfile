@@ -26,7 +26,8 @@ COPY . .
 
 # Build Vite frontend assets for production
 ENV RAILS_ENV=production \
-    NODE_ENV=production
+    NODE_ENV=production \
+    VITE_RUBY_SKIP_COMPATIBILITY_CHECK=true
 RUN SECRET_KEY_BASE=placeholder bundle exec vite build
 
 # ===== Production Stage =====
