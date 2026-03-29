@@ -1,41 +1,42 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import type { History } from '../../types'
 
-export default function History() {
-  const [histories, setHistories] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [selectedMonth, setSelectedMonth] = useState(new Date())
+export default function HistoryPage(): JSX.Element {
+  const [histories, setHistories] = useState<History[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+  const [selectedMonth, setSelectedMonth] = useState<Date>(new Date())
 
   useEffect(() => {
     fetchHistories()
   }, [selectedMonth])
 
-  const fetchHistories = async () => {
+  const fetchHistories = async (): Promise<void> => {
     try {
       const year = selectedMonth.getFullYear()
       const month = selectedMonth.getMonth() + 1
-      const response = await axios.get('/api/v1/histories', {
+      const response = await axios.get<History[]>('/api/v1/histories', {
         params: { year, month },
       })
       setHistories(response.data)
-    } catch (error) {
+    } catch {
       // Error fetching histories
     } finally {
       setLoading(false)
     }
   }
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: number): Promise<void> => {
     if (!window.confirm('この記録を削除しますか？')) return
     try {
       await axios.delete(`/api/v1/histories/${id}`)
       fetchHistories()
-    } catch (error) {
+    } catch {
       alert('削除に失敗しました')
     }
   }
 
-  const groupedHistories = histories.reduce((acc, history) => {
+  const groupedHistories = histories.reduce<Record<string, History[]>>((acc, history) => {
     const date = new Date(history.date).toLocaleDateString('ja-JP')
     if (!acc[date]) acc[date] = []
     acc[date].push(history)
@@ -86,9 +87,7 @@ export default function History() {
                   className="flex items-center justify-between p-3 bg-gray-50 rounded"
                 >
                   <div>
-                    <p className="font-medium text-gray-900">
-                      {history.work?.name}
-                    </p>
+                    <p className="font-medium text-gray-900">{history.work?.name}</p>
                     <p className="text-sm text-gray-600">
                       {history.member?.family_name}
                       {history.member?.given_name}
@@ -108,9 +107,7 @@ export default function History() {
       </div>
 
       {histories.length === 0 && (
-        <div className="text-center py-12 text-gray-500">
-          記録がありません
-        </div>
+        <div className="text-center py-12 text-gray-500">記録がありません</div>
       )}
     </div>
   )
