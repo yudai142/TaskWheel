@@ -231,7 +231,7 @@ export default function Dashboard(): JSX.Element {
     return <div className="text-center py-12 text-gray-600">読み込み中...</div>
   }
 
-  const activeMembers = members.filter((m) => !m.archive).length
+  const assignedMembersCount = new Set(histories.map((h: History) => h.member_id)).size
 
   return (
     <div className="space-y-6">
@@ -376,9 +376,9 @@ export default function Dashboard(): JSX.Element {
         <div className="card bg-gradient-to-br from-green-50 to-green-100 border border-green-200">
           <div className="flex items-center justify-between">
             <div className="flex-1">
-              <p className="text-sm font-medium text-green-600 uppercase tracking-wide">活動中</p>
-              <p className="text-4xl font-bold text-green-900 mt-2">{activeMembers}</p>
-              <p className="text-xs text-green-600 mt-2">人が活動中です</p>
+              <p className="text-sm font-medium text-green-600 uppercase tracking-wide">割り当て済み</p>
+              <p className="text-4xl font-bold text-green-900 mt-2">{assignedMembersCount}</p>
+              <p className="text-xs text-green-600 mt-2">人が割り当てられています</p>
             </div>
             <div className="flex-shrink-0">
               <div className="flex items-center justify-center h-14 w-14 rounded-lg bg-green-200">
