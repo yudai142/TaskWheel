@@ -20,7 +20,8 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
+      target: development
     container_name: duty_shuffle_web
     command: /app/docker-entrypoint.sh
     volumes:
