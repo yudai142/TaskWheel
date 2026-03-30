@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: duty-shuffle-2
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      - key: NODE_ENV
+        value: production
+      - key: RAILS_SERVE_STATIC_FILES
+        value: "true"
+      - key: RAILS_LOG_TO_STDOUT
+        value: "true"
+      - key: DATABASE_URL
+        sync: false
+      - key: SECRET_KEY_BASE
+        generateValue: true
