@@ -34,6 +34,11 @@ module Api
       def shuffle
         work = Work.find(params[:work_id])
         members = work.available_members.active
+        participant_member_ids = Array(params[:participant_member_ids]).map(&:to_i).uniq
+
+        if params.key?(:participant_member_ids)
+          members = members.where(id: participant_member_ids)
+        end
 
         if members.empty?
           return render_error("割り当て可能なメンバーがいません", :unprocessable_entity)
