@@ -24,6 +24,8 @@ interface Notification {
   type: 'success' | 'error'
 }
 
+type StatsTab = 'works' | 'members' | 'assigned'
+
 export default function Dashboard(): JSX.Element {
   const [works, setWorks] = useState<Work[]>([])
   const [members, setMembers] = useState<Member[]>([])
@@ -33,6 +35,7 @@ export default function Dashboard(): JSX.Element {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [loading, setLoading] = useState<boolean>(true)
   const [shuffling, setShuffling] = useState<number | 'all' | null>(null)
+  const [activeStatsTab, setActiveStatsTab] = useState<StatsTab>('works')
   const [showCalendar, setShowCalendar] = useState<boolean>(false)
   const [notification, setNotification] = useState<Notification | null>(null)
 
@@ -277,6 +280,8 @@ export default function Dashboard(): JSX.Element {
   }
 
   const assignedMembersCount = new Set(histories.map((h: History) => h.member_id)).size
+  const showParticipantSection = activeStatsTab !== 'assigned'
+  const showWorksSection = activeStatsTab !== 'members'
 
   return (
     <div className="space-y-6">
@@ -395,9 +400,17 @@ export default function Dashboard(): JSX.Element {
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
-        <div className="card bg-gradient-to-br from-primary-50 to-primary-100 border border-primary-200">
+      {/* Stats Cards as Tabs */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6" role="tablist" aria-label="統計表示タブ">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeStatsTab === 'works'}
+          onClick={() => setActiveStatsTab('works')}
+          className={`card bg-gradient-to-br from-primary-50 to-primary-100 border border-primary-200 text-left transition-all ${
+            activeStatsTab === 'works' ? 'ring-2 ring-primary-500 shadow-lg' : 'hover:shadow-md'
+          }`}
+        >
           <div className="flex items-center justify-between">
             <div className="flex-1">
               <p className="text-sm font-medium text-primary-600 uppercase tracking-wide">当番数</p>
@@ -410,9 +423,17 @@ export default function Dashboard(): JSX.Element {
               </div>
             </div>
           </div>
-        </div>
+        </button>
 
-        <div className="card bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeStatsTab === 'members'}
+          onClick={() => setActiveStatsTab('members')}
+          className={`card bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 text-left transition-all ${
+            activeStatsTab === 'members' ? 'ring-2 ring-blue-500 shadow-lg' : 'hover:shadow-md'
+          }`}
+        >
           <div className="flex items-center justify-between">
             <div className="flex-1">
               <p className="text-sm font-medium text-blue-600 uppercase tracking-wide">メンバー数</p>
@@ -425,9 +446,17 @@ export default function Dashboard(): JSX.Element {
               </div>
             </div>
           </div>
-        </div>
+        </button>
 
-        <div className="card bg-gradient-to-br from-green-50 to-green-100 border border-green-200">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeStatsTab === 'assigned'}
+          onClick={() => setActiveStatsTab('assigned')}
+          className={`card bg-gradient-to-br from-green-50 to-green-100 border border-green-200 text-left transition-all ${
+            activeStatsTab === 'assigned' ? 'ring-2 ring-green-500 shadow-lg' : 'hover:shadow-md'
+          }`}
+        >
           <div className="flex items-center justify-between">
             <div className="flex-1">
               <p className="text-sm font-medium text-green-600 uppercase tracking-wide">割り当て済み</p>
@@ -440,10 +469,11 @@ export default function Dashboard(): JSX.Element {
               </div>
             </div>
           </div>
-        </div>
+        </button>
       </div>
 
-      <div className="card">
+      {showParticipantSection && (
+      <div className="card" role="tabpanel">
         <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
           <h3 className="text-lg font-semibold text-gray-900">参加メンバー選択</h3>
           <div className="flex items-center gap-2">
@@ -501,8 +531,10 @@ export default function Dashboard(): JSX.Element {
           </div>
         )}
       </div>
+      )}
 
       {/* Works List Section */}
+      {showWorksSection && (
       <div className="card">
         <div className="mb-6">
           <div className="flex items-center">
@@ -582,6 +614,7 @@ export default function Dashboard(): JSX.Element {
           </div>
         )}
       </div>
+      )}
     </div>
   )
 }
