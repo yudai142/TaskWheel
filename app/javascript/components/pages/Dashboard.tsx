@@ -27,6 +27,8 @@ interface Notification {
 export default function Dashboard(): JSX.Element {
   const [works, setWorks] = useState<Work[]>([])
   const [members, setMembers] = useState<Member[]>([])
+  const [participantMemberIds, setParticipantMemberIds] = useState<number[]>([])
+  const [participantSelectionInitialized, setParticipantSelectionInitialized] = useState<boolean>(false)
   const [histories, setHistories] = useState<History[]>([])
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [loading, setLoading] = useState<boolean>(true)
@@ -42,6 +44,18 @@ export default function Dashboard(): JSX.Element {
   useEffect(() => {
     fetchData()
   }, [selectedDate])
+
+  useEffect(() => {
+    const activeMemberIds = members.filter((member) => !member.archive).map((member) => member.id)
+
+    if (!participantSelectionInitialized) {
+      setParticipantMemberIds(activeMemberIds)
+      setParticipantSelectionInitialized(true)
+      return
+    }
+
+    setParticipantMemberIds((prev) => prev.filter((id) => activeMemberIds.includes(id)))
+  }, [members, participantSelectionInitialized])
 
   const fetchData = async (): Promise<void> => {
     try {
@@ -67,6 +81,11 @@ export default function Dashboard(): JSX.Element {
   }
 
   const handleShuffle = async (workId: number): Promise<void> => {
+    if (participantMemberIds.length === 0) {
+      showNotification('参加メンバーを1人以上選択してください', 'error')
+      return
+    }
+
     setShuffling(workId)
     try {
       const year = selectedDate.getFullYear()
@@ -75,6 +94,7 @@ export default function Dashboard(): JSX.Element {
 
       const response = await axios.post<{ member: Member }>('/api/v1/works/shuffle', {
         work_id: workId,
+        participant_member_ids: participantMemberIds,
         year,
         month,
         day,
@@ -96,6 +116,11 @@ export default function Dashboard(): JSX.Element {
       return
     }
 
+    if (participantMemberIds.length === 0) {
+      showNotification('参加メンバーを1人以上選択してください', 'error')
+      return
+    }
+
     setShuffling('all')
     try {
       let successCount = 0
@@ -108,6 +133,7 @@ export default function Dashboard(): JSX.Element {
         try {
           const response = await axios.post<{ member: Member }>('/api/v1/works/shuffle', {
             work_id: work.id,
+            participant_member_ids: participantMemberIds,
             year,
             month,
             day,
@@ -191,6 +217,25 @@ export default function Dashboard(): JSX.Element {
 
   const getTodayAssignedMembers = (workId: number): History[] => {
     return histories.filter((h) => h.work_id === workId)
+  }
+
+  const activeMembers = members.filter((member) => !member.archive)
+
+  const handleToggleParticipant = (memberId: number): void => {
+    setParticipantMemberIds((prev) => {
+      if (prev.includes(memberId)) {
+        return prev.filter((id) => id !== memberId)
+      }
+      return [...prev, memberId]
+    })
+  }
+
+  const handleSelectAllParticipants = (): void => {
+    setParticipantMemberIds(activeMembers.map((member) => member.id))
+  }
+
+  const handleClearAllParticipants = (): void => {
+    setParticipantMemberIds([])
   }
 
   const handlePrevDay = (): void => {
@@ -313,10 +358,19 @@ export default function Dashboard(): JSX.Element {
 
           <button
             onClick={handleShuffleAllWorks}
-            disabled={shuffling === 'all' || works.length === 0 || members.length === 0}
+            disabled={
+              shuffling === 'all' ||
+              works.length === 0 ||
+              activeMembers.length === 0 ||
+              participantMemberIds.length === 0
+            }
             className={`btn-primary flex items-center justify-center transition-all duration-200 ${
               shuffling === 'all' ? 'opacity-75 cursor-wait' : ''
-            } ${works.length === 0 || members.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+            } ${
+              works.length === 0 || activeMembers.length === 0 || participantMemberIds.length === 0
+                ? 'opacity-50 cursor-not-allowed'
+                : ''
+            }`}
           >
             {shuffling === 'all' ? (
               <>
@@ -362,7 +416,7 @@ export default function Dashboard(): JSX.Element {
           <div className="flex items-center justify-between">
             <div className="flex-1">
               <p className="text-sm font-medium text-blue-600 uppercase tracking-wide">メンバー数</p>
-              <p className="text-4xl font-bold text-blue-900 mt-2">{members.length}</p>
+              <p className="text-4xl font-bold text-blue-900 mt-2">{activeMembers.length}</p>
               <p className="text-xs text-blue-600 mt-2">人が参加しています</p>
             </div>
             <div className="flex-shrink-0">
@@ -387,6 +441,65 @@ export default function Dashboard(): JSX.Element {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="card">
+        <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
+          <h3 className="text-lg font-semibold text-gray-900">参加メンバー選択</h3>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleSelectAllParticipants}
+              className="btn-secondary text-sm px-3 py-1"
+              disabled={activeMembers.length === 0}
+            >
+              全選択
+            </button>
+            <button
+              type="button"
+              onClick={handleClearAllParticipants}
+              className="btn-secondary text-sm px-3 py-1"
+              disabled={participantMemberIds.length === 0}
+            >
+              全解除
+            </button>
+          </div>
+        </div>
+
+        <p className="text-sm text-gray-600 mb-4">
+          選択中: {participantMemberIds.length}/{activeMembers.length}人
+        </p>
+
+        {activeMembers.length === 0 ? (
+          <p className="text-sm text-gray-500">参加可能なメンバーがいません。</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {activeMembers.map((member) => {
+              const checked = participantMemberIds.includes(member.id)
+              return (
+                <label
+                  key={member.id}
+                  className={`flex items-center gap-3 rounded-lg border p-3 cursor-pointer transition-colors ${
+                    checked
+                      ? 'border-primary-400 bg-primary-50'
+                      : 'border-gray-200 bg-white hover:bg-gray-50'
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={() => handleToggleParticipant(member.id)}
+                    className="h-4 w-4"
+                  />
+                  <span className="text-sm font-medium text-gray-800">
+                    {member.family_name}
+                    {member.given_name}
+                  </span>
+                </label>
+              )
+            })}
+          </div>
+        )}
       </div>
 
       {/* Works List Section */}
@@ -422,6 +535,18 @@ export default function Dashboard(): JSX.Element {
                         今日の割り当て: {todayAssignments.length}人
                       </span>
                     </div>
+                    <button
+                      type="button"
+                      onClick={() => handleShuffle(work.id)}
+                      disabled={shuffling === work.id || participantMemberIds.length === 0}
+                      className={`btn-primary px-4 py-2 text-sm ${
+                        shuffling === work.id || participantMemberIds.length === 0
+                          ? 'opacity-50 cursor-not-allowed'
+                          : ''
+                      }`}
+                    >
+                      {shuffling === work.id ? '処理中...' : 'この当番をシャッフル'}
+                    </button>
                   </div>
 
                   {todayAssignments.length > 0 ? (
