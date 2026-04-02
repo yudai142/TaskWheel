@@ -48,14 +48,21 @@ export default function Dashboard(): JSX.Element {
 
   useEffect(() => {
     fetchData()
+  }, [selectedDate])
+
+  // その日に割り当てられているメンバーをチェック状態にする
+  // 割り当てられていないメンバーはチェックが外れる
+  useEffect(() => {
+    const assignedMemberIds = Array.from(new Set(histories.map((h) => h.member_id)))
+    setParticipantMemberIds(assignedMemberIds)
     
-    // 日付が変わったときに、その日付の参加メンバー選択を復元
+    // 現在の日付の選択を保存
     const dateKey = selectedDate.toISOString().split('T')[0]
-    const savedSelection = participantSelectionByDate[dateKey]
-    if (savedSelection) {
-      setParticipantMemberIds(savedSelection)
-    }
-  }, [selectedDate, participantSelectionByDate])
+    setParticipantSelectionByDate((prev) => ({
+      ...prev,
+      [dateKey]: assignedMemberIds,
+    }))
+  }, [histories, selectedDate])
 
   useEffect(() => {
     const activeMemberIds = members.filter((member) => !member.archive).map((member) => member.id)
