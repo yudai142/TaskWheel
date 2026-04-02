@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_03_25_000000) do
+ActiveRecord::Schema[7.1].define(version: 2026_04_02_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,6 +20,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_25_000000) do
     t.date "date", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["date"], name: "index_histories_on_date"
     t.index ["member_id", "date"], name: "index_histories_on_member_id_and_date"
     t.index ["member_id"], name: "index_histories_on_member_id"
     t.index ["work_id"], name: "index_histories_on_work_id"
@@ -31,8 +32,10 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_25_000000) do
     t.integer "status", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["member_id", "status"], name: "index_member_options_on_member_id_and_status"
     t.index ["member_id"], name: "index_member_options_on_member_id"
     t.index ["work_id", "member_id"], name: "index_member_options_on_work_id_and_member_id", unique: true
+    t.index ["work_id", "status"], name: "index_member_options_on_work_id_and_status"
     t.index ["work_id"], name: "index_member_options_on_work_id"
   end
 
@@ -43,6 +46,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_25_000000) do
     t.boolean "archive", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["archive"], name: "index_members_on_archive"
   end
 
   create_table "off_works", force: :cascade do |t|
@@ -50,6 +54,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_25_000000) do
     t.date "date", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["date"], name: "index_off_works_on_date"
     t.index ["work_id", "date"], name: "index_off_works_on_work_id_and_date", unique: true
     t.index ["work_id"], name: "index_off_works_on_work_id"
   end
@@ -67,6 +72,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_25_000000) do
     t.boolean "is_above", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["archive"], name: "index_works_on_archive"
   end
 
   create_table "worksheets", force: :cascade do |t|
