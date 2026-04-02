@@ -38,6 +38,7 @@ export default function Dashboard(): JSX.Element {
   const [activeStatsTab, setActiveStatsTab] = useState<StatsTab>('works')
   const [showCalendar, setShowCalendar] = useState<boolean>(false)
   const [notification, setNotification] = useState<Notification | null>(null)
+  const [excludedWorkIds, setExcludedWorkIds] = useState<Set<number>>(new Set())
 
   const showNotification = useCallback((message: string, type: 'success' | 'error' = 'success') => {
     setNotification({ message, type })
@@ -132,7 +133,10 @@ export default function Dashboard(): JSX.Element {
       const month = selectedDate.getMonth() + 1
       const day = selectedDate.getDate()
 
-      for (const work of works) {
+      // 除外されていない work のみシャッフル対象にする
+      const validWorks = works.filter((w) => !excludedWorkIds.has(w.id))
+
+      for (const work of validWorks) {
         try {
           const response = await axios.post<{ member: Member }>('/api/v1/works/shuffle', {
             work_id: work.id,
@@ -233,6 +237,18 @@ export default function Dashboard(): JSX.Element {
     })
   }
 
+  const handleToggleWorkExclusion = (workId: number): void => {
+    setExcludedWorkIds((prev) => {
+      const newSet = new Set(prev)
+      if (newSet.has(workId)) {
+        newSet.delete(workId)
+      } else {
+        newSet.add(workId)
+      }
+      return newSet
+    })
+  }
+
   const handleSelectAllParticipants = (): void => {
     setParticipantMemberIds(activeMembers.map((member) => member.id))
   }
@@ -280,8 +296,12 @@ export default function Dashboard(): JSX.Element {
   }
 
   const assignedMembersCount = new Set(histories.map((h: History) => h.member_id)).size
-  const showParticipantSection = activeStatsTab !== 'assigned'
-  const showWorksSection = activeStatsTab !== 'members'
+  const showParticipantSection = activeStatsTab === 'members'
+  const showWorksSection = activeStatsTab === 'assigned'
+  
+  // 統計データ計算
+  const validWorksCount = works.filter((w) => !excludedWorkIds.has(w.id)).length
+  const selectedMembersCount = participantMemberIds.length
 
   return (
     <div className="space-y-6">
@@ -365,14 +385,14 @@ export default function Dashboard(): JSX.Element {
             onClick={handleShuffleAllWorks}
             disabled={
               shuffling === 'all' ||
-              works.length === 0 ||
+              validWorksCount === 0 ||
               activeMembers.length === 0 ||
               participantMemberIds.length === 0
             }
             className={`btn-primary flex items-center justify-center transition-all duration-200 ${
               shuffling === 'all' ? 'opacity-75 cursor-wait' : ''
             } ${
-              works.length === 0 || activeMembers.length === 0 || participantMemberIds.length === 0
+              validWorksCount === 0 || activeMembers.length === 0 || participantMemberIds.length === 0
                 ? 'opacity-50 cursor-not-allowed'
                 : ''
             }`}
@@ -414,8 +434,8 @@ export default function Dashboard(): JSX.Element {
           <div className="flex items-center justify-between">
             <div className="flex-1">
               <p className="text-sm font-medium text-primary-600 uppercase tracking-wide">当番数</p>
-              <p className="text-4xl font-bold text-primary-900 mt-2">{works.length}</p>
-              <p className="text-xs text-primary-600 mt-2">個の当番が登録されています</p>
+              <p className="text-4xl font-bold text-primary-900 mt-2">{validWorksCount}</p>
+              <p className="text-xs text-primary-600 mt-2">個のシャッフル対象が登録されています</p>
             </div>
             <div className="flex-shrink-0">
               <div className="flex items-center justify-center h-14 w-14 rounded-lg bg-primary-200">
@@ -437,8 +457,8 @@ export default function Dashboard(): JSX.Element {
           <div className="flex items-center justify-between">
             <div className="flex-1">
               <p className="text-sm font-medium text-blue-600 uppercase tracking-wide">メンバー数</p>
-              <p className="text-4xl font-bold text-blue-900 mt-2">{activeMembers.length}</p>
-              <p className="text-xs text-blue-600 mt-2">人が参加しています</p>
+              <p className="text-4xl font-bold text-blue-900 mt-2">{selectedMembersCount}</p>
+              <p className="text-xs text-blue-600 mt-2">人が選択されています</p>
             </div>
             <div className="flex-shrink-0">
               <div className="flex items-center justify-center h-14 w-14 rounded-lg bg-blue-200">
@@ -533,6 +553,55 @@ export default function Dashboard(): JSX.Element {
       </div>
       )}
 
+      {/* Works Exclusion List (for Works Tab) */}
+      {activeStatsTab === 'works' && (
+      <div className="card" role="tabpanel">
+        <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
+          <h3 className="text-lg font-semibold text-gray-900">当番管理</h3>
+          <p className="text-sm text-gray-600">
+            シャッフル対象: {validWorksCount}/{works.length}個
+          </p>
+        </div>
+
+        <p className="text-sm text-gray-600 mb-4">
+          シャッフルから除外したい当番にチェックを入れてください。チェックされた当番はシャッフル対象から外れます。
+        </p>
+
+        {works.length === 0 ? (
+          <p className="text-sm text-gray-500">当番が登録されていません。</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {works.map((work) => {
+              const isExcluded = excludedWorkIds.has(work.id)
+              return (
+                <label
+                  key={work.id}
+                  className={`flex items-center gap-3 rounded-lg border p-4 cursor-pointer transition-all ${
+                    isExcluded
+                      ? 'border-red-400 bg-red-50'
+                      : 'border-gray-200 bg-white hover:bg-gray-50'
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={isExcluded}
+                    onChange={() => handleToggleWorkExclusion(work.id)}
+                    className="h-4 w-4"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-900 truncate">{work.name}</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {isExcluded ? '除外中' : 'シャッフル対象'}
+                    </p>
+                  </div>
+                </label>
+              )
+            })}
+          </div>
+        )}
+      </div>
+      )}
+
       {/* Works List Section */}
       {showWorksSection && (
       <div className="card">
@@ -552,16 +621,20 @@ export default function Dashboard(): JSX.Element {
           <div className="space-y-4">
             {works.map((work) => {
               const todayAssignments = getTodayAssignedMembers(work.id)
+              const isExcluded = excludedWorkIds.has(work.id)
               return (
                 <div
                   key={work.id}
-                  className="border border-gray-200 rounded-xl p-5 bg-gradient-to-r from-gray-50 to-gray-100 hover:shadow-md transition-all"
+                  className={`border border-gray-200 rounded-xl p-5 bg-gradient-to-r from-gray-50 to-gray-100 hover:shadow-md transition-all ${
+                    isExcluded ? 'opacity-60 border-red-300' : ''
+                  }`}
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
                     <div>
                       <div className="flex items-center mb-2">
-                        <div className="h-3 w-3 bg-primary-600 rounded-full mr-3"></div>
+                        <div className={`h-3 w-3 rounded-full mr-3 ${isExcluded ? 'bg-red-500' : 'bg-primary-600'}`}></div>
                         <h3 className="text-lg font-semibold text-gray-900">{work.name}</h3>
+                        {isExcluded && <span className="ml-3 inline-flex items-center px-2 py-1 rounded-full text-xs font-small bg-red-100 text-red-700">除外中</span>}
                       </div>
                       <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-700">
                         今日の割り当て: {todayAssignments.length}人
@@ -570,12 +643,13 @@ export default function Dashboard(): JSX.Element {
                     <button
                       type="button"
                       onClick={() => handleShuffle(work.id)}
-                      disabled={shuffling === work.id || participantMemberIds.length === 0}
+                      disabled={shuffling === work.id || participantMemberIds.length === 0 || isExcluded}
                       className={`btn-primary px-4 py-2 text-sm ${
-                        shuffling === work.id || participantMemberIds.length === 0
+                        shuffling === work.id || participantMemberIds.length === 0 || isExcluded
                           ? 'opacity-50 cursor-not-allowed'
                           : ''
                       }`}
+                      title={isExcluded ? 'この当番はシャッフル対象から除外されています' : ''}
                     >
                       {shuffling === work.id ? '処理中...' : 'この当番をシャッフル'}
                     </button>
