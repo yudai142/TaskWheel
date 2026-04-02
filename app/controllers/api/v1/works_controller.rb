@@ -51,18 +51,20 @@ module Api
           Date.today
         end
 
-        # その日のメンバーごとの割り当て数をカウント
+        # その日のメンバーごとの割り当て数をカウント（N+1回避）
         assigned_counts = History.where(date: date).group(:member_id).count
+        member_ids = members.pluck(:id)
 
         # 割り当て数が最も少ないメンバーを優先的に選択
-        members_with_count = members.map do |m|
-          { member: m, count: assigned_counts[m.id] || 0 }
+        members_with_count = member_ids.map do |id|
+          { id: id, count: assigned_counts[id] || 0 }
         end.sort_by { |m| m[:count] }
 
         # 割り当て数が最も少ないメンバーのグループから均等に割り当て
         min_count = members_with_count.first[:count]
-        candidates = members_with_count.select { |m| m[:count] == min_count }.map { |m| m[:member] }
-        selected_member = candidates.sample
+        candidate_ids = members_with_count.select { |m| m[:count] == min_count }.map { |m| m[:id] }
+        selected_member_id = candidate_ids.sample
+        selected_member = members.find(selected_member_id)
 
         # 既に同じメンバーが同じ日付に記録されている場合は更新
         existing_history = History.find_by(member_id: selected_member.id, date: date)

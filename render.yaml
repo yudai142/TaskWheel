@@ -16,5 +16,13 @@ services:
         value: "true"
       - key: DATABASE_URL
         sync: false
+      - key: DATABASE_POOL
+        value: "20"
+      - key: RAILS_MAX_THREADS
+        value: "5"
+      - key: WEB_CONCURRENCY
+        value: "4"
+      - key: RACK_ENV
+        value: production
       - key: SECRET_KEY_BASE
         generateValue: true
