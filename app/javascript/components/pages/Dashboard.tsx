@@ -30,6 +30,7 @@ export default function Dashboard(): JSX.Element {
   const [works, setWorks] = useState<Work[]>([])
   const [members, setMembers] = useState<Member[]>([])
   const [participantMemberIds, setParticipantMemberIds] = useState<number[]>([])
+  const [participantSelectionByDate, setParticipantSelectionByDate] = useState<Record<string, number[]>>({})
   const [participantSelectionInitialized, setParticipantSelectionInitialized] = useState<boolean>(false)
   const [histories, setHistories] = useState<History[]>([])
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
@@ -47,7 +48,14 @@ export default function Dashboard(): JSX.Element {
 
   useEffect(() => {
     fetchData()
-  }, [selectedDate])
+    
+    // 日付が変わったときに、その日付の参加メンバー選択を復元
+    const dateKey = selectedDate.toISOString().split('T')[0]
+    const savedSelection = participantSelectionByDate[dateKey]
+    if (savedSelection) {
+      setParticipantMemberIds(savedSelection)
+    }
+  }, [selectedDate, participantSelectionByDate])
 
   useEffect(() => {
     const activeMemberIds = members.filter((member) => !member.archive).map((member) => member.id)
@@ -229,12 +237,18 @@ export default function Dashboard(): JSX.Element {
   const activeMembers = members.filter((member) => !member.archive)
 
   const handleToggleParticipant = (memberId: number): void => {
-    setParticipantMemberIds((prev) => {
-      if (prev.includes(memberId)) {
-        return prev.filter((id) => id !== memberId)
-      }
-      return [...prev, memberId]
-    })
+    const newSelection = participantMemberIds.includes(memberId)
+      ? participantMemberIds.filter((id) => id !== memberId)
+      : [...participantMemberIds, memberId]
+    
+    setParticipantMemberIds(newSelection)
+    
+    // 現在の日付の選択を保存
+    const dateKey = selectedDate.toISOString().split('T')[0]
+    setParticipantSelectionByDate((prev) => ({
+      ...prev,
+      [dateKey]: newSelection,
+    }))
   }
 
   const handleToggleWorkExclusion = (workId: number): void => {
@@ -250,11 +264,26 @@ export default function Dashboard(): JSX.Element {
   }
 
   const handleSelectAllParticipants = (): void => {
-    setParticipantMemberIds(activeMembers.map((member) => member.id))
+    const newSelection = activeMembers.map((member) => member.id)
+    setParticipantMemberIds(newSelection)
+    
+    // 現在の日付の選択を保存
+    const dateKey = selectedDate.toISOString().split('T')[0]
+    setParticipantSelectionByDate((prev) => ({
+      ...prev,
+      [dateKey]: newSelection,
+    }))
   }
 
   const handleClearAllParticipants = (): void => {
     setParticipantMemberIds([])
+    
+    // 現在の日付の選択を保存
+    const dateKey = selectedDate.toISOString().split('T')[0]
+    setParticipantSelectionByDate((prev) => ({
+      ...prev,
+      [dateKey]: [],
+    }))
   }
 
   const handlePrevDay = (): void => {
@@ -302,6 +331,15 @@ export default function Dashboard(): JSX.Element {
   // 統計データ計算
   const validWorksCount = works.filter((w) => !excludedWorkIds.has(w.id)).length
   const selectedMembersCount = participantMemberIds.length
+  
+  // 未割り当てメンバーを計算
+  const getUnassignedMembers = (): number[] => {
+    return participantMemberIds.filter(
+      (memberId) => !histories.some((h) => h.member_id === memberId)
+    )
+  }
+  const unassignedMemberIds = getUnassignedMembers()
+  const unassignedMembers = members.filter((m) => unassignedMemberIds.includes(m.id))
 
   return (
     <div className="space-y-6">
@@ -619,6 +657,43 @@ export default function Dashboard(): JSX.Element {
           </div>
         ) : (
           <div className="space-y-4">
+            {/* Unassigned Members Card */}
+            <div className="border border-gray-300 rounded-xl p-5 bg-gradient-to-r from-yellow-50 to-yellow-100 hover:shadow-md transition-all">
+              <div className="mb-4">
+                <div className="flex items-center">
+                  <div className="h-3 w-3 bg-yellow-500 rounded-full mr-3"></div>
+                  <h3 className="text-lg font-semibold text-gray-900">未割り当て</h3>
+                </div>
+              </div>
+
+              {unassignedMembers.length === 0 ? (
+                <div className="text-center py-6">
+                  <p className="text-sm text-gray-600">
+                    全ての参加メンバーが割り当てられています
+                  </p>
+                </div>
+              ) : (
+                <div className="border-t border-gray-300 pt-4">
+                  <p className="text-sm font-semibold text-gray-600 mb-3">
+                    未割り当ての参加メンバー:
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {unassignedMembers.map((member) => (
+                      <div
+                        key={member.id}
+                        className="p-4 bg-white border-2 border-yellow-300 rounded-lg hover:shadow-md transition-all flex items-center justify-center"
+                      >
+                        <p className="font-semibold text-gray-900 text-center">
+                          {member.family_name}
+                          {member.given_name}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
             {works.map((work) => {
               const todayAssignments = getTodayAssignedMembers(work.id)
               const isExcluded = excludedWorkIds.has(work.id)
