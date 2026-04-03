@@ -39,10 +39,19 @@ export default function Dashboard(): JSX.Element {
   const [activeStatsTab, setActiveStatsTab] = useState<StatsTab>('works')
   const [showCalendar, setShowCalendar] = useState<boolean>(false)
   const [notification, setNotification] = useState<Notification | null>(null)
+  const [isScrolled, setIsScrolled] = useState<boolean>(false)
 
   const showNotification = useCallback((message: string, type: 'success' | 'error' = 'success') => {
     setNotification({ message, type })
     setTimeout(() => setNotification(null), 4000)
+  }, [])
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 100)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   useEffect(() => {
@@ -607,14 +616,16 @@ export default function Dashboard(): JSX.Element {
       )}
 
       {/* Date Navigation Header */}
-      <div className="card bg-gradient-to-r from-primary-50 to-blue-50 border-2 border-primary-200">
-        <div className="flex items-center justify-center gap-3 flex-wrap">
+      <div className={`card bg-gradient-to-r from-primary-50 to-blue-50 border-2 border-primary-200 sticky top-0 z-40 transition-all ${
+        isScrolled ? 'py-1 shadow-lg' : 'py-4'
+      }`}>
+        <div className={`flex items-center justify-center flex-wrap transition-all ${isScrolled ? 'gap-1.5' : 'gap-3'}`}>
           <button
             onClick={handlePrevDay}
-            className="btn-secondary flex items-center p-2"
+            className={`btn-secondary flex items-center transition-all ${isScrolled ? 'p-1.5' : 'p-2'}`}
             title="前の日"
           >
-            <ChevronLeftIcon className="h-5 w-5" />
+            <ChevronLeftIcon className={`transition-all ${isScrolled ? 'h-4 w-4' : 'h-5 w-5'}`} />
           </button>
 
           <div className="flex items-center space-x-2 relative">
@@ -623,7 +634,7 @@ export default function Dashboard(): JSX.Element {
               className="text-primary-600 hover:text-primary-700 transition-colors flex-shrink-0"
               title="カレンダーを表示"
             >
-              <CalendarIcon className="h-6 w-6" />
+              <CalendarIcon className={`transition-all ${isScrolled ? 'h-5 w-5' : 'h-6 w-6'}`} />
             </button>
             {showCalendar && (
               <>
@@ -646,13 +657,13 @@ export default function Dashboard(): JSX.Element {
                 </div>
               </>
             )}
-            <span className="text-xl font-bold text-gray-900 whitespace-nowrap">
+            <span className={`font-bold text-gray-900 whitespace-nowrap transition-all ${isScrolled ? 'text-base' : 'text-xl'}`}>
               {formatDate(selectedDate)}
             </span>
             {!isToday(selectedDate) && (
               <button
                 onClick={handleToday}
-                className="text-sm px-2 py-1 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors font-medium flex-shrink-0"
+                className={`bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors font-medium flex-shrink-0 ${isScrolled ? 'text-xs px-1.5 py-0.5' : 'text-sm px-2 py-1'}`}
               >
                 今日
               </button>
@@ -660,38 +671,51 @@ export default function Dashboard(): JSX.Element {
           </div>
 
           <button
-            onClick={handleShuffleAllWorks}
-            className={`flex items-center justify-center font-medium rounded-lg transition-all duration-200 px-4 py-2 ${
-              shuffling === 'all' || validWorksCount === 0 || activeMembers.length === 0 || assignedMembersCount === 0
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed opacity-60 pointer-events-auto'
-                : 'btn-primary'
-            }`}
+            onClick={() => {
+              const isDisabled = shuffling === 'all' || validWorksCount === 0 || histories.length === 0
+              if (isDisabled && histories.length === 0) {
+                showNotification('参加メンバーを選択してください', 'error')
+                return
+              }
+              if (!isDisabled) {
+                handleShuffleAllWorks()
+              }
+            }}
+            className={`flex items-center justify-center font-medium rounded-lg transition-all duration-200 ${
+              shuffling === 'all' || validWorksCount === 0 || histories.length === 0
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed opacity-50 pointer-events-auto'
+                : 'btn-primary hover:shadow-lg'
+            } ${isScrolled ? 'px-3 py-1.5 text-sm' : 'px-4 py-2'}`}
           >
             {shuffling === 'all' ? (
               <>
                 <span className="animate-spin mr-2">⏳</span>
-                処理中...
+                <span className={isScrolled ? 'hidden sm:inline' : ''}>処理中...</span>
               </>
             ) : (
               <>
-                <SparklesIcon className="h-5 w-5 mr-2" />
-                シャッフル
+                <SparklesIcon className={`mr-2 ${isScrolled ? 'h-4 w-4' : 'h-5 w-5'}`} />
+                <span className={isScrolled ? 'hidden sm:inline' : ''}>シャッフル</span>
               </>
             )}
           </button>
 
           <button
             onClick={handleNextDay}
-            className="btn-secondary flex items-center p-2"
+            className={`btn-secondary flex items-center transition-all ${isScrolled ? 'p-1.5' : 'p-2'}`}
             title="次の日"
           >
-            <ChevronRightIcon className="h-5 w-5" />
+            <ChevronRightIcon className={`transition-all ${isScrolled ? 'h-4 w-4' : 'h-5 w-5'}`} />
           </button>
         </div>
       </div>
 
       {/* Stats Cards as Tabs */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6" role="tablist" aria-label="統計表示タブ">
+      <div className={`grid sticky top-12 z-30 bg-white rounded-lg transition-all border ${
+        isScrolled 
+          ? 'py-1.5 px-2 shadow-md grid-cols-1 md:grid-cols-3 gap-1.5 lg:gap-2 border-gray-200' 
+          : 'py-4 px-4 grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6 border-transparent'
+      }`} role="tablist" aria-label="統計表示タブ">
         <button
           type="button"
           role="tab"
@@ -699,17 +723,17 @@ export default function Dashboard(): JSX.Element {
           onClick={() => setActiveStatsTab('works')}
           className={`card bg-gradient-to-br from-primary-50 to-primary-100 border border-primary-200 text-left transition-all ${
             activeStatsTab === 'works' ? 'ring-2 ring-primary-500 shadow-lg' : 'hover:shadow-md'
-          }`}
+          } ${isScrolled ? 'p-2' : 'p-4'}`}
         >
           <div className="flex items-center justify-between">
             <div className="flex-1">
-              <p className="text-sm font-medium text-primary-600 uppercase tracking-wide">当番数</p>
-              <p className="text-4xl font-bold text-primary-900 mt-2">{validWorksCount}</p>
-              <p className="text-xs text-primary-600 mt-2">個のシャッフル対象が登録されています</p>
+              <p className={`font-medium text-primary-600 uppercase tracking-wide transition-all ${isScrolled ? 'text-xs leading-tight' : 'text-sm'}`}>当番数</p>
+              <p className={`font-bold text-primary-900 transition-all ${isScrolled ? 'text-xl mt-0.5' : 'text-4xl mt-2'}`}>{validWorksCount}</p>
+              {!isScrolled && <p className="text-xs text-primary-600 mt-2">個のシャッフル対象が登録されています</p>}
             </div>
             <div className="flex-shrink-0">
-              <div className="flex items-center justify-center h-14 w-14 rounded-lg bg-primary-200">
-                <ClipboardDocumentListIcon className="h-8 w-8 text-primary-700" />
+              <div className={`flex items-center justify-center rounded-lg bg-primary-200 transition-all ${isScrolled ? 'h-8 w-8' : 'h-14 w-14'}`}>
+                <ClipboardDocumentListIcon className={`text-primary-700 transition-all ${isScrolled ? 'h-4 w-4' : 'h-8 w-8'}`} />
               </div>
             </div>
           </div>
@@ -722,17 +746,17 @@ export default function Dashboard(): JSX.Element {
           onClick={() => setActiveStatsTab('members')}
           className={`card bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 text-left transition-all ${
             activeStatsTab === 'members' ? 'ring-2 ring-blue-500 shadow-lg' : 'hover:shadow-md'
-          }`}
+          } ${isScrolled ? 'p-2' : 'p-4'}`}
         >
           <div className="flex items-center justify-between">
             <div className="flex-1">
-              <p className="text-sm font-medium text-blue-600 uppercase tracking-wide">メンバー数</p>
-              <p className="text-4xl font-bold text-blue-900 mt-2">{assignedMembersCount}</p>
-              <p className="text-xs text-blue-600 mt-2">人が参加しています</p>
+              <p className={`font-medium text-blue-600 uppercase tracking-wide transition-all ${isScrolled ? 'text-xs leading-tight' : 'text-sm'}`}>メンバー数</p>
+              <p className={`font-bold text-blue-900 transition-all ${isScrolled ? 'text-xl mt-0.5' : 'text-4xl mt-2'}`}>{assignedMembersCount}</p>
+              {!isScrolled && <p className="text-xs text-blue-600 mt-2">人が参加しています</p>}
             </div>
             <div className="flex-shrink-0">
-              <div className="flex items-center justify-center h-14 w-14 rounded-lg bg-blue-200">
-                <UserGroupIcon className="h-8 w-8 text-blue-700" />
+              <div className={`flex items-center justify-center rounded-lg bg-blue-200 transition-all ${isScrolled ? 'h-8 w-8' : 'h-14 w-14'}`}>
+                <UserGroupIcon className={`text-blue-700 transition-all ${isScrolled ? 'h-4 w-4' : 'h-8 w-8'}`} />
               </div>
             </div>
           </div>
@@ -745,17 +769,17 @@ export default function Dashboard(): JSX.Element {
           onClick={() => setActiveStatsTab('assigned')}
           className={`card bg-gradient-to-br from-green-50 to-green-100 border border-green-200 text-left transition-all ${
             activeStatsTab === 'assigned' ? 'ring-2 ring-green-500 shadow-lg' : 'hover:shadow-md'
-          }`}
+          } ${isScrolled ? 'p-2' : 'p-4'}`}
         >
           <div className="flex items-center justify-between">
             <div className="flex-1">
-              <p className="text-sm font-medium text-green-600 uppercase tracking-wide">割り当て済み</p>
-              <p className="text-4xl font-bold text-green-900 mt-2">{assignedMembersCount}</p>
-              <p className="text-xs text-green-600 mt-2">人が割り当てられています</p>
+              <p className={`font-medium text-green-600 uppercase tracking-wide transition-all ${isScrolled ? 'text-xs leading-tight' : 'text-sm'}`}>割り当て済み</p>
+              <p className={`font-bold text-green-900 transition-all ${isScrolled ? 'text-xl mt-0.5' : 'text-4xl mt-2'}`}>{assignedMembersCount}</p>
+              {!isScrolled && <p className="text-xs text-green-600 mt-2">人が割り当てられています</p>}
             </div>
             <div className="flex-shrink-0">
-              <div className="flex items-center justify-center h-14 w-14 rounded-lg bg-green-200">
-                <CheckCircleIcon className="h-8 w-8 text-green-700" />
+              <div className={`flex items-center justify-center rounded-lg bg-green-200 transition-all ${isScrolled ? 'h-8 w-8' : 'h-14 w-14'}`}>
+                <CheckCircleIcon className={`text-green-700 transition-all ${isScrolled ? 'h-4 w-4' : 'h-8 w-8'}`} />
               </div>
             </div>
           </div>
