@@ -99,13 +99,26 @@ export default function Dashboard(): JSX.Element {
   }
 
   const handleShuffle = async (workId: number): Promise<void> => {
-    // 参加者を計算（work_id=nullのメンバー）
-    const currentParticipatingIds = Array.from(
-      new Set(histories.filter((h: History) => h.work_id === null).map((h: History) => h.member_id))
+    // その日のhistoryレコード全体（work_idに関わらず）
+    const allMembersWithRecords = Array.from(
+      new Set(histories.map((h: History) => h.member_id))
     )
 
-    if (currentParticipatingIds.length === 0) {
-      showNotification('参加メンバーを1人以上選択してください', 'error')
+    if (allMembersWithRecords.length === 0) {
+      showNotification('メンバーを1人以上選択してください', 'error')
+      return
+    }
+
+    // シャッフル中はスキップ
+    if (shuffling !== null) {
+      showNotification('シャッフル処理中です。お待ちください', 'error')
+      return
+    }
+
+    // 除外状態をチェック
+    const work = works.find((w: Work) => w.id === workId)
+    if (work && !work.is_above) {
+      showNotification('この当番はシャッフル対象から除外されています', 'error')
       return
     }
 
@@ -117,13 +130,14 @@ export default function Dashboard(): JSX.Element {
 
       const response = await axios.post<{ member: Member }>('/api/v1/works/shuffle', {
         work_id: workId,
-        participant_member_ids: currentParticipatingIds,
+        participant_member_ids: allMembersWithRecords,
         year,
         month,
         day,
       })
       showNotification(`${response.data.member.given_name}さんに決定しました！`)
-      fetchData()
+      await fetchData()
+      setActiveStatsTab('assigned')
     } catch (error) {
       const axiosError = error as { response?: { data?: { error?: string } } }
       const msg = axiosError.response?.data?.error || 'シャッフルに失敗しました'
@@ -134,9 +148,9 @@ export default function Dashboard(): JSX.Element {
   }
 
   const handleShuffleAllWorks = async (): Promise<void> => {
-    // 参加者を計算（work_id=nullのメンバー）
-    const currentParticipatingIds = Array.from(
-      new Set(histories.filter((h: History) => h.work_id === null).map((h: History) => h.member_id))
+    // その日のhistoryレコード全体（work_idに関わらず）
+    const allMembersWithRecords = Array.from(
+      new Set(histories.map((h: History) => h.member_id))
     )
 
     if (works.length === 0) {
@@ -144,10 +158,23 @@ export default function Dashboard(): JSX.Element {
       return
     }
 
-    if (currentParticipatingIds.length === 0) {
-      showNotification('参加メンバーを1人以上選択してください', 'error')
+    if (allMembersWithRecords.length === 0) {
+      showNotification('メンバーを1人以上選択してください', 'error')
       return
     }
+    if (validWorksCount === 0) {
+      showNotification('シャッフル対象の当番がありません。当番一覧を確認してください', 'error')
+      return
+    }
+
+    if (shuffling !== null) {
+      showNotification('シャッフル処理中です。お待ちください', 'error')
+      return
+    }
+    // 参加者を計算（work_id=nullのメンバー）
+    const currentParticipatingIds = Array.from(
+      new Set(histories.filter((h: History) => h.work_id === null).map((h: History) => h.member_id))
+    )
 
     setShuffling('all')
     try {
@@ -164,7 +191,7 @@ export default function Dashboard(): JSX.Element {
         try {
           const response = await axios.post<{ member: Member }>('/api/v1/works/shuffle', {
             work_id: work.id,
-            participant_member_ids: currentParticipatingIds,
+            participant_member_ids: allMembersWithRecords,
             year,
             month,
             day,
@@ -186,9 +213,13 @@ export default function Dashboard(): JSX.Element {
       if (successCount > 0) {
         await removeDuplicateAssignments()
 
+        // 割り当てられなかったメンバーに対して work_id=null で登録
+        await ensureAllParticipantsHaveRecords(year, month, day, allMembersWithRecords)
+
         const summary = assignedMembers.map((a) => `${a.work} → ${a.member}`).join('\n')
         showNotification(`${successCount}個の当番を割り当てました！\n\n${summary}`)
-        fetchData()
+        await fetchData()
+        setActiveStatsTab('assigned')
       } else {
         showNotification('割り当てに失敗しました', 'error')
       }
@@ -196,6 +227,57 @@ export default function Dashboard(): JSX.Element {
       showNotification('一括シャッフルに失敗しました', 'error')
     } finally {
       setShuffling(null)
+    }
+  }
+
+  const ensureAllParticipantsHaveRecords = async (
+    year: number,
+    month: number,
+    day: number,
+    currentParticipatingIds: number[]
+  ): Promise<void> => {
+    try {
+      const dateStr = getDateString(selectedDate)
+      const historiesRes = await axios.get<History[]>('/api/v1/histories', {
+        params: { year, month, day },
+      })
+
+      const todayHistories = historiesRes.data
+      
+      // 割り当て済みメンバー（work_id != null）
+      const assignedMemberIds = Array.from(
+        new Set(todayHistories.filter((h: History) => h.work_id !== null).map((h: History) => h.member_id))
+      )
+      
+      // 参加メンバー（work_id = null）
+      const participatingMemberIds = Array.from(
+        new Set(todayHistories.filter((h: History) => h.work_id === null).map((h: History) => h.member_id))
+      )
+      
+      // 全参加メンバー
+      const allRecordedMemberIds = Array.from(new Set([...assignedMemberIds, ...participatingMemberIds]))
+      
+      // 割り当てられなかったメンバー（記録されていないメンバー）
+      const unrecordedMemberIds = currentParticipatingIds.filter(
+        (id: number) => !allRecordedMemberIds.includes(id)
+      )
+      
+      // 割り当てられなかったメンバーに対して work_id=null のHistoryレコードを作成
+      for (const memberId of unrecordedMemberIds) {
+        try {
+          await axios.post('/api/v1/histories', {
+            history: {
+              member_id: memberId,
+              work_id: null,
+              date: dateStr,
+            }
+          })
+        } catch {
+          // Historyレコード作成に失敗した場合はスキップ
+        }
+      }
+    } catch {
+      // 処理に失敗した場合もスキップ
     }
   }
 
@@ -579,18 +661,10 @@ export default function Dashboard(): JSX.Element {
 
           <button
             onClick={handleShuffleAllWorks}
-            disabled={
-              shuffling === 'all' ||
-              validWorksCount === 0 ||
-              activeMembers.length === 0 ||
-              selectedMembersCount === 0
-            }
-            className={`btn-primary flex items-center justify-center transition-all duration-200 ${
-              shuffling === 'all' ? 'opacity-75 cursor-wait' : ''
-            } ${
-              validWorksCount === 0 || activeMembers.length === 0 || selectedMembersCount === 0
-                ? 'opacity-50 cursor-not-allowed'
-                : ''
+            className={`flex items-center justify-center font-medium rounded-lg transition-all duration-200 px-4 py-2 ${
+              shuffling === 'all' || validWorksCount === 0 || activeMembers.length === 0 || assignedMembersCount === 0
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed opacity-60 pointer-events-auto'
+                : 'btn-primary'
             }`}
           >
             {shuffling === 'all' ? (
@@ -877,13 +951,12 @@ export default function Dashboard(): JSX.Element {
                     <button
                       type="button"
                       onClick={() => handleShuffle(work.id)}
-                      disabled={shuffling === work.id || selectedMembersCount === 0 || isExcluded}
-                      className={`btn-primary px-4 py-2 text-sm ${
-                        shuffling === work.id || selectedMembersCount === 0 || isExcluded
-                          ? 'opacity-50 cursor-not-allowed'
-                          : ''
+                      className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                        shuffling === work.id || assignedMembersCount === 0 || isExcluded
+                          ? 'bg-gray-300 text-gray-500 cursor-not-allowed opacity-60 pointer-events-auto'
+                          : 'btn-primary'
                       }`}
-                      title={isExcluded ? 'この当番はシャッフル対象から除外されています' : ''}
+                      title={isExcluded ? 'この当番はシャッフル対象から除外されています' : assignedMembersCount === 0 ? 'メンバーを1人以上選択してください' : ''}
                     >
                       {shuffling === work.id ? '処理中...' : 'この当番をシャッフル'}
                     </button>
