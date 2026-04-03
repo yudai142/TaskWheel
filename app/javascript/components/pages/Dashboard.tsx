@@ -39,7 +39,6 @@ export default function Dashboard(): JSX.Element {
   const [activeStatsTab, setActiveStatsTab] = useState<StatsTab>('works')
   const [showCalendar, setShowCalendar] = useState<boolean>(false)
   const [notification, setNotification] = useState<Notification | null>(null)
-  const [excludedWorkIds, setExcludedWorkIds] = useState<Set<number>>(new Set())
 
   const showNotification = useCallback((message: string, type: 'success' | 'error' = 'success') => {
     setNotification({ message, type })
@@ -53,19 +52,19 @@ export default function Dashboard(): JSX.Element {
   // その日に割り当てられているメンバーをチェック状態にする
   // 割り当てられていないメンバーはチェックが外れる
   useEffect(() => {
+    // 履歴から割り当て済みメンバーを取得（日付にはフィルター済み）
     const assignedMemberIds = Array.from(new Set(histories.map((h) => h.member_id)))
-    setParticipantMemberIds(assignedMemberIds)
     
     // 現在の日付の選択を保存
     const dateKey = selectedDate.toISOString().split('T')[0]
-    setParticipantSelectionByDate((prev) => ({
+    setParticipantSelectionByDate((prev: Record<string, number[]>) => ({
       ...prev,
       [dateKey]: assignedMemberIds,
     }))
   }, [histories, selectedDate])
 
   useEffect(() => {
-    const activeMemberIds = members.filter((member) => !member.archive).map((member) => member.id)
+    const activeMemberIds = members.filter((member: Member) => !member.archive).map((member: Member) => member.id)
 
     if (!participantSelectionInitialized) {
       setParticipantMemberIds(activeMemberIds)
@@ -73,7 +72,7 @@ export default function Dashboard(): JSX.Element {
       return
     }
 
-    setParticipantMemberIds((prev) => prev.filter((id) => activeMemberIds.includes(id)))
+    setParticipantMemberIds((prev: number[]) => prev.filter((id: number) => activeMemberIds.includes(id)))
   }, [members, participantSelectionInitialized])
 
   const fetchData = async (): Promise<void> => {
@@ -89,7 +88,7 @@ export default function Dashboard(): JSX.Element {
           params: { year, month, day },
         }),
       ])
-      setWorks(worksRes.data)
+      setWorks(worksRes.data.sort((a, b) => a.id - b.id))
       setMembers(membersRes.data)
       setHistories(historiesRes.data)
     } catch {
@@ -100,7 +99,12 @@ export default function Dashboard(): JSX.Element {
   }
 
   const handleShuffle = async (workId: number): Promise<void> => {
-    if (participantMemberIds.length === 0) {
+    // 参加者を計算（work_id=nullのメンバー）
+    const currentParticipatingIds = Array.from(
+      new Set(histories.filter((h: History) => h.work_id === null).map((h: History) => h.member_id))
+    )
+
+    if (currentParticipatingIds.length === 0) {
       showNotification('参加メンバーを1人以上選択してください', 'error')
       return
     }
@@ -113,7 +117,7 @@ export default function Dashboard(): JSX.Element {
 
       const response = await axios.post<{ member: Member }>('/api/v1/works/shuffle', {
         work_id: workId,
-        participant_member_ids: participantMemberIds,
+        participant_member_ids: currentParticipatingIds,
         year,
         month,
         day,
@@ -130,12 +134,17 @@ export default function Dashboard(): JSX.Element {
   }
 
   const handleShuffleAllWorks = async (): Promise<void> => {
+    // 参加者を計算（work_id=nullのメンバー）
+    const currentParticipatingIds = Array.from(
+      new Set(histories.filter((h: History) => h.work_id === null).map((h: History) => h.member_id))
+    )
+
     if (works.length === 0) {
       showNotification('当番が登録されていません', 'error')
       return
     }
 
-    if (participantMemberIds.length === 0) {
+    if (currentParticipatingIds.length === 0) {
       showNotification('参加メンバーを1人以上選択してください', 'error')
       return
     }
@@ -148,14 +157,14 @@ export default function Dashboard(): JSX.Element {
       const month = selectedDate.getMonth() + 1
       const day = selectedDate.getDate()
 
-      // 除外されていない work のみシャッフル対象にする
-      const validWorks = works.filter((w) => !excludedWorkIds.has(w.id))
+      // シャッフル対象に設定されている work のみ対象にする（is_above=true）
+      const validWorks = works.filter((w: Work) => w.is_above)
 
       for (const work of validWorks) {
         try {
           const response = await axios.post<{ member: Member }>('/api/v1/works/shuffle', {
             work_id: work.id,
-            participant_member_ids: participantMemberIds,
+            participant_member_ids: currentParticipatingIds,
             year,
             month,
             day,
@@ -238,59 +247,196 @@ export default function Dashboard(): JSX.Element {
   }
 
   const getTodayAssignedMembers = (workId: number): History[] => {
-    return histories.filter((h) => h.work_id === workId)
+    return histories.filter((h: History) => h.work_id === workId)
   }
 
-  const activeMembers = members.filter((member) => !member.archive)
+  const activeMembers = members.filter((member: Member) => !member.archive)
 
-  const handleToggleParticipant = (memberId: number): void => {
-    const newSelection = participantMemberIds.includes(memberId)
-      ? participantMemberIds.filter((id) => id !== memberId)
-      : [...participantMemberIds, memberId]
-    
-    setParticipantMemberIds(newSelection)
-    
-    // 現在の日付の選択を保存
-    const dateKey = selectedDate.toISOString().split('T')[0]
-    setParticipantSelectionByDate((prev) => ({
-      ...prev,
-      [dateKey]: newSelection,
-    }))
+  // 日付を YYYY-MM-DD 形式で取得（ローカル時間）
+  const getDateString = (date: Date): string => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
   }
 
-  const handleToggleWorkExclusion = (workId: number): void => {
-    setExcludedWorkIds((prev) => {
-      const newSet = new Set(prev)
-      if (newSet.has(workId)) {
-        newSet.delete(workId)
+  const handleToggleParticipant = async (memberId: number): Promise<void> => {
+    // チェック状態をチェックボックスと同じ方法で判定（履歴に基づく）
+    const isCurrentlyChecked = histories.some((h: History) => h.member_id === memberId)
+    const dateStr = getDateString(selectedDate)
+
+    try {
+      if (isCurrentlyChecked) {
+        // チェック外す → History レコードを削除
+        const recordToDelete = histories.find(
+          (h: History) => {
+            const hDate = typeof h.date === 'string' ? h.date : getDateString(new Date(h.date))
+            return h.member_id === memberId && hDate === dateStr
+          }
+        )
+        if (recordToDelete) {
+          await axios.delete(`/api/v1/histories/${recordToDelete.id}`)
+        }
       } else {
-        newSet.add(workId)
+        // チェック入れる → 既存チェック後、History レコードを作成（work_id=null）
+        const existingRecord = histories.find(
+          (h: History) => {
+            const hDate = typeof h.date === 'string' ? h.date : getDateString(new Date(h.date))
+            return h.member_id === memberId && hDate === dateStr
+          }
+        )
+        
+        if (!existingRecord) {
+          await axios.post('/api/v1/histories', {
+            history: {
+              member_id: memberId,
+              work_id: null,
+              date: dateStr,
+            }
+          })
+        }
       }
-      return newSet
-    })
+      
+      // データを再取得
+      const year = selectedDate.getFullYear()
+      const month = selectedDate.getMonth() + 1
+      const day = selectedDate.getDate()
+
+      const [worksRes, membersRes, historiesRes] = await Promise.all([
+        axios.get<Work[]>('/api/v1/works'),
+        axios.get<Member[]>('/api/v1/members'),
+        axios.get<History[]>('/api/v1/histories', {
+          params: { year, month, day },
+        }),
+      ])
+      setWorks(worksRes.data.sort((a, b) => a.id - b.id))
+      setMembers(membersRes.data)
+      setHistories(historiesRes.data)
+    } catch (error) {
+      const axiosError = error as { response?: { data?: { error?: string; errors?: string[] } } }
+      const msg = axiosError.response?.data?.errors?.join(', ') || axiosError.response?.data?.error || 'メンバー選択の更新に失敗しました'
+      showNotification(msg, 'error')
+      console.error('handleToggleParticipant error:', error)
+    }
   }
 
-  const handleSelectAllParticipants = (): void => {
-    const newSelection = activeMembers.map((member) => member.id)
-    setParticipantMemberIds(newSelection)
-    
-    // 現在の日付の選択を保存
-    const dateKey = selectedDate.toISOString().split('T')[0]
-    setParticipantSelectionByDate((prev) => ({
-      ...prev,
-      [dateKey]: newSelection,
-    }))
+  const handleToggleWorkExclusion = async (workId: number): Promise<void> => {
+    try {
+      // 現在の Work オブジェクトを取得
+      const work = works.find((w: Work) => w.id === workId)
+      if (!work) return
+
+      // is_above を反転
+      // チェック入れる（除外） = is_above を false に
+      // チェック外す（対象に戻す） = is_above を true に
+      const newIsAbove = !work.is_above
+
+      // API で Work を更新
+      await axios.patch(`/api/v1/works/${workId}`, {
+        work: {
+          is_above: newIsAbove,
+        }
+      })
+
+      // データを再取得
+      const worksRes = await axios.get<Work[]>('/api/v1/works')
+      setWorks(worksRes.data.sort((a, b) => a.id - b.id))
+      showNotification('当番の設定を更新しました', 'success')
+    } catch (error) {
+      const axiosError = error as { response?: { data?: { error?: string; errors?: string[] } } }
+      const msg = axiosError.response?.data?.errors?.join(', ') || axiosError.response?.data?.error || '当番の更新に失敗しました'
+      showNotification(msg, 'error')
+      console.error('handleToggleWorkExclusion error:', error)
+    }
   }
 
-  const handleClearAllParticipants = (): void => {
-    setParticipantMemberIds([])
-    
-    // 現在の日付の選択を保存
-    const dateKey = selectedDate.toISOString().split('T')[0]
-    setParticipantSelectionByDate((prev) => ({
-      ...prev,
-      [dateKey]: [],
-    }))
+  const handleSelectAllParticipants = async (): Promise<void> => {
+    try {
+      const dateStr = getDateString(selectedDate)
+      
+      // 既存レコードをチェック
+      const existingMembers = histories
+        .filter((h: History) => {
+          const hDate = typeof h.date === 'string' ? h.date : getDateString(new Date(h.date))
+          return hDate === dateStr
+        })
+        .map((h: History) => h.member_id)
+      
+      const toAdd = activeMembers.filter(
+        (m: Member) => !existingMembers.includes(m.id)
+      )
+
+      // 新規メンバーの History レコードを作成
+      for (const member of toAdd) {
+        await axios.post('/api/v1/histories', {
+          history: {
+            member_id: member.id,
+            work_id: null,
+            date: dateStr,
+          }
+        })
+      }
+
+      // データを再取得
+      const year = selectedDate.getFullYear()
+      const month = selectedDate.getMonth() + 1
+      const day = selectedDate.getDate()
+
+      const [worksRes, membersRes, historiesRes] = await Promise.all([
+        axios.get<Work[]>('/api/v1/works'),
+        axios.get<Member[]>('/api/v1/members'),
+        axios.get<History[]>('/api/v1/histories', {
+          params: { year, month, day },
+        }),
+      ])
+      setWorks(worksRes.data.sort((a, b) => a.id - b.id))
+      setMembers(membersRes.data)
+      setHistories(historiesRes.data)
+    } catch (error) {
+      const axiosError = error as { response?: { data?: { error?: string; errors?: string[] } } }
+      const msg = axiosError.response?.data?.errors?.join(', ') || axiosError.response?.data?.error || '全選択に失敗しました'
+      showNotification(msg, 'error')
+      console.error('handleSelectAllParticipants error:', error)
+    }
+  }
+
+  const handleClearAllParticipants = async (): Promise<void> => {
+    try {
+      const dateStr = getDateString(selectedDate)
+      
+      // その日の全メンバーの History レコードを削除
+      const toDelete = histories.filter(
+        (h: History) => {
+          const hDate = typeof h.date === 'string' ? h.date : getDateString(new Date(h.date))
+          return hDate === dateStr
+        }
+      )
+
+      for (const record of toDelete) {
+        await axios.delete(`/api/v1/histories/${record.id}`)
+      }
+
+      // データを再取得
+      const year = selectedDate.getFullYear()
+      const month = selectedDate.getMonth() + 1
+      const day = selectedDate.getDate()
+
+      const [worksRes, membersRes, historiesRes] = await Promise.all([
+        axios.get<Work[]>('/api/v1/works'),
+        axios.get<Member[]>('/api/v1/members'),
+        axios.get<History[]>('/api/v1/histories', {
+          params: { year, month, day },
+        }),
+      ])
+      setWorks(worksRes.data.sort((a, b) => a.id - b.id))
+      setMembers(membersRes.data)
+      setHistories(historiesRes.data)
+    } catch (error) {
+      const axiosError = error as { response?: { data?: { error?: string; errors?: string[] } } }
+      const msg = axiosError.response?.data?.errors?.join(', ') || axiosError.response?.data?.error || '全解除に失敗しました'
+      showNotification(msg, 'error')
+      console.error('handleClearAllParticipants error:', error)
+    }
   }
 
   const handlePrevDay = (): void => {
@@ -331,22 +477,27 @@ export default function Dashboard(): JSX.Element {
     return <div className="text-center py-12 text-gray-600">読み込み中...</div>
   }
 
-  const assignedMembersCount = new Set(histories.map((h: History) => h.member_id)).size
   const showParticipantSection = activeStatsTab === 'members'
   const showWorksSection = activeStatsTab === 'assigned'
   
   // 統計データ計算
-  const validWorksCount = works.filter((w) => !excludedWorkIds.has(w.id)).length
-  const selectedMembersCount = participantMemberIds.length
+  const validWorksCount = works.filter((w: Work) => w.is_above).length
   
   // 未割り当てメンバーを計算
-  const getUnassignedMembers = (): number[] => {
-    return participantMemberIds.filter(
-      (memberId) => !histories.some((h) => h.member_id === memberId)
-    )
-  }
-  const unassignedMemberIds = getUnassignedMembers()
-  const unassignedMembers = members.filter((m) => unassignedMemberIds.includes(m.id))
+  // work_id が null = 参加しているが未割り当て
+  // work_id が null でない = 割り当て済み
+  const participatingMemberIds = Array.from(
+    new Set(histories.filter((h: History) => h.work_id === null).map((h: History) => h.member_id))
+  )
+  const assignedMemberIds = Array.from(
+    new Set(histories.filter((h: History) => h.work_id !== null).map((h: History) => h.member_id))
+  )
+  const assignedMembersCount = new Set(histories.map((h: History) => h.member_id)).size
+  const selectedMembersCount = participatingMemberIds.length
+  const unassignedMemberIds = participatingMemberIds.filter(
+    (memberId: number) => !assignedMemberIds.includes(memberId)
+  )
+  const unassignedMembers = members.filter((m: Member) => unassignedMemberIds.includes(m.id))
 
   return (
     <div className="space-y-6">
@@ -401,7 +552,7 @@ export default function Dashboard(): JSX.Element {
                 <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 z-50 bg-white rounded-xl shadow-2xl border border-indigo-100 p-2">
                   <Calendar
                     value={selectedDate}
-                    onChange={(value) => {
+                    onChange={(value: unknown) => {
                       if (value instanceof Date) {
                         setSelectedDate(value)
                         setShowCalendar(false)
@@ -432,12 +583,12 @@ export default function Dashboard(): JSX.Element {
               shuffling === 'all' ||
               validWorksCount === 0 ||
               activeMembers.length === 0 ||
-              participantMemberIds.length === 0
+              selectedMembersCount === 0
             }
             className={`btn-primary flex items-center justify-center transition-all duration-200 ${
               shuffling === 'all' ? 'opacity-75 cursor-wait' : ''
             } ${
-              validWorksCount === 0 || activeMembers.length === 0 || participantMemberIds.length === 0
+              validWorksCount === 0 || activeMembers.length === 0 || selectedMembersCount === 0
                 ? 'opacity-50 cursor-not-allowed'
                 : ''
             }`}
@@ -502,8 +653,8 @@ export default function Dashboard(): JSX.Element {
           <div className="flex items-center justify-between">
             <div className="flex-1">
               <p className="text-sm font-medium text-blue-600 uppercase tracking-wide">メンバー数</p>
-              <p className="text-4xl font-bold text-blue-900 mt-2">{selectedMembersCount}</p>
-              <p className="text-xs text-blue-600 mt-2">人が選択されています</p>
+              <p className="text-4xl font-bold text-blue-900 mt-2">{assignedMembersCount}</p>
+              <p className="text-xs text-blue-600 mt-2">人が参加しています</p>
             </div>
             <div className="flex-shrink-0">
               <div className="flex items-center justify-center h-14 w-14 rounded-lg bg-blue-200">
@@ -554,7 +705,7 @@ export default function Dashboard(): JSX.Element {
               type="button"
               onClick={handleClearAllParticipants}
               className="btn-secondary text-sm px-3 py-1"
-              disabled={participantMemberIds.length === 0}
+              disabled={selectedMembersCount === 0}
             >
               全解除
             </button>
@@ -562,15 +713,16 @@ export default function Dashboard(): JSX.Element {
         </div>
 
         <p className="text-sm text-gray-600 mb-4">
-          選択中: {participantMemberIds.length}/{activeMembers.length}人
+          参加中: {assignedMembersCount}/{activeMembers.length}人
         </p>
 
         {activeMembers.length === 0 ? (
           <p className="text-sm text-gray-500">参加可能なメンバーがいません。</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {activeMembers.map((member) => {
-              const checked = participantMemberIds.includes(member.id)
+            {activeMembers.map((member: Member) => {
+              // その日に割り当てられているか（履歴に記録されているか）で判定
+              const checked = histories.some((h: History) => h.member_id === member.id)
               return (
                 <label
                   key={member.id}
@@ -616,8 +768,8 @@ export default function Dashboard(): JSX.Element {
           <p className="text-sm text-gray-500">当番が登録されていません。</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {works.map((work) => {
-              const isExcluded = excludedWorkIds.has(work.id)
+            {works.map((work: Work) => {
+              const isExcluded = !work.is_above
               return (
                 <label
                   key={work.id}
@@ -703,7 +855,7 @@ export default function Dashboard(): JSX.Element {
 
             {works.map((work) => {
               const todayAssignments = getTodayAssignedMembers(work.id)
-              const isExcluded = excludedWorkIds.has(work.id)
+              const isExcluded = !work.is_above
               return (
                 <div
                   key={work.id}
@@ -725,9 +877,9 @@ export default function Dashboard(): JSX.Element {
                     <button
                       type="button"
                       onClick={() => handleShuffle(work.id)}
-                      disabled={shuffling === work.id || participantMemberIds.length === 0 || isExcluded}
+                      disabled={shuffling === work.id || selectedMembersCount === 0 || isExcluded}
                       className={`btn-primary px-4 py-2 text-sm ${
-                        shuffling === work.id || participantMemberIds.length === 0 || isExcluded
+                        shuffling === work.id || selectedMembersCount === 0 || isExcluded
                           ? 'opacity-50 cursor-not-allowed'
                           : ''
                       }`}
