@@ -1,0 +1,13 @@
+dist
+build
+public/builds
+public/packs
+public/vite-dev
+node_modules
+coverage
+tmp
+log
+*.lock
+package-lock.json
+yarn.lock
+.DS_Store

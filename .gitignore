@@ -70,3 +70,4 @@ node_modules
 .direnv/
 .envrc
 .agent.md
+.copilot-prompt.txt
