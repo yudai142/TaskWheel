@@ -67,6 +67,10 @@ jobs:
           ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: true
 
+      - name: Add platform to Gemfile.lock
+        run: |
+          bundle lock --add-platform x86_64-linux || true
+
       - name: Set up Node.js for Rails assets
         uses: actions/setup-node@v4
         with:
