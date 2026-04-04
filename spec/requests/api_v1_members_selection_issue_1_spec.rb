@@ -139,6 +139,7 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
     context 'メンバーの参加/不参加を更新' do
       it '参加メンバーを選択できる' do
         params = {
+          work_id: works[0].id,
           member_options: [
             { member_id: members[0].id, status: 1 }, # 参加
             { member_id: members[1].id, status: 1 }, # 参加
@@ -153,6 +154,7 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
 
       it '参加メンバーの数が返される' do
         params = {
+          work_id: works[0].id,
           member_options: [
             { member_id: members[0].id, status: 1 },
             { member_id: members[1].id, status: 1 },
