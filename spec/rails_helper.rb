@@ -3,8 +3,8 @@
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 
-# Clear FactoryBot before loading environment
-FactoryBot.factories.clear
+# Note: FactoryBot automatically loads factories from spec/factories/
+# No need to manually clear factories in modern versions
 
 require File.expand_path('../config/environment', __dir__)
 
