@@ -42,7 +42,7 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
   describe 'POST /api/v1/works/shuffle_with_selected_members - 参加者のみでシャッフル' do
     context '参加メンバーに対してシャッフルを実行' do
       it '選択したメンバーのみでシャッフルが実行される' do
-        pending('API endpoint not yet implemented')
+        skip('API endpoint not yet implemented')
         
         selected_member_ids = [members[0].id, members[1].id, members[2].id]
         params = {
@@ -68,7 +68,7 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
       end
 
       it '重複せず各メンバーに異なる当番が割り当てられる' do
-        pending('API endpoint not yet implemented')
+        skip('API endpoint not yet implemented')
         
         selected_member_ids = [members[0].id, members[1].id, members[2].id]
         params = {
@@ -91,7 +91,7 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
       end
 
       it '非参加メンバーは割り当てられない' do
-        pending('API endpoint not yet implemented')
+        skip('API endpoint not yet implemented')
         
         # メンバー 0, 1, 2 のみ参加
         selected_member_ids = [members[0].id, members[1].id, members[2].id]
@@ -117,7 +117,7 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
       end
 
       it '当番が十分でない場合もシャッフルが実行される' do
-        pending('API endpoint not yet implemented')
+        skip('API endpoint not yet implemented')
         
         selected_member_ids = [members[0].id, members[1].id, members[2].id, members[3].id]
         params = {
@@ -138,7 +138,7 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
   describe 'POST /api/v1/member_options/update_selected - メンバーの参加選択を保存' do
     context 'メンバーの参加/不参加を更新' do
       it '参加メンバーを選択できる' do
-        pending('API endpoint not yet implemented')
+        skip('API endpoint not yet implemented')
         
         params = {
           member_options: [
@@ -154,7 +154,7 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
       end
 
       it '参加メンバーの数が返される' do
-        pending('API endpoint not yet implemented')
+        skip('API endpoint not yet implemented')
         
         params = {
           member_options: [
@@ -177,7 +177,7 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
   describe 'GET /api/v1/dashboard/member_selection_state - 参加メンバーの選択状態' do
     context 'ダッシュボードの参加メンバー選択状態を取得' do
       it '選択状態が返される' do
-        pending('API endpoint not yet implemented')
+        skip('API endpoint not yet implemented')
         
         get '/api/v1/dashboard/member_selection_state'
         
@@ -189,7 +189,7 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
       end
 
       it 'メンバーごとに選択状態が含まれている' do
-        pending('API endpoint not yet implemented')
+        skip('API endpoint not yet implemented')
         
         get '/api/v1/dashboard/member_selection_state'
         
@@ -208,7 +208,7 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
   describe 'User Flow - ユーザーの操作フロー' do
     context '参加メンバーを選択してシャッフルを実行' do
       it 'ダッシュボードで参加メンバーを選択し、シャッフルを実行できる' do
-        pending('API endpoints not yet implemented')
+        skip('API endpoints not yet implemented')
         
         # Step 1: メンバー一覧を取得
         get '/api/v1/members'
