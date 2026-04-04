@@ -1,11 +1,6 @@
+/// <reference types="@testing-library/jest-dom" />
 import '@testing-library/jest-dom'
-
-// Mock axios
-vi.mock('axios', () => ({
-  default: {
-    get: vi.fn(),
-  },
-}))
+import { vi } from 'vitest'
 
 // Mock react-calendar CSS
 vi.mock('react-calendar/dist/Calendar.css', () => ({}))
