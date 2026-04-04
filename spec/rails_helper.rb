@@ -74,9 +74,11 @@ RSpec.configure do |config|
   # Filter lines from Rails gems in backtraces.
   config.filter_rails_from_backtrace!
 
-  # Set default test request headers to bypass CSRF
+  # Set default test request headers and environment for API tests
   config.before(:each, type: :request) do
     ENV['RAILS_ENV'] = 'test'
+    # Set headers for API requests
+    host! 'localhost:3000'
   end
 end
 
