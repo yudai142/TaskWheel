@@ -1,67 +1,67 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
-import type { Member, Work } from '../../types'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import type { Member, Work } from '../../types';
 
 interface WorkFormData {
-  name: string
-  multiple: number
+  name: string;
+  multiple: number;
 }
 
 export default function Works(): JSX.Element {
-  const [works, setWorks] = useState<Work[]>([])
-  const [members, setMembers] = useState<Member[]>([])
-  const [loading, setLoading] = useState<boolean>(true)
-  const [showForm, setShowForm] = useState<boolean>(false)
+  const [works, setWorks] = useState<Work[]>([]);
+  const [members, setMembers] = useState<Member[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [showForm, setShowForm] = useState<boolean>(false);
   const [formData, setFormData] = useState<WorkFormData>({
     name: '',
     multiple: 1,
-  })
+  });
 
   useEffect(() => {
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   const fetchData = async (): Promise<void> => {
     try {
       const [worksRes, membersRes] = await Promise.all([
         axios.get<Work[]>('/api/v1/works'),
         axios.get<Member[]>('/api/v1/members'),
-      ])
-      setWorks(worksRes.data)
-      setMembers(membersRes.data)
+      ]);
+      setWorks(worksRes.data);
+      setMembers(membersRes.data);
     } catch {
       // Error fetching data
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      await axios.post('/api/v1/works', { work: formData })
-      setFormData({ name: '', multiple: 1 })
-      setShowForm(false)
-      fetchData()
+      await axios.post('/api/v1/works', { work: formData });
+      setFormData({ name: '', multiple: 1 });
+      setShowForm(false);
+      fetchData();
     } catch {
-      alert('当番の追加に失敗しました')
+      alert('当番の追加に失敗しました');
     }
-  }
+  };
 
   const handleDelete = async (id: number): Promise<void> => {
-    if (!window.confirm('この当番を削除しますか？')) return
+    if (!window.confirm('この当番を削除しますか？')) return;
     try {
-      await axios.delete(`/api/v1/works/${id}`)
-      fetchData()
+      await axios.delete(`/api/v1/works/${id}`);
+      fetchData();
     } catch {
-      alert('削除に失敗しました')
+      alert('削除に失敗しました');
     }
-  }
+  };
 
-  if (loading) return <div className="text-center py-12">読み込み中...</div>
+  if (loading) return <div className="text-center py-12">読み込み中...</div>;
 
   // members は型チェックのために使用
-  void members
+  void members;
 
   return (
     <div className="space-y-6">
@@ -91,9 +91,7 @@ export default function Works(): JSX.Element {
                 type="number"
                 className="input-field"
                 value={formData.multiple}
-                onChange={(e) =>
-                  setFormData({ ...formData, multiple: parseInt(e.target.value) })
-                }
+                onChange={(e) => setFormData({ ...formData, multiple: parseInt(e.target.value) })}
                 min="1"
               />
             </div>
@@ -111,10 +109,8 @@ export default function Works(): JSX.Element {
               <div className="flex-1">
                 <h3 className="text-lg font-semibold text-gray-900">{work.name}</h3>
                 <div className="mt-2 space-y-1">
-                  <p className="text-sm text-gray-600">
-                    メンバー: {work.members?.length ?? 0}人
-                  </p>
-                  {work.multiple > 1 && (
+                  <p className="text-sm text-gray-600">メンバー: {work.members?.length ?? 0}人</p>
+                  {(work.multiple ?? 0) > 1 && (
                     <p className="text-sm text-gray-600">複数割り当て: {work.multiple}人</p>
                   )}
                 </div>
@@ -127,5 +123,5 @@ export default function Works(): JSX.Element {
         ))}
       </div>
     </div>
-  )
+  );
 }

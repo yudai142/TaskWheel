@@ -35,8 +35,12 @@ export default [
         process: 'readonly',
         HTMLInputElement: 'readonly',
         HTMLElement: 'readonly',
+        HTMLFormElement: 'readonly',
         Document: 'readonly',
         Window: 'readonly',
+        window: 'readonly',
+        alert: 'readonly',
+        JSX: 'readonly',
       },
     },
     plugins: {
