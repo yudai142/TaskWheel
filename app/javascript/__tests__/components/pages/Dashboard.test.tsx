@@ -3,41 +3,24 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import axios from 'axios'
-import Dashboard from './Dashboard'
-
-// Mock data
-const mockWorks = [
-  { id: 1, title: '掃除A' },
-  { id: 2, title: '掃除B' },
-  { id: 3, title: '掃除C' },
-]
-
-const mockMembers = [
-  { id: 1, first_name: 'Taro', last_name: 'Yamada', archive: false },
-  { id: 2, first_name: 'Hanako', last_name: 'Tanaka', archive: false },
-  { id: 3, first_name: 'Jiro', last_name: 'Suzuki', archive: false },
-]
-
-const mockHistories = [
-  { id: 1, member_id: 1, work_id: 1, date: '2026-04-04' },
-  { id: 2, member_id: 2, work_id: 2, date: '2026-04-04' },
-]
+import Dashboard from '../../../components/pages/Dashboard'
+import {
+  mockWorks,
+  mockMembers,
+  mockHistories,
+  mockMembersWithArchived,
+  mockHistoriesYesterday,
+} from '../../../spec/fixtures/mockData'
+import {
+  setupDefaultAxiosMocks,
+  setupAxiosMocksWithArchived,
+  setupAxiosMocksYesterday,
+} from '../../../spec/fixtures/axiosMocks'
 
 describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    ;(axios.get as any).mockImplementation((url: string) => {
-      if (url === '/api/v1/works') {
-        return Promise.resolve({ data: mockWorks })
-      }
-      if (url === '/api/v1/members') {
-        return Promise.resolve({ data: mockMembers })
-      }
-      if (url.includes('/api/v1/histories')) {
-        return Promise.resolve({ data: mockHistories })
-      }
-      return Promise.resolve({ data: [] })
-    })
+    setupDefaultAxiosMocks()
   })
 
   describe('タブ表示機能', () => {
@@ -165,17 +148,8 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
     })
 
     it('アーカイブされたメンバーは表示されない', async () => {
-      const membersWithArchive = [
-        { id: 1, first_name: 'Taro', last_name: 'Yamada', archive: false },
-        { id: 2, first_name: 'Archived', last_name: 'Member', archive: true },
-      ]
-      
-      ;(axios.get as any).mockImplementation((url: string) => {
-        if (url === '/api/v1/members') {
-          return Promise.resolve({ data: membersWithArchive })
-        }
-        return Promise.resolve({ data: [] })
-      })
+      vi.clearAllMocks()
+      setupAxiosMocksWithArchived()
       
       render(<Dashboard />)
       
