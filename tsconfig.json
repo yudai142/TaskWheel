@@ -14,8 +14,9 @@
     "strict": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "types": ["node", "@testing-library/jest-dom", "vitest/globals"]
   },
-  "include": ["app/javascript/**/*", "vite.config.ts"],
+  "include": ["app/javascript/**/*", "vitest.config.ts", "vite.config.ts"],
   "exclude": ["node_modules"]
 }

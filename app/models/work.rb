@@ -13,11 +13,11 @@ class Work < ApplicationRecord
   scope :archived, -> { where(archive: true) }
 
   def available_members
-    members.active.where(member_options: { status: 1 })
+    members.active.joins(:member_options).where(member_options: { status: 1, work_id: id })
   end
 
   def unavailable_members
-    members.active.where(member_options: { status: 0 })
+    members.active.joins(:member_options).where(member_options: { status: 0, work_id: id })
   end
 
   def has_off_work_on?(date)

@@ -7,7 +7,7 @@ module Api
       before_action :set_member, only: [:show, :update, :destroy]
 
       def index
-        @members = Member.all
+        @members = Member.includes(:member_options, :works).active
         render json: @members
       end
 

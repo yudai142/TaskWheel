@@ -66,3 +66,8 @@ node_modules
 # https://vitejs.dev/guide/env-and-mode.html#env-files
 *.local
 
+# direnv
+.direnv/
+.envrc
+.agent.md
+.copilot-prompt.txt

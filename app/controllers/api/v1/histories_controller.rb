@@ -18,8 +18,11 @@ module Api
 
       def create
         @history = History.new(history_params)
-        @history.save!
-        render json: @history, status: :created
+        if @history.save
+          render json: @history, status: :created
+        else
+          render json: { errors: @history.errors.full_messages }, status: :unprocessable_entity
+        end
       end
 
       def destroy
