@@ -133,7 +133,6 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
   describe 'POST /api/v1/histories/bulk_create - Bulk assign duties (シャッフル時)' do
     context '複数の当番割り当て' do
       it '複数の履歴を一括作成できる' do
-        skip('API endpoint not yet implemented')
         params = {
           histories: [
             { member_id: members[0].id, work_id: works[0].id, date: today },
@@ -149,7 +148,6 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
       end
 
       it '無効なパラメータの場合はエラーになる' do
-        skip('API endpoint not yet implemented')
         params = {
           histories: [
             { member_id: 999, work_id: 999, date: today }
@@ -166,7 +164,6 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
   describe 'POST /api/v1/works/shuffle - Shuffle duty assignments' do
     context 'シャッフル機能' do
       it 'シャッフルエンドポイントが成功する' do
-        skip('API endpoint not yet implemented')
         params = {
           member_ids: members.map(&:id),
           work_ids: works.map(&:id),
@@ -179,7 +176,6 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
       end
 
       it 'シャッフル後、割り当てが作成される' do
-        skip('API endpoint not yet implemented')
         params = {
           member_ids: members.map(&:id),
           work_ids: works.map(&:id),
@@ -194,7 +190,6 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
       end
 
       it '除外された当番はシャッフル対象から外れる' do
-        skip('API endpoint not yet implemented')
         # 除外対象のworkを指定
         excluded_work_ids = [works[0].id]
         target_work_ids = works.map(&:id) - excluded_work_ids
