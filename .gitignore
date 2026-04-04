@@ -69,3 +69,4 @@ node_modules
 # direnv
 .direnv/
 .envrc
+.agent.md
