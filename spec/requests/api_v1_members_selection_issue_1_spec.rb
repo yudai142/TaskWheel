@@ -138,9 +138,8 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
   describe 'POST /api/v1/member_options/update_selected - メンバーの参加選択を保存' do
     context 'メンバーの参加/不参加を更新' do
       it '参加メンバーを選択できる' do
-        skip('API endpoint not yet implemented')
-        
         params = {
+          work_id: works[0].id,
           member_options: [
             { member_id: members[0].id, status: 1 }, # 参加
             { member_id: members[1].id, status: 1 }, # 参加
@@ -154,9 +153,8 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
       end
 
       it '参加メンバーの数が返される' do
-        skip('API endpoint not yet implemented')
-        
         params = {
+          work_id: works[0].id,
           member_options: [
             { member_id: members[0].id, status: 1 },
             { member_id: members[1].id, status: 1 },
@@ -177,8 +175,6 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
   describe 'GET /api/v1/dashboard/member_selection_state - 参加メンバーの選択状態' do
     context 'ダッシュボードの参加メンバー選択状態を取得' do
       it '選択状態が返される' do
-        skip('API endpoint not yet implemented')
-        
         get '/api/v1/dashboard/member_selection_state'
         
         expect(response).to have_http_status(:ok)
@@ -189,8 +185,6 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
       end
 
       it 'メンバーごとに選択状態が含まれている' do
-        skip('API endpoint not yet implemented')
-        
         get '/api/v1/dashboard/member_selection_state'
         
         expect(response).to have_http_status(:ok)
