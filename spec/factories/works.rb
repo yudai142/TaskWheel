@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :work do
-    name { Faker::Lorem.word }
+    sequence(:name) { |n| "Work #{n}: #{Faker::Lorem.word}" }
     archive { false }
 
     trait :excluded do
