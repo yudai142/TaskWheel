@@ -73,6 +73,9 @@ RSpec.configure do |config|
 
   # Filter lines from Rails gems in backtraces.
   config.filter_rails_from_backtrace!
+
+  # Include request helpers in request specs
+  config.include Rack::Test::Methods, type: :request
 end
 
 # Include factory_bot methods

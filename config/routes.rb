@@ -34,6 +34,16 @@ Rails.application.routes.draw do
           post :bulk_update
         end
       end
+
+      # Member options
+      resources :member_options, only: [] do
+        collection do
+          post :update_selected
+        end
+      end
+
+      # Dashboard
+      get 'dashboard/member_selection_state', to: 'dashboard#member_selection_state'
     end
   end
 
