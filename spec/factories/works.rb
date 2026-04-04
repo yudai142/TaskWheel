@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :work do
-    title { Faker::Lorem.word }
-    sequence(:position) { |n| n }
+    name { Faker::Lorem.word }
+    archive { false }
 
     trait :excluded do
       # このtraitはシャッフル除外をテストする時に使用

@@ -15,13 +15,13 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
         expect(response.parsed_body.length).to eq(4)
       end
 
-      it '当番のtitleが包含されている' do
+      it '当番のnameが包含されている' do
         get '/api/v1/works'
         
         expect(response).to have_http_status(:ok)
         json_response = response.parsed_body
         
-        expect(json_response[0]).to have_key('title')
+        expect(json_response[0]).to have_key('name')
         expect(json_response[0]).to have_key('id')
       end
 
