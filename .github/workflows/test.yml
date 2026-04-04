@@ -43,9 +43,8 @@ jobs:
         image: postgres:15-alpine
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: ""
           POSTGRES_DB: duty_shuffle_test
-          POSTGRES_INITDB_ARGS: "--auth=trust"
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
