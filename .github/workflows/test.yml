@@ -6,6 +6,10 @@ on:
   push:
     branches: [main, develop]
 
+permissions:
+  pull-requests: write
+  contents: read
+
 jobs:
   javascript-tests:
     name: React / TypeScript Tests
