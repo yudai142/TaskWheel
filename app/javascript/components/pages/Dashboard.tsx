@@ -24,17 +24,22 @@ interface Notification {
   type: 'success' | 'error'
 }
 
+type StatsTab = 'works' | 'members' | 'assigned'
+
 export default function Dashboard(): JSX.Element {
   const [works, setWorks] = useState<Work[]>([])
   const [members, setMembers] = useState<Member[]>([])
   const [participantMemberIds, setParticipantMemberIds] = useState<number[]>([])
+  const [participantSelectionByDate, setParticipantSelectionByDate] = useState<Record<string, number[]>>({})
   const [participantSelectionInitialized, setParticipantSelectionInitialized] = useState<boolean>(false)
   const [histories, setHistories] = useState<History[]>([])
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [loading, setLoading] = useState<boolean>(true)
   const [shuffling, setShuffling] = useState<number | 'all' | null>(null)
+  const [activeStatsTab, setActiveStatsTab] = useState<StatsTab>('works')
   const [showCalendar, setShowCalendar] = useState<boolean>(false)
   const [notification, setNotification] = useState<Notification | null>(null)
+  const [isScrolled, setIsScrolled] = useState<boolean>(false)
 
   const showNotification = useCallback((message: string, type: 'success' | 'error' = 'success') => {
     setNotification({ message, type })
@@ -42,11 +47,33 @@ export default function Dashboard(): JSX.Element {
   }, [])
 
   useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 100)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  useEffect(() => {
     fetchData()
   }, [selectedDate])
 
+  // その日に割り当てられているメンバーをチェック状態にする
+  // 割り当てられていないメンバーはチェックが外れる
   useEffect(() => {
-    const activeMemberIds = members.filter((member) => !member.archive).map((member) => member.id)
+    // 履歴から割り当て済みメンバーを取得（日付にはフィルター済み）
+    const assignedMemberIds = Array.from(new Set(histories.map((h) => h.member_id)))
+    
+    // 現在の日付の選択を保存
+    const dateKey = selectedDate.toISOString().split('T')[0]
+    setParticipantSelectionByDate((prev: Record<string, number[]>) => ({
+      ...prev,
+      [dateKey]: assignedMemberIds,
+    }))
+  }, [histories, selectedDate])
+
+  useEffect(() => {
+    const activeMemberIds = members.filter((member: Member) => !member.archive).map((member: Member) => member.id)
 
     if (!participantSelectionInitialized) {
       setParticipantMemberIds(activeMemberIds)
@@ -54,7 +81,7 @@ export default function Dashboard(): JSX.Element {
       return
     }
 
-    setParticipantMemberIds((prev) => prev.filter((id) => activeMemberIds.includes(id)))
+    setParticipantMemberIds((prev: number[]) => prev.filter((id: number) => activeMemberIds.includes(id)))
   }, [members, participantSelectionInitialized])
 
   const fetchData = async (): Promise<void> => {
@@ -70,7 +97,7 @@ export default function Dashboard(): JSX.Element {
           params: { year, month, day },
         }),
       ])
-      setWorks(worksRes.data)
+      setWorks(worksRes.data.sort((a, b) => a.id - b.id))
       setMembers(membersRes.data)
       setHistories(historiesRes.data)
     } catch {
@@ -81,8 +108,26 @@ export default function Dashboard(): JSX.Element {
   }
 
   const handleShuffle = async (workId: number): Promise<void> => {
-    if (participantMemberIds.length === 0) {
-      showNotification('参加メンバーを1人以上選択してください', 'error')
+    // その日のhistoryレコード全体（work_idに関わらず）
+    const allMembersWithRecords = Array.from(
+      new Set(histories.map((h: History) => h.member_id))
+    )
+
+    if (allMembersWithRecords.length === 0) {
+      showNotification('メンバーを1人以上選択してください', 'error')
+      return
+    }
+
+    // シャッフル中はスキップ
+    if (shuffling !== null) {
+      showNotification('シャッフル処理中です。お待ちください', 'error')
+      return
+    }
+
+    // 除外状態をチェック
+    const work = works.find((w: Work) => w.id === workId)
+    if (work && !work.is_above) {
+      showNotification('この当番はシャッフル対象から除外されています', 'error')
       return
     }
 
@@ -94,13 +139,14 @@ export default function Dashboard(): JSX.Element {
 
       const response = await axios.post<{ member: Member }>('/api/v1/works/shuffle', {
         work_id: workId,
-        participant_member_ids: participantMemberIds,
+        participant_member_ids: allMembersWithRecords,
         year,
         month,
         day,
       })
       showNotification(`${response.data.member.given_name}さんに決定しました！`)
-      fetchData()
+      await fetchData()
+      setActiveStatsTab('assigned')
     } catch (error) {
       const axiosError = error as { response?: { data?: { error?: string } } }
       const msg = axiosError.response?.data?.error || 'シャッフルに失敗しました'
@@ -111,15 +157,33 @@ export default function Dashboard(): JSX.Element {
   }
 
   const handleShuffleAllWorks = async (): Promise<void> => {
+    // その日のhistoryレコード全体（work_idに関わらず）
+    const allMembersWithRecords = Array.from(
+      new Set(histories.map((h: History) => h.member_id))
+    )
+
     if (works.length === 0) {
       showNotification('当番が登録されていません', 'error')
       return
     }
 
-    if (participantMemberIds.length === 0) {
-      showNotification('参加メンバーを1人以上選択してください', 'error')
+    if (allMembersWithRecords.length === 0) {
+      showNotification('メンバーを1人以上選択してください', 'error')
       return
     }
+    if (validWorksCount === 0) {
+      showNotification('シャッフル対象の当番がありません。当番一覧を確認してください', 'error')
+      return
+    }
+
+    if (shuffling !== null) {
+      showNotification('シャッフル処理中です。お待ちください', 'error')
+      return
+    }
+    // 参加者を計算（work_id=nullのメンバー）
+    const currentParticipatingIds = Array.from(
+      new Set(histories.filter((h: History) => h.work_id === null).map((h: History) => h.member_id))
+    )
 
     setShuffling('all')
     try {
@@ -129,11 +193,14 @@ export default function Dashboard(): JSX.Element {
       const month = selectedDate.getMonth() + 1
       const day = selectedDate.getDate()
 
-      for (const work of works) {
+      // シャッフル対象に設定されている work のみ対象にする（is_above=true）
+      const validWorks = works.filter((w: Work) => w.is_above)
+
+      for (const work of validWorks) {
         try {
           const response = await axios.post<{ member: Member }>('/api/v1/works/shuffle', {
             work_id: work.id,
-            participant_member_ids: participantMemberIds,
+            participant_member_ids: allMembersWithRecords,
             year,
             month,
             day,
@@ -155,9 +222,13 @@ export default function Dashboard(): JSX.Element {
       if (successCount > 0) {
         await removeDuplicateAssignments()
 
+        // 割り当てられなかったメンバーに対して work_id=null で登録
+        await ensureAllParticipantsHaveRecords(year, month, day, allMembersWithRecords)
+
         const summary = assignedMembers.map((a) => `${a.work} → ${a.member}`).join('\n')
         showNotification(`${successCount}個の当番を割り当てました！\n\n${summary}`)
-        fetchData()
+        await fetchData()
+        setActiveStatsTab('assigned')
       } else {
         showNotification('割り当てに失敗しました', 'error')
       }
@@ -165,6 +236,57 @@ export default function Dashboard(): JSX.Element {
       showNotification('一括シャッフルに失敗しました', 'error')
     } finally {
       setShuffling(null)
+    }
+  }
+
+  const ensureAllParticipantsHaveRecords = async (
+    year: number,
+    month: number,
+    day: number,
+    currentParticipatingIds: number[]
+  ): Promise<void> => {
+    try {
+      const dateStr = getDateString(selectedDate)
+      const historiesRes = await axios.get<History[]>('/api/v1/histories', {
+        params: { year, month, day },
+      })
+
+      const todayHistories = historiesRes.data
+      
+      // 割り当て済みメンバー（work_id != null）
+      const assignedMemberIds = Array.from(
+        new Set(todayHistories.filter((h: History) => h.work_id !== null).map((h: History) => h.member_id))
+      )
+      
+      // 参加メンバー（work_id = null）
+      const participatingMemberIds = Array.from(
+        new Set(todayHistories.filter((h: History) => h.work_id === null).map((h: History) => h.member_id))
+      )
+      
+      // 全参加メンバー
+      const allRecordedMemberIds = Array.from(new Set([...assignedMemberIds, ...participatingMemberIds]))
+      
+      // 割り当てられなかったメンバー（記録されていないメンバー）
+      const unrecordedMemberIds = currentParticipatingIds.filter(
+        (id: number) => !allRecordedMemberIds.includes(id)
+      )
+      
+      // 割り当てられなかったメンバーに対して work_id=null のHistoryレコードを作成
+      for (const memberId of unrecordedMemberIds) {
+        try {
+          await axios.post('/api/v1/histories', {
+            history: {
+              member_id: memberId,
+              work_id: null,
+              date: dateStr,
+            }
+          })
+        } catch {
+          // Historyレコード作成に失敗した場合はスキップ
+        }
+      }
+    } catch {
+      // 処理に失敗した場合もスキップ
     }
   }
 
@@ -216,26 +338,196 @@ export default function Dashboard(): JSX.Element {
   }
 
   const getTodayAssignedMembers = (workId: number): History[] => {
-    return histories.filter((h) => h.work_id === workId)
+    return histories.filter((h: History) => h.work_id === workId)
   }
 
-  const activeMembers = members.filter((member) => !member.archive)
+  const activeMembers = members.filter((member: Member) => !member.archive)
 
-  const handleToggleParticipant = (memberId: number): void => {
-    setParticipantMemberIds((prev) => {
-      if (prev.includes(memberId)) {
-        return prev.filter((id) => id !== memberId)
+  // 日付を YYYY-MM-DD 形式で取得（ローカル時間）
+  const getDateString = (date: Date): string => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
+  const handleToggleParticipant = async (memberId: number): Promise<void> => {
+    // チェック状態をチェックボックスと同じ方法で判定（履歴に基づく）
+    const isCurrentlyChecked = histories.some((h: History) => h.member_id === memberId)
+    const dateStr = getDateString(selectedDate)
+
+    try {
+      if (isCurrentlyChecked) {
+        // チェック外す → History レコードを削除
+        const recordToDelete = histories.find(
+          (h: History) => {
+            const hDate = typeof h.date === 'string' ? h.date : getDateString(new Date(h.date))
+            return h.member_id === memberId && hDate === dateStr
+          }
+        )
+        if (recordToDelete) {
+          await axios.delete(`/api/v1/histories/${recordToDelete.id}`)
+        }
+      } else {
+        // チェック入れる → 既存チェック後、History レコードを作成（work_id=null）
+        const existingRecord = histories.find(
+          (h: History) => {
+            const hDate = typeof h.date === 'string' ? h.date : getDateString(new Date(h.date))
+            return h.member_id === memberId && hDate === dateStr
+          }
+        )
+        
+        if (!existingRecord) {
+          await axios.post('/api/v1/histories', {
+            history: {
+              member_id: memberId,
+              work_id: null,
+              date: dateStr,
+            }
+          })
+        }
       }
-      return [...prev, memberId]
-    })
+      
+      // データを再取得
+      const year = selectedDate.getFullYear()
+      const month = selectedDate.getMonth() + 1
+      const day = selectedDate.getDate()
+
+      const [worksRes, membersRes, historiesRes] = await Promise.all([
+        axios.get<Work[]>('/api/v1/works'),
+        axios.get<Member[]>('/api/v1/members'),
+        axios.get<History[]>('/api/v1/histories', {
+          params: { year, month, day },
+        }),
+      ])
+      setWorks(worksRes.data.sort((a, b) => a.id - b.id))
+      setMembers(membersRes.data)
+      setHistories(historiesRes.data)
+    } catch (error) {
+      const axiosError = error as { response?: { data?: { error?: string; errors?: string[] } } }
+      const msg = axiosError.response?.data?.errors?.join(', ') || axiosError.response?.data?.error || 'メンバー選択の更新に失敗しました'
+      showNotification(msg, 'error')
+      console.error('handleToggleParticipant error:', error)
+    }
   }
 
-  const handleSelectAllParticipants = (): void => {
-    setParticipantMemberIds(activeMembers.map((member) => member.id))
+  const handleToggleWorkExclusion = async (workId: number): Promise<void> => {
+    try {
+      // 現在の Work オブジェクトを取得
+      const work = works.find((w: Work) => w.id === workId)
+      if (!work) return
+
+      // is_above を反転
+      // チェック入れる（除外） = is_above を false に
+      // チェック外す（対象に戻す） = is_above を true に
+      const newIsAbove = !work.is_above
+
+      // API で Work を更新
+      await axios.patch(`/api/v1/works/${workId}`, {
+        work: {
+          is_above: newIsAbove,
+        }
+      })
+
+      // データを再取得
+      const worksRes = await axios.get<Work[]>('/api/v1/works')
+      setWorks(worksRes.data.sort((a, b) => a.id - b.id))
+      showNotification('当番の設定を更新しました', 'success')
+    } catch (error) {
+      const axiosError = error as { response?: { data?: { error?: string; errors?: string[] } } }
+      const msg = axiosError.response?.data?.errors?.join(', ') || axiosError.response?.data?.error || '当番の更新に失敗しました'
+      showNotification(msg, 'error')
+      console.error('handleToggleWorkExclusion error:', error)
+    }
   }
 
-  const handleClearAllParticipants = (): void => {
-    setParticipantMemberIds([])
+  const handleSelectAllParticipants = async (): Promise<void> => {
+    try {
+      const dateStr = getDateString(selectedDate)
+      
+      // 既存レコードをチェック
+      const existingMembers = histories
+        .filter((h: History) => {
+          const hDate = typeof h.date === 'string' ? h.date : getDateString(new Date(h.date))
+          return hDate === dateStr
+        })
+        .map((h: History) => h.member_id)
+      
+      const toAdd = activeMembers.filter(
+        (m: Member) => !existingMembers.includes(m.id)
+      )
+
+      // 新規メンバーの History レコードを作成
+      for (const member of toAdd) {
+        await axios.post('/api/v1/histories', {
+          history: {
+            member_id: member.id,
+            work_id: null,
+            date: dateStr,
+          }
+        })
+      }
+
+      // データを再取得
+      const year = selectedDate.getFullYear()
+      const month = selectedDate.getMonth() + 1
+      const day = selectedDate.getDate()
+
+      const [worksRes, membersRes, historiesRes] = await Promise.all([
+        axios.get<Work[]>('/api/v1/works'),
+        axios.get<Member[]>('/api/v1/members'),
+        axios.get<History[]>('/api/v1/histories', {
+          params: { year, month, day },
+        }),
+      ])
+      setWorks(worksRes.data.sort((a, b) => a.id - b.id))
+      setMembers(membersRes.data)
+      setHistories(historiesRes.data)
+    } catch (error) {
+      const axiosError = error as { response?: { data?: { error?: string; errors?: string[] } } }
+      const msg = axiosError.response?.data?.errors?.join(', ') || axiosError.response?.data?.error || '全選択に失敗しました'
+      showNotification(msg, 'error')
+      console.error('handleSelectAllParticipants error:', error)
+    }
+  }
+
+  const handleClearAllParticipants = async (): Promise<void> => {
+    try {
+      const dateStr = getDateString(selectedDate)
+      
+      // その日の全メンバーの History レコードを削除
+      const toDelete = histories.filter(
+        (h: History) => {
+          const hDate = typeof h.date === 'string' ? h.date : getDateString(new Date(h.date))
+          return hDate === dateStr
+        }
+      )
+
+      for (const record of toDelete) {
+        await axios.delete(`/api/v1/histories/${record.id}`)
+      }
+
+      // データを再取得
+      const year = selectedDate.getFullYear()
+      const month = selectedDate.getMonth() + 1
+      const day = selectedDate.getDate()
+
+      const [worksRes, membersRes, historiesRes] = await Promise.all([
+        axios.get<Work[]>('/api/v1/works'),
+        axios.get<Member[]>('/api/v1/members'),
+        axios.get<History[]>('/api/v1/histories', {
+          params: { year, month, day },
+        }),
+      ])
+      setWorks(worksRes.data.sort((a, b) => a.id - b.id))
+      setMembers(membersRes.data)
+      setHistories(historiesRes.data)
+    } catch (error) {
+      const axiosError = error as { response?: { data?: { error?: string; errors?: string[] } } }
+      const msg = axiosError.response?.data?.errors?.join(', ') || axiosError.response?.data?.error || '全解除に失敗しました'
+      showNotification(msg, 'error')
+      console.error('handleClearAllParticipants error:', error)
+    }
   }
 
   const handlePrevDay = (): void => {
@@ -276,7 +568,27 @@ export default function Dashboard(): JSX.Element {
     return <div className="text-center py-12 text-gray-600">読み込み中...</div>
   }
 
+  const showParticipantSection = activeStatsTab === 'members'
+  const showWorksSection = activeStatsTab === 'assigned'
+  
+  // 統計データ計算
+  const validWorksCount = works.filter((w: Work) => w.is_above).length
+  
+  // 未割り当てメンバーを計算
+  // work_id が null = 参加しているが未割り当て
+  // work_id が null でない = 割り当て済み
+  const participatingMemberIds = Array.from(
+    new Set(histories.filter((h: History) => h.work_id === null).map((h: History) => h.member_id))
+  )
+  const assignedMemberIds = Array.from(
+    new Set(histories.filter((h: History) => h.work_id !== null).map((h: History) => h.member_id))
+  )
   const assignedMembersCount = new Set(histories.map((h: History) => h.member_id)).size
+  const selectedMembersCount = participatingMemberIds.length
+  const unassignedMemberIds = participatingMemberIds.filter(
+    (memberId: number) => !assignedMemberIds.includes(memberId)
+  )
+  const unassignedMembers = members.filter((m: Member) => unassignedMemberIds.includes(m.id))
 
   return (
     <div className="space-y-6">
@@ -304,14 +616,16 @@ export default function Dashboard(): JSX.Element {
       )}
 
       {/* Date Navigation Header */}
-      <div className="card bg-gradient-to-r from-primary-50 to-blue-50 border-2 border-primary-200">
-        <div className="flex items-center justify-center gap-3 flex-wrap">
+      <div className={`card bg-gradient-to-r from-primary-50 to-blue-50 border-2 border-primary-200 sticky top-0 z-40 transition-all ${
+        isScrolled ? 'py-1 shadow-lg' : 'py-4'
+      }`}>
+        <div className={`flex items-center justify-center flex-wrap transition-all ${isScrolled ? 'gap-1.5' : 'gap-3'}`}>
           <button
             onClick={handlePrevDay}
-            className="btn-secondary flex items-center p-2"
+            className={`btn-secondary flex items-center transition-all ${isScrolled ? 'p-1.5' : 'p-2'}`}
             title="前の日"
           >
-            <ChevronLeftIcon className="h-5 w-5" />
+            <ChevronLeftIcon className={`transition-all ${isScrolled ? 'h-4 w-4' : 'h-5 w-5'}`} />
           </button>
 
           <div className="flex items-center space-x-2 relative">
@@ -320,7 +634,7 @@ export default function Dashboard(): JSX.Element {
               className="text-primary-600 hover:text-primary-700 transition-colors flex-shrink-0"
               title="カレンダーを表示"
             >
-              <CalendarIcon className="h-6 w-6" />
+              <CalendarIcon className={`transition-all ${isScrolled ? 'h-5 w-5' : 'h-6 w-6'}`} />
             </button>
             {showCalendar && (
               <>
@@ -331,7 +645,7 @@ export default function Dashboard(): JSX.Element {
                 <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 z-50 bg-white rounded-xl shadow-2xl border border-indigo-100 p-2">
                   <Calendar
                     value={selectedDate}
-                    onChange={(value) => {
+                    onChange={(value: unknown) => {
                       if (value instanceof Date) {
                         setSelectedDate(value)
                         setShowCalendar(false)
@@ -343,13 +657,13 @@ export default function Dashboard(): JSX.Element {
                 </div>
               </>
             )}
-            <span className="text-xl font-bold text-gray-900 whitespace-nowrap">
+            <span className={`font-bold text-gray-900 whitespace-nowrap transition-all ${isScrolled ? 'text-base' : 'text-xl'}`}>
               {formatDate(selectedDate)}
             </span>
             {!isToday(selectedDate) && (
               <button
                 onClick={handleToday}
-                className="text-sm px-2 py-1 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors font-medium flex-shrink-0"
+                className={`bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors font-medium flex-shrink-0 ${isScrolled ? 'text-xs px-1.5 py-0.5' : 'text-sm px-2 py-1'}`}
               >
                 今日
               </button>
@@ -357,93 +671,123 @@ export default function Dashboard(): JSX.Element {
           </div>
 
           <button
-            onClick={handleShuffleAllWorks}
-            disabled={
-              shuffling === 'all' ||
-              works.length === 0 ||
-              activeMembers.length === 0 ||
-              participantMemberIds.length === 0
-            }
-            className={`btn-primary flex items-center justify-center transition-all duration-200 ${
-              shuffling === 'all' ? 'opacity-75 cursor-wait' : ''
-            } ${
-              works.length === 0 || activeMembers.length === 0 || participantMemberIds.length === 0
-                ? 'opacity-50 cursor-not-allowed'
-                : ''
-            }`}
+            onClick={() => {
+              const isDisabled = shuffling === 'all' || validWorksCount === 0 || histories.length === 0
+              if (isDisabled && histories.length === 0) {
+                showNotification('参加メンバーを選択してください', 'error')
+                return
+              }
+              if (!isDisabled) {
+                handleShuffleAllWorks()
+              }
+            }}
+            className={`flex items-center justify-center font-medium rounded-lg transition-all duration-200 ${
+              shuffling === 'all' || validWorksCount === 0 || histories.length === 0
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed opacity-50 pointer-events-auto'
+                : 'btn-primary hover:shadow-lg'
+            } ${isScrolled ? 'px-3 py-1.5 text-sm' : 'px-4 py-2'}`}
           >
             {shuffling === 'all' ? (
               <>
                 <span className="animate-spin mr-2">⏳</span>
-                処理中...
+                <span className={isScrolled ? 'hidden sm:inline' : ''}>処理中...</span>
               </>
             ) : (
               <>
-                <SparklesIcon className="h-5 w-5 mr-2" />
-                シャッフル
+                <SparklesIcon className={`mr-2 ${isScrolled ? 'h-4 w-4' : 'h-5 w-5'}`} />
+                <span className={isScrolled ? 'hidden sm:inline' : ''}>シャッフル</span>
               </>
             )}
           </button>
 
           <button
             onClick={handleNextDay}
-            className="btn-secondary flex items-center p-2"
+            className={`btn-secondary flex items-center transition-all ${isScrolled ? 'p-1.5' : 'p-2'}`}
             title="次の日"
           >
-            <ChevronRightIcon className="h-5 w-5" />
+            <ChevronRightIcon className={`transition-all ${isScrolled ? 'h-4 w-4' : 'h-5 w-5'}`} />
           </button>
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
-        <div className="card bg-gradient-to-br from-primary-50 to-primary-100 border border-primary-200">
+      {/* Stats Cards as Tabs */}
+      <div className={`grid sticky top-12 z-30 bg-white rounded-lg transition-all border ${
+        isScrolled 
+          ? 'py-1.5 px-2 shadow-md grid-cols-1 md:grid-cols-3 gap-1.5 lg:gap-2 border-gray-200' 
+          : 'py-4 px-4 grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6 border-transparent'
+      }`} role="tablist" aria-label="統計表示タブ">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeStatsTab === 'works'}
+          onClick={() => setActiveStatsTab('works')}
+          className={`card bg-gradient-to-br from-primary-50 to-primary-100 border border-primary-200 text-left transition-all ${
+            activeStatsTab === 'works' ? 'ring-2 ring-primary-500 shadow-lg' : 'hover:shadow-md'
+          } ${isScrolled ? 'p-2' : 'p-4'}`}
+        >
           <div className="flex items-center justify-between">
             <div className="flex-1">
-              <p className="text-sm font-medium text-primary-600 uppercase tracking-wide">当番数</p>
-              <p className="text-4xl font-bold text-primary-900 mt-2">{works.length}</p>
-              <p className="text-xs text-primary-600 mt-2">個の当番が登録されています</p>
+              <p className={`font-medium text-primary-600 uppercase tracking-wide transition-all ${isScrolled ? 'text-xs leading-tight' : 'text-sm'}`}>当番数</p>
+              <p className={`font-bold text-primary-900 transition-all ${isScrolled ? 'text-xl mt-0.5' : 'text-4xl mt-2'}`}>{validWorksCount}</p>
+              {!isScrolled && <p className="text-xs text-primary-600 mt-2">個のシャッフル対象が登録されています</p>}
             </div>
             <div className="flex-shrink-0">
-              <div className="flex items-center justify-center h-14 w-14 rounded-lg bg-primary-200">
-                <ClipboardDocumentListIcon className="h-8 w-8 text-primary-700" />
+              <div className={`flex items-center justify-center rounded-lg bg-primary-200 transition-all ${isScrolled ? 'h-8 w-8' : 'h-14 w-14'}`}>
+                <ClipboardDocumentListIcon className={`text-primary-700 transition-all ${isScrolled ? 'h-4 w-4' : 'h-8 w-8'}`} />
               </div>
             </div>
           </div>
-        </div>
+        </button>
 
-        <div className="card bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeStatsTab === 'members'}
+          onClick={() => setActiveStatsTab('members')}
+          className={`card bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 text-left transition-all ${
+            activeStatsTab === 'members' ? 'ring-2 ring-blue-500 shadow-lg' : 'hover:shadow-md'
+          } ${isScrolled ? 'p-2' : 'p-4'}`}
+        >
           <div className="flex items-center justify-between">
             <div className="flex-1">
-              <p className="text-sm font-medium text-blue-600 uppercase tracking-wide">メンバー数</p>
-              <p className="text-4xl font-bold text-blue-900 mt-2">{activeMembers.length}</p>
-              <p className="text-xs text-blue-600 mt-2">人が参加しています</p>
+              <p className={`font-medium text-blue-600 uppercase tracking-wide transition-all ${isScrolled ? 'text-xs leading-tight' : 'text-sm'}`}>メンバー数</p>
+              <p className={`font-bold text-blue-900 transition-all ${isScrolled ? 'text-xl mt-0.5' : 'text-4xl mt-2'}`}>{assignedMembersCount}</p>
+              {!isScrolled && <p className="text-xs text-blue-600 mt-2">人が参加しています</p>}
             </div>
             <div className="flex-shrink-0">
-              <div className="flex items-center justify-center h-14 w-14 rounded-lg bg-blue-200">
-                <UserGroupIcon className="h-8 w-8 text-blue-700" />
+              <div className={`flex items-center justify-center rounded-lg bg-blue-200 transition-all ${isScrolled ? 'h-8 w-8' : 'h-14 w-14'}`}>
+                <UserGroupIcon className={`text-blue-700 transition-all ${isScrolled ? 'h-4 w-4' : 'h-8 w-8'}`} />
               </div>
             </div>
           </div>
-        </div>
+        </button>
 
-        <div className="card bg-gradient-to-br from-green-50 to-green-100 border border-green-200">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeStatsTab === 'assigned'}
+          onClick={() => setActiveStatsTab('assigned')}
+          className={`card bg-gradient-to-br from-green-50 to-green-100 border border-green-200 text-left transition-all ${
+            activeStatsTab === 'assigned' ? 'ring-2 ring-green-500 shadow-lg' : 'hover:shadow-md'
+          } ${isScrolled ? 'p-2' : 'p-4'}`}
+        >
           <div className="flex items-center justify-between">
             <div className="flex-1">
-              <p className="text-sm font-medium text-green-600 uppercase tracking-wide">割り当て済み</p>
-              <p className="text-4xl font-bold text-green-900 mt-2">{assignedMembersCount}</p>
-              <p className="text-xs text-green-600 mt-2">人が割り当てられています</p>
+              <p className={`font-medium text-green-600 uppercase tracking-wide transition-all ${isScrolled ? 'text-xs leading-tight' : 'text-sm'}`}>割り当て済み</p>
+              <p className={`font-bold text-green-900 transition-all ${isScrolled ? 'text-xl mt-0.5' : 'text-4xl mt-2'}`}>{assignedMembersCount}</p>
+              {!isScrolled && <p className="text-xs text-green-600 mt-2">人が割り当てられています</p>}
             </div>
             <div className="flex-shrink-0">
-              <div className="flex items-center justify-center h-14 w-14 rounded-lg bg-green-200">
-                <CheckCircleIcon className="h-8 w-8 text-green-700" />
+              <div className={`flex items-center justify-center rounded-lg bg-green-200 transition-all ${isScrolled ? 'h-8 w-8' : 'h-14 w-14'}`}>
+                <CheckCircleIcon className={`text-green-700 transition-all ${isScrolled ? 'h-4 w-4' : 'h-8 w-8'}`} />
               </div>
             </div>
           </div>
-        </div>
+        </button>
       </div>
 
-      <div className="card">
+      {showParticipantSection && (
+      <div className="card" role="tabpanel">
         <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
           <h3 className="text-lg font-semibold text-gray-900">参加メンバー選択</h3>
           <div className="flex items-center gap-2">
@@ -459,7 +803,7 @@ export default function Dashboard(): JSX.Element {
               type="button"
               onClick={handleClearAllParticipants}
               className="btn-secondary text-sm px-3 py-1"
-              disabled={participantMemberIds.length === 0}
+              disabled={selectedMembersCount === 0}
             >
               全解除
             </button>
@@ -467,15 +811,16 @@ export default function Dashboard(): JSX.Element {
         </div>
 
         <p className="text-sm text-gray-600 mb-4">
-          選択中: {participantMemberIds.length}/{activeMembers.length}人
+          参加中: {assignedMembersCount}/{activeMembers.length}人
         </p>
 
         {activeMembers.length === 0 ? (
           <p className="text-sm text-gray-500">参加可能なメンバーがいません。</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {activeMembers.map((member) => {
-              const checked = participantMemberIds.includes(member.id)
+            {activeMembers.map((member: Member) => {
+              // その日に割り当てられているか（履歴に記録されているか）で判定
+              const checked = histories.some((h: History) => h.member_id === member.id)
               return (
                 <label
                   key={member.id}
@@ -501,8 +846,59 @@ export default function Dashboard(): JSX.Element {
           </div>
         )}
       </div>
+      )}
+
+      {/* Works Exclusion List (for Works Tab) */}
+      {activeStatsTab === 'works' && (
+      <div className="card" role="tabpanel">
+        <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
+          <h3 className="text-lg font-semibold text-gray-900">当番管理</h3>
+          <p className="text-sm text-gray-600">
+            シャッフル対象: {validWorksCount}/{works.length}個
+          </p>
+        </div>
+
+        <p className="text-sm text-gray-600 mb-4">
+          シャッフルから除外したい当番にチェックを入れてください。チェックされた当番はシャッフル対象から外れます。
+        </p>
+
+        {works.length === 0 ? (
+          <p className="text-sm text-gray-500">当番が登録されていません。</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {works.map((work: Work) => {
+              const isExcluded = !work.is_above
+              return (
+                <label
+                  key={work.id}
+                  className={`flex items-center gap-3 rounded-lg border p-4 cursor-pointer transition-all ${
+                    isExcluded
+                      ? 'border-red-400 bg-red-50'
+                      : 'border-gray-200 bg-white hover:bg-gray-50'
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={isExcluded}
+                    onChange={() => handleToggleWorkExclusion(work.id)}
+                    className="h-4 w-4"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-900 truncate">{work.name}</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {isExcluded ? '除外中' : 'シャッフル対象'}
+                    </p>
+                  </div>
+                </label>
+              )
+            })}
+          </div>
+        )}
+      </div>
+      )}
 
       {/* Works List Section */}
+      {showWorksSection && (
       <div className="card">
         <div className="mb-6">
           <div className="flex items-center">
@@ -518,18 +914,59 @@ export default function Dashboard(): JSX.Element {
           </div>
         ) : (
           <div className="space-y-4">
+            {/* Unassigned Members Card */}
+            <div className="border border-gray-300 rounded-xl p-5 bg-gradient-to-r from-yellow-50 to-yellow-100 hover:shadow-md transition-all">
+              <div className="mb-4">
+                <div className="flex items-center">
+                  <div className="h-3 w-3 bg-yellow-500 rounded-full mr-3"></div>
+                  <h3 className="text-lg font-semibold text-gray-900">未割り当て</h3>
+                </div>
+              </div>
+
+              {unassignedMembers.length === 0 ? (
+                <div className="text-center py-6">
+                  <p className="text-sm text-gray-600">
+                    全ての参加メンバーが割り当てられています
+                  </p>
+                </div>
+              ) : (
+                <div className="border-t border-gray-300 pt-4">
+                  <p className="text-sm font-semibold text-gray-600 mb-3">
+                    未割り当ての参加メンバー:
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {unassignedMembers.map((member) => (
+                      <div
+                        key={member.id}
+                        className="p-4 bg-white border-2 border-yellow-300 rounded-lg hover:shadow-md transition-all flex items-center justify-center"
+                      >
+                        <p className="font-semibold text-gray-900 text-center">
+                          {member.family_name}
+                          {member.given_name}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
             {works.map((work) => {
               const todayAssignments = getTodayAssignedMembers(work.id)
+              const isExcluded = !work.is_above
               return (
                 <div
                   key={work.id}
-                  className="border border-gray-200 rounded-xl p-5 bg-gradient-to-r from-gray-50 to-gray-100 hover:shadow-md transition-all"
+                  className={`border border-gray-200 rounded-xl p-5 bg-gradient-to-r from-gray-50 to-gray-100 hover:shadow-md transition-all ${
+                    isExcluded ? 'opacity-60 border-red-300' : ''
+                  }`}
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
                     <div>
                       <div className="flex items-center mb-2">
-                        <div className="h-3 w-3 bg-primary-600 rounded-full mr-3"></div>
+                        <div className={`h-3 w-3 rounded-full mr-3 ${isExcluded ? 'bg-red-500' : 'bg-primary-600'}`}></div>
                         <h3 className="text-lg font-semibold text-gray-900">{work.name}</h3>
+                        {isExcluded && <span className="ml-3 inline-flex items-center px-2 py-1 rounded-full text-xs font-small bg-red-100 text-red-700">除外中</span>}
                       </div>
                       <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-700">
                         今日の割り当て: {todayAssignments.length}人
@@ -538,12 +975,12 @@ export default function Dashboard(): JSX.Element {
                     <button
                       type="button"
                       onClick={() => handleShuffle(work.id)}
-                      disabled={shuffling === work.id || participantMemberIds.length === 0}
-                      className={`btn-primary px-4 py-2 text-sm ${
-                        shuffling === work.id || participantMemberIds.length === 0
-                          ? 'opacity-50 cursor-not-allowed'
-                          : ''
+                      className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                        shuffling === work.id || assignedMembersCount === 0 || isExcluded
+                          ? 'bg-gray-300 text-gray-500 cursor-not-allowed opacity-60 pointer-events-auto'
+                          : 'btn-primary'
                       }`}
+                      title={isExcluded ? 'この当番はシャッフル対象から除外されています' : assignedMembersCount === 0 ? 'メンバーを1人以上選択してください' : ''}
                     >
                       {shuffling === work.id ? '処理中...' : 'この当番をシャッフル'}
                     </button>
@@ -582,6 +1019,7 @@ export default function Dashboard(): JSX.Element {
           </div>
         )}
       </div>
+      )}
     </div>
   )
 }
