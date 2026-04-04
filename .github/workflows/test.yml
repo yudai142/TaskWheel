@@ -72,6 +72,11 @@ jobs:
           bundle lock --add-platform x86_64-linux || true
           bundle install --jobs 4
 
+      - name: Clear npm cache and reinstall Node dependencies
+        run: |
+          npm cache clean --force
+          npm install
+
       - name: Set up Node.js for Rails assets
         uses: actions/setup-node@v4
         with:
