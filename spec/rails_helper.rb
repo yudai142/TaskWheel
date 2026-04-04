@@ -3,6 +3,9 @@
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 
+# Set test database URL to prevent remote database errors in DatabaseCleaner
+ENV['DATABASE_URL'] = ENV.fetch('DATABASE_URL_TEST', 'postgresql://postgres:password@localhost:5432/duty_shuffle_test')
+
 # Configure FactoryBot to prevent duplicate definition errors
 require File.expand_path('../config/environment', __dir__)
 
@@ -32,6 +35,8 @@ RSpec.configure do |config|
   # Checks for pending migrations before running the test suite
   # If you are not using ActiveRecord, you can remove these lines.
   config.before(:suite) do
+    # Disable DatabaseCleaner safeguard for Docker tests
+    DatabaseCleaner.allow_remote_database_url = true
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with(:truncation)
   end
