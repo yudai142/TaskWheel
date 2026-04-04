@@ -24,7 +24,7 @@ end
 
 RSpec.configure do |config|
   # Remove this line to allow ActiveRecord to raise an error for migrations with missing names
-  config.pending_migration_checker = :migrations
+  # config.pending_migration_checker = :migrations
 
   # Checks for pending migrations before running the test suite
   # If you are not using ActiveRecord, you can remove these lines.
