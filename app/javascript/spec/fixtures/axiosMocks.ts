@@ -13,66 +13,61 @@ import {
  * テスト用axiosモック設定
  */
 
-// デフォルトのaxiosモック設定
-export const setupDefaultAxiosMocks = () => {
+/**
+ * 共通のモック設定関数
+ * GET と PATCH メソッドをセットアップ
+ */
+const setupCommonMocks = (works: any, members: any, histories: any) => {
   ;(axios.get as any).mockImplementation((url: string) => {
     if (url === '/api/v1/works') {
-      return Promise.resolve({ data: mockWorks })
+      return Promise.resolve({ data: works })
     }
     if (url === '/api/v1/members') {
-      return Promise.resolve({ data: mockMembers })
+      return Promise.resolve({ data: members })
     }
     if (url.includes('/api/v1/histories')) {
-      return Promise.resolve({ data: mockHistories })
+      return Promise.resolve({ data: histories })
     }
     return Promise.resolve({ data: [] })
   })
+
+  ;(axios.patch as any).mockImplementation((url: string, data: any) => {
+    // シャッフル除外機能のモック
+    if (url.includes('/api/v1/works/')) {
+      return Promise.resolve({ data: { success: true } })
+    }
+    return Promise.resolve({ data: {} })
+  })
+
+  // POST メソッドのモック（シャッフル時など）
+  ;(axios.post as any).mockImplementation((url: string, data: any) => {
+    if (url.includes('/api/v1/works/shuffle')) {
+      return Promise.resolve({ data: [] })
+    }
+    if (url.includes('/api/v1/histories')) {
+      return Promise.resolve({ data: {} })
+    }
+    return Promise.resolve({ data: {} })
+  })
+}
+
+// デフォルトのaxiosモック設定
+export const setupDefaultAxiosMocks = () => {
+  setupCommonMocks(mockWorks, mockMembers, mockHistories)
 }
 
 // カスタムデータセット用のaxiosモック設定
 export const setupAxiosMocksWithData = (dataSet: typeof mockDataSets.today) => {
-  ;(axios.get as any).mockImplementation((url: string) => {
-    if (url === '/api/v1/works') {
-      return Promise.resolve({ data: dataSet.works })
-    }
-    if (url === '/api/v1/members') {
-      return Promise.resolve({ data: dataSet.members })
-    }
-    if (url.includes('/api/v1/histories')) {
-      return Promise.resolve({ data: dataSet.histories })
-    }
-    return Promise.resolve({ data: [] })
-  })
+  setupCommonMocks(dataSet.works, dataSet.members, dataSet.histories)
 }
 
 // アーカイブメンバーを含むモックデータでセットアップ
 export const setupAxiosMocksWithArchived = () => {
-  ;(axios.get as any).mockImplementation((url: string) => {
-    if (url === '/api/v1/works') {
-      return Promise.resolve({ data: mockWorks })
-    }
-    if (url === '/api/v1/members') {
-      return Promise.resolve({ data: mockMembersWithArchived })
-    }
-    if (url.includes('/api/v1/histories')) {
-      return Promise.resolve({ data: mockHistories })
-    }
-    return Promise.resolve({ data: [] })
-  })
+  setupCommonMocks(mockWorks, mockMembersWithArchived, mockHistories)
 }
 
 // 昨日のデータでセットアップ
 export const setupAxiosMocksYesterday = () => {
-  ;(axios.get as any).mockImplementation((url: string) => {
-    if (url === '/api/v1/works') {
-      return Promise.resolve({ data: mockWorks })
-    }
-    if (url === '/api/v1/members') {
-      return Promise.resolve({ data: mockMembers })
-    }
-    if (url.includes('/api/v1/histories')) {
-      return Promise.resolve({ data: mockHistoriesYesterday })
-    }
-    return Promise.resolve({ data: [] })
-  })
+  setupCommonMocks(mockWorks, mockMembers, mockHistoriesYesterday)
 }
+

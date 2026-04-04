@@ -10,6 +10,7 @@ export default defineConfig({
     setupFiles: './vitest.setup.ts',
     css: true,
     include: ['app/javascript/__tests__/**/*.test.{ts,tsx}'],
+    mockReset: true,
   },
   resolve: {
     alias: {

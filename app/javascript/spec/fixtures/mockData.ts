@@ -7,43 +7,43 @@ import type { Member, Work, History } from '../../types'
 
 // 当番（掃除タスク）のモックデータ
 export const mockWorks: Work[] = [
-  { id: 1, title: '掃除A' },
-  { id: 2, title: '掃除B' },
-  { id: 3, title: '掃除C' },
+  { id: 1, name: '掃除A', archive: false, is_above: false, created_at: '2026-04-04T00:00:00Z', updated_at: '2026-04-04T00:00:00Z' },
+  { id: 2, name: '掃除B', archive: false, is_above: false, created_at: '2026-04-04T00:00:00Z', updated_at: '2026-04-04T00:00:00Z' },
+  { id: 3, name: '掃除C', archive: false, is_above: false, created_at: '2026-04-04T00:00:00Z', updated_at: '2026-04-04T00:00:00Z' },
 ]
 
 // メンバーのモックデータ
 export const mockMembers: Member[] = [
-  { id: 1, first_name: 'Taro', last_name: 'Yamada', archive: false },
-  { id: 2, first_name: 'Hanako', last_name: 'Tanaka', archive: false },
-  { id: 3, first_name: 'Jiro', last_name: 'Suzuki', archive: false },
+  { id: 1, family_name: 'Yamada', given_name: 'Taro', kana_name: 'ヤマダ タロウ', archive: false, created_at: '2026-04-04T00:00:00Z', updated_at: '2026-04-04T00:00:00Z' },
+  { id: 2, family_name: 'Tanaka', given_name: 'Hanako', kana_name: 'タナカ ハナコ', archive: false, created_at: '2026-04-04T00:00:00Z', updated_at: '2026-04-04T00:00:00Z' },
+  { id: 3, family_name: 'Suzuki', given_name: 'Jiro', kana_name: 'スズキ ジロウ', archive: false, created_at: '2026-04-04T00:00:00Z', updated_at: '2026-04-04T00:00:00Z' },
 ]
 
 // アーカイブ済みメンバーを含むモックデータ
 export const mockMembersWithArchived: Member[] = [
-  { id: 1, first_name: 'Taro', last_name: 'Yamada', archive: false },
-  { id: 2, first_name: 'Hanako', last_name: 'Tanaka', archive: false },
-  { id: 3, first_name: 'Archived', last_name: 'Member', archive: true },
+  { id: 1, family_name: 'Yamada', given_name: 'Taro', kana_name: 'ヤマダ タロウ', archive: false, created_at: '2026-04-04T00:00:00Z', updated_at: '2026-04-04T00:00:00Z' },
+  { id: 2, family_name: 'Tanaka', given_name: 'Hanako', kana_name: 'タナカ ハナコ', archive: false, created_at: '2026-04-04T00:00:00Z', updated_at: '2026-04-04T00:00:00Z' },
+  { id: 3, family_name: 'Archived', given_name: 'Member', kana_name: 'アーカイブ メンバー', archive: true, created_at: '2026-04-04T00:00:00Z', updated_at: '2026-04-04T00:00:00Z' },
 ]
 
 // 割り当て履歴のモックデータ
 export const mockHistories: History[] = [
-  { id: 1, member_id: 1, work_id: 1, date: '2026-04-04' },
-  { id: 2, member_id: 2, work_id: 2, date: '2026-04-04' },
+  { id: 1, member_id: 1, work_id: 1, date: '2026-04-04', created_at: '2026-04-04T00:00:00Z', updated_at: '2026-04-04T00:00:00Z' },
+  { id: 2, member_id: 2, work_id: 2, date: '2026-04-04', created_at: '2026-04-04T00:00:00Z', updated_at: '2026-04-04T00:00:00Z' },
 ]
 
 // 昨日の履歴
 export const mockHistoriesYesterday: History[] = [
-  { id: 3, member_id: 1, work_id: 1, date: '2026-04-03' },
-  { id: 4, member_id: 3, work_id: 3, date: '2026-04-03' },
+  { id: 3, member_id: 1, work_id: 1, date: '2026-04-03', created_at: '2026-04-03T00:00:00Z', updated_at: '2026-04-03T00:00:00Z' },
+  { id: 4, member_id: 3, work_id: 3, date: '2026-04-03', created_at: '2026-04-03T00:00:00Z', updated_at: '2026-04-03T00:00:00Z' },
 ]
 
 // 複数メンバーの複数割り当て（シャッフルテスト用）
 export const mockHistoriesMultiple: History[] = [
-  { id: 1, member_id: 1, work_id: 1, date: '2026-04-04' },
-  { id: 2, member_id: 2, work_id: 2, date: '2026-04-04' },
-  { id: 3, member_id: 3, work_id: 3, date: '2026-04-04' },
-  { id: 4, member_id: 1, work_id: 2, date: '2026-04-04' },
+  { id: 1, member_id: 1, work_id: 1, date: '2026-04-04', created_at: '2026-04-04T00:00:00Z', updated_at: '2026-04-04T00:00:00Z' },
+  { id: 2, member_id: 2, work_id: 2, date: '2026-04-04', created_at: '2026-04-04T00:00:00Z', updated_at: '2026-04-04T00:00:00Z' },
+  { id: 3, member_id: 3, work_id: 3, date: '2026-04-04', created_at: '2026-04-04T00:00:00Z', updated_at: '2026-04-04T00:00:00Z' },
+  { id: 4, member_id: 1, work_id: 2, date: '2026-04-04', created_at: '2026-04-04T00:00:00Z', updated_at: '2026-04-04T00:00:00Z' },
 ]
 
 // スマートなモックデータセット（複合テスト用）

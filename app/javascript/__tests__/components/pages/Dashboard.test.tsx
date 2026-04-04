@@ -17,6 +17,9 @@ import {
   setupAxiosMocksYesterday,
 } from '../../../spec/fixtures/axiosMocks'
 
+// Mock axios
+vi.mock('axios')
+
 describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
   beforeEach(() => {
     vi.clearAllMocks()
