@@ -3,10 +3,13 @@
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 
-# Note: FactoryBot automatically loads factories from spec/factories/
-# No need to manually clear factories in modern versions
-
+# Configure FactoryBot to prevent duplicate definition errors
 require File.expand_path('../config/environment', __dir__)
+
+# Clear any existing factory definitions to prevent duplicates
+if FactoryBot.factories.instance_variable_get(:@factories)
+  FactoryBot.factories.instance_variable_get(:@factories).clear
+end
 
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
