@@ -1,0 +1,76 @@
+#!/bin/zsh
+
+# プロジェクト固有のAIアシスタントスクリプト
+COMMAND=$1
+shift
+
+case "$COMMAND" in
+  "commit")
+    git diff --cached | gemini-chat "このGit差分に基づいて、日本語で簡潔なコミットメッセージを生成して。1行目に要約、必要に応じて詳細を記述して。"
+    ;;
+  "review")
+    cat "$1" | gemini-chat "このファイルをシニアエンジニアの視点でレビューして。特にRailsのベストプラクティスに則っているか確認して。"
+    ;;
+  "edit")
+    FILE=$1
+    PROMPT=$2
+    if [[ ! -f "$FILE" ]]; then
+      echo "Usage: ai edit <file> <prompt>"
+      exit 1
+    fi
+
+    # 一時ファイルを作成
+    NEW_FILE=$(mktemp)
+    
+    # Geminiに編集を依頼（コードのみを出力するよう指示）
+    cat "$FILE" | gemini-chat "プログラミング・アシスタントとして、以下のファイルを指示に従って編集してください。説明やMarkdownの装飾（\`\`\`）は一切含めず、修正後のファイル内容全体のみを出力してください。 指示: $PROMPT" > "$NEW_FILE"
+
+    # 差分を表示
+    echo "\n🔎 提案された変更点:"
+    if command -v delta > /dev/null 2>&1; then
+      delta "$FILE" "$NEW_FILE"
+    else
+      diff -u "$FILE" "$NEW_FILE"
+    fi
+
+    echo -n "\nこの変更を $FILE に反映しますか？ (y/N): "
+    read CONFIRM
+    if [[ "$CONFIRM" =~ ^[Yy]$ ]]; then
+      cp "$NEW_FILE" "$FILE"
+      echo "✅ ファイルを更新しました。"
+    else
+      echo "♻️ 変更を破棄しました。"
+    fi
+    rm "$NEW_FILE"
+    ;;
+  "cmd")
+    PROMPT=$1
+    if [[ -z "$PROMPT" ]]; then
+      echo "Usage: ai cmd <instruction>"
+      exit 1
+    fi
+
+    # Geminiに実行すべきコマンドのみを生成させる
+    COMMAND_TO_RUN=$(gemini-chat "あなたは熟練のソフトウェアエンジニアです。以下の指示を達成するためのMac/Linux用ターミナルコマンドを生成してください。
+    出力は解説やMarkdownの装飾（\`\`\`）を一切含めず、実行可能なコマンド文字列のみとしてください。
+    指示: $PROMPT")
+
+    echo "\n🤖 AIの提案コマンド:"
+    echo "------------------------------------------------"
+    echo "$COMMAND_TO_RUN"
+    echo "------------------------------------------------"
+
+    echo -n "このコマンドを実行しますか？ (y/N): "
+    read CONFIRM
+    if [[ "$CONFIRM" =~ ^[Yy]$ ]]; then
+      echo "🚀 実行を開始します...\n"
+      eval "$COMMAND_TO_RUN"
+    else
+      echo "🛑 キャンセルしました。"
+    fi
+    ;;
+  *)
+    echo "Usage: bin/ai {commit|review <file>|edit <file> <prompt>|cmd <instruction>}"
+    exit 1
+    ;;
+esac
