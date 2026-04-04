@@ -74,8 +74,18 @@ RSpec.configure do |config|
   # Filter lines from Rails gems in backtraces.
   config.filter_rails_from_backtrace!
 
-  # Include request helpers in request specs
-  config.include Rack::Test::Methods, type: :request
+  # Set default test request headers to bypass CSRF
+  config.before(:each, type: :request) do
+    ENV['RAILS_ENV'] = 'test'
+  end
+end
+
+# Include shared request helpers
+class ActionDispatch::IntegrationTest
+  # Set JSON headers for tests
+  def json_headers
+    { 'CONTENT_TYPE' => 'application/json', 'ACCEPT' => 'application/json' }
+  end
 end
 
 # Include factory_bot methods

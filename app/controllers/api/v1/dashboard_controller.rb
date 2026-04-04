@@ -2,17 +2,21 @@ module Api
   module V1
     class DashboardController < BaseController
       def member_selection_state
-        # Get all member options with member details
-        member_options = MemberOption.includes(:member).all
+        # Get work_id from params or use the first work
+        work = Work.find_by(id: params[:work_id]) || Work.order(id: :asc).first
+        return render json: { error: 'No work found' }, status: :not_found if work.blank?
 
-        # If no member_options exist, create defaults for all members
+        # Get all member options for this work
+        member_options = MemberOption.where(work_id: work.id).includes(:member)
+
+        # If no member_options exist for this work, create defaults for all members
         if member_options.empty?
           Member.find_each do |member|
-            MemberOption.find_or_create_by(member_id: member.id) do |option|
+            MemberOption.find_or_create_by(work_id: work.id, member_id: member.id) do |option|
               option.status = 1 # Default to selected/participating
             end
           end
-          member_options = MemberOption.includes(:member).all
+          member_options = MemberOption.where(work_id: work.id).includes(:member)
         end
 
         # Build response
