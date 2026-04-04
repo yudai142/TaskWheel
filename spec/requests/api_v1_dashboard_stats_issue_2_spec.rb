@@ -79,8 +79,8 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
   end
 
   describe 'GET /api/v1/histories - Assigned history with date filter (Issue #2重要)' do
-    let!(:today_history) { create(:history, member: members[0], work: works[0], assigned_date: today) }
-    let!(:yesterday_history) { create(:history, member: members[1], work: works[1], assigned_date: yesterday) }
+    let!(:today_history) { create(:history, member: members[0], work: works[0], date: today) }
+    let!(:yesterday_history) { create(:history, member: members[1], work: works[1], date: yesterday) }
 
     context '日付フィルタなし' do
       it 'すべての履歴が返却される' do
@@ -124,7 +124,7 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
         expect(json_response[0]).to have_key('id')
         expect(json_response[0]).to have_key('member_id')
         expect(json_response[0]).to have_key('work_id')
-        expect(json_response[0]).to have_key('assigned_date')
+        expect(json_response[0]).to have_key('date')
       end
     end
   end
@@ -134,8 +134,8 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
       it '複数の履歴を一括作成できる' do
         params = {
           histories: [
-            { member_id: members[0].id, work_id: works[0].id, assigned_date: today },
-            { member_id: members[1].id, work_id: works[1].id, assigned_date: today },
+            { member_id: members[0].id, work_id: works[0].id, date: today },
+            { member_id: members[1].id, work_id: works[1].id, date: today },
           ]
         }
 
@@ -149,7 +149,7 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
       it '無効なパラメータの場合はエラーになる' do
         params = {
           histories: [
-            { member_id: 999, work_id: 999, assigned_date: today }
+            { member_id: 999, work_id: 999, date: today }
           ]
         }
 
@@ -166,7 +166,7 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
         params = {
           member_ids: members.map(&:id),
           work_ids: works.map(&:id),
-          assigned_date: today
+          date: today
         }
 
         post '/api/v1/works/shuffle', params: params
@@ -178,7 +178,7 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
         params = {
           member_ids: members.map(&:id),
           work_ids: works.map(&:id),
-          assigned_date: today
+          date: today
         }
 
         expect {
@@ -196,7 +196,7 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
         params = {
           member_ids: members.map(&:id),
           work_ids: target_work_ids,
-          assigned_date: today
+          date: today
         }
 
         post '/api/v1/works/shuffle', params: params
@@ -214,8 +214,8 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
 
   describe 'Statistics consistency (Issue #2: 統計数値の一貫性)' do
     before do
-      create_list(:history, 2, member: members[0], assigned_date: today)
-      create_list(:history, 3, member: members[1], assigned_date: today)
+      create_list(:history, 2, member: members[0], date: today)
+      create_list(:history, 3, member: members[1], date: today)
     end
 
     it 'メンバー数は活動中（非アーカイブ）メンバーのみ' do
