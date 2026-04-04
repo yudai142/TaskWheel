@@ -89,7 +89,7 @@ jobs:
       - name: Setup database
         env:
           RAILS_ENV: test
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/duty_shuffle_test
+          DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/duty_shuffle_test
         run: |
           bundle exec rails db:create
           bundle exec rails db:migrate
@@ -97,7 +97,7 @@ jobs:
       - name: Run Rails tests
         env:
           RAILS_ENV: test
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/duty_shuffle_test
+          DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/duty_shuffle_test
         run: bundle exec rspec spec/requests/ -f progress
 
   test-summary:
