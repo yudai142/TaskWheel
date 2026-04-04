@@ -32,12 +32,24 @@ module Api
       end
 
       def bulk_create
+        histories_data = Array(params[:histories])
+        
+        if histories_data.empty?
+          return render_error("履歴データが指定されていません", :unprocessable_entity)
+        end
+
+        created_histories = []
         History.transaction do
-          params[:histories].each do |history_data|
-            History.create!(history_data)
+          histories_data.each do |history_data|
+            created_histories << History.create!(
+              member_id: history_data[:member_id],
+              work_id: history_data[:work_id],
+              date: history_data[:date]
+            )
           end
         end
-        render json: { success: true }
+        
+        render json: { success: true, histories: created_histories }, status: :ok
       end
 
       private
