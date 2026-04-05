@@ -32,59 +32,18 @@ module Api
       end
 
       def shuffle
+        date = extract_target_date
         work_id = (params[:work_id] || params[:id]).to_i
-        raise ActiveRecord::RecordNotFound if work_id.zero?
+        allocator = FairShuffleAllocator.new(
+          date: date,
+          participant_member_ids: params[:participant_member_ids]
+        )
 
-        work = Work.find(work_id)
-        members = work.available_members.active
-        participant_member_ids = Array(params[:participant_member_ids]).compact.map(&:to_i).uniq
-
-        if participant_member_ids.any?
-          members = members.where(id: participant_member_ids)
+        if work_id.zero?
+          return shuffle_for_date(allocator)
         end
 
-        if members.empty?
-          return render_error("割り当て可能なメンバーがいません", :unprocessable_entity)
-        end
-
-        # 指定された日付、またはデフォルトで今日の日付
-        date = if params[:year] && params[:month] && params[:day]
-          Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i)
-        else
-          Date.today
-        end
-
-        # その日のメンバーごとの割り当て数をカウント（N+1回避）
-        assigned_counts = History.where(date: date).group(:member_id).count
-        member_ids = members.pluck(:id)
-
-        # 割り当て数が最も少ないメンバーを優先的に選択
-        members_with_count = member_ids.map do |id|
-          { id: id, count: assigned_counts[id] || 0 }
-        end.sort_by { |m| m[:count] }
-
-        # 割り当て数が最も少ないメンバーのグループから均等に割り当て
-        min_count = members_with_count.first[:count]
-        candidate_ids = members_with_count.select { |m| m[:count] == min_count }.map { |m| m[:id] }
-        selected_member_id = candidate_ids.sample
-        selected_member = members.find(selected_member_id)
-
-        # 既に同じメンバーが同じ日付に記録されている場合は更新
-        existing_history = History.find_by(member_id: selected_member.id, date: date)
-        if existing_history
-          existing_history.update!(work_id: work.id)
-        else
-          History.create!(
-            work_id: work.id,
-            member_id: selected_member.id,
-            date: date
-          )
-        end
-
-        # 同じメンバーの重複を除去
-        remove_duplicate_assignments(date)
-
-        render json: { success: true, member: selected_member }
+        shuffle_single_work(work_id, date, allocator)
       end
 
       def bulk_update
@@ -95,6 +54,36 @@ module Api
           end
         end
         render json: { success: true }
+      end
+
+      def shuffle_with_selected_members
+        date = extract_target_date_from_param
+        member_ids = Array(params[:member_ids]).compact.map(&:to_i).uniq
+        work_ids = Array(params[:work_ids]).compact.map(&:to_i).uniq
+
+        if member_ids.empty? || work_ids.empty?
+          return render_error('member_ids と work_ids は必須です', :unprocessable_entity)
+        end
+
+        History.transaction do
+          member_ids.each do |member_id|
+            History.find_or_create_by!(member_id: member_id, date: date) do |history|
+              history.work_id = nil
+            end
+          end
+        end
+
+        allocator = FairShuffleAllocator.new(
+          date: date,
+          participant_member_ids: member_ids,
+          allowed_work_ids: work_ids
+        )
+        allocator.shuffle_for_date(member_ids: member_ids)
+
+        shuffled_histories = History.where(date: date, member_id: member_ids).order(:id)
+        render json: shuffled_histories
+      rescue ActiveRecord::RecordInvalid => e
+        render_error(e.record.errors.full_messages.join(', '), :unprocessable_entity)
       end
 
       private
@@ -120,6 +109,55 @@ module Api
           end
         end
       end
+
+      def extract_target_date
+        if params[:year] && params[:month] && params[:day]
+          Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i)
+        else
+          Date.today
+        end
+      end
+
+      def extract_target_date_from_param
+        return Date.parse(params[:date]) if params[:date].present?
+
+        extract_target_date
+      rescue ArgumentError
+        extract_target_date
+      end
+
+      def shuffle_single_work(work_id, date, allocator)
+        work = Work.find(work_id)
+        selected_member = allocator.shuffle_single_work(work)
+
+        if selected_member.nil?
+          return render_error("割り当て可能なメンバーがいません", :unprocessable_entity)
+        end
+
+        remove_duplicate_assignments(date)
+
+        render json: { success: true, member: selected_member }
+      end
+
+      def shuffle_for_date(allocator)
+        histories = History.where(date: extract_target_date).includes(:member).to_a
+        if histories.empty?
+          return render_error("参加メンバーがいません", :unprocessable_entity)
+        end
+
+        works = load_shufflable_works(extract_target_date)
+        if works.empty?
+          return render_error("シャッフル対象の当番がありません", :unprocessable_entity)
+        end
+
+        render json: allocator.shuffle_for_date
+      end
+
+      def load_shufflable_works(date)
+        off_work_ids = OffWork.where(date: date).pluck(:work_id)
+        Work.active.where.not(id: off_work_ids)
+      end
+
     end
   end
 end
