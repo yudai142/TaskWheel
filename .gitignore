@@ -71,3 +71,4 @@ node_modules
 .envrc
 .agent.md
 .copilot-prompt.txt
+.github/copilot-instructions.md

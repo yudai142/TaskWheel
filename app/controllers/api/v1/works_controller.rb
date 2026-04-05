@@ -32,11 +32,14 @@ module Api
       end
 
       def shuffle
-        work = Work.find(params[:work_id])
-        members = work.available_members.active
-        participant_member_ids = Array(params[:participant_member_ids]).map(&:to_i).uniq
+        work_id = (params[:work_id] || params[:id]).to_i
+        raise ActiveRecord::RecordNotFound if work_id.zero?
 
-        if params.key?(:participant_member_ids)
+        work = Work.find(work_id)
+        members = work.available_members.active
+        participant_member_ids = Array(params[:participant_member_ids]).compact.map(&:to_i).uniq
+
+        if participant_member_ids.any?
           members = members.where(id: participant_member_ids)
         end
 
