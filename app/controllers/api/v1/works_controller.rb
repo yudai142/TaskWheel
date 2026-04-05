@@ -34,12 +34,16 @@ module Api
       def shuffle
         date = extract_target_date
         work_id = (params[:work_id] || params[:id]).to_i
+        allocator = FairShuffleAllocator.new(
+          date: date,
+          participant_member_ids: params[:participant_member_ids]
+        )
 
         if work_id.zero?
-          return shuffle_for_date(date)
+          return shuffle_for_date(allocator)
         end
 
-        shuffle_single_work(work_id, date)
+        shuffle_single_work(work_id, date, allocator)
       end
 
       def bulk_update
@@ -84,84 +88,31 @@ module Api
         end
       end
 
-      def shuffle_single_work(work_id, date)
+      def shuffle_single_work(work_id, date, allocator)
         work = Work.find(work_id)
-        members = work.available_members.active
-        participant_member_ids = Array(params[:participant_member_ids]).compact.map(&:to_i).uniq
+        selected_member = allocator.shuffle_single_work(work)
 
-        members = members.where(id: participant_member_ids) if participant_member_ids.any?
-
-        if members.empty?
+        if selected_member.nil?
           return render_error("割り当て可能なメンバーがいません", :unprocessable_entity)
         end
-
-        assigned_counts = History.where(date: date).where.not(work_id: nil).group(:member_id).count
-        member_ids = members.pluck(:id)
-        members_with_count = member_ids.map { |id| { id: id, count: assigned_counts[id] || 0 } }
-        min_count = members_with_count.min_by { |m| m[:count] }[:count]
-        candidate_ids = members_with_count.select { |m| m[:count] == min_count }.map { |m| m[:id] }
-        selected_member_id = candidate_ids.sample
-        selected_member = members.find(selected_member_id)
-
-        existing_history = History.find_or_initialize_by(member_id: selected_member.id, date: date)
-        existing_history.work_id = work.id
-        existing_history.save!
 
         remove_duplicate_assignments(date)
 
         render json: { success: true, member: selected_member }
       end
 
-      def shuffle_for_date(date)
-        histories = History.where(date: date).includes(:member).to_a
+      def shuffle_for_date(allocator)
+        histories = History.where(date: extract_target_date).includes(:member).to_a
         if histories.empty?
           return render_error("参加メンバーがいません", :unprocessable_entity)
         end
 
-        works = load_shufflable_works(date)
+        works = load_shufflable_works(extract_target_date)
         if works.empty?
           return render_error("シャッフル対象の当番がありません", :unprocessable_entity)
         end
 
-        work_slots, work_limits, work_assignment_count, work_info = build_work_slots(works)
-        history_list = histories.map(&:id)
-        history_members = histories.to_h { |h| [h.id, h.member_id] }
-
-        expand_work_slots_for_is_above!(work_slots, work_info, history_list.length)
-        work_slots.shuffle!
-        history_list.shuffle!
-
-        recent_member_works = load_recent_member_works(date)
-
-        assignments = {}
-        unique_works_list = work_slots.uniq
-        member_index = 0
-
-        history_list.each do |history_id|
-          member_id = history_members[history_id]
-          assigned_work = find_assignable_work(unique_works_list, member_id, member_index, recent_member_works, work_limits, work_assignment_count)
-
-          if assigned_work.nil?
-            assignments[history_id] = nil
-          else
-            assignments[history_id] = assigned_work
-            work_assignment_count[assigned_work] += 1
-          end
-
-          member_index += 1
-        end
-
-        History.transaction do
-          assignments.each do |history_id, work_id|
-            History.where(id: history_id).update_all(work_id: work_id)
-          end
-        end
-
-        render json: {
-          success: true,
-          assigned_count: assignments.values.compact.length,
-          unassigned_count: assignments.values.count(&:nil?)
-        }
+        render json: allocator.shuffle_for_date
       end
 
       def load_shufflable_works(date)
@@ -169,88 +120,6 @@ module Api
         Work.active.where.not(id: off_work_ids)
       end
 
-      def build_work_slots(works)
-        work_slots = []
-        work_limits = {}
-        work_assignment_count = {}
-        work_info = {}
-
-        works.each do |work|
-          multiple = work.multiple.to_i
-          next if multiple <= 0
-
-          work_info[work.id] = work
-          work_assignment_count[work.id] = 0
-          work_limits[work.id] = work.is_above ? -1 : multiple
-
-          multiple.times { work_slots << work.id }
-        end
-
-        [work_slots, work_limits, work_assignment_count, work_info]
-      end
-
-      def expand_work_slots_for_is_above!(work_slots, work_info, participant_count)
-        additional_needed = participant_count - work_slots.length
-        return if additional_needed <= 0
-
-        is_above_works = work_info.values.select(&:is_above).map(&:id)
-        return if is_above_works.empty?
-
-        idx = 0
-        while additional_needed.positive?
-          work_slots << is_above_works[idx % is_above_works.length]
-          additional_needed -= 1
-          idx += 1
-        end
-      end
-
-      def load_recent_member_works(date)
-        worksheet = Worksheet.order(:id).first
-        return {} if worksheet.nil? || worksheet.interval.to_i <= 0
-
-        start_date = date - worksheet.interval.days
-
-        if worksheet.week_use
-          0.upto(6) do |days_back|
-            check_date = date - days_back.days
-            if check_date.wday == worksheet.week
-              start_date = check_date
-              break
-            end
-          end
-        else
-          latest_reset_date = ShuffleOption.where("reset_date <= ?", date).order(reset_date: :desc).limit(1).pluck(:reset_date).first
-          start_date = latest_reset_date if latest_reset_date.present?
-        end
-
-        rows = History.where(date: start_date..date).where.not(work_id: nil).distinct.pluck(:member_id, :work_id)
-        rows.each_with_object(Hash.new { |h, k| h[k] = [] }) do |(member_id, work_id), memo|
-          memo[member_id] << work_id unless memo[member_id].include?(work_id)
-        end
-      end
-
-      def assignable_to_work?(member_id, work_id, recent_member_works, work_limits, work_assignment_count)
-        is_recent = recent_member_works.fetch(member_id, []).include?(work_id)
-        within_limit = work_limits[work_id] == -1 || work_assignment_count[work_id] < work_limits[work_id]
-
-        !is_recent && within_limit
-      end
-
-      def find_assignable_work(unique_works_list, member_id, member_index, recent_member_works, work_limits, work_assignment_count)
-        return nil if unique_works_list.empty?
-
-        start_idx = member_index % unique_works_list.length
-
-        unique_works_list.length.times do |offset|
-          idx = (start_idx + offset) % unique_works_list.length
-          candidate_work = unique_works_list[idx]
-          next unless assignable_to_work?(member_id, candidate_work, recent_member_works, work_limits, work_assignment_count)
-
-          return candidate_work
-        end
-
-        nil
-      end
     end
   end
 end
