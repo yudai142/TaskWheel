@@ -1,4 +1,4 @@
-# 掃除当番管理 - Duty Shuffle 2.0
+# 掃除当番管理 - TaskWheel
 
 Rails + React + PostgreSQL + Docker + Tailwind CSSで構築された、掃除当番管理アプリケーション。
 
@@ -48,7 +48,7 @@ Rails + React + PostgreSQL + Docker + Tailwind CSSで構築された、掃除当
 1. **プロジェクトのクローン**
 
 ```bash
-cd DutyShuffle-2
+cd TaskWheel
 ```
 
 2. **.envファイルの設定**
@@ -135,7 +135,7 @@ POST   /api/v1/histories/bulk_create # 複数履歴作成
 ## ディレクトリ構造
 
 ```
-DutyShuffle-2/
+TaskWheel/
 ├── app/
 │   ├── controllers/         # Rails コントローラー
 │   ├── models/             # Rails モデル
@@ -235,4 +235,4 @@ MIT
 
 ## 作者
 
-DutyShuffle Development Team
+TaskWheel Development Team

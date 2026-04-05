@@ -3,9 +3,9 @@ version: '3.8'
 services:
   db:
     image: postgres:15-alpine
-    container_name: duty_shuffle_db
+    container_name: task_wheel_db
     environment:
-      POSTGRES_DB: duty_shuffle_development
+      POSTGRES_DB: task_wheel_development
       POSTGRES_PASSWORD: password
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -22,7 +22,7 @@ services:
       context: .
       dockerfile: Dockerfile
       target: development
-    container_name: duty_shuffle_web
+    container_name: task_wheel_web
     command: /app/docker-entrypoint.sh
     volumes:
       - .:/app
@@ -35,8 +35,8 @@ services:
       db:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://postgres:password@db:5432/duty_shuffle_development
-      DATABASE_URL_TEST: postgresql://postgres:password@db:5432/duty_shuffle_test
+      DATABASE_URL: postgresql://postgres:password@db:5432/task_wheel_development
+      DATABASE_URL_TEST: postgresql://postgres:password@db:5432/task_wheel_test
       RAILS_ENV: development
       NODE_ENV: development
       VITE_RUBY_HOST: 0.0.0.0

@@ -4,7 +4,7 @@ require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 
 # Set test database URL to prevent remote database errors in DatabaseCleaner
-ENV['DATABASE_URL'] = ENV.fetch('DATABASE_URL_TEST', 'postgresql://postgres:password@localhost:5432/duty_shuffle_test')
+ENV['DATABASE_URL'] = ENV.fetch('DATABASE_URL_TEST', 'postgresql://postgres:password@localhost:5432/task_wheel_test')
 
 # Configure FactoryBot to prevent duplicate definition errors
 require File.expand_path('../config/environment', __dir__)

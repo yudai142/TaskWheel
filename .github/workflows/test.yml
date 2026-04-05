@@ -47,7 +47,7 @@ jobs:
         image: postgres:15-alpine
         env:
           POSTGRES_HOST_AUTH_METHOD: trust
-          POSTGRES_DB: duty_shuffle_test
+          POSTGRES_DB: task_wheel_test
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -92,7 +92,7 @@ jobs:
       - name: Setup database
         env:
           RAILS_ENV: test
-          DATABASE_URL: postgresql://postgres@localhost/duty_shuffle_test
+          DATABASE_URL: postgresql://postgres@localhost/task_wheel_test
         run: |
           bundle exec rails db:create
           bundle exec rails db:migrate
@@ -100,7 +100,7 @@ jobs:
       - name: Run Rails tests
         env:
           RAILS_ENV: test
-          DATABASE_URL: postgresql://postgres@localhost/duty_shuffle_test
+          DATABASE_URL: postgresql://postgres@localhost/task_wheel_test
         run: bundle exec rspec spec/requests/ -f progress
 
   test-summary:

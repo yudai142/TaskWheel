@@ -1,5 +1,5 @@
 {
-  "name": "duty-shuffle-rails",
+  "name": "taskwheel-rails",
   "version": "1.0.0",
   "private": true,
   "type": "module",

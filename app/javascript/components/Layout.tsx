@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   HomeIcon,
   UserGroupIcon,
@@ -8,20 +8,20 @@ import {
   CogIcon,
   Bars3Icon,
   XMarkIcon,
-} from '@heroicons/react/24/outline'
+} from '@heroicons/react/24/outline';
 
 interface NavItem {
-  name: string
-  href: string
-  icon: React.FC<React.SVGProps<SVGSVGElement>>
+  name: string;
+  href: string;
+  icon: React.ComponentType<React.ComponentProps<'svg'>>;
 }
 
 interface LayoutProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export default function Layout({ children }: LayoutProps): JSX.Element {
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true)
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
 
   const navigation: NavItem[] = [
     { name: 'ダッシュボード', href: '/', icon: HomeIcon },
@@ -29,7 +29,7 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
     { name: '当番', href: '/works', icon: ClipboardDocumentListIcon },
     { name: '履歴', href: '/history', icon: CalendarIcon },
     { name: '設定', href: '/settings', icon: CogIcon },
-  ]
+  ];
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -41,17 +41,13 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
       >
         <div className="flex items-center justify-between p-4 border-b">
           <h1 className={`font-bold text-lg ${!sidebarOpen && 'hidden'} text-primary-600`}>
-            DutyShuffle
+            TaskWheel
           </h1>
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="p-1 hover:bg-gray-100 rounded"
           >
-            {sidebarOpen ? (
-              <XMarkIcon className="w-5 h-5" />
-            ) : (
-              <Bars3Icon className="w-5 h-5" />
-            )}
+            {sidebarOpen ? <XMarkIcon className="w-5 h-5" /> : <Bars3Icon className="w-5 h-5" />}
           </button>
         </div>
 
@@ -69,7 +65,7 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
         </nav>
 
         <div className="p-4 border-t text-xs text-gray-500 text-center">
-          {sidebarOpen && <p>? 2026 DutyShuffle</p>}
+          {sidebarOpen && <p>2026 TaskWheel</p>}
         </div>
       </div>
 
@@ -93,5 +89,5 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
         </main>
       </div>
     </div>
-  )
+  );
 }
