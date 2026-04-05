@@ -163,6 +163,15 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
 
   describe 'POST /api/v1/works/shuffle - Shuffle duty assignment' do
     context 'シャッフル機能' do
+      before do
+        # 各メンバーを各当番に参加可能として登録
+        works.each do |work|
+          members.each do |member|
+            create(:member_option, work: work, member: member, status: 1) # status 1 = 参加可能
+          end
+        end
+      end
+
       it 'シャッフルエンドポイントが成功する' do
         params = {
           work_id: works[0].id
