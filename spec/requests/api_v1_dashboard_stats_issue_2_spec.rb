@@ -26,11 +26,30 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
       end
 
       it 'シャッフル対象の当番のみを取得できる' do
-        # 除外マークありの当番を作成（実装時に確認）
+        # テストセットアップ時に作成された works の数を記録
         get '/api/v1/works'
+        initial_count = response.parsed_body.length
         
         expect(response).to have_http_status(:ok)
-        expect(response.parsed_body).to be_an(Array)
+        json_response = response.parsed_body
+        
+        # let! で作成された当番数と一致することを確認
+        expect(json_response.length).to eq(4)
+        
+        # すべての返却された当番の archive フラグを確認
+        json_response.each do |work|
+          expect(work).to have_key('id')
+          expect(work).to have_key('name')
+          expect(work).to have_key('archive')
+        end
+        
+        # archive 属性の分布を確認
+        active_count = json_response.count { |work| work['archive'] == false }
+        archived_count = json_response.count { |work| work['archive'] == true }
+        
+        # テストセットアップで作成された works はすべて archive: false
+        expect(active_count).to eq(4)
+        expect(archived_count).to eq(0)
       end
     end
   end
@@ -156,7 +175,15 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
 
         post '/api/v1/histories/bulk_create', params: params
         
+        # ステータスコード確認（422 または 404）
         expect(response).to have_http_status(:unprocessable_entity).or have_http_status(:not_found)
+        
+        # エラーレスポンスが JSON 形式であることを確認
+        expect(response.media_type).to eq('application/json')
+        
+        # エラーレスポンスに error キーが含まれることを確認
+        json_response = response.parsed_body
+        expect(json_response).to have_key('error').or have_key('message')
       end
     end
   end
@@ -233,9 +260,20 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
     it '割り当て済みメンバーは指定日の履歴から集計される' do
       get "/api/v1/histories?year=#{today.year}&month=#{today.month}&day=#{today.day}"
       
-      assigned_members = response.parsed_body.map { |h| h['member_id'] }.uniq
+      expect(response).to have_http_status(:ok)
+      json_response = response.parsed_body
+      assigned_members = json_response.map { |h| h['member_id'] }.uniq
       
-      expect(assigned_members.length).to be > 0
+      # 本日の割り当てメンバーが正確に2人（members[0] と members[1]）
+      expect(assigned_members.length).to eq(2)
+      expect(assigned_members).to contain_exactly(members[0].id, members[1].id)
+      
+      # members[2] は本日割り当てなし
+      expect(assigned_members).not_to include(members[2].id)
+      
+      # 返却メンバーID の一意性確認（重複がない）
+      all_member_ids = json_response.map { |h| h['member_id'] }
+      expect(all_member_ids.uniq.length).to eq(all_member_ids.length)
     end
   end
 
