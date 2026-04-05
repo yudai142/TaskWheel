@@ -231,6 +231,52 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
         # 割り当てられたメンバーが指定されたメンバーであることを確認
         expect(json_response['member']['id']).to eq(members[0].id)
       end
+
+      it 'work_id未指定時は日付参加者を一括シャッフルできる' do
+        target_works = create_list(:work, 3, multiple: 1, is_above: true, archive: false)
+        participants = create_list(:member, 3)
+
+        participants.each do |member|
+          create(:history, member: member, work: nil, date: today)
+        end
+
+        post '/api/v1/works/shuffle', params: {
+          year: today.year,
+          month: today.month,
+          day: today.day
+        }
+
+        expect(response).to have_http_status(:ok)
+        json_response = response.parsed_body
+        expect(json_response['success']).to eq(true)
+
+        refreshed = History.where(date: today, member_id: participants.map(&:id))
+        expect(refreshed.count).to eq(3)
+        expect(refreshed.where.not(work_id: nil).count).to eq(3)
+        expect(refreshed.pluck(:work_id).compact).to all(be_in(target_works.map(&:id)))
+      end
+
+      it '除外設定された作業は日付一括シャッフルで割り当て対象外になる' do
+        target_member = create(:member)
+        allowed_work = create(:work, multiple: 1, is_above: true, archive: false)
+        excluded_work = create(:work, multiple: 1, is_above: true, archive: false)
+
+        # ajax.php互換: status=1 は除外
+        create(:member_option, work: excluded_work, member: target_member, status: 1)
+        create(:history, member: target_member, work: nil, date: today)
+
+        post '/api/v1/works/shuffle', params: {
+          year: today.year,
+          month: today.month,
+          day: today.day
+        }
+
+        expect(response).to have_http_status(:ok)
+
+        refreshed = History.find_by(member_id: target_member.id, date: today)
+        expect(refreshed).to be_present
+        expect(refreshed.work_id).to eq(allowed_work.id)
+      end
     end
   end
 
