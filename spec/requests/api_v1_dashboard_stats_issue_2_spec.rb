@@ -164,7 +164,6 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
   describe 'POST /api/v1/works/shuffle - Shuffle duty assignment' do
     context 'シャッフル機能' do
       it 'シャッフルエンドポイントが成功する' do
-        skip('エンドポイントの完全な実装が必要')
         params = {
           work_id: works[0].id
         }
@@ -174,7 +173,6 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
       end
 
       it 'シャッフル後、割り当てが作成される' do
-        skip('エンドポイントの完全な実装が必要')
         params = {
           work_id: works[0].id
         }
@@ -186,7 +184,6 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
       end
 
       it '指定メンバー以外には割り当てられない' do
-        skip('エンドポイントの完全な実装が必要')
         params = {
           work_id: works[0].id,
           participant_member_ids: [members[0].id]
