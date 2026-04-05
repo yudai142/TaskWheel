@@ -56,6 +56,36 @@ module Api
         render json: { success: true }
       end
 
+      def shuffle_with_selected_members
+        date = extract_target_date_from_param
+        member_ids = Array(params[:member_ids]).compact.map(&:to_i).uniq
+        work_ids = Array(params[:work_ids]).compact.map(&:to_i).uniq
+
+        if member_ids.empty? || work_ids.empty?
+          return render_error('member_ids と work_ids は必須です', :unprocessable_entity)
+        end
+
+        History.transaction do
+          member_ids.each do |member_id|
+            History.find_or_create_by!(member_id: member_id, date: date) do |history|
+              history.work_id = nil
+            end
+          end
+        end
+
+        allocator = FairShuffleAllocator.new(
+          date: date,
+          participant_member_ids: member_ids,
+          allowed_work_ids: work_ids
+        )
+        allocator.shuffle_for_date(member_ids: member_ids)
+
+        shuffled_histories = History.where(date: date, member_id: member_ids).order(:id)
+        render json: shuffled_histories
+      rescue ActiveRecord::RecordInvalid => e
+        render_error(e.record.errors.full_messages.join(', '), :unprocessable_entity)
+      end
+
       private
 
       def set_work
@@ -86,6 +116,14 @@ module Api
         else
           Date.today
         end
+      end
+
+      def extract_target_date_from_param
+        return Date.parse(params[:date]) if params[:date].present?
+
+        extract_target_date
+      rescue ArgumentError
+        extract_target_date
       end
 
       def shuffle_single_work(work_id, date, allocator)

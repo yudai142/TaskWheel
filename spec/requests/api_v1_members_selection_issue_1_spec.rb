@@ -41,9 +41,15 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
 
   describe 'POST /api/v1/works/shuffle_with_selected_members - 参加者のみでシャッフル' do
     context '参加メンバーに対してシャッフルを実行' do
+      before do
+        works.each do |work|
+          members.each do |member|
+            create(:member_option, work: work, member: member, status: 1)
+          end
+        end
+      end
+
       it '選択したメンバーのみでシャッフルが実行される' do
-        skip('API endpoint not yet implemented')
-        
         selected_member_ids = [members[0].id, members[1].id, members[2].id]
         params = {
           member_ids: selected_member_ids,
@@ -68,8 +74,6 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
       end
 
       it '重複せず各メンバーに異なる当番が割り当てられる' do
-        skip('API endpoint not yet implemented')
-        
         selected_member_ids = [members[0].id, members[1].id, members[2].id]
         params = {
           member_ids: selected_member_ids,
@@ -91,8 +95,6 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
       end
 
       it '非参加メンバーは割り当てられない' do
-        skip('API endpoint not yet implemented')
-        
         # メンバー 0, 1, 2 のみ参加
         selected_member_ids = [members[0].id, members[1].id, members[2].id]
         excluded_member_ids = [members[3].id, members[4].id]
@@ -117,8 +119,6 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
       end
 
       it '当番が十分でない場合もシャッフルが実行される' do
-        skip('API endpoint not yet implemented')
-        
         selected_member_ids = [members[0].id, members[1].id, members[2].id, members[3].id]
         params = {
           member_ids: selected_member_ids,
@@ -202,7 +202,11 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
   describe 'User Flow - ユーザーの操作フロー' do
     context '参加メンバーを選択してシャッフルを実行' do
       it 'ダッシュボードで参加メンバーを選択し、シャッフルを実行できる' do
-        skip('API endpoints not yet implemented')
+        works.each do |work|
+          members.each do |member|
+            create(:member_option, work: work, member: member, status: 1)
+          end
+        end
         
         # Step 1: メンバー一覧を取得
         get '/api/v1/members'
@@ -213,10 +217,22 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
         selected_ids = [all_members[0]['id'], all_members[1]['id']]
         
         # Step 3: 選択を保存（未実装）
-        # POST /api/v1/member_options/update_selected
+        post '/api/v1/member_options/update_selected', params: {
+          work_id: works[0].id,
+          member_options: selected_ids.map { |id| { member_id: id, status: 1 } }
+        }
+        expect(response).to have_http_status(:ok)
         
         # Step 4: 選択メンバーのみでシャッフル（未実装）
-        # POST /api/v1/works/shuffle_with_selected_members
+        post '/api/v1/works/shuffle_with_selected_members', params: {
+          member_ids: selected_ids,
+          work_ids: works.map(&:id),
+          date: today
+        }
+
+        expect(response).to have_http_status(:ok)
+        json_response = response.parsed_body
+        expect(json_response.map { |h| h['member_id'] }.uniq).to match_array(selected_ids)
       end
     end
   end

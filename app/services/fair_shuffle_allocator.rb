@@ -4,9 +4,10 @@ class FairShuffleAllocator
   UNASSIGNED_COST = 10_000_000_000
   Slot = Struct.new(:work_id, :slot_index)
 
-  def initialize(date:, participant_member_ids: [])
+  def initialize(date:, participant_member_ids: [], allowed_work_ids: [])
     @date = date
     @participant_member_ids = Array(participant_member_ids).compact.map(&:to_i).uniq
+    @allowed_work_ids = Array(allowed_work_ids).compact.map(&:to_i).uniq
     @recent_member_works = load_recent_member_works
     @score_calculator = FairnessScoreCalculator.new(date: @date, recent_member_works: @recent_member_works)
   end
@@ -40,8 +41,10 @@ class FairShuffleAllocator
     selected_member
   end
 
-  def shuffle_for_date
-    histories = History.where(date: @date).order(:id).to_a
+  def shuffle_for_date(member_ids: nil)
+    histories = History.where(date: @date)
+    histories = histories.where(member_id: member_ids) if member_ids.present?
+    histories = histories.order(:id).to_a
     raise ActiveRecord::RecordInvalid, History.new if histories.empty?
 
     works = load_shufflable_works
@@ -66,7 +69,9 @@ class FairShuffleAllocator
 
   def load_shufflable_works
     off_work_ids = OffWork.where(date: @date).pluck(:work_id)
-    Work.active.where.not(id: off_work_ids).order(:id).to_a
+    works = Work.active.where.not(id: off_work_ids)
+    works = works.where(id: @allowed_work_ids) if @allowed_work_ids.any?
+    works.order(:id).to_a
   end
 
   def build_work_slots(works, participant_count)

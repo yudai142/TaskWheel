@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       resources :works do
         collection do
           post :shuffle
+          post :shuffle_with_selected_members
           post :bulk_update
         end
         resources :off_work_dates, only: [:index, :create, :destroy]
