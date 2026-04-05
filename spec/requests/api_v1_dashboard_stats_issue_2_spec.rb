@@ -256,13 +256,12 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
         expect(refreshed.pluck(:work_id).compact).to all(be_in(target_works.map(&:id)))
       end
 
-      it '除外設定された作業は日付一括シャッフルで割り当て対象外になる' do
+      it 'off_work の当番は日付一括シャッフルで割り当て対象外になる' do
         target_member = create(:member)
         allowed_work = create(:work, multiple: 1, is_above: true, archive: false)
         excluded_work = create(:work, multiple: 1, is_above: true, archive: false)
 
-        # ajax.php互換: status=1 は除外
-        create(:member_option, work: excluded_work, member: target_member, status: 1)
+        OffWork.create!(work: excluded_work, date: today)
         create(:history, member: target_member, work: nil, date: today)
 
         post '/api/v1/works/shuffle', params: {
@@ -276,6 +275,26 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
         refreshed = History.find_by(member_id: target_member.id, date: today)
         expect(refreshed).to be_present
         expect(refreshed.work_id).to eq(allowed_work.id)
+      end
+
+      it 'is_above=true の当番は参加人数が枠数を超えても追加割り当てされる' do
+        expandable_work = create(:work, multiple: 1, is_above: true, archive: false)
+        participants = create_list(:member, 3)
+
+        participants.each do |member|
+          create(:history, member: member, work: nil, date: today)
+        end
+
+        post '/api/v1/works/shuffle', params: {
+          year: today.year,
+          month: today.month,
+          day: today.day
+        }
+
+        expect(response).to have_http_status(:ok)
+
+        refreshed = History.where(date: today, member_id: participants.map(&:id))
+        expect(refreshed.where(work_id: expandable_work.id).count).to eq(3)
       end
     end
   end

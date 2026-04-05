@@ -150,7 +150,6 @@ export default function Dashboard(): JSX.Element {
       const response = await axios.post<{ assigned_count?: number; unassigned_count?: number }>(
         '/api/v1/works/shuffle',
         {
-          participant_member_ids: allMembersWithRecords,
           year,
           month,
           day,

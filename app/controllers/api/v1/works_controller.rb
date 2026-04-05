@@ -6,9 +6,6 @@ module Api
     class WorksController < BaseController
       before_action :set_work, only: [:show, :update, :destroy]
 
-      SHUFFLE_FIXED_STATUS = 0
-      SHUFFLE_EXCLUDED_STATUS = 1
-
       def index
         @works = Work.includes(:members, :off_works)
         render json: @works, include: [:members, :off_works]
@@ -134,48 +131,18 @@ module Api
         work_slots.shuffle!
         history_list.shuffle!
 
-        fixed_members, excluded_members = load_member_option_maps
         recent_member_works = load_recent_member_works(date)
 
         assignments = {}
-        fixed_assigned = {}
-        unassigned_members = {}
-
-        history_list.each do |history_id|
-          member_id = history_members[history_id]
-          fixed_work_id = fixed_work_for_member(member_id, fixed_members)
-          next if fixed_work_id.nil?
-
-          if assignable_to_work?(member_id, fixed_work_id, excluded_members, recent_member_works, work_limits, work_assignment_count)
-            assignments[history_id] = fixed_work_id
-            work_assignment_count[fixed_work_id] += 1
-            fixed_assigned[history_id] = true
-          else
-            assignments[history_id] = nil
-            unassigned_members[history_id] = true
-          end
-        end
-
         unique_works_list = work_slots.uniq
         member_index = 0
 
         history_list.each do |history_id|
-          if fixed_assigned[history_id]
-            next
-          end
-
-          if unassigned_members[history_id]
-            assignments[history_id] = nil
-            member_index += 1
-            next
-          end
-
           member_id = history_members[history_id]
-          assigned_work = find_assignable_work(unique_works_list, member_id, member_index, excluded_members, recent_member_works, work_limits, work_assignment_count)
+          assigned_work = find_assignable_work(unique_works_list, member_id, member_index, recent_member_works, work_limits, work_assignment_count)
 
           if assigned_work.nil?
             assignments[history_id] = nil
-            unassigned_members[history_id] = true
           else
             assignments[history_id] = assigned_work
             work_assignment_count[assigned_work] += 1
@@ -210,7 +177,7 @@ module Api
 
         works.each do |work|
           multiple = work.multiple.to_i
-          multiple = 1 if multiple <= 0
+          next if multiple <= 0
 
           work_info[work.id] = work
           work_assignment_count[work.id] = 0
@@ -237,23 +204,8 @@ module Api
         end
       end
 
-      def load_member_option_maps
-        fixed_members = Hash.new { |h, k| h[k] = [] }
-        excluded_members = Hash.new { |h, k| h[k] = [] }
-
-        MemberOption.find_each do |option|
-          if option.status == SHUFFLE_FIXED_STATUS
-            fixed_members[option.work_id] << option.member_id
-          elsif option.status == SHUFFLE_EXCLUDED_STATUS
-            excluded_members[option.work_id] << option.member_id
-          end
-        end
-
-        [fixed_members, excluded_members]
-      end
-
       def load_recent_member_works(date)
-        worksheet = Worksheet.current
+        worksheet = Worksheet.order(:id).first
         return {} if worksheet.nil? || worksheet.interval.to_i <= 0
 
         start_date = date - worksheet.interval.days
@@ -277,22 +229,14 @@ module Api
         end
       end
 
-      def fixed_work_for_member(member_id, fixed_members)
-        fixed_members.each do |work_id, member_ids|
-          return work_id if member_ids.include?(member_id)
-        end
-        nil
-      end
-
-      def assignable_to_work?(member_id, work_id, excluded_members, recent_member_works, work_limits, work_assignment_count)
-        is_excluded = excluded_members[work_id].include?(member_id)
+      def assignable_to_work?(member_id, work_id, recent_member_works, work_limits, work_assignment_count)
         is_recent = recent_member_works.fetch(member_id, []).include?(work_id)
         within_limit = work_limits[work_id] == -1 || work_assignment_count[work_id] < work_limits[work_id]
 
-        !is_excluded && !is_recent && within_limit
+        !is_recent && within_limit
       end
 
-      def find_assignable_work(unique_works_list, member_id, member_index, excluded_members, recent_member_works, work_limits, work_assignment_count)
+      def find_assignable_work(unique_works_list, member_id, member_index, recent_member_works, work_limits, work_assignment_count)
         return nil if unique_works_list.empty?
 
         start_idx = member_index % unique_works_list.length
@@ -300,7 +244,7 @@ module Api
         unique_works_list.length.times do |offset|
           idx = (start_idx + offset) % unique_works_list.length
           candidate_work = unique_works_list[idx]
-          next unless assignable_to_work?(member_id, candidate_work, excluded_members, recent_member_works, work_limits, work_assignment_count)
+          next unless assignable_to_work?(member_id, candidate_work, recent_member_works, work_limits, work_assignment_count)
 
           return candidate_work
         end
