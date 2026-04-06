@@ -9,6 +9,7 @@ class FairnessScoreCalculator
   WORK_ASSIGNMENT_WEIGHT = 10_000
   RECENT_ASSIGNMENT_WEIGHT = 100
   RECENT_WORK_WEIGHT = 10
+  RELAXED_RECENT_PENALTY = 5_000_000
 
   def initialize(date:, recent_member_works: {})
     @date = date
@@ -24,14 +25,16 @@ class FairnessScoreCalculator
     !@recent_member_works.fetch(member_id, []).include?(work_id)
   end
 
-  def score(member_id:, work_id:, same_day_assignments: 0)
-    return INELIGIBLE_SCORE unless eligible?(member_id: member_id, work_id: work_id)
+  def score(member_id:, work_id:, same_day_assignments: 0, allow_recent_override: false)
+    is_recent = @recent_member_works.fetch(member_id, []).include?(work_id)
+    return INELIGIBLE_SCORE if is_recent && !allow_recent_override
 
     (same_day_assignments.to_i * SAME_DAY_ASSIGNMENT_WEIGHT) +
       (total_assignment_count(member_id) * TOTAL_ASSIGNMENT_WEIGHT) +
       (work_assignment_count(member_id, work_id) * WORK_ASSIGNMENT_WEIGHT) +
       (recent_assignment_penalty(member_id) * RECENT_ASSIGNMENT_WEIGHT) +
       (recent_work_penalty(member_id, work_id) * RECENT_WORK_WEIGHT) +
+      (is_recent ? RELAXED_RECENT_PENALTY : 0) +
       stable_tie_breaker(member_id, work_id)
   end
 

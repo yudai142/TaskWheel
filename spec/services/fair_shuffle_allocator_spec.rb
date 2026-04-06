@@ -59,6 +59,71 @@ RSpec.describe FairShuffleAllocator, type: :service do
       expect(result[:success]).to eq(true)
       expect(History.find_by(member_id: member.id, date: base_date)&.work_id).to eq(work_b.id)
     end
+
+    it '空き枠がある場合は未割り当てにしない（recent制約は緩和される）' do
+      member = create(:member)
+      work = create(:work, multiple: 1, is_above: true, archive: false)
+      Worksheet.create!(interval: 7, week_use: false, week: 0)
+
+      create(:history, member: member, work: work, date: base_date - 1.day)
+      create(:history, member: member, work: nil, date: base_date)
+
+      result = described_class.new(date: base_date).shuffle_for_date
+
+      expect(result[:success]).to eq(true)
+      expect(result[:unassigned_count]).to eq(0)
+      expect(History.find_by(member_id: member.id, date: base_date)&.work_id).to eq(work.id)
+    end
+
+    it 'is_above=true かつ multiple=0 でも不可能でなければ追加枠で割り当てる' do
+      expandable_work = create(:work, multiple: 0, is_above: true, archive: false)
+      participants = create_list(:member, 3)
+
+      participants.each do |member|
+        create(:history, member: member, work: nil, date: base_date)
+      end
+
+      result = described_class.new(date: base_date).shuffle_for_date
+
+      expect(result[:success]).to eq(true)
+      expect(result[:unassigned_count]).to eq(0)
+
+      assigned = History.where(date: base_date, member_id: participants.map(&:id)).where.not(work_id: nil)
+      expect(assigned.count).to eq(3)
+      expect(assigned.pluck(:work_id).uniq).to eq([expandable_work.id])
+    end
+
+    it 'is_above=false の当番は multiple の上限を超えて割り当てない' do
+      capped_work = create(:work, multiple: 1, is_above: false, archive: false)
+      participants = create_list(:member, 3)
+
+      participants.each do |member|
+        create(:history, member: member, work: nil, date: base_date)
+      end
+
+      result = described_class.new(date: base_date).shuffle_for_date
+
+      expect(result[:success]).to eq(true)
+      expect(History.where(date: base_date, work_id: capped_work.id).count).to eq(1)
+      expect(result[:unassigned_count]).to eq(2)
+    end
+
+    it 'is_above=true の追加枠は当番間で偏りを抑えて配分される' do
+      work_a = create(:work, multiple: 1, is_above: true, archive: false)
+      work_b = create(:work, multiple: 1, is_above: true, archive: false)
+      participants = create_list(:member, 7)
+
+      participants.each do |member|
+        create(:history, member: member, work: nil, date: base_date)
+      end
+
+      result = described_class.new(date: base_date).shuffle_for_date
+
+      expect(result[:success]).to eq(true)
+      counts = History.where(date: base_date, work_id: [work_a.id, work_b.id]).group(:work_id).count
+      expect(counts.values.sum).to eq(7)
+      expect((counts[work_a.id] - counts[work_b.id]).abs).to be <= 1
+    end
   end
 
   describe '#shuffle_single_work' do

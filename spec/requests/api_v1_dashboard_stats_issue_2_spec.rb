@@ -278,6 +278,7 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
       end
 
       it 'is_above=true の当番は参加人数が枠数を超えても追加割り当てされる' do
+        works.each { |work| work.update!(archive: true) }
         expandable_work = create(:work, multiple: 1, is_above: true, archive: false)
         participants = create_list(:member, 3)
 

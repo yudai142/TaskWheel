@@ -18,15 +18,20 @@ class FairShuffleAllocator
 
     today_assigned_counts = History.where(date: @date).where.not(work_id: nil).group(:member_id).count
 
-    scored_candidates = candidate_members.filter_map do |member|
-      score = @score_calculator.score(
-        member_id: member.id,
-        work_id: work.id,
-        same_day_assignments: today_assigned_counts[member.id] || 0
-      )
-      next if score.infinite?
+    scored_candidates = build_single_work_candidates(
+      candidate_members: candidate_members,
+      work_id: work.id,
+      today_assigned_counts: today_assigned_counts,
+      allow_recent_override: false
+    )
 
-      [member, score]
+    if scored_candidates.empty?
+      scored_candidates = build_single_work_candidates(
+        candidate_members: candidate_members,
+        work_id: work.id,
+        today_assigned_counts: today_assigned_counts,
+        allow_recent_override: true
+      )
     end
 
     return nil if scored_candidates.empty?
@@ -79,14 +84,14 @@ class FairShuffleAllocator
     is_above_work_ids = []
 
     works.each do |work|
+      is_above_work_ids << work.id if work.is_above
+
       multiple = work.multiple.to_i
       next if multiple <= 0
 
       multiple.times do |slot_index|
         work_slots << Slot.new(work.id, slot_index)
       end
-
-      is_above_work_ids << work.id if work.is_above
     end
 
     additional_needed = participant_count - work_slots.length
@@ -135,20 +140,29 @@ class FairShuffleAllocator
     sink = slot_offset + work_slots.length
     graph = MinCostMaxFlow.new(sink + 1)
     assignment_edges = {}
-    unassigned_edges = {}
+
+    candidate_scores_by_history = histories.index_with do |history|
+      scores = build_candidate_scores_for_history(history, work_slots, allow_recent_override: false)
+      scores = build_candidate_scores_for_history(history, work_slots, allow_recent_override: true) if scores.empty?
+      scores
+    end
+
+    global_max_score = candidate_scores_by_history.values.flat_map(&:values).max
+    default_unassigned_cost = global_max_score.nil? ? UNASSIGNED_COST : global_max_score + 1
 
     histories.each_with_index do |history, index|
       history_node = history_offset + index
       graph.add_edge(source, history_node, 1, 0)
-      unassigned_edges[history.id] = graph.add_edge(history_node, sink, 1, UNASSIGNED_COST, true)
 
-      work_slots.each_with_index do |slot, slot_index|
-        score = @score_calculator.score(member_id: history.member_id, work_id: slot.work_id)
-        next if score.infinite?
+      candidate_scores = candidate_scores_by_history[history]
 
+      candidate_scores.each do |slot_index, score|
         edge = graph.add_edge(history_node, slot_offset + slot_index, 1, score, true)
         assignment_edges[[history.id, slot_index]] = edge
       end
+
+      fallback_cost = candidate_scores.empty? ? UNASSIGNED_COST : default_unassigned_cost
+      graph.add_edge(history_node, sink, 1, fallback_cost, true)
     end
 
     work_slots.each_index do |slot_index|
@@ -235,6 +249,33 @@ class FairShuffleAllocator
 
         flow += increment
       end
+    end
+  end
+
+  def build_single_work_candidates(candidate_members:, work_id:, today_assigned_counts:, allow_recent_override:)
+    candidate_members.filter_map do |member|
+      score = @score_calculator.score(
+        member_id: member.id,
+        work_id: work_id,
+        same_day_assignments: today_assigned_counts[member.id] || 0,
+        allow_recent_override: allow_recent_override
+      )
+      next if score.infinite?
+
+      [member, score]
+    end
+  end
+
+  def build_candidate_scores_for_history(history, work_slots, allow_recent_override:)
+    work_slots.each_with_index.each_with_object({}) do |(slot, slot_index), scores|
+      score = @score_calculator.score(
+        member_id: history.member_id,
+        work_id: slot.work_id,
+        allow_recent_override: allow_recent_override
+      )
+      next if score.infinite?
+
+      scores[slot_index] = score
     end
   end
 end
