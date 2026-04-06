@@ -11,12 +11,7 @@ module Api
       end
 
       def create
-        member_option = MemberOption.find_or_initialize_by(
-          member_id: member_option_params[:member_id],
-          work_id: member_option_params[:work_id]
-        )
-        member_option.status = member_option_params[:status]
-        member_option.save!
+        member_option = MemberOption.create!(member_option_params)
 
         render json: serialize_member_option(member_option), status: :ok
       end

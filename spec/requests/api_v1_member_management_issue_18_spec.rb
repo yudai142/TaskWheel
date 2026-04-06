@@ -48,7 +48,23 @@ RSpec.describe 'API V1: Member Management Modal (Issue #18)', type: :request do
       expect(response.parsed_body['status_label']).to eq('除外')
     end
 
-    it '同一メンバーと当番の設定は上書きされる' do
+    it '同じ内容を複数登録できない' do
+      create(:member_option, member: member, work: work_a, status: 0)
+
+      post '/api/v1/member_options', params: {
+        member_option: {
+          member_id: member.id,
+          work_id: work_a.id,
+          status: 0
+        }
+      }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(MemberOption.where(member_id: member.id, work_id: work_a.id).count).to eq(1)
+      expect(MemberOption.find_by(member_id: member.id, work_id: work_a.id)&.status).to eq(0)
+    end
+
+    it '同じ当番で固定と除外を両方登録できない' do
       create(:member_option, member: member, work: work_a, status: 0)
 
       post '/api/v1/member_options', params: {
@@ -59,9 +75,24 @@ RSpec.describe 'API V1: Member Management Modal (Issue #18)', type: :request do
         }
       }
 
-      expect(response).to have_http_status(:ok)
+      expect(response).to have_http_status(:unprocessable_entity)
       expect(MemberOption.where(member_id: member.id, work_id: work_a.id).count).to eq(1)
-      expect(MemberOption.find_by(member_id: member.id, work_id: work_a.id)&.status).to eq(1)
+      expect(MemberOption.find_by(member_id: member.id, work_id: work_a.id)&.status).to eq(0)
+    end
+
+    it '固定設定はメンバー1人につき1件まで' do
+      create(:member_option, member: member, work: work_a, status: 0)
+
+      post '/api/v1/member_options', params: {
+        member_option: {
+          member_id: member.id,
+          work_id: work_b.id,
+          status: 0
+        }
+      }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(MemberOption.where(member_id: member.id, status: 0).count).to eq(1)
     end
   end
 
