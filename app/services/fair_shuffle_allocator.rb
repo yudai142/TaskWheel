@@ -13,8 +13,14 @@ class FairShuffleAllocator
   end
 
   def shuffle_single_work(work)
+    option_rules = load_member_option_rules([work.id])
     candidate_members = Member.active
     candidate_members = candidate_members.where(id: @participant_member_ids) if @participant_member_ids.any?
+
+    fixed_member_ids = option_rules[:fixed_by_work][work.id]
+    excluded_member_ids = option_rules[:excluded_by_work][work.id]
+    candidate_members = candidate_members.where(id: fixed_member_ids) if fixed_member_ids.any?
+    candidate_members = candidate_members.where.not(id: excluded_member_ids) if excluded_member_ids.any?
 
     today_assigned_counts = History.where(date: @date).where.not(work_id: nil).group(:member_id).count
 

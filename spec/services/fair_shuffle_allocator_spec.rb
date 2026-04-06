@@ -169,6 +169,25 @@ RSpec.describe FairShuffleAllocator, type: :service do
   end
 
   describe '#shuffle_single_work' do
+    it '固定設定がある場合は固定メンバーを優先する' do
+      work = create(:work, multiple: 1, is_above: true, archive: false)
+      fixed_member = create(:member)
+      non_fixed_member = create(:member)
+
+      create(:member_option, work: work, member: fixed_member, status: 0)
+
+      5.times do |offset|
+        create(:history, member: fixed_member, work: work, date: base_date - (offset + 1).days)
+      end
+
+      selected_member = described_class.new(
+        date: base_date,
+        participant_member_ids: [fixed_member.id, non_fixed_member.id]
+      ).shuffle_single_work(work)
+
+      expect(selected_member&.id).to eq(fixed_member.id)
+    end
+
     it '総担当回数が少ない参加者を優先する' do
       work = create(:work, multiple: 1, is_above: true, archive: false)
       heavily_assigned_member = create(:member)

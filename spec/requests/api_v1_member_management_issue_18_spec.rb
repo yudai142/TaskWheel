@@ -78,6 +78,26 @@ RSpec.describe 'API V1: Member Management Modal (Issue #18)', type: :request do
   end
 
   describe 'POST /api/v1/works/shuffle' do
+    it '単体シャッフルで固定設定メンバーを優先する' do
+      target_member = create(:member)
+      other_member = create(:member)
+
+      create(:history, member: target_member, work: nil, date: today)
+      create(:history, member: other_member, work: nil, date: today)
+      create(:member_option, member: target_member, work: work_a, status: 0)
+
+      post '/api/v1/works/shuffle', params: {
+        work_id: work_a.id,
+        participant_member_ids: [target_member.id, other_member.id],
+        year: today.year,
+        month: today.month,
+        day: today.day
+      }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body['member']['id']).to eq(target_member.id)
+    end
+
     it '固定設定を優先して日付シャッフルに反映する' do
       create(:member_option, member: member, work: work_b, status: 0)
       create(:history, member: member, work: nil, date: today)
