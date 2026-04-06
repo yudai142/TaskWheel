@@ -1,3 +1,12 @@
+export interface MemberOptionSetting {
+  id: number;
+  member_id: number;
+  work_id: number;
+  work_name: string | null;
+  status: number;
+  status_label: string;
+}
+
 export interface Member {
   id: number;
   family_name: string;
@@ -6,6 +15,7 @@ export interface Member {
   archive: boolean;
   created_at: string;
   updated_at: string;
+  member_options?: MemberOptionSetting[];
 }
 
 export interface Work {

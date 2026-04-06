@@ -37,7 +37,7 @@ Rails.application.routes.draw do
       end
 
       # Member options
-      resources :member_options, only: [] do
+      resources :member_options, only: [:index, :create, :destroy] do
         collection do
           post :update_selected
         end

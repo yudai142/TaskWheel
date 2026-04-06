@@ -1,26 +1,54 @@
 module Api
   module V1
     class MemberOptionsController < BaseController
+      before_action :set_member_option, only: [:destroy]
+
+      def index
+        return render_error('member_id is required', :unprocessable_entity) if params[:member_id].blank?
+
+        member_options = MemberOption.where(member_id: params[:member_id]).includes(:work).order(:id)
+        render json: member_options.map { |option| serialize_member_option(option) }
+      end
+
+      def create
+        member_option = MemberOption.create!(member_option_params)
+
+        render json: serialize_member_option(member_option), status: :ok
+      end
+
       def update_selected
-        # Get work_id and member options from params
-        work_id = params[:work_id]
         member_options = params[:member_options] || []
-
-        # Validate work_id
-        return render json: { error: 'work_id is required' }, status: :unprocessable_entity if work_id.blank?
-
-        # Upsert member options
-        member_options.each do |option|
-          MemberOption.upsert(
-            { work_id: work_id, member_id: option[:member_id], status: option[:status] },
-            unique_by: [:work_id, :member_id]
-          )
+        selected_count = member_options.count do |option|
+          option[:status].to_i == 1 || option['status'].to_i == 1
         end
 
-        # Count selected members for this work
-        selected_count = MemberOption.where(work_id: work_id, status: 1).count
-
         render json: { selected_count: selected_count }, status: :ok
+      end
+
+      def destroy
+        @member_option.destroy!
+        head :no_content
+      end
+
+      private
+
+      def set_member_option
+        @member_option = MemberOption.find(params[:id])
+      end
+
+      def member_option_params
+        params.require(:member_option).permit(:member_id, :work_id, :status)
+      end
+
+      def serialize_member_option(option)
+        {
+          id: option.id,
+          member_id: option.member_id,
+          work_id: option.work_id,
+          work_name: option.work&.name,
+          status: option.status,
+          status_label: option.status.zero? ? '固定' : '除外'
+        }
       end
     end
   end

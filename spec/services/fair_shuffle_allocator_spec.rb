@@ -75,6 +75,65 @@ RSpec.describe FairShuffleAllocator, type: :service do
       expect(History.find_by(member_id: member.id, date: base_date)&.work_id).to eq(work.id)
     end
 
+    it '固定設定されたメンバーは指定当番に割り当てられる' do
+      member = create(:member)
+      fixed_work = create(:work, multiple: 1, is_above: false, archive: false)
+      other_work = create(:work, multiple: 1, is_above: false, archive: false)
+      create(:member_option, member: member, work: fixed_work, status: 0)
+      create(:history, member: member, work: nil, date: base_date)
+
+      result = described_class.new(date: base_date).shuffle_for_date
+
+      expect(result[:success]).to eq(true)
+      expect(History.find_by(member_id: member.id, date: base_date)&.work_id).to eq(fixed_work.id)
+      expect(other_work).to be_present
+    end
+
+    it '固定設定は recent 制約より優先される' do
+      member = create(:member)
+      fixed_work = create(:work, multiple: 1, is_above: true, archive: false)
+      Worksheet.create!(interval: 7, week_use: false, week: 0)
+      create(:member_option, member: member, work: fixed_work, status: 0)
+      create(:history, member: member, work: fixed_work, date: base_date - 1.day)
+      create(:history, member: member, work: nil, date: base_date)
+
+      result = described_class.new(date: base_date).shuffle_for_date
+
+      expect(result[:success]).to eq(true)
+      expect(result[:unassigned_count]).to eq(0)
+      expect(History.find_by(member_id: member.id, date: base_date)&.work_id).to eq(fixed_work.id)
+    end
+
+    it '再シャッフルしても固定メンバーは固定先に割り当てられる' do
+      member = create(:member)
+      fixed_work = create(:work, multiple: 1, is_above: true, archive: false)
+      Worksheet.create!(interval: 7, week_use: false, week: 0)
+      create(:member_option, member: member, work: fixed_work, status: 0)
+      create(:history, member: member, work: nil, date: base_date)
+
+      allocator = described_class.new(date: base_date)
+
+      first_result = allocator.shuffle_for_date
+      second_result = described_class.new(date: base_date).shuffle_for_date
+
+      expect(first_result[:success]).to eq(true)
+      expect(second_result[:success]).to eq(true)
+      expect(History.find_by(member_id: member.id, date: base_date)&.work_id).to eq(fixed_work.id)
+    end
+
+    it '除外設定された当番は他候補がある限り割り当てない' do
+      member = create(:member)
+      excluded_work = create(:work, multiple: 1, is_above: false, archive: false)
+      allowed_work = create(:work, multiple: 1, is_above: false, archive: false)
+      create(:member_option, member: member, work: excluded_work, status: 1)
+      create(:history, member: member, work: nil, date: base_date)
+
+      result = described_class.new(date: base_date).shuffle_for_date
+
+      expect(result[:success]).to eq(true)
+      expect(History.find_by(member_id: member.id, date: base_date)&.work_id).to eq(allowed_work.id)
+    end
+
     it 'is_above=true かつ multiple=0 でも不可能でなければ追加枠で割り当てる' do
       expandable_work = create(:work, multiple: 0, is_above: true, archive: false)
       participants = create_list(:member, 3)
@@ -91,6 +150,25 @@ RSpec.describe FairShuffleAllocator, type: :service do
       assigned = History.where(date: base_date, member_id: participants.map(&:id)).where.not(work_id: nil)
       expect(assigned.count).to eq(3)
       expect(assigned.pluck(:work_id).uniq).to eq([expandable_work.id])
+    end
+
+    it 'シャッフル前の既存割り当てを無視してメモリ上で再計算し、結果をDBに一括保存する' do
+      work_a = create(:work, multiple: 1, is_above: false, archive: false)
+      work_b = create(:work, multiple: 1, is_above: false, archive: false)
+      member_a = create(:member)
+      member_b = create(:member)
+
+      # シャッフル前の状態: 両メンバーが work_a に割り当てられている（制約違反の状態）
+      create(:history, member: member_a, work: work_a, date: base_date)
+      create(:history, member: member_b, work: work_a, date: base_date)
+
+      result = described_class.new(date: base_date).shuffle_for_date
+
+      expect(result[:success]).to eq(true)
+      # メモリ上で再計算するため制約が正しく適用され、work_a には 1 人のみ（multiple 上限）
+      expect(History.where(date: base_date, work_id: work_a.id).count).to eq(1)
+      # もう 1 人は work_b に割り当てられる
+      expect(History.where(date: base_date, work_id: work_b.id).count).to eq(1)
     end
 
     it 'is_above=false の当番は multiple の上限を超えて割り当てない' do
@@ -127,13 +205,29 @@ RSpec.describe FairShuffleAllocator, type: :service do
   end
 
   describe '#shuffle_single_work' do
+    it '固定設定がある場合は固定メンバーを優先する' do
+      work = create(:work, multiple: 1, is_above: true, archive: false)
+      fixed_member = create(:member)
+      non_fixed_member = create(:member)
+
+      create(:member_option, work: work, member: fixed_member, status: 0)
+
+      5.times do |offset|
+        create(:history, member: fixed_member, work: work, date: base_date - (offset + 1).days)
+      end
+
+      selected_member = described_class.new(
+        date: base_date,
+        participant_member_ids: [fixed_member.id, non_fixed_member.id]
+      ).shuffle_single_work(work)
+
+      expect(selected_member&.id).to eq(fixed_member.id)
+    end
+
     it '総担当回数が少ない参加者を優先する' do
       work = create(:work, multiple: 1, is_above: true, archive: false)
       heavily_assigned_member = create(:member)
       lightly_assigned_member = create(:member)
-
-      create(:member_option, work: work, member: heavily_assigned_member, status: 1)
-      create(:member_option, work: work, member: lightly_assigned_member, status: 1)
 
       5.times do |offset|
         create(:history, member: heavily_assigned_member, work: work, date: base_date - (offset + 1).days)
