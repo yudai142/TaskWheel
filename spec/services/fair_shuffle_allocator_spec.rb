@@ -89,7 +89,7 @@ RSpec.describe FairShuffleAllocator, type: :service do
       expect(other_work).to be_present
     end
 
-    it '固定設定が recent 制約と衝突した場合は未割り当てになる' do
+    it '固定設定は recent 制約より優先される' do
       member = create(:member)
       fixed_work = create(:work, multiple: 1, is_above: true, archive: false)
       Worksheet.create!(interval: 7, week_use: false, week: 0)
@@ -100,8 +100,25 @@ RSpec.describe FairShuffleAllocator, type: :service do
       result = described_class.new(date: base_date).shuffle_for_date
 
       expect(result[:success]).to eq(true)
-      expect(result[:unassigned_count]).to eq(1)
-      expect(History.find_by(member_id: member.id, date: base_date)&.work_id).to be_nil
+      expect(result[:unassigned_count]).to eq(0)
+      expect(History.find_by(member_id: member.id, date: base_date)&.work_id).to eq(fixed_work.id)
+    end
+
+    it '再シャッフルしても固定メンバーは固定先に割り当てられる' do
+      member = create(:member)
+      fixed_work = create(:work, multiple: 1, is_above: true, archive: false)
+      Worksheet.create!(interval: 7, week_use: false, week: 0)
+      create(:member_option, member: member, work: fixed_work, status: 0)
+      create(:history, member: member, work: nil, date: base_date)
+
+      allocator = described_class.new(date: base_date)
+
+      first_result = allocator.shuffle_for_date
+      second_result = described_class.new(date: base_date).shuffle_for_date
+
+      expect(first_result[:success]).to eq(true)
+      expect(second_result[:success]).to eq(true)
+      expect(History.find_by(member_id: member.id, date: base_date)&.work_id).to eq(fixed_work.id)
     end
 
     it '除外設定された当番は他候補がある限り割り当てない' do

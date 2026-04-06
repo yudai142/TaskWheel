@@ -175,9 +175,7 @@ class FairShuffleAllocator
       end
 
       fixed_work_id = fixed_work_ids.min
-      recent_work_ids = @recent_member_works.fetch(history.member_id, [])
-
-      if option_rules[:excluded_by_member][history.member_id].include?(fixed_work_id) || recent_work_ids.include?(fixed_work_id)
+      if option_rules[:excluded_by_member][history.member_id].include?(fixed_work_id)
         assignments[history.id] = nil
         next
       end

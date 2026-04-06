@@ -143,6 +143,22 @@ RSpec.describe 'API V1: Member Management Modal (Issue #18)', type: :request do
       expect(History.find_by(member_id: member.id, date: today)&.work_id).to eq(work_b.id)
     end
 
+    it '固定設定メンバーは再シャッフルしても固定先に割り当てられる' do
+      create(:member_option, member: member, work: work_b, status: 0)
+      create(:history, member: member, work: nil, date: today)
+
+      2.times do
+        post '/api/v1/works/shuffle', params: {
+          year: today.year,
+          month: today.month,
+          day: today.day
+        }
+        expect(response).to have_http_status(:ok)
+      end
+
+      expect(History.find_by(member_id: member.id, date: today)&.work_id).to eq(work_b.id)
+    end
+
     it '除外設定された当番を避けて割り当てる' do
       create(:member_option, member: member, work: work_a, status: 1)
       create(:history, member: member, work: nil, date: today)
