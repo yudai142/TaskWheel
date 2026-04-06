@@ -152,6 +152,25 @@ RSpec.describe FairShuffleAllocator, type: :service do
       expect(assigned.pluck(:work_id).uniq).to eq([expandable_work.id])
     end
 
+    it 'シャッフル前の既存割り当てを無視してメモリ上で再計算し、結果をDBに一括保存する' do
+      work_a = create(:work, multiple: 1, is_above: false, archive: false)
+      work_b = create(:work, multiple: 1, is_above: false, archive: false)
+      member_a = create(:member)
+      member_b = create(:member)
+
+      # シャッフル前の状態: 両メンバーが work_a に割り当てられている（制約違反の状態）
+      create(:history, member: member_a, work: work_a, date: base_date)
+      create(:history, member: member_b, work: work_a, date: base_date)
+
+      result = described_class.new(date: base_date).shuffle_for_date
+
+      expect(result[:success]).to eq(true)
+      # メモリ上で再計算するため制約が正しく適用され、work_a には 1 人のみ（multiple 上限）
+      expect(History.where(date: base_date, work_id: work_a.id).count).to eq(1)
+      # もう 1 人は work_b に割り当てられる
+      expect(History.where(date: base_date, work_id: work_b.id).count).to eq(1)
+    end
+
     it 'is_above=false の当番は multiple の上限を超えて割り当てない' do
       capped_work = create(:work, multiple: 1, is_above: false, archive: false)
       participants = create_list(:member, 3)

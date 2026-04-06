@@ -64,6 +64,7 @@ class FairShuffleAllocator
     work_slots = build_work_slots(works, remaining_histories.length, preassigned_counts)
     assignments = fixed_assignments.merge(solve_assignments(remaining_histories, work_slots, option_rules))
 
+    # メモリ上で全員の割り当てが決まった段階でDBに一括保存
     History.transaction do
       assignments.each do |history_id, work_id|
         History.where(id: history_id).update_all(work_id: work_id)
