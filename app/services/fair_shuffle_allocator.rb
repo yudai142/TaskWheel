@@ -13,7 +13,7 @@ class FairShuffleAllocator
   end
 
   def shuffle_single_work(work)
-    candidate_members = work.available_members.active
+    candidate_members = Member.active
     candidate_members = candidate_members.where(id: @participant_member_ids) if @participant_member_ids.any?
 
     today_assigned_counts = History.where(date: @date).where.not(work_id: nil).group(:member_id).count
@@ -53,8 +53,10 @@ class FairShuffleAllocator
     raise ActiveRecord::RecordInvalid, History.new if histories.empty?
 
     works = load_shufflable_works
-    work_slots = build_work_slots(works, histories.length)
-    assignments = solve_assignments(histories, work_slots)
+    option_rules = load_member_option_rules(works.map(&:id))
+    fixed_assignments, remaining_histories, preassigned_counts = build_fixed_assignments(histories, works, option_rules)
+    work_slots = build_work_slots(works, remaining_histories.length, preassigned_counts)
+    assignments = fixed_assignments.merge(solve_assignments(remaining_histories, work_slots, option_rules))
 
     History.transaction do
       assignments.each do |history_id, work_id|
@@ -79,14 +81,14 @@ class FairShuffleAllocator
     works.order(:id).to_a
   end
 
-  def build_work_slots(works, participant_count)
+  def build_work_slots(works, participant_count, preassigned_counts = {})
     work_slots = []
     is_above_work_ids = []
 
     works.each do |work|
       is_above_work_ids << work.id if work.is_above
 
-      multiple = work.multiple.to_i
+      multiple = [work.multiple.to_i - preassigned_counts.fetch(work.id, 0), 0].max
       next if multiple <= 0
 
       multiple.times do |slot_index|
@@ -133,7 +135,55 @@ class FairShuffleAllocator
       end
   end
 
-  def solve_assignments(histories, work_slots)
+  def load_member_option_rules(work_ids)
+    options = MemberOption.where(work_id: work_ids).order(:work_id, :member_id)
+
+    options.each_with_object(
+      fixed_by_member: Hash.new { |hash, key| hash[key] = [] },
+      excluded_by_member: Hash.new { |hash, key| hash[key] = [] },
+      fixed_by_work: Hash.new { |hash, key| hash[key] = [] },
+      excluded_by_work: Hash.new { |hash, key| hash[key] = [] }
+    ) do |option, rules|
+      if option.status.zero?
+        rules[:fixed_by_member][option.member_id] << option.work_id
+        rules[:fixed_by_work][option.work_id] << option.member_id
+      else
+        rules[:excluded_by_member][option.member_id] << option.work_id
+        rules[:excluded_by_work][option.work_id] << option.member_id
+      end
+    end
+  end
+
+  def build_fixed_assignments(histories, works, option_rules)
+    available_work_ids = works.map(&:id)
+    assignments = {}
+    remaining_histories = []
+    preassigned_counts = Hash.new(0)
+
+    histories.each do |history|
+      fixed_work_ids = option_rules[:fixed_by_member][history.member_id] & available_work_ids
+
+      if fixed_work_ids.empty?
+        remaining_histories << history
+        next
+      end
+
+      fixed_work_id = fixed_work_ids.min
+      recent_work_ids = @recent_member_works.fetch(history.member_id, [])
+
+      if option_rules[:excluded_by_member][history.member_id].include?(fixed_work_id) || recent_work_ids.include?(fixed_work_id)
+        assignments[history.id] = nil
+        next
+      end
+
+      assignments[history.id] = fixed_work_id
+      preassigned_counts[fixed_work_id] += 1
+    end
+
+    [assignments, remaining_histories, preassigned_counts]
+  end
+
+  def solve_assignments(histories, work_slots, option_rules)
     source = 0
     history_offset = 1
     slot_offset = history_offset + histories.length
@@ -142,8 +192,8 @@ class FairShuffleAllocator
     assignment_edges = {}
 
     candidate_scores_by_history = histories.index_with do |history|
-      scores = build_candidate_scores_for_history(history, work_slots, allow_recent_override: false)
-      scores = build_candidate_scores_for_history(history, work_slots, allow_recent_override: true) if scores.empty?
+      scores = build_candidate_scores_for_history(history, work_slots, option_rules: option_rules, allow_recent_override: false)
+      scores = build_candidate_scores_for_history(history, work_slots, option_rules: option_rules, allow_recent_override: true) if scores.empty?
       scores
     end
 
@@ -266,8 +316,12 @@ class FairShuffleAllocator
     end
   end
 
-  def build_candidate_scores_for_history(history, work_slots, allow_recent_override:)
+  def build_candidate_scores_for_history(history, work_slots, option_rules:, allow_recent_override:)
+    excluded_work_ids = option_rules[:excluded_by_member][history.member_id]
+
     work_slots.each_with_index.each_with_object({}) do |(slot, slot_index), scores|
+      next if excluded_work_ids.include?(slot.work_id)
+
       score = @score_calculator.score(
         member_id: history.member_id,
         work_id: slot.work_id,

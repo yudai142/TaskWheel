@@ -7,12 +7,13 @@ module Api
       before_action :set_member, only: [:show, :update, :destroy]
 
       def index
-        @members = Member.includes(:member_options, :works).active
-        render json: @members
+        scope = Member.includes(member_options: :work).order(:id)
+        scope = scope.active unless include_archived?
+        render json: scope.map { |member| serialize_member(member) }
       end
 
       def show
-        render json: @member
+        render json: serialize_member(@member)
       end
 
       def create
@@ -49,6 +50,41 @@ module Api
 
       def member_params
         params.require(:member).permit(:family_name, :given_name, :kana_name, :archive)
+      end
+
+      def include_archived?
+        ActiveModel::Type::Boolean.new.cast(params[:include_archived])
+      end
+
+      def include_settings?
+        ActiveModel::Type::Boolean.new.cast(params[:include_settings])
+      end
+
+      def serialize_member(member)
+        payload = {
+          id: member.id,
+          family_name: member.family_name,
+          given_name: member.given_name,
+          kana_name: member.kana_name,
+          archive: member.archive,
+          created_at: member.created_at,
+          updated_at: member.updated_at
+        }
+
+        return payload unless include_settings?
+
+        payload.merge(
+          member_options: member.member_options.sort_by { |option| [option.work_id, option.id] }.map do |option|
+            {
+              id: option.id,
+              member_id: option.member_id,
+              work_id: option.work_id,
+              work_name: option.work&.name,
+              status: option.status,
+              status_label: option.status.zero? ? '固定' : '除外'
+            }
+          end
+        )
       end
     end
   end
