@@ -57,6 +57,19 @@ cd TaskWheel
 cp .env.example .env
 ```
 
+Googleログインを利用する場合は、`.env` に以下を設定してください。
+
+```bash
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+```
+
+Google Cloud Console 側では OAuth クライアント（Webアプリ）を作成し、承認済みリダイレクト URI に以下を登録してください。
+
+```text
+http://localhost:3000/users/auth/google_oauth2/callback
+```
+
 3. **Dockerコンテナの起動**
 
 ```bash

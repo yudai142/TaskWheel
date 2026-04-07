@@ -24,6 +24,8 @@ services:
       target: development
     container_name: task_wheel_web
     command: /app/docker-entrypoint.sh
+    env_file:
+      - .env
     volumes:
       - .:/app
       - node_modules:/app/node_modules
@@ -37,6 +39,8 @@ services:
     environment:
       DATABASE_URL: postgresql://postgres:password@db:5432/task_wheel_development
       DATABASE_URL_TEST: postgresql://postgres:password@db:5432/task_wheel_test
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
       RAILS_ENV: development
       NODE_ENV: development
       VITE_RUBY_HOST: 0.0.0.0
