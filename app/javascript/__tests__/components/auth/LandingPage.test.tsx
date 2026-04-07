@@ -11,7 +11,18 @@ describe('LandingPage', () => {
 
     expect(screen.getByRole('button', { name: '新規登録' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'ログイン' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Googleでログイン' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Googleでログイン' })).toBeInTheDocument();
+  });
+
+  it('GoogleログインはPOSTフォームで送信される', () => {
+    render(<LandingPage onOpenLogin={vi.fn()} onOpenRegister={vi.fn()} />);
+
+    const googleButton = screen.getByRole('button', { name: 'Googleでログイン' });
+    const form = googleButton.closest('form');
+
+    expect(form).not.toBeNull();
+    expect(form).toHaveAttribute('action', '/users/auth/google_oauth2');
+    expect(form).toHaveAttribute('method', 'post');
   });
 
   it('新規登録ボタン押下時にハンドラーが呼ばれる', async () => {

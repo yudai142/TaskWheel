@@ -5,6 +5,16 @@ interface LandingPageProps {
   onOpenRegister: () => void;
 }
 
+function csrfToken(): string {
+  const doc = globalThis.document;
+  if (!doc) {
+    return '';
+  }
+
+  const meta = doc.querySelector('meta[name="csrf-token"]');
+  return meta?.getAttribute('content') || '';
+}
+
 export default function LandingPage({
   onOpenLogin,
   onOpenRegister,
@@ -32,12 +42,15 @@ export default function LandingPage({
             >
               ログイン
             </button>
-            <a
-              href="/users/auth/google_oauth2"
-              className="rounded-lg border border-slate-300 bg-white px-5 py-3 text-center font-semibold text-slate-900 hover:bg-slate-50"
-            >
-              Googleでログイン
-            </a>
+            <form action="/users/auth/google_oauth2" method="post" className="contents">
+              <input type="hidden" name="authenticity_token" value={csrfToken()} />
+              <button
+                type="submit"
+                className="rounded-lg border border-slate-300 bg-white px-5 py-3 text-center font-semibold text-slate-900 hover:bg-slate-50"
+              >
+                Googleでログイン
+              </button>
+            </form>
           </div>
         </div>
 
