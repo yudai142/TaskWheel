@@ -6,12 +6,24 @@ module Api
       def index
         return render_error('member_id is required', :unprocessable_entity) if params[:member_id].blank?
 
-        member_options = MemberOption.where(member_id: params[:member_id]).includes(:work).order(:id)
+        member = current_worksheet.members.find_by(id: params[:member_id])
+        return render_error('メンバーが見つかりません', :not_found) unless member
+
+        member_options = MemberOption
+          .where(member_id: member.id, work_id: current_worksheet.works.select(:id))
+          .includes(:work)
+          .order(:id)
         render json: member_options.map { |option| serialize_member_option(option) }
       end
 
       def create
-        member_option = MemberOption.create!(member_option_params)
+        member = current_worksheet.members.find(member_option_params[:member_id])
+        work = current_worksheet.works.find(member_option_params[:work_id])
+        member_option = MemberOption.create!(
+          member_id: member.id,
+          work_id: work.id,
+          status: member_option_params[:status]
+        )
 
         render json: serialize_member_option(member_option), status: :ok
       end
@@ -33,7 +45,10 @@ module Api
       private
 
       def set_member_option
-        @member_option = MemberOption.find(params[:id])
+        # current_worksheetに属するMemberのOptionに限定
+        worksheet_member_ids = current_worksheet.members.pluck(:id)
+        @member_option = MemberOption.joins(:member).where(id: params[:id], member_id: worksheet_member_ids).first
+        render_not_found(ActiveRecord::RecordNotFound.new("MemberOption not found")) unless @member_option
       end
 
       def member_option_params

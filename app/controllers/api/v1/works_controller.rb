@@ -7,7 +7,7 @@ module Api
       before_action :set_work, only: [:show, :update, :destroy]
 
       def index
-        @works = Work.includes(:members, :off_works)
+        @works = current_worksheet.works.includes(:members, :off_works)
         render json: @works, include: [:members, :off_works]
       end
 
@@ -16,7 +16,7 @@ module Api
       end
 
       def create
-        @work = Work.new(work_params)
+        @work = current_worksheet.works.build(work_params)
         @work.save!
         render json: @work, status: :created
       end
@@ -36,6 +36,7 @@ module Api
         work_id = (params[:work_id] || params[:id]).to_i
         allocator = FairShuffleAllocator.new(
           date: date,
+          worksheet: current_worksheet,
           participant_member_ids: params[:participant_member_ids]
         )
 
@@ -49,7 +50,7 @@ module Api
       def bulk_update
         Work.transaction do
           params[:works].each do |work_data|
-            work = Work.find(work_data[:id])
+            work = current_worksheet.works.find(work_data[:id])
             work.update!(work_data.except(:id))
           end
         end
@@ -58,8 +59,14 @@ module Api
 
       def shuffle_with_selected_members
         date = extract_target_date_from_param
-        member_ids = Array(params[:member_ids]).compact.map(&:to_i).uniq
-        work_ids = Array(params[:work_ids]).compact.map(&:to_i).uniq
+        requested_member_ids = Array(params[:member_ids]).compact.map(&:to_i).uniq
+        requested_work_ids = Array(params[:work_ids]).compact.map(&:to_i).uniq
+
+        worksheet_member_ids = current_worksheet.members.where(id: requested_member_ids).pluck(:id)
+        worksheet_work_ids = current_worksheet.works.where(id: requested_work_ids).pluck(:id)
+
+        member_ids = worksheet_member_ids
+        work_ids = worksheet_work_ids
 
         if member_ids.empty? || work_ids.empty?
           return render_error('member_ids と work_ids は必須です', :unprocessable_entity)
@@ -75,6 +82,7 @@ module Api
 
         allocator = FairShuffleAllocator.new(
           date: date,
+          worksheet: current_worksheet,
           participant_member_ids: member_ids,
           allowed_work_ids: work_ids
         )
@@ -89,7 +97,7 @@ module Api
       private
 
       def set_work
-        @work = Work.find(params[:id])
+        @work = current_worksheet.works.find(params[:id])
       end
 
       def work_params
@@ -98,7 +106,8 @@ module Api
 
       def remove_duplicate_assignments(date)
         # 指定日付のHistoryレコードをメンバーごとにグループ化
-        histories = History.where(date: date)
+        worksheet_member_ids = current_worksheet.members.pluck(:id)
+        histories = History.where(date: date, member_id: worksheet_member_ids)
         grouped = histories.group_by(&:member_id)
 
         # 同じメンバーが複数回割り当てられている場合、最初の1つ以外を削除
@@ -127,7 +136,7 @@ module Api
       end
 
       def shuffle_single_work(work_id, date, allocator)
-        work = Work.find(work_id)
+        work = current_worksheet.works.find(work_id)
         selected_member = allocator.shuffle_single_work(work)
 
         if selected_member.nil?
@@ -140,7 +149,8 @@ module Api
       end
 
       def shuffle_for_date(allocator)
-        histories = History.where(date: extract_target_date).includes(:member).to_a
+        worksheet_member_ids = current_worksheet.members.pluck(:id)
+        histories = History.where(date: extract_target_date, member_id: worksheet_member_ids).includes(:member).to_a
         if histories.empty?
           return render_error("参加メンバーがいません", :unprocessable_entity)
         end
@@ -155,7 +165,7 @@ module Api
 
       def load_shufflable_works(date)
         off_work_ids = OffWork.where(date: date).pluck(:work_id)
-        Work.active.where.not(id: off_work_ids)
+        current_worksheet.works.active.where.not(id: off_work_ids)
       end
 
     end

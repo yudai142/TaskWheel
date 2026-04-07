@@ -1,7 +1,21 @@
 # encoding: utf-8
 Rails.application.routes.draw do
+  devise_for :users,
+             controllers: {
+               omniauth_callbacks: 'users/omniauth_callbacks'
+             },
+             skip: [:sessions, :registrations, :passwords]
+
   namespace :api do
     namespace :v1 do
+      scope :auth do
+        get :me, to: 'sessions#me'
+        post :login, to: 'sessions#login'
+        post :logout, to: 'sessions#logout'
+        post :register, to: 'sessions#register'
+        patch :switch_worksheet, to: 'sessions#switch_worksheet'
+      end
+
       # Members
       resources :members do
         collection do

@@ -2,7 +2,7 @@ module Api
   module V1
     class DashboardController < BaseController
       def member_selection_state
-        response = Member.active.order(:id).map do |member|
+        response = current_worksheet.members.active.order(:id).map do |member|
           {
             id: member.id,
             member_id: member.id,

@@ -7,7 +7,7 @@ module Api
       before_action :set_member, only: [:show, :update, :destroy]
 
       def index
-        scope = Member.includes(member_options: :work).order(:id)
+        scope = current_worksheet.members.includes(member_options: :work).order(:id)
         scope = scope.active unless include_archived?
         render json: scope.map { |member| serialize_member(member) }
       end
@@ -17,7 +17,7 @@ module Api
       end
 
       def create
-        @member = Member.new(member_params)
+        @member = current_worksheet.members.build(member_params)
         @member.save!
         render json: @member, status: :created
       end
@@ -35,7 +35,7 @@ module Api
       def bulk_update
         Member.transaction do
           params[:members].each do |member_data|
-            member = Member.find(member_data[:id])
+            member = current_worksheet.members.find(member_data[:id])
             member.update!(member_data.except(:id))
           end
         end
@@ -45,7 +45,7 @@ module Api
       private
 
       def set_member
-        @member = Member.find(params[:id])
+        @member = current_worksheet.members.find(params[:id])
       end
 
       def member_params

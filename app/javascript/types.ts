@@ -54,3 +54,26 @@ export interface HistoryPayload {
 export interface WorkPayload {
   is_above: boolean;
 }
+
+export interface WorksheetSummary {
+  id: number;
+  name: string | null;
+  interval: number;
+  week_use: boolean;
+  week: number;
+}
+
+export interface AuthUser {
+  id: number;
+  email: string;
+  name: string;
+  provider: string | null;
+}
+
+export interface AuthResponse {
+  authenticated: boolean;
+  user: AuthUser | null;
+  current_worksheet: WorksheetSummary | null;
+  error?: string;
+  errors?: string[];
+}
