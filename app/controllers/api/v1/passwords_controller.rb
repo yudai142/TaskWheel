@@ -9,12 +9,17 @@ module Api
       def forgot
         email = params[:email].to_s.strip.downcase
 
-        if email.present?
-          user = User.find_by(email: email)
-          user&.send_reset_password_instructions
+        if email.blank?
+          return render json: { success: false, message: 'メールアドレスを入力してください' }, status: :unprocessable_entity
         end
 
-        # メールアドレスの存在有無を漏らさないため常に成功レスポンス
+        user = User.find_by(email: email)
+        unless user
+          return render json: { success: false, message: '登録済みのメールアドレスが見つかりません' }, status: :not_found
+        end
+
+        user.send_reset_password_instructions
+
         render json: { success: true, message: '再設定メールを送信しました' }
       end
 

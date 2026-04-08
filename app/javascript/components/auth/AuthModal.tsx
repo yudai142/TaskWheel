@@ -51,11 +51,19 @@ export default function AuthModal({
         await onRegister(name, email, password, passwordConfirmation);
         onClose();
       } else {
-        await axios.post('/api/v1/auth/password/forgot', { email });
-        setMessage('再設定メールを送信しました。メール内のリンクから再設定してください。');
+        const res = await axios.post('/api/v1/auth/password/forgot', { email });
+        if (res.data?.success) {
+          setMessage('再設定メールを送信しました。メール内のリンクから再設定してください。');
+        } else {
+          setError(res.data?.message || 'メール送信に失敗しました');
+        }
       }
     } catch (e) {
-      setError(e instanceof Error ? e.message : '認証に失敗しました');
+      if (axios.isAxiosError(e)) {
+        setError(e.response?.data?.message || '認証に失敗しました');
+      } else {
+        setError(e instanceof Error ? e.message : '認証に失敗しました');
+      }
     } finally {
       setLoading(false);
     }
@@ -111,20 +119,21 @@ export default function AuthModal({
             />
           </div>
 
-          <div>
-            <label htmlFor="auth-password" className="mb-1 block text-sm text-gray-700">
-              パスワード
-            </label>
-            <input
-              id="auth-password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required={currentMode !== 'forgot'}
-              disabled={currentMode === 'forgot'}
-              className="w-full rounded border border-gray-300 px-3 py-2"
-            />
-          </div>
+          {currentMode !== 'forgot' && (
+            <div>
+              <label htmlFor="auth-password" className="mb-1 block text-sm text-gray-700">
+                パスワード
+              </label>
+              <input
+                id="auth-password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full rounded border border-gray-300 px-3 py-2"
+              />
+            </div>
+          )}
 
           {currentMode === 'register' && (
             <div>

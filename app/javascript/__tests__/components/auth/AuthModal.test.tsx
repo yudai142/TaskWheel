@@ -76,6 +76,7 @@ describe('AuthModal', () => {
     );
 
     await user.click(screen.getByRole('button', { name: 'パスワードを忘れた場合' }));
+    expect(screen.queryByLabelText('パスワード')).not.toBeInTheDocument();
     await user.type(screen.getByLabelText('メールアドレス'), 'forgot@example.com');
     await user.click(screen.getByRole('button', { name: '再設定メールを送信' }));
 

@@ -105,11 +105,21 @@ RSpec.describe 'API V1 Authentication (Issue #23)', type: :request do
       expect(ActionMailer::Base.deliveries.last.body.encoded).to include('/password-reset?token=')
     end
 
-    it '存在しないメールアドレスでも成功レスポンスを返す' do
+    it '存在しないメールアドレスは404を返す' do
       post '/api/v1/auth/password/forgot', params: { email: 'unknown@example.com' }
 
-      expect(response).to have_http_status(:ok)
-      expect(response.parsed_body['success']).to eq(true)
+      expect(response).to have_http_status(:not_found)
+      expect(response.parsed_body['success']).to eq(false)
+      expect(response.parsed_body['message']).to eq('登録済みのメールアドレスが見つかりません')
+      expect(ActionMailer::Base.deliveries.size).to eq(0)
+    end
+
+    it 'メールアドレス未入力は422を返す' do
+      post '/api/v1/auth/password/forgot', params: { email: '' }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.parsed_body['success']).to eq(false)
+      expect(response.parsed_body['message']).to eq('メールアドレスを入力してください')
       expect(ActionMailer::Base.deliveries.size).to eq(0)
     end
   end
