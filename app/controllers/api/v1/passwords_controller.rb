@@ -4,6 +4,24 @@
 module Api
   module V1
     class PasswordsController < ActionController::API
+      # POST /api/v1/auth/password/validate_token
+      # 再設定トークンの有効性を検証
+      def validate_token
+        token = params[:token].to_s
+        if token.blank?
+          return render json: { success: false, message: '再設定トークンが無効です。再度メールを送信してください。' }, status: :unprocessable_entity
+        end
+
+        digested_token = Devise.token_generator.digest(User, :reset_password_token, token)
+        user = User.find_by(reset_password_token: digested_token)
+
+        if user&.reset_password_period_valid?
+          render json: { success: true }
+        else
+          render json: { success: false, message: '再設定トークンが古いため無効です。再度メールを送信してください。' }, status: :unprocessable_entity
+        end
+      end
+
       # POST /api/v1/auth/password/forgot
       # メールアドレスを受け取り、パスワード再設定メールを送信
       def forgot

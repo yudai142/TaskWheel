@@ -162,4 +162,35 @@ RSpec.describe 'API V1 Authentication (Issue #23)', type: :request do
       expect(response.parsed_body['errors']).to be_present
     end
   end
+
+  describe 'POST /api/v1/auth/password/validate_token' do
+    let!(:user) do
+      create(:user, email: 'validate@example.com', password: 'oldpassword123', password_confirmation: 'oldpassword123')
+    end
+
+    it '有効なトークンの場合はsuccess=trueを返す' do
+      raw_token = user.send_reset_password_instructions
+
+      post '/api/v1/auth/password/validate_token', params: { token: raw_token }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body['success']).to eq(true)
+    end
+
+    it '無効なトークンの場合は422を返す' do
+      post '/api/v1/auth/password/validate_token', params: { token: 'invalid-token' }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.parsed_body['success']).to eq(false)
+      expect(response.parsed_body['message']).to include('再設定トークン')
+    end
+
+    it 'トークン未入力の場合は422を返す' do
+      post '/api/v1/auth/password/validate_token', params: { token: '' }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.parsed_body['success']).to eq(false)
+      expect(response.parsed_body['message']).to include('再設定トークン')
+    end
+  end
 end

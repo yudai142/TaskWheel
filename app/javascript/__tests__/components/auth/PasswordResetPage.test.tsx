@@ -16,11 +16,23 @@ describe('PasswordResetPage', () => {
 
   it('新しいパスワードを送信して再設定APIを呼び出す', async () => {
     const user = userEvent.setup();
-    (axios.post as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({
-      data: { success: true },
+    (axios.post as unknown as ReturnType<typeof vi.fn>).mockImplementation((url: string) => {
+      if (url === '/api/v1/auth/password/validate_token') {
+        return Promise.resolve({ data: { success: true } });
+      }
+      if (url === '/api/v1/auth/password/reset') {
+        return Promise.resolve({ data: { success: true } });
+      }
+      return Promise.resolve({ data: {} });
     });
 
     render(<PasswordResetPage />);
+
+    await waitFor(() => {
+      expect(axios.post).toHaveBeenCalledWith('/api/v1/auth/password/validate_token', {
+        token: 'test-token',
+      });
+    });
 
     await user.type(screen.getByLabelText('新しいパスワード'), 'newpassword123');
     await user.type(screen.getByLabelText('新しいパスワード（確認）'), 'newpassword123');
@@ -33,5 +45,27 @@ describe('PasswordResetPage', () => {
         password_confirmation: 'newpassword123',
       });
     });
+  });
+
+  it('無効トークン時はフォームを表示せずエラーメッセージのみ表示する', async () => {
+    (axios.post as unknown as ReturnType<typeof vi.fn>).mockRejectedValue({
+      response: {
+        data: {
+          message: '再設定トークンが古いため無効です。再度メールを送信してください。',
+        },
+      },
+      isAxiosError: true,
+    });
+
+    render(<PasswordResetPage />);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText('再設定トークンが古いため無効です。再度メールを送信してください。')
+      ).toBeInTheDocument();
+    });
+
+    expect(screen.queryByLabelText('新しいパスワード')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'パスワードを再設定' })).not.toBeInTheDocument();
   });
 });

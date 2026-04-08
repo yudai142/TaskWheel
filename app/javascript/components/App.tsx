@@ -12,12 +12,25 @@ import AuthModal from './auth/AuthModal';
 import PasswordResetPage from './auth/PasswordResetPage';
 import type { AuthResponse, AuthUser, WorksheetSummary } from '../types';
 
+function queryParam(name: string): string | null {
+  const SearchParams = globalThis.URLSearchParams;
+  const params = new SearchParams(globalThis.location.search);
+  return params.get(name);
+}
+
 export default function App(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(true);
   const [authenticated, setAuthenticated] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
   const [currentWorksheet, setCurrentWorksheet] = useState<WorksheetSummary | null>(null);
-  const [authModalMode, setAuthModalMode] = useState<'login' | 'register' | null>(null);
+  const [authModalMode, setAuthModalMode] = useState<'login' | 'register' | null>(
+    queryParam('open') === 'login' ? 'login' : null
+  );
+  const [resetSuccessMessage, setResetSuccessMessage] = useState<string | null>(
+    queryParam('reset') === 'success'
+      ? 'パスワードを再設定しました。新しいパスワードでログインしてください。'
+      : null
+  );
 
   useEffect(() => {
     axios
@@ -81,6 +94,20 @@ export default function App(): JSX.Element {
             path="*"
             element={
               <>
+                {resetSuccessMessage && (
+                  <div className="fixed left-1/2 top-6 z-50 w-[min(92vw,640px)] -translate-x-1/2 rounded-lg border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 shadow">
+                    <div className="flex items-start justify-between gap-3">
+                      <p>{resetSuccessMessage}</p>
+                      <button
+                        type="button"
+                        className="text-emerald-700 hover:text-emerald-900"
+                        onClick={() => setResetSuccessMessage(null)}
+                      >
+                        閉じる
+                      </button>
+                    </div>
+                  </div>
+                )}
                 <LandingPage
                   onOpenLogin={() => setAuthModalMode('login')}
                   onOpenRegister={() => setAuthModalMode('register')}
