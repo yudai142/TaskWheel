@@ -69,7 +69,7 @@ module Api
         work_ids = worksheet_work_ids
 
         if member_ids.empty? || work_ids.empty?
-          return render_error('member_ids と work_ids は必須です', :unprocessable_entity)
+          return render_error('member_ids と work_ids は必須です', :unprocessable_content)
         end
 
         History.transaction do
@@ -91,7 +91,7 @@ module Api
         shuffled_histories = History.where(date: date, member_id: member_ids).order(:id)
         render json: shuffled_histories
       rescue ActiveRecord::RecordInvalid => e
-        render_error(e.record.errors.full_messages.join(', '), :unprocessable_entity)
+        render_error(e.record.errors.full_messages.join(', '), :unprocessable_content)
       end
 
       private
@@ -140,7 +140,7 @@ module Api
         selected_member = allocator.shuffle_single_work(work)
 
         if selected_member.nil?
-          return render_error("割り当て可能なメンバーがいません", :unprocessable_entity)
+          return render_error("割り当て可能なメンバーがいません", :unprocessable_content)
         end
 
         remove_duplicate_assignments(date)
@@ -152,12 +152,12 @@ module Api
         worksheet_member_ids = current_worksheet.members.pluck(:id)
         histories = History.where(date: extract_target_date, member_id: worksheet_member_ids).includes(:member).to_a
         if histories.empty?
-          return render_error("参加メンバーがいません", :unprocessable_entity)
+          return render_error("参加メンバーがいません", :unprocessable_content)
         end
 
         works = load_shufflable_works(extract_target_date)
         if works.empty?
-          return render_error("シャッフル対象の当番がありません", :unprocessable_entity)
+          return render_error("シャッフル対象の当番がありません", :unprocessable_content)
         end
 
         render json: allocator.shuffle_for_date

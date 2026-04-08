@@ -102,7 +102,9 @@ RSpec.describe 'API V1 Authentication (Issue #23)', type: :request do
       expect(response.parsed_body['success']).to eq(true)
       expect(ActionMailer::Base.deliveries.size).to eq(1)
       expect(ActionMailer::Base.deliveries.last.to).to include('forgot@example.com')
-      expect(ActionMailer::Base.deliveries.last.body.encoded).to include('/password-reset?token=')
+      mail = ActionMailer::Base.deliveries.last
+      decoded_body = [mail.text_part&.decoded, mail.html_part&.decoded, mail.body.decoded].compact.join("\n")
+      expect(decoded_body).to include('/password-reset?token=')
     end
 
     it '存在しないメールアドレスは404を返す' do
@@ -117,7 +119,7 @@ RSpec.describe 'API V1 Authentication (Issue #23)', type: :request do
     it 'メールアドレス未入力は422を返す' do
       post '/api/v1/auth/password/forgot', params: { email: '' }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.parsed_body['success']).to eq(false)
       expect(response.parsed_body['message']).to eq('メールアドレスを入力してください')
       expect(ActionMailer::Base.deliveries.size).to eq(0)
@@ -157,7 +159,7 @@ RSpec.describe 'API V1 Authentication (Issue #23)', type: :request do
         password_confirmation: 'newpassword123'
       }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.parsed_body['success']).to eq(false)
       expect(response.parsed_body['errors']).to be_present
     end
@@ -180,7 +182,7 @@ RSpec.describe 'API V1 Authentication (Issue #23)', type: :request do
     it '無効なトークンの場合は422を返す' do
       post '/api/v1/auth/password/validate_token', params: { token: 'invalid-token' }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.parsed_body['success']).to eq(false)
       expect(response.parsed_body['message']).to include('再設定トークン')
     end
@@ -188,7 +190,7 @@ RSpec.describe 'API V1 Authentication (Issue #23)', type: :request do
     it 'トークン未入力の場合は422を返す' do
       post '/api/v1/auth/password/validate_token', params: { token: '' }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.parsed_body['success']).to eq(false)
       expect(response.parsed_body['message']).to include('再設定トークン')
     end

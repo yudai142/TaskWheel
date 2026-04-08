@@ -50,7 +50,7 @@ module Api
       end
 
       def render_unprocessable_entity(e)
-        render json: { error: "Validation failed", messages: e.record.errors.full_messages }, status: :unprocessable_entity
+        render json: { error: "Validation failed", messages: e.record.errors.full_messages }, status: :unprocessable_content
       end
 
       def render_error(message, status = :bad_request)

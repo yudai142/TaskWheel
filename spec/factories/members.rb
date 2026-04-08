@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :member do
-    association :worksheet
+    worksheet { Worksheet.order(:id).first || association(:worksheet) }
     given_name { Faker::Name.first_name }
     family_name { Faker::Name.last_name }
     kana_name { 'テストメンバー' }

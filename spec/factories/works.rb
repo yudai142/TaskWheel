@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :work do
-    association :worksheet
+    worksheet { Worksheet.order(:id).first || association(:worksheet) }
     sequence(:name) { |n| "Work #{n}: #{Faker::Lorem.word}" }
     archive { false }
 

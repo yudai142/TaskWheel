@@ -9,7 +9,7 @@ module Api
       def validate_token
         token = params[:token].to_s
         if token.blank?
-          return render json: { success: false, message: '再設定トークンが無効です。再度メールを送信してください。' }, status: :unprocessable_entity
+          return render json: { success: false, message: '再設定トークンが無効です。再度メールを送信してください。' }, status: :unprocessable_content
         end
 
         digested_token = Devise.token_generator.digest(User, :reset_password_token, token)
@@ -18,7 +18,7 @@ module Api
         if user&.reset_password_period_valid?
           render json: { success: true }
         else
-          render json: { success: false, message: '再設定トークンが古いため無効です。再度メールを送信してください。' }, status: :unprocessable_entity
+          render json: { success: false, message: '再設定トークンが古いため無効です。再度メールを送信してください。' }, status: :unprocessable_content
         end
       end
 
@@ -28,7 +28,7 @@ module Api
         email = params[:email].to_s.strip.downcase
 
         if email.blank?
-          return render json: { success: false, message: 'メールアドレスを入力してください' }, status: :unprocessable_entity
+          return render json: { success: false, message: 'メールアドレスを入力してください' }, status: :unprocessable_content
         end
 
         user = User.find_by(email: email)
@@ -53,7 +53,7 @@ module Api
         if user.errors.empty?
           render json: { success: true, message: 'パスワードを再設定しました' }
         else
-          render json: { success: false, errors: user.errors.full_messages }, status: :unprocessable_entity
+          render json: { success: false, errors: user.errors.full_messages }, status: :unprocessable_content
         end
       end
     end

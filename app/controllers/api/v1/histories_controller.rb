@@ -23,7 +23,7 @@ module Api
         if @history.save
           render json: @history, status: :created
         else
-          render json: { errors: @history.errors.full_messages }, status: :unprocessable_entity
+          render json: { errors: @history.errors.full_messages }, status: :unprocessable_content
         end
       end
 
@@ -37,7 +37,7 @@ module Api
         histories_data = Array(params[:histories])
         
         if histories_data.empty?
-          return render_error("履歴データが指定されていません", :unprocessable_entity)
+          return render_error("履歴データが指定されていません", :unprocessable_content)
         end
 
         created_histories = []
