@@ -1,8 +1,7 @@
 # frozen_string_literal: true
-# encoding: utf-8
 
 class Work < ApplicationRecord
-    belongs_to :worksheet
+  belongs_to :worksheet
 
   has_many :member_options, dependent: :destroy
   has_many :members, through: :member_options

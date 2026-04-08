@@ -1,5 +1,6 @@
-# encoding: utf-8
-require "active_support/core_ext/integer/time"
+# frozen_string_literal: true
+
+require 'active_support/core_ext/integer/time'
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -17,10 +18,10 @@ Rails.application.configure do
 
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
-  if Rails.root.join("tmp/caching-dev.txt").exist?
+  if Rails.root.join('tmp/caching-dev.txt').exist?
     config.action_controller.perform_caching = true
     config.action_controller.cache_store = :memory_store
-    config.public_file_server.headers = { "Cache-Control" => "public, max-age=#{2.days.to_i}" }
+    config.public_file_server.headers = { 'Cache-Control' => "public, max-age=#{2.days.to_i}" }
   else
     config.action_controller.perform_caching = false
     config.cache_store = :null_store
@@ -39,8 +40,8 @@ Rails.application.configure do
     address: ENV.fetch('SMTP_ADDRESS', 'smtp.gmail.com'),
     port: ENV.fetch('SMTP_PORT', 587).to_i,
     domain: ENV.fetch('SMTP_DOMAIN', 'gmail.com'),
-    user_name: ENV['SMTP_USER_NAME'],
-    password: ENV['SMTP_PASSWORD'],
+    user_name: ENV.fetch('SMTP_USER_NAME', nil),
+    password: ENV.fetch('SMTP_PASSWORD', nil),
     authentication: ENV.fetch('SMTP_AUTHENTICATION', 'plain').to_sym,
     enable_starttls_auto: ENV.fetch('SMTP_ENABLE_STARTTLS_AUTO', 'true') == 'true'
   }

@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# encoding: utf-8
 
 module Api
   module V1
@@ -9,7 +8,7 @@ module Api
         if @shuffle_option
           render json: @shuffle_option
         else
-          render json: { error: "No shuffle option found" }, status: :not_found
+          render json: { error: 'No shuffle option found' }, status: :not_found
         end
       end
 

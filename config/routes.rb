@@ -1,10 +1,11 @@
-# encoding: utf-8
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   devise_for :users,
              controllers: {
                omniauth_callbacks: 'users/omniauth_callbacks'
              },
-             skip: [:sessions, :registrations, :passwords]
+             skip: %i[sessions registrations passwords]
 
   namespace :api do
     namespace :v1 do
@@ -33,28 +34,28 @@ Rails.application.routes.draw do
           post :shuffle_with_selected_members
           post :bulk_update
         end
-        resources :off_work_dates, only: [:index, :create, :destroy]
+        resources :off_work_dates, only: %i[index create destroy]
       end
 
       # History
-      resources :histories, only: [:index, :create, :destroy] do
+      resources :histories, only: %i[index create destroy] do
         collection do
           post :bulk_create
         end
       end
 
       # Shuffle options
-      resources :shuffle_options, only: [:show, :update]
+      resources :shuffle_options, only: %i[show update]
 
       # Reset dates
-      resources :reset_dates, only: [:index, :update] do
+      resources :reset_dates, only: %i[index update] do
         collection do
           post :bulk_update
         end
       end
 
       # Member options
-      resources :member_options, only: [:index, :create, :destroy] do
+      resources :member_options, only: %i[index create destroy] do
         collection do
           post :update_selected
         end
@@ -66,6 +67,6 @@ Rails.application.routes.draw do
   end
 
   # React App - Serve index.html for all other routes
-  root "pages#index"
-  match "*path", to: "pages#index", via: :all
+  root 'pages#index'
+  match '*path', to: 'pages#index', via: :all
 end

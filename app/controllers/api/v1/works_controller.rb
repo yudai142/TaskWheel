@@ -1,18 +1,17 @@
 # frozen_string_literal: true
-# encoding: utf-8
 
 module Api
   module V1
     class WorksController < BaseController
-      before_action :set_work, only: [:show, :update, :destroy]
+      before_action :set_work, only: %i[show update destroy]
 
       def index
         @works = current_worksheet.works.includes(:members, :off_works)
-        render json: @works, include: [:members, :off_works]
+        render json: @works, include: %i[members off_works]
       end
 
       def show
-        render json: @work, include: [:members, :off_works]
+        render json: @work, include: %i[members off_works]
       end
 
       def create
@@ -40,9 +39,7 @@ module Api
           participant_member_ids: params[:participant_member_ids]
         )
 
-        if work_id.zero?
-          return shuffle_for_date(allocator)
-        end
+        return shuffle_for_date(allocator) if work_id.zero?
 
         shuffle_single_work(work_id, date, allocator)
       end
@@ -111,7 +108,7 @@ module Api
         grouped = histories.group_by(&:member_id)
 
         # 同じメンバーが複数回割り当てられている場合、最初の1つ以外を削除
-        grouped.each do |member_id, records|
+        grouped.each_value do |records|
           if records.length > 1
             # 最新の割り当てを保持し、それ以前のものを削除
             records.sort_by(&:id).slice(1..-1).each(&:destroy)
@@ -123,7 +120,7 @@ module Api
         if params[:year] && params[:month] && params[:day]
           Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i)
         else
-          Date.today
+          Time.zone.today
         end
       end
 
@@ -139,9 +136,7 @@ module Api
         work = current_worksheet.works.find(work_id)
         selected_member = allocator.shuffle_single_work(work)
 
-        if selected_member.nil?
-          return render_error("割り当て可能なメンバーがいません", :unprocessable_content)
-        end
+        return render_error('割り当て可能なメンバーがいません', :unprocessable_content) if selected_member.nil?
 
         remove_duplicate_assignments(date)
 
@@ -151,14 +146,10 @@ module Api
       def shuffle_for_date(allocator)
         worksheet_member_ids = current_worksheet.members.pluck(:id)
         histories = History.where(date: extract_target_date, member_id: worksheet_member_ids).includes(:member).to_a
-        if histories.empty?
-          return render_error("参加メンバーがいません", :unprocessable_content)
-        end
+        return render_error('参加メンバーがいません', :unprocessable_content) if histories.empty?
 
         works = load_shufflable_works(extract_target_date)
-        if works.empty?
-          return render_error("シャッフル対象の当番がありません", :unprocessable_content)
-        end
+        return render_error('シャッフル対象の当番がありません', :unprocessable_content) if works.empty?
 
         render json: allocator.shuffle_for_date
       end
@@ -167,7 +158,6 @@ module Api
         off_work_ids = OffWork.where(date: date).pluck(:work_id)
         current_worksheet.works.active.where.not(id: off_work_ids)
       end
-
     end
   end
 end

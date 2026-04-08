@@ -1,7 +1,8 @@
-# encoding: utf-8
-require_relative "boot"
+# frozen_string_literal: true
 
-require "rails/all"
+require_relative 'boot'
+
+require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -15,11 +16,13 @@ module TaskWheel
     config.api_only = false
 
     # CORS設定
-    config.middleware.use Rack::Cors do
-      allow do
-        origins "localhost", "127.0.0.1", "0.0.0.0"
-        resource "*", headers: :any, methods: [:get, :post, :put, :patch, :delete, :options]
+    if Rails.env.development?
+      config.middleware.use Rack::Cors do
+        allow do
+          origins 'localhost', '127.0.0.1', '0.0.0.0'
+          resource '*', headers: :any, methods: %i[get post put patch delete options]
+        end
       end
-    end if Rails.env.development?
+    end
   end
 end

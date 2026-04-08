@@ -22,7 +22,7 @@ class FairnessScoreCalculator
   end
 
   def eligible?(member_id:, work_id:)
-    !@recent_member_works.fetch(member_id, []).include?(work_id)
+    @recent_member_works.fetch(member_id, []).exclude?(work_id)
   end
 
   def score(member_id:, work_id:, same_day_assignments: 0, allow_recent_override: false)

@@ -1,5 +1,6 @@
-# encoding: utf-8
-require "active_support/core_ext/integer/time"
+# frozen_string_literal: true
+
+require 'active_support/core_ext/integer/time'
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -45,7 +46,7 @@ Rails.application.configure do
   config.log_level = :info
 
   # Prepend all log lines with the following tags.
-  config.log_tags = [ :request_id ]
+  config.log_tags = [:request_id]
 
   # Use a different cache store in production.
   config.cache_store = :memory_store, { size: 64.megabytes }
@@ -56,7 +57,7 @@ Rails.application.configure do
 
   # SQL Logging for performance monitoring
   config.log_tags = [:request_id]
-  ActiveRecord::Base.logger = ActiveSupport::Logger.new("log/sql.log")
+  ActiveRecord::Base.logger = ActiveSupport::Logger.new('log/sql.log')
   ActiveRecord::Base.logger.level = Logger::INFO
 
   config.action_mailer.raise_delivery_errors = false

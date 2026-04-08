@@ -1,10 +1,8 @@
 # frozen_string_literal: true
-# encoding: utf-8
 
 class ApplicationController < ActionController::Base
   include ActionController::MimeResponds
-  
-  
+
   # Devise用: OmniAuthコールバックにはCSRFチェック不要
   protect_from_forgery with: :exception
   skip_before_action :verify_authenticity_token, if: :json_request?

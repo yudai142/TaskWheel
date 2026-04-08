@@ -4,7 +4,6 @@ class FairShuffleAllocator
   UNASSIGNED_COST = 10_000_000_000
   Slot = Struct.new(:work_id, :slot_index)
 
-
   def initialize(date:, worksheet: nil, participant_member_ids: [], allowed_work_ids: [])
     @date = date
     @worksheet = worksheet
@@ -130,17 +129,17 @@ class FairShuffleAllocator
         end
       end
     else
-      latest_reset_date = ShuffleOption.where('reset_date <= ?', @date).order(reset_date: :desc).limit(1).pluck(:reset_date).first
+      latest_reset_date = ShuffleOption.where(reset_date: ..@date).order(reset_date: :desc).limit(1).pick(:reset_date)
       start_date = latest_reset_date if latest_reset_date.present?
     end
 
     History.where(date: start_date..@date)
-      .where.not(work_id: nil)
-      .distinct
-      .pluck(:member_id, :work_id)
-      .each_with_object(Hash.new { |hash, key| hash[key] = [] }) do |(member_id, work_id), recent_works|
-        recent_works[member_id] << work_id unless recent_works[member_id].include?(work_id)
-      end
+           .where.not(work_id: nil)
+           .distinct
+           .pluck(:member_id, :work_id)
+           .each_with_object(Hash.new { |hash, key| hash[key] = [] }) do |(member_id, work_id), recent_works|
+             recent_works[member_id] << work_id unless recent_works[member_id].include?(work_id)
+           end
   end
 
   def load_member_option_rules(work_ids)
@@ -198,8 +197,12 @@ class FairShuffleAllocator
     assignment_edges = {}
 
     candidate_scores_by_history = histories.index_with do |history|
-      scores = build_candidate_scores_for_history(history, work_slots, option_rules: option_rules, allow_recent_override: false)
-      scores = build_candidate_scores_for_history(history, work_slots, option_rules: option_rules, allow_recent_override: true) if scores.empty?
+      scores = build_candidate_scores_for_history(history, work_slots, option_rules: option_rules,
+                                                                       allow_recent_override: false)
+      if scores.empty?
+        scores = build_candidate_scores_for_history(history, work_slots, option_rules: option_rules,
+                                                                         allow_recent_override: true)
+      end
       scores
     end
 
@@ -229,7 +232,7 @@ class FairShuffleAllocator
 
     histories.each_with_object({}) do |history, result|
       assigned_slot_index = work_slots.each_index.find do |slot_index|
-        assignment_edges[[history.id, slot_index]]&.capacity == 0
+        assignment_edges[[history.id, slot_index]]&.capacity&.zero?
       end
 
       result[history.id] = assigned_slot_index.nil? ? nil : work_slots[assigned_slot_index].work_id
@@ -325,7 +328,7 @@ class FairShuffleAllocator
   def build_candidate_scores_for_history(history, work_slots, option_rules:, allow_recent_override:)
     excluded_work_ids = option_rules[:excluded_by_member][history.member_id]
 
-    work_slots.each_with_index.each_with_object({}) do |(slot, slot_index), scores|
+    work_slots.each_with_index.with_object({}) do |(slot, slot_index), scores|
       next if excluded_work_ids.include?(slot.work_id)
 
       score = @score_calculator.score(

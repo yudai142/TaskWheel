@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Api
   module V1
     class MemberOptionsController < BaseController
@@ -10,9 +12,9 @@ module Api
         return render_error('メンバーが見つかりません', :not_found) unless member
 
         member_options = MemberOption
-          .where(member_id: member.id, work_id: current_worksheet.works.select(:id))
-          .includes(:work)
-          .order(:id)
+                         .where(member_id: member.id, work_id: current_worksheet.works.select(:id))
+                         .includes(:work)
+                         .order(:id)
         render json: member_options.map { |option| serialize_member_option(option) }
       end
 
@@ -48,7 +50,7 @@ module Api
         # current_worksheetに属するMemberのOptionに限定
         worksheet_member_ids = current_worksheet.members.pluck(:id)
         @member_option = MemberOption.joins(:member).where(id: params[:id], member_id: worksheet_member_ids).first
-        render_not_found(ActiveRecord::RecordNotFound.new("MemberOption not found")) unless @member_option
+        render_not_found(ActiveRecord::RecordNotFound.new('MemberOption not found')) unless @member_option
       end
 
       def member_option_params

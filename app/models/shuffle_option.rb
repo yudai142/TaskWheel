@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# encoding: utf-8
 
 class ShuffleOption < ApplicationRecord
   validates :reset_date, presence: true, uniqueness: true

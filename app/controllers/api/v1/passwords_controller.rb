@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# encoding: utf-8
 
 module Api
   module V1
@@ -9,7 +8,8 @@ module Api
       def validate_token
         token = params[:token].to_s
         if token.blank?
-          return render json: { success: false, message: '再設定トークンが無効です。再度メールを送信してください。' }, status: :unprocessable_content
+          return render json: { success: false, message: '再設定トークンが無効です。再度メールを送信してください。' },
+                        status: :unprocessable_content
         end
 
         digested_token = Devise.token_generator.digest(User, :reset_password_token, token)
@@ -32,9 +32,7 @@ module Api
         end
 
         user = User.find_by(email: email)
-        unless user
-          return render json: { success: false, message: '登録済みのメールアドレスが見つかりません' }, status: :not_found
-        end
+        return render json: { success: false, message: '登録済みのメールアドレスが見つかりません' }, status: :not_found unless user
 
         user.send_reset_password_instructions
 

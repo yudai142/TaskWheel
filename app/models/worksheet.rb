@@ -1,10 +1,9 @@
 # frozen_string_literal: true
-# encoding: utf-8
 
 class Worksheet < ApplicationRecord
-    belongs_to :user
-    has_many :members, dependent: :destroy
-    has_many :works, dependent: :destroy
+  belongs_to :user
+  has_many :members, dependent: :destroy
+  has_many :works, dependent: :destroy
 
   before_validation :assign_test_fallback_user, on: :create
 

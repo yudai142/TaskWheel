@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# encoding: utf-8
 
 module Api
   module V1
@@ -8,14 +7,14 @@ module Api
         worksheet_member_ids = current_worksheet.members.pluck(:id)
 
         @histories = if params[:year] && params[:month] && params[:day]
-          date = Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i)
-          History.where(member_id: worksheet_member_ids).by_date(date).recent
-        elsif params[:year] && params[:month]
-          History.where(member_id: worksheet_member_ids).by_month(params[:year], params[:month]).recent
-        else
-          History.where(member_id: worksheet_member_ids).recent
-        end
-        render json: @histories, include: [:work, :member]
+                       date = Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i)
+                       History.where(member_id: worksheet_member_ids).by_date(date).recent
+                     elsif params[:year] && params[:month]
+                       History.where(member_id: worksheet_member_ids).by_month(params[:year], params[:month]).recent
+                     else
+                       History.where(member_id: worksheet_member_ids).recent
+                     end
+        render json: @histories, include: %i[work member]
       end
 
       def create
@@ -35,10 +34,8 @@ module Api
 
       def bulk_create
         histories_data = Array(params[:histories])
-        
-        if histories_data.empty?
-          return render_error("履歴データが指定されていません", :unprocessable_content)
-        end
+
+        return render_error('履歴データが指定されていません', :unprocessable_content) if histories_data.empty?
 
         created_histories = []
         History.transaction do
@@ -50,7 +47,7 @@ module Api
             )
           end
         end
-        
+
         render json: { success: true, histories: created_histories }, status: :ok
       end
 

@@ -311,10 +311,10 @@ Devise.setup do |config|
   # ==> OmniAuth設定
   # Google OAuth2認証（環境変数から読み込み）
   config.omniauth :google_oauth2,
-                  ENV.fetch("GOOGLE_CLIENT_ID", "dummy_client_id"),
-                  ENV.fetch("GOOGLE_CLIENT_SECRET", "dummy_client_secret"),
-                  scope: "email, profile",
-                  prompt: "select_account"
+                  ENV.fetch('GOOGLE_CLIENT_ID', 'dummy_client_id'),
+                  ENV.fetch('GOOGLE_CLIENT_SECRET', 'dummy_client_secret'),
+                  scope: 'email, profile',
+                  prompt: 'select_account'
 
   # ==> SPA/API設定
   # 未認証時にリダイレクトせずJSONエラーを返す

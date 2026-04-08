@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# encoding: utf-8
 
 module Api
   module V1
@@ -16,7 +15,9 @@ module Api
 
       # セッションから現在のユーザーを取得
       def current_user
-        @current_user ||= User.find_by(id: session[:user_id])
+        return @current_user if defined?(@current_user)
+
+        @current_user = User.find_by(id: session[:user_id])
       end
 
       # 現在選択中のワークシートを取得（セッション or 最初のワークシート）
@@ -42,15 +43,16 @@ module Api
           end
         end
 
-        render json: { error: "認証が必要です", authenticated: false }, status: :unauthorized
+        render json: { error: '認証が必要です', authenticated: false }, status: :unauthorized
       end
 
       def render_not_found(e)
-        render json: { error: "Record not found", message: e.message }, status: :not_found
+        render json: { error: 'Record not found', message: e.message }, status: :not_found
       end
 
       def render_unprocessable_entity(e)
-        render json: { error: "Validation failed", messages: e.record.errors.full_messages }, status: :unprocessable_content
+        render json: { error: 'Validation failed', messages: e.record.errors.full_messages },
+               status: :unprocessable_content
       end
 
       def render_error(message, status = :bad_request)

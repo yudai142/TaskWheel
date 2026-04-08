@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# encoding: utf-8
 
 # セッションを使ったログイン/ログアウト/現在のユーザー情報APIコントローラー
 module Api
@@ -36,7 +35,7 @@ module Api
             current_worksheet: worksheet ? serialize_worksheet(worksheet) : nil
           }
         else
-          render json: { error: "メールアドレスまたはパスワードが正しくありません" }, status: :unauthorized
+          render json: { error: 'メールアドレスまたはパスワードが正しくありません' }, status: :unauthorized
         end
       end
 
@@ -60,7 +59,7 @@ module Api
         if user.save
           # デフォルトワークシートを作成
           worksheet = user.worksheets.create!(
-            name: "マイワークシート",
+            name: 'マイワークシート',
             interval: 1,
             week_use: false,
             week: 0
@@ -81,10 +80,10 @@ module Api
       # 使用するワークシートを切り替える
       def switch_worksheet
         user = User.find_by(id: session[:user_id])
-        return render json: { error: "認証が必要です" }, status: :unauthorized unless user
+        return render json: { error: '認証が必要です' }, status: :unauthorized unless user
 
         worksheet = user.worksheets.find_by(id: params[:worksheet_id])
-        return render json: { error: "ワークシートが見つかりません" }, status: :not_found unless worksheet
+        return render json: { error: 'ワークシートが見つかりません' }, status: :not_found unless worksheet
 
         session[:current_worksheet_id] = worksheet.id
         render json: { current_worksheet: serialize_worksheet(worksheet) }

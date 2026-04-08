@@ -1,19 +1,21 @@
+# frozen_string_literal: true
+
 # Puma Performance Configuration
 # Production optimized settings
 
-if ENV["RAILS_ENV"] == "production"
+if ENV['RAILS_ENV'] == 'production'
   # ワーカープロセス数（CPU コア数）
-  workers ENV.fetch("WEB_CONCURRENCY") { 4 }
+  workers ENV.fetch('WEB_CONCURRENCY', 4)
 
   # スレッド数
-  threads_count = ENV.fetch("RAILS_MAX_THREADS") { 5 }
+  threads_count = ENV.fetch('RAILS_MAX_THREADS', 5)
   threads threads_count, threads_count
 
   # ポート
-  port ENV.fetch("PORT") { 3000 }
+  port ENV.fetch('PORT', 3000)
 
   # API サーバーモード
-  app_env = ENV.fetch("RACK_ENV") { "production" }
+  app_env = ENV.fetch('RACK_ENV', 'production')
   environment app_env
 
   # プリロード アプリケーション
@@ -33,8 +35,8 @@ if ENV["RAILS_ENV"] == "production"
   end
 else
   # Development
-  threads_count = ENV.fetch("RAILS_MAX_THREADS") { 5 }
+  threads_count = ENV.fetch('RAILS_MAX_THREADS', 5)
   threads threads_count, threads_count
-  port ENV.fetch("PORT") { 3000 }
-  environment "development"
+  port ENV.fetch('PORT', 3000)
+  environment 'development'
 end

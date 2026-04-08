@@ -1,10 +1,9 @@
 # frozen_string_literal: true
-# encoding: utf-8
 
 module Api
   module V1
     class MembersController < BaseController
-      before_action :set_member, only: [:show, :update, :destroy]
+      before_action :set_member, only: %i[show update destroy]
 
       def index
         scope = current_worksheet.members.includes(member_options: :work).order(:id)
