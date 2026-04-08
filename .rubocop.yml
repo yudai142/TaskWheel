@@ -1,0 +1,112 @@
+plugins:
+  - rubocop-rails
+  - rubocop-rspec
+  - rubocop-factory_bot
+
+AllCops:
+  NewCops: enable
+  SuggestExtensions: false
+  TargetRubyVersion: 3.2
+  Exclude:
+    - 'bin/**/*'
+    - 'db/schema.rb'
+    - 'db/seeds.rb'
+    - 'db/migrate/**/*'
+    - 'node_modules/**/*'
+    - 'vendor/**/*'
+
+Style/Documentation:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Exclude:
+    - 'spec/**/*.rb'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*.rb'
+    - 'config/routes.rb'
+    - 'config/environments/development.rb'
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+Naming/MethodParameterName:
+  AllowedNames:
+    - e
+    - to
+
+Naming/PredicatePrefix:
+  Enabled: false
+
+Style/OptionalBooleanParameter:
+  Enabled: false
+
+Lint/UselessAssignment:
+  Exclude:
+    - 'spec/**/*.rb'
+
+Layout/LineLength:
+  Max: 120
+  Exclude:
+    - 'spec/**/*.rb'
+    - 'config/initializers/devise.rb'
+
+Rails/UniqueValidationWithoutIndex:
+  Enabled: false
+
+Rails/I18nLocaleTexts:
+  Enabled: false
+
+Rails/SkipsModelValidations:
+  Enabled: false
+
+Rails/Exit:
+  Exclude:
+    - 'spec/rails_helper.rb'
+
+Style/MixinUsage:
+  Exclude:
+    - 'spec/rails_helper.rb'
+
+FactoryBot/FactoryAssociationWithStrategy:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Enabled: false
+
+RSpec/DescribeClass:
+  Enabled: false
+
+RSpec/ContextWording:
+  Enabled: false
+
+RSpec/LetSetup:
+  Enabled: false
+
+RSpec/IteratedExpectation:
+  Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
