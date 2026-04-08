@@ -9,6 +9,7 @@ import History from './pages/History';
 import Settings from './pages/Settings';
 import LandingPage from './auth/LandingPage';
 import AuthModal from './auth/AuthModal';
+import PasswordResetPage from './auth/PasswordResetPage';
 import type { AuthResponse, AuthUser, WorksheetSummary } from '../types';
 
 export default function App(): JSX.Element {
@@ -73,20 +74,30 @@ export default function App(): JSX.Element {
 
   if (!authenticated) {
     return (
-      <>
-        <LandingPage
-          onOpenLogin={() => setAuthModalMode('login')}
-          onOpenRegister={() => setAuthModalMode('register')}
-        />
-        {authModalMode && (
-          <AuthModal
-            mode={authModalMode}
-            onClose={() => setAuthModalMode(null)}
-            onLogin={login}
-            onRegister={register}
+      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <Routes>
+          <Route path="/password-reset" element={<PasswordResetPage />} />
+          <Route
+            path="*"
+            element={
+              <>
+                <LandingPage
+                  onOpenLogin={() => setAuthModalMode('login')}
+                  onOpenRegister={() => setAuthModalMode('register')}
+                />
+                {authModalMode && (
+                  <AuthModal
+                    mode={authModalMode}
+                    onClose={() => setAuthModalMode(null)}
+                    onLogin={login}
+                    onRegister={register}
+                  />
+                )}
+              </>
+            }
           />
-        )}
-      </>
+        </Routes>
+      </Router>
     );
   }
 
@@ -98,6 +109,7 @@ export default function App(): JSX.Element {
         onLogout={logout}
       >
         <Routes>
+          <Route path="/password-reset" element={<PasswordResetPage />} />
           <Route path="/" element={<Dashboard />} />
           <Route path="/members" element={<Members />} />
           <Route path="/works" element={<Works />} />

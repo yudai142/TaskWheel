@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
-type Mode = 'login' | 'register';
+type Mode = 'login' | 'register' | 'forgot';
 
 interface AuthModalProps {
   mode: Mode;
@@ -20,27 +21,39 @@ export default function AuthModal({
   onLogin,
   onRegister,
 }: AuthModalProps): JSX.Element {
+  const [currentMode, setCurrentMode] = useState<Mode>(mode);
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [passwordConfirmation, setPasswordConfirmation] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const [message, setMessage] = useState<string>('');
 
-  const title = mode === 'login' ? 'ログイン' : '新規登録';
+  const title =
+    currentMode === 'login'
+      ? 'ログイン'
+      : currentMode === 'register'
+        ? '新規登録'
+        : 'パスワード再設定';
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     setLoading(true);
     setError('');
+    setMessage('');
 
     try {
-      if (mode === 'login') {
+      if (currentMode === 'login') {
         await onLogin(email, password);
-      } else {
+        onClose();
+      } else if (currentMode === 'register') {
         await onRegister(name, email, password, passwordConfirmation);
+        onClose();
+      } else {
+        await axios.post('/api/v1/auth/password/forgot', { email });
+        setMessage('再設定メールを送信しました。メール内のリンクから再設定してください。');
       }
-      onClose();
     } catch (e) {
       setError(e instanceof Error ? e.message : '認証に失敗しました');
     } finally {
@@ -63,9 +76,12 @@ export default function AuthModal({
         </div>
 
         {error && <p className="mb-3 rounded bg-red-50 p-2 text-sm text-red-700">{error}</p>}
+        {message && (
+          <p className="mb-3 rounded bg-emerald-50 p-2 text-sm text-emerald-700">{message}</p>
+        )}
 
         <form className="space-y-3" onSubmit={handleSubmit}>
-          {mode === 'register' && (
+          {currentMode === 'register' && (
             <div>
               <label htmlFor="auth-name" className="mb-1 block text-sm text-gray-700">
                 名前
@@ -104,12 +120,13 @@ export default function AuthModal({
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
+              required={currentMode !== 'forgot'}
+              disabled={currentMode === 'forgot'}
               className="w-full rounded border border-gray-300 px-3 py-2"
             />
           </div>
 
-          {mode === 'register' && (
+          {currentMode === 'register' && (
             <div>
               <label
                 htmlFor="auth-password-confirmation"
@@ -133,8 +150,38 @@ export default function AuthModal({
             disabled={loading}
             className="w-full rounded bg-slate-800 px-4 py-2 font-semibold text-white hover:bg-slate-700 disabled:opacity-60"
           >
-            {loading ? '処理中...' : title}
+            {loading ? '処理中...' : currentMode === 'forgot' ? '再設定メールを送信' : title}
           </button>
+
+          <div className="flex items-center justify-between pt-1 text-sm">
+            {currentMode !== 'forgot' ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setCurrentMode('forgot');
+                  setError('');
+                  setMessage('');
+                  setPassword('');
+                  setPasswordConfirmation('');
+                }}
+                className="text-slate-600 underline hover:text-slate-900"
+              >
+                パスワードを忘れた場合
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  setCurrentMode('login');
+                  setError('');
+                  setMessage('');
+                }}
+                className="text-slate-600 underline hover:text-slate-900"
+              >
+                ログインに戻る
+              </button>
+            )}
+          </div>
         </form>
       </div>
     </div>

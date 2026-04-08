@@ -3,7 +3,10 @@ import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import axios from 'axios';
 import AuthModal from '../../../components/auth/AuthModal';
+
+vi.mock('axios');
 
 describe('AuthModal', () => {
   it('ログインモードでonLoginが呼ばれる', async () => {
@@ -54,6 +57,32 @@ describe('AuthModal', () => {
         'password123',
         'password123'
       );
+    });
+  });
+
+  it('パスワードを忘れた場合から再設定メール送信ができる', async () => {
+    const user = userEvent.setup();
+    (axios.post as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({
+      data: { success: true },
+    });
+
+    render(
+      <AuthModal
+        mode="login"
+        onClose={vi.fn()}
+        onLogin={vi.fn().mockResolvedValue(undefined)}
+        onRegister={vi.fn().mockResolvedValue(undefined)}
+      />
+    );
+
+    await user.click(screen.getByRole('button', { name: 'パスワードを忘れた場合' }));
+    await user.type(screen.getByLabelText('メールアドレス'), 'forgot@example.com');
+    await user.click(screen.getByRole('button', { name: '再設定メールを送信' }));
+
+    await waitFor(() => {
+      expect(axios.post).toHaveBeenCalledWith('/api/v1/auth/password/forgot', {
+        email: 'forgot@example.com',
+      });
     });
   });
 });

@@ -87,4 +87,69 @@ RSpec.describe 'API V1 Authentication (Issue #23)', type: :request do
       expect(response.parsed_body['authenticated']).to eq(false)
     end
   end
+
+  describe 'POST /api/v1/auth/password/forgot' do
+    let!(:user) { create(:user, email: 'forgot@example.com') }
+
+    before do
+      ActionMailer::Base.deliveries.clear
+    end
+
+    it '存在するメールアドレスに再設定メールを送信する' do
+      post '/api/v1/auth/password/forgot', params: { email: 'forgot@example.com' }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body['success']).to eq(true)
+      expect(ActionMailer::Base.deliveries.size).to eq(1)
+      expect(ActionMailer::Base.deliveries.last.to).to include('forgot@example.com')
+      expect(ActionMailer::Base.deliveries.last.body.encoded).to include('/password-reset?token=')
+    end
+
+    it '存在しないメールアドレスでも成功レスポンスを返す' do
+      post '/api/v1/auth/password/forgot', params: { email: 'unknown@example.com' }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body['success']).to eq(true)
+      expect(ActionMailer::Base.deliveries.size).to eq(0)
+    end
+  end
+
+  describe 'POST /api/v1/auth/password/reset' do
+    let!(:user) do
+      create(:user, email: 'reset@example.com', password: 'oldpassword123', password_confirmation: 'oldpassword123')
+    end
+
+    it '有効なトークンでパスワードを再設定できる' do
+      raw_token = user.send_reset_password_instructions
+
+      post '/api/v1/auth/password/reset', params: {
+        token: raw_token,
+        password: 'newpassword123',
+        password_confirmation: 'newpassword123'
+      }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body['success']).to eq(true)
+
+      post '/api/v1/auth/login', params: {
+        email: 'reset@example.com',
+        password: 'newpassword123'
+      }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body['authenticated']).to eq(true)
+    end
+
+    it '無効なトークンの場合はエラーを返す' do
+      post '/api/v1/auth/password/reset', params: {
+        token: 'invalid-token',
+        password: 'newpassword123',
+        password_confirmation: 'newpassword123'
+      }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.parsed_body['success']).to eq(false)
+      expect(response.parsed_body['errors']).to be_present
+    end
+  end
 end
