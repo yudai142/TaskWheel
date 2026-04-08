@@ -3,7 +3,8 @@
 # See http://rspec.info/documentation/
 
 # Ensure test environment is set before anything else
-ENV['RAILS_ENV'] ||= 'test'
+# Docker環境でdevelopmentが注入されるケースがあるため、RSpecでは常にtestを強制する
+ENV['RAILS_ENV'] = 'test'
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

@@ -18,7 +18,7 @@ module Api
       end
 
       def destroy
-        @off_work = OffWork.find(params[:id])
+        @off_work = @work.off_works.find(params[:id])
         @off_work.destroy!
         head :no_content
       end
@@ -26,7 +26,7 @@ module Api
       private
 
       def set_work
-        @work = Work.find(params[:work_id])
+        @work = current_worksheet.works.find(params[:work_id])
       end
 
       def off_work_params

@@ -16,6 +16,11 @@ gem "image_processing", "~> 1.2"
 gem "aws-sdk-s3", require: false
 gem "rack-cors"
 
+# 認証
+gem "devise"
+gem "omniauth-google-oauth2"
+gem "omniauth-rails_csrf_protection"
+
 
 # API
 gem "active_model_serializers"

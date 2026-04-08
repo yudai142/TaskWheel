@@ -13,26 +13,31 @@ Rails + React + PostgreSQL + Docker + Tailwind CSSで構築された、掃除当
 ## 機能
 
 ### メンバー管理
+
 - メンバー情報の登録・編集・削除
 - 苗字、名前、かな名の管理
 - アーカイブ機能
 
 ### 当番管理
+
 - 当番（掃除タスク）の登録・編集・削除
 - 複数割り当て機能
 - メンバーごとの担当当番設定
 
 ### 自動シャッフル
+
 - ワンクリックで当番を自動割り当て
 - 週間モード/日数間隔モードの切り替え
 - リセット日付の自動管理
 
 ### 履歴管理
+
 - 当番割り当ての履歴を記録
 - 月ごとの履歴表示
 - 履歴の検索・削除
 
 ### 設定
+
 - リセット日付の設定
 - シャッフルモードの設定
 - データのエクスポート/インポート
@@ -40,6 +45,7 @@ Rails + React + PostgreSQL + Docker + Tailwind CSSで構築された、掃除当
 ## セットアップ
 
 ### 前提条件
+
 - Docker & Docker Compose
 - (オプション) Ruby 3.2+, Node.js 18+
 
@@ -55,6 +61,19 @@ cd TaskWheel
 
 ```bash
 cp .env.example .env
+```
+
+Googleログインを利用する場合は、`.env` に以下を設定してください。
+
+```bash
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+```
+
+Google Cloud Console 側では OAuth クライアント（Webアプリ）を作成し、承認済みリダイレクト URI に以下を登録してください。
+
+```text
+http://localhost:3000/users/auth/google_oauth2/callback
 ```
 
 3. **Dockerコンテナの起動**
@@ -73,6 +92,24 @@ docker-compose exec web rails db:migrate
 5. **アプリケーションにアクセス**
 
 ブラウザで `http://localhost:3000` を開く
+
+6. **再設定メール確認（Gmail SMTP）**
+
+`.env` に Gmail SMTP 設定を追加してください。
+
+```bash
+SMTP_ADDRESS=smtp.gmail.com
+SMTP_PORT=587
+SMTP_DOMAIN=gmail.com
+SMTP_USER_NAME=your_gmail_address@gmail.com
+SMTP_PASSWORD=your_google_app_password
+SMTP_AUTHENTICATION=plain
+SMTP_ENABLE_STARTTLS_AUTO=true
+```
+
+`SMTP_PASSWORD` には Google アカウントの通常パスワードではなく、2段階認証を有効化した上で発行した **アプリパスワード** を設定してください。
+
+設定後に `docker compose up -d --build` で再起動し、「パスワードを忘れた場合」から送信したメールが Gmail 受信箱に届くことを確認してください。
 
 ## 開発
 
@@ -105,6 +142,7 @@ npm run dev
 ### API エンドポイント
 
 #### Members
+
 ```
 GET    /api/v1/members           # 全メンバー取得
 POST   /api/v1/members           # メンバー作成
@@ -115,6 +153,7 @@ POST   /api/v1/members/bulk_update # 複数メンバー更新
 ```
 
 #### Works
+
 ```
 GET    /api/v1/works             # 全当番取得
 POST   /api/v1/works             # 当番作成
@@ -125,6 +164,7 @@ POST   /api/v1/works/shuffle     # シャッフル実行
 ```
 
 #### Histories
+
 ```
 GET    /api/v1/histories         # 履歴一覧取得
 POST   /api/v1/histories         # 履歴作成
@@ -160,6 +200,7 @@ TaskWheel/
 ## データベーススキーマ
 
 ### Members テーブル
+
 - id (integer, PK)
 - family_name (string, max: 30)
 - given_name (string, max: 30)
@@ -167,6 +208,7 @@ TaskWheel/
 - archive (boolean, default: false)
 
 ### Works テーブル
+
 - id (integer, PK)
 - name (string)
 - multiple (integer)
@@ -174,27 +216,32 @@ TaskWheel/
 - is_above (boolean, default: true)
 
 ### Histories テーブル
+
 - id (integer, PK)
 - work_id (integer, FK)
 - member_id (integer, FK)
 - date (date)
 
 ### MemberOptions テーブル
+
 - id (integer, PK)
 - work_id (integer, FK)
 - member_id (integer, FK)
 - status (integer) # 0: 除外, 1: 対象
 
 ### OffWorks テーブル
+
 - id (integer, PK)
 - work_id (integer, FK)
 - date (date)
 
 ### ShuffleOptions テーブル
+
 - id (integer, PK)
 - reset_date (date)
 
 ### Worksheets テーブル
+
 - id (integer, PK)
 - interval (integer)
 - week_use (boolean, default: false)
@@ -203,6 +250,7 @@ TaskWheel/
 ## トラブルシューティング
 
 ### ポートが既に使用されている場合
+
 ```bash
 # ポート 3000 を使用しているプロセスを確認
 lsof -i :3000
@@ -212,6 +260,7 @@ lsof -i :3000
 ```
 
 ### データベース接続エラー
+
 ```bash
 # コンテナのログを確認
 docker-compose logs db
@@ -221,6 +270,7 @@ docker-compose restart db
 ```
 
 ### Node モジュールのエラー
+
 ```bash
 # モジュールを再インストール
 docker-compose exec web npm install

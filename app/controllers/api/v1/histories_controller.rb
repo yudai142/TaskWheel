@@ -5,13 +5,15 @@ module Api
   module V1
     class HistoriesController < BaseController
       def index
+        worksheet_member_ids = current_worksheet.members.pluck(:id)
+
         @histories = if params[:year] && params[:month] && params[:day]
           date = Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i)
-          History.by_date(date).recent
+          History.where(member_id: worksheet_member_ids).by_date(date).recent
         elsif params[:year] && params[:month]
-          History.by_month(params[:year], params[:month]).recent
+          History.where(member_id: worksheet_member_ids).by_month(params[:year], params[:month]).recent
         else
-          History.recent
+          History.where(member_id: worksheet_member_ids).recent
         end
         render json: @histories, include: [:work, :member]
       end
@@ -21,7 +23,7 @@ module Api
         if @history.save
           render json: @history, status: :created
         else
-          render json: { errors: @history.errors.full_messages }, status: :unprocessable_entity
+          render json: { errors: @history.errors.full_messages }, status: :unprocessable_content
         end
       end
 
@@ -35,7 +37,7 @@ module Api
         histories_data = Array(params[:histories])
         
         if histories_data.empty?
-          return render_error("履歴データが指定されていません", :unprocessable_entity)
+          return render_error("履歴データが指定されていません", :unprocessable_content)
         end
 
         created_histories = []

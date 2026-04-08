@@ -1,7 +1,11 @@
 FactoryBot.define do
   factory :history do
-    member { association :member }
-    work { association :work }
+    transient do
+      worksheet { create(:worksheet) }
+    end
+
+    member { association :member, worksheet: worksheet }
+    work { association :work, worksheet: worksheet }
     date { Date.current }
 
     trait :past do

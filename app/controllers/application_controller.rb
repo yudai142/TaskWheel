@@ -4,9 +4,11 @@
 class ApplicationController < ActionController::Base
   include ActionController::MimeResponds
   
-  # Skip CSRF for API endpoints
-  skip_before_action :verify_authenticity_token, if: :json_request?
   
+  # Devise用: OmniAuthコールバックにはCSRFチェック不要
+  protect_from_forgery with: :exception
+  skip_before_action :verify_authenticity_token, if: :json_request?
+
   before_action :set_default_response_format
 
   private

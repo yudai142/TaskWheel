@@ -59,7 +59,7 @@ RSpec.describe 'API V1: Member Management Modal (Issue #18)', type: :request do
         }
       }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(MemberOption.where(member_id: member.id, work_id: work_a.id).count).to eq(1)
       expect(MemberOption.find_by(member_id: member.id, work_id: work_a.id)&.status).to eq(0)
     end
@@ -75,7 +75,7 @@ RSpec.describe 'API V1: Member Management Modal (Issue #18)', type: :request do
         }
       }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(MemberOption.where(member_id: member.id, work_id: work_a.id).count).to eq(1)
       expect(MemberOption.find_by(member_id: member.id, work_id: work_a.id)&.status).to eq(0)
     end
@@ -91,7 +91,7 @@ RSpec.describe 'API V1: Member Management Modal (Issue #18)', type: :request do
         }
       }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(MemberOption.where(member_id: member.id, status: 0).count).to eq(1)
     end
   end

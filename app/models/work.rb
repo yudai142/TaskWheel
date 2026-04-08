@@ -2,12 +2,14 @@
 # encoding: utf-8
 
 class Work < ApplicationRecord
+    belongs_to :worksheet
+
   has_many :member_options, dependent: :destroy
   has_many :members, through: :member_options
   has_many :histories, dependent: :destroy
   has_many :off_works, dependent: :destroy
 
-  validates :name, presence: true, uniqueness: true
+  validates :name, presence: true, uniqueness: { scope: :worksheet_id }
 
   scope :active, -> { where(archive: false) }
   scope :archived, -> { where(archive: true) }

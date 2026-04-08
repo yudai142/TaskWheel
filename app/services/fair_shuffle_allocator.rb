@@ -4,8 +4,10 @@ class FairShuffleAllocator
   UNASSIGNED_COST = 10_000_000_000
   Slot = Struct.new(:work_id, :slot_index)
 
-  def initialize(date:, participant_member_ids: [], allowed_work_ids: [])
+
+  def initialize(date:, worksheet: nil, participant_member_ids: [], allowed_work_ids: [])
     @date = date
+    @worksheet = worksheet
     @participant_member_ids = Array(participant_member_ids).compact.map(&:to_i).uniq
     @allowed_work_ids = Array(allowed_work_ids).compact.map(&:to_i).uniq
     @recent_member_works = load_recent_member_works
@@ -14,7 +16,7 @@ class FairShuffleAllocator
 
   def shuffle_single_work(work)
     option_rules = load_member_option_rules([work.id])
-    candidate_members = Member.active
+    candidate_members = @worksheet ? @worksheet.members.active : Member.active
     candidate_members = candidate_members.where(id: @participant_member_ids) if @participant_member_ids.any?
 
     fixed_member_ids = option_rules[:fixed_by_work][work.id]
@@ -83,7 +85,7 @@ class FairShuffleAllocator
 
   def load_shufflable_works
     off_work_ids = OffWork.where(date: @date).pluck(:work_id)
-    works = Work.active.where.not(id: off_work_ids)
+    works = @worksheet ? @worksheet.works.active.where.not(id: off_work_ids) : Work.active.where.not(id: off_work_ids)
     works = works.where(id: @allowed_work_ids) if @allowed_work_ids.any?
     works.order(:id).to_a
   end
@@ -115,15 +117,14 @@ class FairShuffleAllocator
   end
 
   def load_recent_member_works
-    worksheet = Worksheet.current
-    return {} if worksheet.nil? || worksheet.interval.to_i <= 0
+    return {} if @worksheet.nil? || @worksheet.interval.to_i <= 0
 
-    start_date = @date - worksheet.interval.days
+    start_date = @date - @worksheet.interval.days
 
-    if worksheet.week_use
+    if @worksheet.week_use
       0.upto(6) do |days_back|
         check_date = @date - days_back.days
-        if check_date.wday == worksheet.week
+        if check_date.wday == @worksheet.week
           start_date = check_date
           break
         end

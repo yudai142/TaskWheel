@@ -176,7 +176,7 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
         post '/api/v1/histories/bulk_create', params: params
         
         # ステータスコード確認（422 または 404）
-        expect(response).to have_http_status(:unprocessable_entity).or have_http_status(:not_found)
+        expect(response).to have_http_status(:unprocessable_content).or have_http_status(:not_found)
         
         # エラーレスポンスが JSON 形式であることを確認
         expect(response.media_type).to eq('application/json')

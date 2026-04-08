@@ -1,7 +1,7 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 # and modified to work with Rails 7+
 require 'spec_helper'
-ENV['RAILS_ENV'] ||= 'test'
+ENV['RAILS_ENV'] = 'test'
 
 # Set test database URL to prevent remote database errors in DatabaseCleaner
 ENV['DATABASE_URL'] = ENV.fetch('DATABASE_URL_TEST', 'postgresql://postgres:password@localhost:5432/task_wheel_test')

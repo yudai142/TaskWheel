@@ -18,9 +18,17 @@ interface NavItem {
 
 interface LayoutProps {
   children: React.ReactNode;
+  currentUserName: string;
+  currentWorksheetName: string;
+  onLogout: () => Promise<void>;
 }
 
-export default function Layout({ children }: LayoutProps): JSX.Element {
+export default function Layout({
+  children,
+  currentUserName,
+  currentWorksheetName,
+  onLogout,
+}: LayoutProps): JSX.Element {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
 
   const navigation: NavItem[] = [
@@ -76,6 +84,18 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
           <div className="px-6 py-4 flex items-center justify-between">
             <h2 className="text-2xl font-bold text-gray-900">掃除当番管理</h2>
             <div className="flex items-center space-x-4">
+              <div className="text-right text-sm text-gray-600">
+                <p>{currentWorksheetName}</p>
+                <p className="text-xs text-gray-500">{currentUserName}</p>
+              </div>
+              <button
+                onClick={() => {
+                  void onLogout();
+                }}
+                className="rounded border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
+              >
+                ログアウト
+              </button>
               <button className="p-2 text-gray-500 hover:text-gray-700">
                 <span className="w-6 h-6">?</span>
               </button>
