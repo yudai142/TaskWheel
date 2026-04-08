@@ -10,17 +10,17 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
     context '当番一覧取得' do
       it 'すべての当番が返却される' do
         get '/api/v1/works'
-        
+
         expect(response).to have_http_status(:ok)
         expect(response.parsed_body.length).to eq(4)
       end
 
       it '当番のnameが包含されている' do
         get '/api/v1/works'
-        
+
         expect(response).to have_http_status(:ok)
         json_response = response.parsed_body
-        
+
         expect(json_response[0]).to have_key('name')
         expect(json_response[0]).to have_key('id')
       end
@@ -29,24 +29,24 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
         # テストセットアップ時に作成された works の数を記録
         get '/api/v1/works'
         initial_count = response.parsed_body.length
-        
+
         expect(response).to have_http_status(:ok)
         json_response = response.parsed_body
-        
+
         # let! で作成された当番数と一致することを確認
         expect(json_response.length).to eq(4)
-        
+
         # すべての返却された当番の archive フラグを確認
         json_response.each do |work|
           expect(work).to have_key('id')
           expect(work).to have_key('name')
           expect(work).to have_key('archive')
         end
-        
+
         # archive 属性の分布を確認
         active_count = json_response.count { |work| work['archive'] == false }
         archived_count = json_response.count { |work| work['archive'] == true }
-        
+
         # テストセットアップで作成された works はすべて archive: false
         expect(active_count).to eq(4)
         expect(archived_count).to eq(0)
@@ -58,17 +58,17 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
     context 'メンバー一覧取得' do
       it 'すべてのメンバーが返却される' do
         get '/api/v1/members'
-        
+
         expect(response).to have_http_status(:ok)
         expect(response.parsed_body.length).to eq(3)
       end
 
       it 'メンバーの属性が包含されている' do
         get '/api/v1/members'
-        
+
         expect(response).to have_http_status(:ok)
         json_response = response.parsed_body
-        
+
         expect(json_response[0]).to have_key('id')
         expect(json_response[0]).to have_key('given_name')
         expect(json_response[0]).to have_key('family_name')
@@ -77,22 +77,22 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
 
       it 'アーカイブメンバーはAPIレスポンスに含まれない（設計上、アクティブメンバーのみ返却）' do
         archived_member = create(:member, :archived)
-        
+
         get '/api/v1/members'
-        
+
         json_response = response.parsed_body
         archived_response = json_response.find { |m| m['id'] == archived_member.id }
-        
+
         # API は active メンバーのみを返すため、アーカイブメンバーは含まれない
         expect(archived_response).to be_nil
       end
 
       it 'アクティブメンバーはarchiveフラグがfalseで返却される' do
         get '/api/v1/members'
-        
+
         json_response = response.parsed_body
-        active_members = json_response.select { |m| !m['archive'] }
-        
+        active_members = json_response.reject { |m| m['archive'] }
+
         expect(active_members.length).to eq(3)
       end
     end
@@ -105,7 +105,7 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
     context '日付フィルタなし' do
       it 'すべての履歴が返却される' do
         get '/api/v1/histories'
-        
+
         expect(response).to have_http_status(:ok)
         expect(response.parsed_body.length).to eq(2)
       end
@@ -114,10 +114,10 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
     context '特定の日付で絞り込み' do
       it '本日の履歴のみが返却される' do
         get "/api/v1/histories?year=#{today.year}&month=#{today.month}&day=#{today.day}"
-        
+
         expect(response).to have_http_status(:ok)
         json_response = response.parsed_body
-        
+
         expect(json_response.length).to eq(1)
         expect(json_response[0]['member_id']).to eq(members[0].id)
         expect(json_response[0]['work_id']).to eq(works[0].id)
@@ -125,10 +125,10 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
 
       it '昨日の履歴のみが返却される' do
         get "/api/v1/histories?year=#{yesterday.year}&month=#{yesterday.month}&day=#{yesterday.day}"
-        
+
         expect(response).to have_http_status(:ok)
         json_response = response.parsed_body
-        
+
         expect(json_response.length).to eq(1)
         expect(json_response[0]['member_id']).to eq(members[1].id)
       end
@@ -137,10 +137,10 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
     context '履歴の属性' do
       it '履歴が必要な属性を包含している' do
         get "/api/v1/histories?year=#{today.year}&month=#{today.month}&day=#{today.day}"
-        
+
         expect(response).to have_http_status(:ok)
         json_response = response.parsed_body
-        
+
         expect(json_response[0]).to have_key('id')
         expect(json_response[0]).to have_key('member_id')
         expect(json_response[0]).to have_key('work_id')
@@ -155,13 +155,13 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
         params = {
           histories: [
             { member_id: members[0].id, work_id: works[0].id, date: today },
-            { member_id: members[1].id, work_id: works[1].id, date: today },
+            { member_id: members[1].id, work_id: works[1].id, date: today }
           ]
         }
 
-        expect {
+        expect do
           post '/api/v1/histories/bulk_create', params: params
-        }.to change(History, :count).by(2)
+        end.to change(History, :count).by(2)
 
         expect(response).to have_http_status(:ok)
       end
@@ -174,13 +174,13 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
         }
 
         post '/api/v1/histories/bulk_create', params: params
-        
+
         # ステータスコード確認（422 または 404）
         expect(response).to have_http_status(:unprocessable_content).or have_http_status(:not_found)
-        
+
         # エラーレスポンスが JSON 形式であることを確認
         expect(response.media_type).to eq('application/json')
-        
+
         # エラーレスポンスに error キーが含まれることを確認
         json_response = response.parsed_body
         expect(json_response).to have_key('error').or have_key('message')
@@ -195,7 +195,7 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
           work_id: works[0].id
         }
         post '/api/v1/works/shuffle', params: params
-        
+
         expect(response).to have_http_status(:ok)
       end
 
@@ -203,9 +203,9 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
         params = {
           work_id: works[0].id
         }
-        expect {
+        expect do
           post '/api/v1/works/shuffle', params: params
-        }.to change(History, :count)
+        end.to change(History, :count)
 
         expect(response).to have_http_status(:ok)
       end
@@ -216,7 +216,7 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
           participant_member_ids: [members[0].id]
         }
         post '/api/v1/works/shuffle', params: params
-        
+
         expect(response).to have_http_status(:ok)
         json_response = response.parsed_body
         # 割り当てられたメンバーが指定されたメンバーであることを確認
@@ -239,7 +239,7 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
 
         expect(response).to have_http_status(:ok)
         json_response = response.parsed_body
-        expect(json_response['success']).to eq(true)
+        expect(json_response['success']).to be(true)
 
         refreshed = History.where(date: today, member_id: participants.map(&:id))
         expect(refreshed.count).to eq(3)
@@ -302,34 +302,34 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
 
     it 'メンバー数は活動中（非アーカイブ）メンバーのみ' do
       get '/api/v1/members'
-      
+
       active_members = response.parsed_body.count { |m| !m['archive'] }
-      
+
       expect(active_members).to eq(3)
     end
 
     it '当番数は登録されているすべての当番' do
       get '/api/v1/works'
-      
+
       expect(response.parsed_body.length).to eq(4)
     end
 
     it '割り当て済みメンバーは指定日の履歴から集計される' do
       get "/api/v1/histories?year=#{today.year}&month=#{today.month}&day=#{today.day}"
-      
+
       expect(response).to have_http_status(:ok)
       json_response = response.parsed_body
-      assigned_members = json_response.map { |h| h['member_id'] }.uniq
-      
+      assigned_members = json_response.pluck('member_id').uniq
+
       # 本日の割り当てメンバーが正確に2人（members[0] と members[1]）
       expect(assigned_members.length).to eq(2)
       expect(assigned_members).to contain_exactly(members[0].id, members[1].id)
-      
+
       # members[2] は本日割り当てなし
       expect(assigned_members).not_to include(members[2].id)
-      
+
       # 返却メンバーID の一意性確認（重複がない）
-      all_member_ids = json_response.map { |h| h['member_id'] }
+      all_member_ids = json_response.pluck('member_id')
       expect(all_member_ids.uniq.length).to eq(all_member_ids.length)
     end
   end
@@ -337,13 +337,13 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
   describe 'Responsive Behavior (レスポンシブ対応テスト)' do
     it 'APIレスポンスがJSON形式である' do
       get '/api/v1/works'
-      
+
       expect(response.media_type).to eq('application/json')
     end
 
     it 'エラー時もJSON形式で返却される' do
       get '/api/v1/members/9999'
-      
+
       expect(response.media_type).to eq('application/json')
       expect(response).to have_http_status(:not_found)
     end

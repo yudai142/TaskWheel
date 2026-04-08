@@ -9,7 +9,7 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
     context 'メンバー一覧取得' do
       it 'すべてのメンバーが返却される' do
         get '/api/v1/members'
-        
+
         expect(response).to have_http_status(:ok)
         json_response = response.parsed_body
         expect(json_response.length).to eq(5)
@@ -17,10 +17,10 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
 
       it 'メンバーの属性が含まれている' do
         get '/api/v1/members'
-        
+
         expect(response).to have_http_status(:ok)
         json_response = response.parsed_body
-        
+
         expect(json_response[0]).to have_key('id')
         expect(json_response[0]).to have_key('given_name')
         expect(json_response[0]).to have_key('family_name')
@@ -28,11 +28,11 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
 
       it 'メンバーの ID を選択可能である' do
         get '/api/v1/members'
-        
+
         expect(response).to have_http_status(:ok)
         json_response = response.parsed_body
-        
-        member_ids = json_response.map { |m| m['id'] }
+
+        member_ids = json_response.pluck('id')
         expect(member_ids).not_to be_empty
         expect(member_ids.first).to be_a(Integer)
       end
@@ -58,18 +58,18 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
         }
 
         post '/api/v1/works/shuffle_with_selected_members', params: params
-        
+
         expect(response).to have_http_status(:ok)
         json_response = response.parsed_body
-        
+
         # シャッフル結果が返される
         expect(json_response).to be_an(Array)
-        
+
         # 返却された割り当てが選択メンバーのみである
-        assigned_member_ids = json_response.map { |h| h['member_id'] }.uniq
+        assigned_member_ids = json_response.pluck('member_id').uniq
         selected_ids_set = Set.new(selected_member_ids)
         assigned_ids_set = Set.new(assigned_member_ids)
-        
+
         expect(assigned_ids_set).to be_subset(selected_ids_set)
       end
 
@@ -82,13 +82,13 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
         }
 
         post '/api/v1/works/shuffle_with_selected_members', params: params
-        
+
         expect(response).to have_http_status(:ok)
         json_response = response.parsed_body
-        
+
         # 同じメンバーが複数の当番に割り当てられていないことを確認
         member_assignments = json_response.group_by { |h| h['member_id'] }
-        member_assignments.each do |member_id, assignments|
+        member_assignments.each_value do |assignments|
           work_ids = assignments.map { |a| a['work_id'] }
           expect(work_ids.uniq.length).to eq(work_ids.length)
         end
@@ -98,7 +98,7 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
         # メンバー 0, 1, 2 のみ参加
         selected_member_ids = [members[0].id, members[1].id, members[2].id]
         excluded_member_ids = [members[3].id, members[4].id]
-        
+
         params = {
           member_ids: selected_member_ids,
           work_ids: works.map(&:id),
@@ -106,15 +106,15 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
         }
 
         post '/api/v1/works/shuffle_with_selected_members', params: params
-        
+
         expect(response).to have_http_status(:ok)
         json_response = response.parsed_body
-        
+
         # 割り当てられたメンバーが除外リストに含まれていないことを確認
-        assigned_member_ids = json_response.map { |h| h['member_id'] }.uniq
+        assigned_member_ids = json_response.pluck('member_id').uniq
         excluded_set = Set.new(excluded_member_ids)
         assigned_set = Set.new(assigned_member_ids)
-        
+
         expect(assigned_set & excluded_set).to be_empty
       end
 
@@ -127,7 +127,7 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
         }
 
         post '/api/v1/works/shuffle_with_selected_members', params: params
-        
+
         # 当番が足りなくても、各メンバーに一度は割り当てられる
         # または適切なエラーが返される
         expect(response.status).to be_in([200, 422, 400])
@@ -143,12 +143,12 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
           member_options: [
             { member_id: members[0].id, status: 1 }, # 参加
             { member_id: members[1].id, status: 1 }, # 参加
-            { member_id: members[2].id, status: 0 }, # 不参加
+            { member_id: members[2].id, status: 0 } # 不参加
           ]
         }
 
         post '/api/v1/member_options/update_selected', params: params
-        
+
         expect(response).to have_http_status(:ok)
       end
 
@@ -157,15 +157,15 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
           work_id: works[0].id,
           member_options: [
             { member_id: members[0].id, status: 1 },
-            { member_id: members[1].id, status: 1 },
+            { member_id: members[1].id, status: 1 }
           ]
         }
 
         post '/api/v1/member_options/update_selected', params: params
-        
+
         expect(response).to have_http_status(:ok)
         json_response = response.parsed_body
-        
+
         expect(json_response).to have_key('selected_count')
         expect(json_response['selected_count']).to eq(2)
       end
@@ -176,20 +176,20 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
     context 'ダッシュボードの参加メンバー選択状態を取得' do
       it '選択状態が返される' do
         get '/api/v1/dashboard/member_selection_state'
-        
+
         expect(response).to have_http_status(:ok)
         json_response = response.parsed_body
-        
+
         # 返却される配列にはメンバー情報と選択状態が含まれる
         expect(json_response).to be_an(Array)
       end
 
       it 'メンバーごとに選択状態が含まれている' do
         get '/api/v1/dashboard/member_selection_state'
-        
+
         expect(response).to have_http_status(:ok)
         json_response = response.parsed_body
-        
+
         if json_response.present?
           expect(json_response[0]).to have_key('id')
           expect(json_response[0]).to have_key('member_id')
@@ -207,22 +207,22 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
             create(:member_option, work: work, member: member, status: 1)
           end
         end
-        
+
         # Step 1: メンバー一覧を取得
         get '/api/v1/members'
         expect(response).to have_http_status(:ok)
         all_members = response.parsed_body
-        
+
         # Step 2: 参加メンバーを選択
         selected_ids = [all_members[0]['id'], all_members[1]['id']]
-        
+
         # Step 3: 選択を保存（未実装）
         post '/api/v1/member_options/update_selected', params: {
           work_id: works[0].id,
           member_options: selected_ids.map { |id| { member_id: id, status: 1 } }
         }
         expect(response).to have_http_status(:ok)
-        
+
         # Step 4: 選択メンバーのみでシャッフル（未実装）
         post '/api/v1/works/shuffle_with_selected_members', params: {
           member_ids: selected_ids,
@@ -232,7 +232,7 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
 
         expect(response).to have_http_status(:ok)
         json_response = response.parsed_body
-        expect(json_response.map { |h| h['member_id'] }.uniq).to match_array(selected_ids)
+        expect(json_response.pluck('member_id').uniq).to match_array(selected_ids)
       end
     end
   end

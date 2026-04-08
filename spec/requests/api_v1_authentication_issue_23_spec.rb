@@ -11,10 +11,10 @@ RSpec.describe 'API V1 Authentication (Issue #23)', type: :request do
           password_confirmation: 'password123'
         }
       end.to change(User, :count).by(1)
-        .and change(Worksheet, :count).by(1)
+                                 .and change(Worksheet, :count).by(1)
 
       expect(response).to have_http_status(:created)
-      expect(response.parsed_body['authenticated']).to eq(true)
+      expect(response.parsed_body['authenticated']).to be(true)
       expect(response.parsed_body.dig('user', 'email')).to eq('register@example.com')
     end
   end
@@ -30,7 +30,7 @@ RSpec.describe 'API V1 Authentication (Issue #23)', type: :request do
       }
 
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body['authenticated']).to eq(true)
+      expect(response.parsed_body['authenticated']).to be(true)
       expect(response.parsed_body.dig('user', 'id')).to eq(user.id)
       expect(response.parsed_body.dig('current_worksheet', 'id')).to eq(worksheet.id)
     end
@@ -53,7 +53,7 @@ RSpec.describe 'API V1 Authentication (Issue #23)', type: :request do
       get '/api/v1/auth/me'
 
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body['authenticated']).to eq(false)
+      expect(response.parsed_body['authenticated']).to be(false)
     end
 
     it 'ログイン後はユーザー情報を返す' do
@@ -65,7 +65,7 @@ RSpec.describe 'API V1 Authentication (Issue #23)', type: :request do
       get '/api/v1/auth/me'
 
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body['authenticated']).to eq(true)
+      expect(response.parsed_body['authenticated']).to be(true)
       expect(response.parsed_body.dig('user', 'email')).to eq('me@example.com')
       expect(response.parsed_body.dig('current_worksheet', 'id')).to eq(worksheet.id)
     end
@@ -84,7 +84,7 @@ RSpec.describe 'API V1 Authentication (Issue #23)', type: :request do
       post '/api/v1/auth/logout'
       get '/api/v1/auth/me'
 
-      expect(response.parsed_body['authenticated']).to eq(false)
+      expect(response.parsed_body['authenticated']).to be(false)
     end
   end
 
@@ -99,7 +99,7 @@ RSpec.describe 'API V1 Authentication (Issue #23)', type: :request do
       post '/api/v1/auth/password/forgot', params: { email: 'forgot@example.com' }
 
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body['success']).to eq(true)
+      expect(response.parsed_body['success']).to be(true)
       expect(ActionMailer::Base.deliveries.size).to eq(1)
       expect(ActionMailer::Base.deliveries.last.to).to include('forgot@example.com')
       mail = ActionMailer::Base.deliveries.last
@@ -111,7 +111,7 @@ RSpec.describe 'API V1 Authentication (Issue #23)', type: :request do
       post '/api/v1/auth/password/forgot', params: { email: 'unknown@example.com' }
 
       expect(response).to have_http_status(:not_found)
-      expect(response.parsed_body['success']).to eq(false)
+      expect(response.parsed_body['success']).to be(false)
       expect(response.parsed_body['message']).to eq('登録済みのメールアドレスが見つかりません')
       expect(ActionMailer::Base.deliveries.size).to eq(0)
     end
@@ -120,7 +120,7 @@ RSpec.describe 'API V1 Authentication (Issue #23)', type: :request do
       post '/api/v1/auth/password/forgot', params: { email: '' }
 
       expect(response).to have_http_status(:unprocessable_content)
-      expect(response.parsed_body['success']).to eq(false)
+      expect(response.parsed_body['success']).to be(false)
       expect(response.parsed_body['message']).to eq('メールアドレスを入力してください')
       expect(ActionMailer::Base.deliveries.size).to eq(0)
     end
@@ -141,7 +141,7 @@ RSpec.describe 'API V1 Authentication (Issue #23)', type: :request do
       }
 
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body['success']).to eq(true)
+      expect(response.parsed_body['success']).to be(true)
 
       post '/api/v1/auth/login', params: {
         email: 'reset@example.com',
@@ -149,7 +149,7 @@ RSpec.describe 'API V1 Authentication (Issue #23)', type: :request do
       }
 
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body['authenticated']).to eq(true)
+      expect(response.parsed_body['authenticated']).to be(true)
     end
 
     it '無効なトークンの場合はエラーを返す' do
@@ -160,7 +160,7 @@ RSpec.describe 'API V1 Authentication (Issue #23)', type: :request do
       }
 
       expect(response).to have_http_status(:unprocessable_content)
-      expect(response.parsed_body['success']).to eq(false)
+      expect(response.parsed_body['success']).to be(false)
       expect(response.parsed_body['errors']).to be_present
     end
   end
@@ -176,14 +176,14 @@ RSpec.describe 'API V1 Authentication (Issue #23)', type: :request do
       post '/api/v1/auth/password/validate_token', params: { token: raw_token }
 
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body['success']).to eq(true)
+      expect(response.parsed_body['success']).to be(true)
     end
 
     it '無効なトークンの場合は422を返す' do
       post '/api/v1/auth/password/validate_token', params: { token: 'invalid-token' }
 
       expect(response).to have_http_status(:unprocessable_content)
-      expect(response.parsed_body['success']).to eq(false)
+      expect(response.parsed_body['success']).to be(false)
       expect(response.parsed_body['message']).to include('再設定トークン')
     end
 
@@ -191,7 +191,7 @@ RSpec.describe 'API V1 Authentication (Issue #23)', type: :request do
       post '/api/v1/auth/password/validate_token', params: { token: '' }
 
       expect(response).to have_http_status(:unprocessable_content)
-      expect(response.parsed_body['success']).to eq(false)
+      expect(response.parsed_body['success']).to be(false)
       expect(response.parsed_body['message']).to include('再設定トークン')
     end
   end

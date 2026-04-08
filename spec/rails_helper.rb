@@ -10,12 +10,10 @@ ENV['DATABASE_URL'] = ENV.fetch('DATABASE_URL_TEST', 'postgresql://postgres:pass
 require File.expand_path('../config/environment', __dir__)
 
 # Clear any existing factory definitions to prevent duplicates
-if FactoryBot.factories.instance_variable_get(:@factories)
-  FactoryBot.factories.instance_variable_get(:@factories).clear
-end
+FactoryBot.factories.instance_variable_get(:@factories)&.clear
 
 # Prevent database truncation if the environment is production
-abort("The Rails environment is running in production mode!") if Rails.env.production?
+abort('The Rails environment is running in production mode!') if Rails.env.production?
 
 require 'rspec/rails'
 
@@ -24,7 +22,7 @@ require 'rspec/rails'
 begin
   ActiveRecord::Migration.maintain_test_schema!
 rescue ActiveRecord::PendingMigrationError => e
-  puts e.to_s.strip
+  Rails.logger.debug e.to_s.strip
   exit 1
 end
 
@@ -41,7 +39,7 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with(:truncation)
   end
 
-  config.around(:each) do |example|
+  config.around do |example|
     DatabaseCleaner.cleaning do
       example.run
     end

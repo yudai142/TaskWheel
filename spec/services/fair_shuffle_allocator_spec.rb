@@ -56,7 +56,7 @@ RSpec.describe FairShuffleAllocator, type: :service do
 
       result = described_class.new(date: base_date).shuffle_for_date
 
-      expect(result[:success]).to eq(true)
+      expect(result[:success]).to be(true)
       expect(History.find_by(member_id: member.id, date: base_date)&.work_id).to eq(work_b.id)
     end
 
@@ -70,7 +70,7 @@ RSpec.describe FairShuffleAllocator, type: :service do
 
       result = described_class.new(date: base_date).shuffle_for_date
 
-      expect(result[:success]).to eq(true)
+      expect(result[:success]).to be(true)
       expect(result[:unassigned_count]).to eq(0)
       expect(History.find_by(member_id: member.id, date: base_date)&.work_id).to eq(work.id)
     end
@@ -84,7 +84,7 @@ RSpec.describe FairShuffleAllocator, type: :service do
 
       result = described_class.new(date: base_date).shuffle_for_date
 
-      expect(result[:success]).to eq(true)
+      expect(result[:success]).to be(true)
       expect(History.find_by(member_id: member.id, date: base_date)&.work_id).to eq(fixed_work.id)
       expect(other_work).to be_present
     end
@@ -99,7 +99,7 @@ RSpec.describe FairShuffleAllocator, type: :service do
 
       result = described_class.new(date: base_date).shuffle_for_date
 
-      expect(result[:success]).to eq(true)
+      expect(result[:success]).to be(true)
       expect(result[:unassigned_count]).to eq(0)
       expect(History.find_by(member_id: member.id, date: base_date)&.work_id).to eq(fixed_work.id)
     end
@@ -116,8 +116,8 @@ RSpec.describe FairShuffleAllocator, type: :service do
       first_result = allocator.shuffle_for_date
       second_result = described_class.new(date: base_date).shuffle_for_date
 
-      expect(first_result[:success]).to eq(true)
-      expect(second_result[:success]).to eq(true)
+      expect(first_result[:success]).to be(true)
+      expect(second_result[:success]).to be(true)
       expect(History.find_by(member_id: member.id, date: base_date)&.work_id).to eq(fixed_work.id)
     end
 
@@ -130,7 +130,7 @@ RSpec.describe FairShuffleAllocator, type: :service do
 
       result = described_class.new(date: base_date).shuffle_for_date
 
-      expect(result[:success]).to eq(true)
+      expect(result[:success]).to be(true)
       expect(History.find_by(member_id: member.id, date: base_date)&.work_id).to eq(allowed_work.id)
     end
 
@@ -144,7 +144,7 @@ RSpec.describe FairShuffleAllocator, type: :service do
 
       result = described_class.new(date: base_date).shuffle_for_date
 
-      expect(result[:success]).to eq(true)
+      expect(result[:success]).to be(true)
       expect(result[:unassigned_count]).to eq(0)
 
       assigned = History.where(date: base_date, member_id: participants.map(&:id)).where.not(work_id: nil)
@@ -164,7 +164,7 @@ RSpec.describe FairShuffleAllocator, type: :service do
 
       result = described_class.new(date: base_date).shuffle_for_date
 
-      expect(result[:success]).to eq(true)
+      expect(result[:success]).to be(true)
       # メモリ上で再計算するため制約が正しく適用され、work_a には 1 人のみ（multiple 上限）
       expect(History.where(date: base_date, work_id: work_a.id).count).to eq(1)
       # もう 1 人は work_b に割り当てられる
@@ -181,7 +181,7 @@ RSpec.describe FairShuffleAllocator, type: :service do
 
       result = described_class.new(date: base_date).shuffle_for_date
 
-      expect(result[:success]).to eq(true)
+      expect(result[:success]).to be(true)
       expect(History.where(date: base_date, work_id: capped_work.id).count).to eq(1)
       expect(result[:unassigned_count]).to eq(2)
     end
@@ -197,7 +197,7 @@ RSpec.describe FairShuffleAllocator, type: :service do
 
       result = described_class.new(date: base_date).shuffle_for_date
 
-      expect(result[:success]).to eq(true)
+      expect(result[:success]).to be(true)
       counts = History.where(date: base_date, work_id: [work_a.id, work_b.id]).group(:work_id).count
       expect(counts.values.sum).to eq(7)
       expect((counts[work_a.id] - counts[work_b.id]).abs).to be <= 1

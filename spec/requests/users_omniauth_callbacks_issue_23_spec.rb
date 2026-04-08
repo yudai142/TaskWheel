@@ -22,7 +22,7 @@ RSpec.describe 'Users::OmniauthCallbacks (Issue #23)', type: :request do
     expect do
       get '/users/auth/google_oauth2/callback'
     end.to change(User, :count).by(1)
-      .and change(Worksheet, :count).by(1)
+                               .and change(Worksheet, :count).by(1)
 
     expect(response).to redirect_to('/?auth=success')
     expect(User.last.email).to eq('google-user@example.com')

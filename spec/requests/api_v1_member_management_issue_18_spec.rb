@@ -15,7 +15,7 @@ RSpec.describe 'API V1: Member Management Modal (Issue #18)', type: :request do
 
       expect(response).to have_http_status(:ok)
       json_response = response.parsed_body
-      expect(json_response.map { |item| item['id'] }).to include(member.id, archived_member.id)
+      expect(json_response.pluck('id')).to include(member.id, archived_member.id)
 
       target_member = json_response.find { |item| item['id'] == member.id }
       expect(target_member['member_options'].length).to eq(1)
@@ -29,7 +29,7 @@ RSpec.describe 'API V1: Member Management Modal (Issue #18)', type: :request do
       patch "/api/v1/members/#{member.id}", params: { member: { archive: true } }
 
       expect(response).to have_http_status(:ok)
-      expect(member.reload.archive).to eq(true)
+      expect(member.reload.archive).to be(true)
     end
   end
 
