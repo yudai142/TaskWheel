@@ -47,7 +47,7 @@ describe('Dashboard - Worksheet Tabs Feature', () => {
   });
 
   it('ワークシートタブが表示される', async () => {
-    render(<Dashboard />);
+    render(<Dashboard worksheetId={null} />);
 
     await waitFor(() => {
       mockWorksheets.forEach((worksheet) => {
@@ -57,20 +57,20 @@ describe('Dashboard - Worksheet Tabs Feature', () => {
   });
 
   it('「掃除当番管理」のテキストが表示されない', () => {
-    render(<Dashboard />);
+    render(<Dashboard worksheetId={null} />);
 
     expect(screen.queryByText('掃除当番管理')).toBeNull();
   });
 
   it('＋ボタンがクリックできる', async () => {
-    render(<Dashboard />);
+    render(<Dashboard worksheetId={null} />);
 
     const addButton = screen.getByRole('button', { name: /\+/i }) || screen.getByText('+');
     expect(addButton).toBeTruthy();
   });
 
   it('＋ボタンをクリックするとワークシート作成モーダルが表示される', async () => {
-    render(<Dashboard />);
+    render(<Dashboard worksheetId={null} />);
 
     const addButton = screen.getByRole('button', { name: /\+/i }) || screen.getByText('+');
     fireEvent.click(addButton);
@@ -81,7 +81,7 @@ describe('Dashboard - Worksheet Tabs Feature', () => {
   });
 
   it('モーダルに入力欄と作成ボタンがある', async () => {
-    render(<Dashboard />);
+    render(<Dashboard worksheetId={null} />);
 
     const addButton = screen.getByRole('button', { name: /\+/i }) || screen.getByText('+');
     fireEvent.click(addButton);
@@ -102,7 +102,7 @@ describe('Dashboard - Worksheet Tabs Feature', () => {
       data: { id: 3, name: '新しいワークシート', interval: 7, week_use: false, week: 0 },
     });
 
-    render(<Dashboard />);
+    render(<Dashboard worksheetId={null} />);
 
     const addButton = screen.getByRole('button', { name: /\+/i }) || screen.getByText('+');
     fireEvent.click(addButton);
@@ -127,7 +127,7 @@ describe('Dashboard - Worksheet Tabs Feature', () => {
   });
 
   it('ワークシートタブをクリックでワークシート切り替え可能', async () => {
-    render(<Dashboard />);
+    render(<Dashboard worksheetId={null} />);
 
     await waitFor(() => {
       const tab = screen.queryByText(mockWorksheets[1].name);
@@ -167,7 +167,7 @@ describe('Dashboard - Worksheet Tabs Feature', () => {
       return Promise.reject(new Error(`Unexpected URL: ${url}`));
     });
 
-    render(<Dashboard />);
+    render(<Dashboard worksheetId={null} />);
 
     const addButton = screen.getByRole('button', { name: /\+/i }) || screen.getByText('+');
     fireEvent.click(addButton);

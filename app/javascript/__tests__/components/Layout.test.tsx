@@ -4,7 +4,12 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Layout from '../../components/Layout';
-import type { WorksheetSummary, Notification } from '../../types';
+import type { WorksheetSummary } from '../../types';
+
+interface Notification {
+  message: string;
+  type: 'success' | 'error';
+}
 
 // Mock react-router-dom
 
@@ -17,9 +22,9 @@ vi.mock('react-router-dom', () => ({
 
 describe('Layout - Issue #27: ワークシート選択機能の実装', () => {
   const mockWorksheets: WorksheetSummary[] = [
-    { id: 1, name: 'ワークシート1', created_at: '2026-01-01', updated_at: '2026-01-01' },
-    { id: 2, name: 'ワークシート2', created_at: '2026-01-02', updated_at: '2026-01-02' },
-    { id: 3, name: 'ワークシート3', created_at: '2026-01-03', updated_at: '2026-01-03' },
+    { id: 1, name: 'ワークシート1', interval: 7, week_use: false, week: 0 },
+    { id: 2, name: 'ワークシート2', interval: 7, week_use: false, week: 0 },
+    { id: 3, name: 'ワークシート3', interval: 7, week_use: false, week: 0 },
   ];
 
   const mockNotification: Notification = {
@@ -32,6 +37,8 @@ describe('Layout - Issue #27: ワークシート選択機能の実装', () => {
     currentWorksheetName: 'ワークシート1',
     onLogout: vi.fn(),
     worksheets: mockWorksheets,
+    activeWorksheetId: 1,
+    onWorksheetSelect: vi.fn(),
     showWorksheetModal: false,
     newWorksheetName: '',
     onShowWorksheetModal: vi.fn(),
@@ -50,7 +57,9 @@ describe('Layout - Issue #27: ワークシート選択機能の実装', () => {
       );
 
       mockWorksheets.forEach((worksheet) => {
-        expect(screen.getByText(worksheet.name)).toBeInTheDocument();
+        if (worksheet.name) {
+          expect(screen.getByText(worksheet.name)).toBeInTheDocument();
+        }
       });
     });
 

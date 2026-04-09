@@ -36,7 +36,7 @@ describe('Members - メンバー設定モーダル', () => {
   it('メンバーカードを押すと設定モーダルが開く', async () => {
     const user = userEvent.setup();
 
-    render(<Members />);
+    render(<Members worksheetId={null} />);
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /YamadaTaro/ })).toBeInTheDocument();
@@ -52,7 +52,7 @@ describe('Members - メンバー設定モーダル', () => {
   it('モーダル内でアーカイブを切り替えられる', async () => {
     const user = userEvent.setup();
 
-    render(<Members />);
+    render(<Members worksheetId={null} />);
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /YamadaTaro/ })).toBeInTheDocument();
@@ -71,7 +71,7 @@ describe('Members - メンバー設定モーダル', () => {
   it('固定/除外設定を追加できる', async () => {
     const user = userEvent.setup();
 
-    render(<Members />);
+    render(<Members worksheetId={null} />);
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /YamadaTaro/ })).toBeInTheDocument();
