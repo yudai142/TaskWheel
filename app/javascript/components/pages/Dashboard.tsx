@@ -117,7 +117,7 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
         month,
         day,
       });
-      showNotification(`${response.data.member.given_name}さんに決定しました！`);
+      showNotification(`${response.data.member.name}さんに決定しました！`);
       await fetchData();
       setActiveStatsTab('assigned');
     } catch (error) {
@@ -745,10 +745,7 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
                       onChange={() => handleToggleParticipant(member.id)}
                       className="h-4 w-4"
                     />
-                    <span className="text-sm font-medium text-gray-800">
-                      {member.family_name}
-                      {member.given_name}
-                    </span>
+                    <span className="text-sm font-medium text-gray-800">{member.name}</span>
                   </label>
                 );
               })}
@@ -849,10 +846,7 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
                           key={member.id}
                           className="p-4 bg-white border-2 border-yellow-300 rounded-lg hover:shadow-md transition-all flex items-center justify-center"
                         >
-                          <p className="font-semibold text-gray-900 text-center">
-                            {member.family_name}
-                            {member.given_name}
-                          </p>
+                          <p className="font-semibold text-gray-900 text-center">{member.name}</p>
                         </div>
                       ))}
                     </div>
@@ -920,8 +914,7 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
                               className="p-4 bg-white border-2 border-primary-300 rounded-lg hover:bg-red-50 hover:border-red-400 cursor-pointer transition-all flex items-center justify-center"
                             >
                               <p className="font-semibold text-gray-900 text-center">
-                                {assignment.member?.family_name}
-                                {assignment.member?.given_name}
+                                {assignment.member?.name}
                               </p>
                             </div>
                           ))}
