@@ -3,6 +3,12 @@ require 'rails_helper'
 RSpec.describe 'API V1 Demo Seed (Issue #30)', type: :request do
   describe 'POST /api/v1/auth/login' do
     context 'ユーザーが登録されていない場合' do
+      before do
+        # デモシード spec はユーザーなし状態をテストするため、config.before(:suite) で作成されたデフォルトユーザーをクリア
+        User.destroy_all
+        Worksheet.destroy_all
+      end
+
       it 'デモアカウントを自動生成しログインできる' do
         # 事前: ユーザーなし状態
         expect(User.count).to eq(0)
@@ -83,6 +89,12 @@ RSpec.describe 'API V1 Demo Seed (Issue #30)', type: :request do
     end
 
     context '既存ユーザーがいる場合' do
+      before do
+        # デフォルトユーザーをクリアしてから、既存ユーザーのみが存在する状態を作成
+        User.destroy_all
+        Worksheet.destroy_all
+      end
+
       let!(:existing_user) { create(:user, email: 'existing@example.com') }
 
       it '既存ユーザーでログインできる' do
