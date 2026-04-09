@@ -71,3 +71,6 @@ module Api
         render json: { error: 'デモアカウントではメンバーと当番の変更はできません' },
                status: :forbidden
       end
+    end
+  end
+end
