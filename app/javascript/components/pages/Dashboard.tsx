@@ -11,8 +11,9 @@ import {
   CheckCircleIcon,
   SparklesIcon,
   XMarkIcon,
+  PlusIcon,
 } from '@heroicons/react/24/outline';
-import type { Member, Work, History } from '../../types';
+import type { Member, Work, History, WorksheetSummary } from '../../types';
 
 interface Notification {
   message: string;
@@ -32,6 +33,9 @@ export default function Dashboard(): JSX.Element {
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [notification, setNotification] = useState<Notification | null>(null);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
+  const [worksheets, setWorksheets] = useState<WorksheetSummary[]>([]);
+  const [showWorksheetModal, setShowWorksheetModal] = useState<boolean>(false);
+  const [newWorksheetName, setNewWorksheetName] = useState<string>('');
 
   const showNotification = useCallback((message: string, type: 'success' | 'error' = 'success') => {
     setNotification({ message, type });
@@ -67,6 +71,18 @@ export default function Dashboard(): JSX.Element {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const fetchWorksheets = async (): Promise<void> => {
+      try {
+        const res = await axios.get<WorksheetSummary[]>('/api/v1/worksheets');
+        setWorksheets(res.data);
+      } catch {
+        // Error fetching worksheets
+      }
+    };
+    void fetchWorksheets();
   }, []);
 
   useEffect(() => {
@@ -117,6 +133,30 @@ export default function Dashboard(): JSX.Element {
       showNotification(msg, 'error');
     } finally {
       setShuffling(null);
+    }
+  };
+
+  const handleCreateWorksheet = async (): Promise<void> => {
+    if (!newWorksheetName.trim()) {
+      showNotification('ワークシート名を入力してください', 'error');
+      return;
+    }
+
+    try {
+      const res = await axios.post<WorksheetSummary>('/api/v1/worksheets', {
+        name: newWorksheetName,
+        interval: 7,
+        week_use: false,
+        week: 0,
+      });
+      setWorksheets((prev) => [...prev, res.data]);
+      setShowWorksheetModal(false);
+      setNewWorksheetName('');
+      showNotification('ワークシートを作成しました', 'success');
+    } catch (error) {
+      const axiosError = error as { response?: { data?: { errors?: string[] } } };
+      const msg = axiosError.response?.data?.errors?.[0] || 'ワークシート作成に失敗しました';
+      showNotification(msg, 'error');
     }
   };
 
@@ -460,6 +500,75 @@ export default function Dashboard(): JSX.Element {
             >
               <XMarkIcon className="h-5 w-5" />
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Worksheet Tabs */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-2">
+        {worksheets.map((worksheet: WorksheetSummary) => (
+          <button
+            key={worksheet.id}
+            role="tab"
+            className={`px-4 py-2 rounded-lg whitespace-nowrap transition-colors ${
+              // Note: activeWorksheetId comparison for visual feedback
+              'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+            }`}
+          >
+            {worksheet.name}
+          </button>
+        ))}
+        <button
+          onClick={() => setShowWorksheetModal(true)}
+          className="flex items-center gap-1 px-3 py-2 rounded-lg border-2 border-primary-200 text-primary-600 hover:bg-primary-50 transition-colors whitespace-nowrap"
+          title="新しいワークシートを作成"
+        >
+          <PlusIcon className="h-5 w-5" />
+        </button>
+      </div>
+
+      {/* Worksheet Creation Modal */}
+      {showWorksheetModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-lg font-bold text-gray-900">新しいワークシートを作成</h3>
+              <button
+                onClick={() => setShowWorksheetModal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <XMarkIcon className="h-6 w-6" />
+              </button>
+            </div>
+            <div className="space-y-4">
+              <input
+                type="text"
+                placeholder="ワークシート名"
+                value={newWorksheetName}
+                onChange={(e) => setNewWorksheetName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    void handleCreateWorksheet();
+                  }
+                }}
+                className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                autoFocus
+              />
+              <div className="flex gap-2 justify-end">
+                <button
+                  onClick={() => setShowWorksheetModal(false)}
+                  className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  キャンセル
+                </button>
+                <button
+                  onClick={() => void handleCreateWorksheet()}
+                  className="px-4 py-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors"
+                >
+                  作成
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

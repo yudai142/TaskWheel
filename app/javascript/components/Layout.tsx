@@ -72,8 +72,18 @@ export default function Layout({
           ))}
         </nav>
 
-        <div className="p-4 border-t text-xs text-gray-500 text-center">
-          {sidebarOpen && <p>2026 TaskWheel</p>}
+        <div className="p-4 border-t space-y-2">
+          {sidebarOpen && <p className="text-xs text-gray-500 text-center">2026 TaskWheel</p>}
+          <button
+            onClick={() => {
+              void onLogout();
+            }}
+            className={`w-full rounded border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors ${
+              !sidebarOpen && 'p-2 text-center'
+            }`}
+          >
+            {sidebarOpen ? 'ログアウト' : '出'}
+          </button>
         </div>
       </div>
 
@@ -82,23 +92,9 @@ export default function Layout({
         {/* Header */}
         <header className="bg-white shadow">
           <div className="px-6 py-4 flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900">掃除当番管理</h2>
-            <div className="flex items-center space-x-4">
-              <div className="text-right text-sm text-gray-600">
-                <p>{currentWorksheetName}</p>
-                <p className="text-xs text-gray-500">{currentUserName}</p>
-              </div>
-              <button
-                onClick={() => {
-                  void onLogout();
-                }}
-                className="rounded border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
-              >
-                ログアウト
-              </button>
-              <button className="p-2 text-gray-500 hover:text-gray-700">
-                <span className="w-6 h-6">?</span>
-              </button>
+            <div className="text-right text-sm text-gray-600">
+              <p>{currentWorksheetName}</p>
+              <p className="text-xs text-gray-500">{currentUserName}</p>
             </div>
           </div>
         </header>
