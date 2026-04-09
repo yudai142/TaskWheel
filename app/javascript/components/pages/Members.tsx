@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import type { Member, Work } from '../../types';
+import type { Member, Work, MemberOptionSetting } from '../../types';
 
 interface BulkFormData {
   text: string;
@@ -10,6 +10,11 @@ interface EditFormData {
   name: string;
   kana: string;
   archive: boolean;
+}
+
+interface SettingFormData {
+  work_id: string;
+  status: string;
 }
 
 interface Props {
@@ -138,6 +143,7 @@ const predictKana = (name: string): string => {
 
 export default function Members({ worksheetId, isDemoUser = false }: Props): JSX.Element {
   const [members, setMembers] = useState<Member[]>([]);
+  const [works, setWorks] = useState<Work[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [showBulkForm, setShowBulkForm] = useState<boolean>(false);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
@@ -149,18 +155,28 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
     kana: '',
     archive: false,
   });
+  const [settingForm, setSettingForm] = useState<SettingFormData>({
+    work_id: '',
+    status: '0',
+  });
 
   useEffect(() => {
-    void fetchMembers();
+    void fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [worksheetId, filter]);
 
-  const fetchMembers = async (): Promise<void> => {
+  const fetchData = async (): Promise<void> => {
     try {
-      const response = await axios.get<Member[]>('/api/v1/members', {
-        params: { filter },
-      });
-      setMembers(response.data);
+      const [membersResponse, worksResponse] = await Promise.all([
+        axios.get<Member[]>('/api/v1/members', {
+          params: { filter, include_archived: 'true', include_settings: 'true' },
+        }),
+        axios.get<Work[]>('/api/v1/works', {
+          params: { worksheet_id: worksheetId },
+        }),
+      ]);
+      setMembers(membersResponse.data);
+      setWorks(worksResponse.data);
     } catch {
       // Error
     } finally {
@@ -199,7 +215,7 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
 
       setBulkFormData({ text: '' });
       setShowBulkForm(false);
-      await fetchMembers();
+      await fetchData();
     } catch {
       alert('メンバーの一括追加に失敗しました');
     }
@@ -239,6 +255,47 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
       setEditMode(false);
     } catch {
       alert('メンバーの更新に失敗しました');
+    }
+  };
+
+  const handleAddSetting = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault();
+    if (selectedMember === null) return;
+
+    try {
+      await axios.post<MemberOptionSetting>('/api/v1/member_options', {
+        member_option: {
+          member_id: selectedMember.id,
+          work_id: Number(settingForm.work_id),
+          status: Number(settingForm.status),
+        },
+      });
+      setSettingForm({ work_id: '', status: '0' });
+      await fetchData();
+      const response = await axios.get<Member[]>('/api/v1/members', {
+        params: { include_archived: 'true', include_settings: 'true' },
+      });
+      const updatedMember = response.data.find((member) => member.id === selectedMember.id) ?? null;
+      setMembers(response.data);
+      setSelectedMember(updatedMember);
+    } catch {
+      alert('設定の追加に失敗しました');
+    }
+  };
+
+  const handleDeleteSetting = async (settingId: number): Promise<void> => {
+    if (selectedMember === null) return;
+
+    try {
+      await axios.delete(`/api/v1/member_options/${settingId}`);
+      const response = await axios.get<Member[]>('/api/v1/members', {
+        params: { include_archived: 'true', include_settings: 'true' },
+      });
+      const updatedMember = response.data.find((member) => member.id === selectedMember.id) ?? null;
+      setMembers(response.data);
+      setSelectedMember(updatedMember);
+    } catch {
+      alert('設定の解除に失敗しました');
     }
   };
 
@@ -321,74 +378,164 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
 
       {selectedMember && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 overflow-y-auto"
           role="dialog"
           aria-modal="true"
         >
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
+          <div className="w-full max-w-4xl rounded-2xl bg-white p-6 shadow-2xl my-4">
             {editMode ? (
               <>
                 <h3 className="text-2xl font-bold text-gray-900 mb-6">メンバーを編集</h3>
-                <form onSubmit={handleEditSubmit} className="space-y-4">
+                <div className="grid grid-cols-2 gap-6">
+                  {/* 左：メンバー編集フォーム */}
                   <div>
-                    <label htmlFor="edit-name" className="block text-sm font-medium text-gray-700">
-                      名前
-                    </label>
-                    <input
-                      id="edit-name"
-                      type="text"
-                      className="input-field"
-                      value={editFormData.name}
-                      onChange={(e) => handleNameChange(e.target.value)}
-                      required
-                    />
+                    <form onSubmit={handleEditSubmit} className="space-y-4">
+                      <div>
+                        <label htmlFor="edit-name" className="block text-sm font-medium text-gray-700">
+                          名前
+                        </label>
+                        <input
+                          id="edit-name"
+                          type="text"
+                          className="input-field"
+                          value={editFormData.name}
+                          onChange={(e) => handleNameChange(e.target.value)}
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="edit-kana" className="block text-sm font-medium text-gray-700">
+                          かな
+                        </label>
+                        <input
+                          id="edit-kana"
+                          type="text"
+                          className="input-field"
+                          value={editFormData.kana}
+                          onChange={(e) => setEditFormData({ ...editFormData, kana: e.target.value })}
+                          required
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          ※名前を入力するとかなが自動予測されます
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <input
+                          id="edit-archive"
+                          type="checkbox"
+                          className="w-4 h-4"
+                          checked={editFormData.archive}
+                          onChange={(e) =>
+                            setEditFormData({ ...editFormData, archive: e.target.checked })
+                          }
+                        />
+                        <label htmlFor="edit-archive" className="text-sm font-medium text-gray-700">
+                          アーカイブにする
+                        </label>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setEditMode(false);
+                            setSelectedMember(null);
+                          }}
+                          className="btn-secondary flex-1"
+                        >
+                          キャンセル
+                        </button>
+                        <button type="submit" className="btn-primary flex-1">
+                          保存
+                        </button>
+                      </div>
+                    </form>
                   </div>
-                  <div>
-                    <label htmlFor="edit-kana" className="block text-sm font-medium text-gray-700">
-                      かな
-                    </label>
-                    <input
-                      id="edit-kana"
-                      type="text"
-                      className="input-field"
-                      value={editFormData.kana}
-                      onChange={(e) => setEditFormData({ ...editFormData, kana: e.target.value })}
-                      required
-                    />
-                    <p className="text-xs text-gray-500 mt-1">
-                      ※名前を入力するとかなが自動予測されます
-                    </p>
+
+                  {/* 右：固定/除外設定パネル */}
+                  <div className="border-l border-gray-200 pl-6">
+                    <form onSubmit={handleAddSetting} className="space-y-4 rounded-xl border border-gray-200 p-4">
+                      <div>
+                        <h4 className="font-semibold text-gray-900">固定/除外設定を追加</h4>
+                        <p className="text-sm text-gray-500">当番名と設定種別を選んで登録します。</p>
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="member-setting-work"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          当番名
+                        </label>
+                        <select
+                          id="member-setting-work"
+                          className="input-field"
+                          value={settingForm.work_id}
+                          onChange={(e) => setSettingForm({ ...settingForm, work_id: e.target.value })}
+                          required
+                        >
+                          <option value="">当番を選択</option>
+                          {works.map((work) => (
+                            <option key={work.id} value={String(work.id)}>
+                              {work.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="member-setting-status"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          設定種別
+                        </label>
+                        <select
+                          id="member-setting-status"
+                          className="input-field"
+                          value={settingForm.status}
+                          onChange={(e) => setSettingForm({ ...settingForm, status: e.target.value })}
+                        >
+                          <option value="0">固定</option>
+                          <option value="1">除外</option>
+                        </select>
+                      </div>
+                      <button type="submit" className="btn-primary w-full">
+                        設定を追加
+                      </button>
+                    </form>
+
+                    {/* 現在の設定一覧 */}
+                    <div className="rounded-xl border border-gray-200 p-4 mt-4">
+                      <div>
+                        <h4 className="font-semibold text-gray-900">現在の設定</h4>
+                        <p className="text-sm text-gray-500">
+                          このメンバーに対して登録済みの固定/除外設定です。
+                        </p>
+                      </div>
+                      <div className="mt-4 space-y-3">
+                        {(selectedMember.member_options ?? []).length === 0 && (
+                          <p className="text-sm text-gray-500">まだ設定はありません。</p>
+                        )}
+                        {(selectedMember.member_options ?? []).map((option) => (
+                          <div
+                            key={option.id}
+                            className="flex items-center justify-between rounded-lg bg-gray-50 px-4 py-3"
+                          >
+                            <div>
+                              <p className="font-medium text-gray-900">{option.work_name}</p>
+                              <p className="text-sm text-gray-500">{option.status_label}</p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteSetting(option.id)}
+                              className="text-sm font-medium text-red-500 hover:text-red-700"
+                            >
+                              解除
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <input
-                      id="edit-archive"
-                      type="checkbox"
-                      className="w-4 h-4"
-                      checked={editFormData.archive}
-                      onChange={(e) =>
-                        setEditFormData({ ...editFormData, archive: e.target.checked })
-                      }
-                    />
-                    <label htmlFor="edit-archive" className="text-sm font-medium text-gray-700">
-                      アーカイブにする
-                    </label>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setEditMode(false);
-                        setSelectedMember(null);
-                      }}
-                      className="btn-secondary flex-1"
-                    >
-                      キャンセル
-                    </button>
-                    <button type="submit" className="btn-primary flex-1">
-                      保存
-                    </button>
-                  </div>
-                </form>
+                </div>
               </>
             ) : (
               <>
