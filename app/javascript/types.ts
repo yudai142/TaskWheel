@@ -26,6 +26,7 @@ export interface Work {
   created_at: string;
   updated_at: string;
   members?: Member[];
+  member_options?: MemberOptionSetting[];
 }
 
 export interface History {
