@@ -264,103 +264,102 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
           aria-modal="true"
         >
           <div className="w-full max-w-4xl rounded-2xl bg-white p-6 shadow-2xl my-4">
-            {editMode ? (
-              <>
-                <h3 className="text-2xl font-bold text-gray-900 mb-6">当番を編集</h3>
-                <form onSubmit={handleEditSubmit} className="space-y-4">
-                  <div>
-                    <label
-                      htmlFor="edit-work-name"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      当番名
-                    </label>
-                    <input
-                      id="edit-work-name"
-                      type="text"
-                      className="input-field"
-                      value={editFormData.name}
-                      onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="edit-work-multiple"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      複数割り当て数
-                    </label>
-                    <input
-                      id="edit-work-multiple"
-                      type="number"
-                      className="input-field"
-                      value={editFormData.multiple}
-                      onChange={(e) =>
-                        setEditFormData({
-                          ...editFormData,
-                          multiple: parseInt(e.target.value, 10),
-                        })
-                      }
-                      min="1"
-                    />
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <input
-                      id="edit-work-is-above"
-                      type="checkbox"
-                      className="w-4 h-4"
-                      checked={editFormData.is_above}
-                      onChange={(e) =>
-                        setEditFormData({ ...editFormData, is_above: e.target.checked })
-                      }
-                    />
-                    <label
-                      htmlFor="edit-work-is-above"
-                      className="text-sm font-medium text-gray-700"
-                    >
-                      以上割り当て（有効にしたら最低でもこの数、無効にしたら最大でもこの数を割り当て）
-                    </label>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <input
-                      id="edit-work-archive"
-                      type="checkbox"
-                      className="w-4 h-4"
-                      checked={editFormData.archive}
-                      onChange={(e) =>
-                        setEditFormData({ ...editFormData, archive: e.target.checked })
-                      }
-                    />
-                    <label
-                      htmlFor="edit-work-archive"
-                      className="text-sm font-medium text-gray-700"
-                    >
-                      アーカイブにする
-                    </label>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setEditMode(false);
-                        setSelectedWork(null);
-                      }}
-                      className="btn-secondary flex-1"
-                    >
-                      キャンセル
-                    </button>
-                    <button type="submit" className="btn-primary flex-1">
-                      保存
-                    </button>
-                  </div>
-                </form>
-              </>
-            ) : (
-              <>
-                <div className="grid grid-cols-2 gap-6">
-                  {/* 左：当番情報表示 */}
-                  <div>
+            <div className="grid grid-cols-2 gap-6">
+              {/* 左：詳細表示 or 編集フォーム */}
+              <div>
+                {editMode ? (
+                  <>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-6">当番を編集</h3>
+                    <form onSubmit={handleEditSubmit} className="space-y-4">
+                      <div>
+                        <label
+                          htmlFor="edit-work-name"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          当番名
+                        </label>
+                        <input
+                          id="edit-work-name"
+                          type="text"
+                          className="input-field"
+                          value={editFormData.name}
+                          onChange={(e) =>
+                            setEditFormData({ ...editFormData, name: e.target.value })
+                          }
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="edit-work-multiple"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          複数割り当て数
+                        </label>
+                        <input
+                          id="edit-work-multiple"
+                          type="number"
+                          className="input-field"
+                          value={editFormData.multiple}
+                          onChange={(e) =>
+                            setEditFormData({
+                              ...editFormData,
+                              multiple: parseInt(e.target.value, 10),
+                            })
+                          }
+                          min="1"
+                        />
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <input
+                          id="edit-work-is-above"
+                          type="checkbox"
+                          className="w-4 h-4"
+                          checked={editFormData.is_above}
+                          onChange={(e) =>
+                            setEditFormData({ ...editFormData, is_above: e.target.checked })
+                          }
+                        />
+                        <label
+                          htmlFor="edit-work-is-above"
+                          className="text-sm font-medium text-gray-700"
+                        >
+                          以上割り当て（有効にしたら最低でもこの数、無効にしたら最大でもこの数を割り当て）
+                        </label>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <input
+                          id="edit-work-archive"
+                          type="checkbox"
+                          className="w-4 h-4"
+                          checked={editFormData.archive}
+                          onChange={(e) =>
+                            setEditFormData({ ...editFormData, archive: e.target.checked })
+                          }
+                        />
+                        <label
+                          htmlFor="edit-work-archive"
+                          className="text-sm font-medium text-gray-700"
+                        >
+                          アーカイブにする
+                        </label>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setEditMode(false)}
+                          className="btn-secondary flex-1"
+                        >
+                          キャンセル
+                        </button>
+                        <button type="submit" className="btn-primary flex-1">
+                          保存
+                        </button>
+                      </div>
+                    </form>
+                  </>
+                ) : (
+                  <>
                     <h3 className="text-2xl font-bold text-gray-900 mb-6">{selectedWork.name}</h3>
                     <div className="space-y-3 mb-6">
                       {(selectedWork.multiple ?? 1) > 1 && (
@@ -399,108 +398,108 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
                         閉じる
                       </button>
                     </div>
-                  </div>
+                  </>
+                )}
+              </div>
 
-                  {/* 右：メンバー固定/除外設定パネル */}
-                  <div className="border-l border-gray-200 pl-6">
-                    <form
-                      onSubmit={handleAddSetting}
-                      className="space-y-4 rounded-xl border border-gray-200 p-4"
-                    >
-                      <div>
-                        <h4 className="font-semibold text-gray-900">メンバー固定/除外設定を追加</h4>
-                        <p className="text-sm text-gray-500">
-                          メンバーと設定種別を選んで登録します。
-                        </p>
-                      </div>
-                      <div>
-                        <label
-                          htmlFor="work-setting-member"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          メンバー名
-                        </label>
-                        <select
-                          id="work-setting-member"
-                          className="input-field"
-                          value={settingForm.member_id}
-                          onChange={(e) =>
-                            setSettingForm({ ...settingForm, member_id: e.target.value })
-                          }
-                          required
-                        >
-                          <option value="">メンバーを選択</option>
-                          {members.map((member) => (
-                            <option key={member.id} value={String(member.id)}>
-                              {member.name}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div>
-                        <label
-                          htmlFor="work-setting-status"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          設定種別
-                        </label>
-                        <select
-                          id="work-setting-status"
-                          className="input-field"
-                          value={settingForm.status}
-                          onChange={(e) =>
-                            setSettingForm({ ...settingForm, status: e.target.value })
-                          }
-                        >
-                          <option value="0">固定</option>
-                          <option value="1">除外</option>
-                        </select>
-                      </div>
-                      <button type="submit" className="btn-primary w-full">
-                        設定を追加
-                      </button>
-                    </form>
+              {/* 右：メンバー固定/除外設定パネル（詳細表示時のみ） */}
+              {!editMode && (
+                <div className="border-l border-gray-200 pl-6">
+                  <form
+                    onSubmit={handleAddSetting}
+                    className="space-y-4 rounded-xl border border-gray-200 p-4"
+                  >
+                    <div>
+                      <h4 className="font-semibold text-gray-900">メンバー固定/除外設定を追加</h4>
+                      <p className="text-sm text-gray-500">
+                        メンバーと設定種別を選んで登録します。
+                      </p>
+                    </div>
+                    <div>
+                      <label
+                        htmlFor="work-setting-member"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        メンバー名
+                      </label>
+                      <select
+                        id="work-setting-member"
+                        className="input-field"
+                        value={settingForm.member_id}
+                        onChange={(e) =>
+                          setSettingForm({ ...settingForm, member_id: e.target.value })
+                        }
+                        required
+                      >
+                        <option value="">メンバーを選択</option>
+                        {members.map((member) => (
+                          <option key={member.id} value={String(member.id)}>
+                            {member.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label
+                        htmlFor="work-setting-status"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        設定種別
+                      </label>
+                      <select
+                        id="work-setting-status"
+                        className="input-field"
+                        value={settingForm.status}
+                        onChange={(e) => setSettingForm({ ...settingForm, status: e.target.value })}
+                      >
+                        <option value="0">固定</option>
+                        <option value="1">除外</option>
+                      </select>
+                    </div>
+                    <button type="submit" className="btn-primary w-full">
+                      設定を追加
+                    </button>
+                  </form>
 
-                    {/* 現在の設定一覧 */}
-                    <div className="rounded-xl border border-gray-200 p-4 mt-4">
-                      <div>
-                        <h4 className="font-semibold text-gray-900">現在の設定</h4>
-                        <p className="text-sm text-gray-500">
-                          この当番に対して登録済みのメンバー固定/除外設定です。
-                        </p>
-                      </div>
-                      <div className="mt-4 space-y-3">
-                        {(selectedWork.member_options ?? []).length === 0 && (
-                          <p className="text-sm text-gray-500">まだ設定はありません。</p>
-                        )}
-                        {(selectedWork.member_options ?? []).map((option) => {
-                          const memberName =
-                            members.find((m) => m.id === option.member_id)?.name || '削除済み';
-                          return (
-                            <div
-                              key={option.id}
-                              className="flex items-center justify-between rounded-lg bg-gray-50 px-4 py-3"
-                            >
-                              <div>
-                                <p className="font-medium text-gray-900">{memberName}</p>
-                                <p className="text-sm text-gray-500">{option.status_label}</p>
-                              </div>
-                              <button
-                                type="button"
-                                onClick={() => handleDeleteSetting(option.id)}
-                                className="text-sm font-medium text-red-500 hover:text-red-700"
-                              >
-                                解除
-                              </button>
+                  {/* 現在の設定一覧 */}
+                  <div className="rounded-xl border border-gray-200 p-4 mt-4">
+                    <div>
+                      <h4 className="font-semibold text-gray-900">現在の設定</h4>
+                      <p className="text-sm text-gray-500">
+                        この当番に対して登録済みのメンバー固定/除外設定です。
+                      </p>
+                    </div>
+                    <div className="mt-4 space-y-3">
+                      {(selectedWork.member_options ?? []).length === 0 && (
+                        <p className="text-sm text-gray-500">まだ設定はありません。</p>
+                      )}
+                      {(selectedWork.member_options ?? []).map((option) => {
+                        const memberName =
+                          members.find((m) => m.id === option.member_id)?.name || '削除済み';
+                        return (
+                          <div
+                            key={option.id}
+                            className="flex items-center justify-between rounded-lg bg-gray-50 px-4 py-3"
+                          >
+                            <div>
+                              <p className="font-medium text-gray-900">{memberName}</p>
+                              <p className="text-sm text-gray-500">{option.status_label}</p>
                             </div>
-                          );
-                        })}
-                      </div>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteSetting(option.id)}
+                              className="text-sm font-medium text-red-500 hover:text-red-700"
+                            >
+                              解除
+                            </button>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
-              </>
-            )}
+              )}
+            </div>
           </div>
         </div>
       )}
