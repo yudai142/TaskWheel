@@ -221,10 +221,7 @@ export default function App(): JSX.Element {
       >
         <Routes>
           <Route path="/password-reset" element={<PasswordResetPage />} />
-          <Route
-            path="/"
-            element={<Dashboard worksheetId={activeWorksheetId} isDemoUser={isDemoUser()} />}
-          />
+          <Route path="/" element={<Dashboard worksheetId={activeWorksheetId} />} />
           <Route
             path="/members"
             element={<Members worksheetId={activeWorksheetId} isDemoUser={isDemoUser()} />}

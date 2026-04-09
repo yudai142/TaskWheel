@@ -21,7 +21,7 @@ interface Notification {
 
 interface Props {
   worksheetId: number | null;
-  isDemoUser?: boolean;
+  _isDemoUser?: boolean;
 }
 
 type StatsTab = 'works' | 'members' | 'assigned';
