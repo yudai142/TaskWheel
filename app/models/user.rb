@@ -55,9 +55,12 @@ class User < ApplicationRecord
     { name: '掃除機', multiple: 0, archive: true, is_above: false }
   ].freeze
 
-  # ユーザーが一人も登録されていない場合、デモアカウントとサンプルデータを生成
+  # デモアカウント（test@example.com）が存在しない場合に生成
+  # ※ 複数のユーザーが存在する場合でも、デモアカウントが必要なら生成される
   def self.seed_demo_user!
-    return if User.count > 0
+    # デモアカウントが既に存在する場合はスキップ
+    existing_user = User.find_by(email: 'test@example.com')
+    return existing_user if existing_user
 
     user = User.create!(
       email: 'test@example.com',

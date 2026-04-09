@@ -85,7 +85,7 @@ RSpec.describe 'API V1 Demo Seed (Issue #30)', type: :request do
     context '既存ユーザーがいる場合' do
       let!(:existing_user) { create(:user, email: 'existing@example.com') }
 
-      it 'デモアカウント生成をスキップ' do
+      it '既存ユーザーでログインできる' do
         expect(User.count).to eq(1)
 
         post '/api/v1/auth/login', params: {
@@ -93,8 +93,28 @@ RSpec.describe 'API V1 Demo Seed (Issue #30)', type: :request do
           password: existing_user.password
         }
 
-        # ユーザー数が変わらない
+        # 既存ユーザーでログイン成功
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body['authenticated']).to be(true)
         expect(User.count).to eq(1)
+      end
+
+      it 'デモアカウントが存在しない場合、デモログインで自動生成＆ログインできる' do
+        expect(User.count).to eq(1)
+
+        post '/api/v1/auth/login', params: {
+          email: 'test@example.com',
+          password: 'password123'
+        }
+
+        # デモアカウントが新規生成される
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body['authenticated']).to be(true)
+        expect(User.count).to eq(2)
+
+        demo_user = User.find_by(email: 'test@example.com')
+        expect(demo_user).not_to be_nil
+        expect(demo_user.name).to eq('デモユーザー')
       end
     end
 

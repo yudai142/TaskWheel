@@ -25,10 +25,12 @@ module Api
       # POST /api/v1/auth/login
       # メール/パスワードでログイン
       def login
-        # ユーザーが登録されていない場合、デモアカウントを自動生成
-        User.seed_demo_user!
+        email = params[:email].to_s.strip.downcase
 
-        user = User.find_by(email: params[:email].to_s.strip.downcase)
+        # デモアカウント（test@example.com）の場合、自動生成を試みる
+        User.seed_demo_user! if email == 'test@example.com'
+
+        user = User.find_by(email: email)
         if user&.valid_password?(params[:password])
           session[:user_id] = user.id
           worksheet = current_worksheet_for(user)
