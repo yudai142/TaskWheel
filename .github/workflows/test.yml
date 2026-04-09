@@ -14,7 +14,7 @@ jobs:
   javascript-tests:
     name: React / TypeScript Tests
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
         node-version: [20.x]
@@ -41,7 +41,7 @@ jobs:
   rails-tests:
     name: Rails / RSpec Tests
     runs-on: ubuntu-latest
-    
+
     services:
       postgres:
         image: postgres:15-alpine
@@ -115,7 +115,7 @@ jobs:
         run: |
           echo "✅ JavaScript Tests: ${{ needs.javascript-tests.result }}"
           echo "✅ Rails Tests: ${{ needs.rails-tests.result }}"
-          
+
       - name: Comment on PR
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -123,11 +123,11 @@ jobs:
           script: |
             const jsResult = '${{ needs.javascript-tests.result }}';
             const railsResult = '${{ needs.rails-tests.result }}';
-            
+
             let summary = '## 🧪 Test Results\n\n';
             summary += jsResult === 'success' ? '✅ **React/TypeScript Tests**: Passed\n' : '❌ **React/TypeScript Tests**: Failed\n';
             summary += railsResult === 'success' ? '✅ **Rails Tests**: Passed\n' : '❌ **Rails Tests**: Failed\n';
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
