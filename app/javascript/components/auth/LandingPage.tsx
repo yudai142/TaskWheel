@@ -3,6 +3,7 @@ import React from 'react';
 interface LandingPageProps {
   onOpenLogin: () => void;
   onOpenRegister: () => void;
+  onDemoLogin?: () => void;
 }
 
 function csrfToken(): string {
@@ -18,6 +19,7 @@ function csrfToken(): string {
 export default function LandingPage({
   onOpenLogin,
   onOpenRegister,
+  onDemoLogin,
 }: LandingPageProps): JSX.Element {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-teal-50 px-4 py-10">
@@ -41,6 +43,13 @@ export default function LandingPage({
               className="rounded-lg border border-slate-300 bg-white px-5 py-3 font-semibold text-slate-900 hover:bg-slate-50"
             >
               ログイン
+            </button>
+            <button
+              type="button"
+              onClick={onDemoLogin}
+              className="rounded-lg border border-slate-300 bg-slate-100 px-5 py-3 font-semibold text-slate-700 hover:bg-slate-200"
+            >
+              デモでログイン
             </button>
             <form action="/users/auth/google_oauth2" method="post" className="contents">
               <input type="hidden" name="authenticity_token" value={csrfToken()} />
