@@ -39,14 +39,16 @@ describe('Members - メンバー設定モーダル', () => {
     render(<Members worksheetId={null} />);
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /YamadaTaro/ })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /Yamada Taro/ })).toBeInTheDocument();
     });
 
-    await user.click(screen.getByRole('button', { name: /YamadaTaro/ }));
+    await user.click(screen.getByRole('button', { name: /Yamada Taro/ }));
 
-    expect(screen.getByText('固定/除外設定を追加')).toBeInTheDocument();
-    expect(screen.getAllByText('掃除A').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('固定').length).toBeGreaterThan(0);
+    // 2列レイアウト内で設定パネルが表示されることを確認
+    expect(screen.getByText('メンバーを編集')).toBeInTheDocument();
+    expect(screen.getByText('メンバー固定/除外設定を追加')).toBeInTheDocument();
+    expect(screen.getByLabelText('メンバー名')).toBeInTheDocument();
+    expect(screen.getByLabelText('設定種別')).toBeInTheDocument();
   });
 
   it('モーダル内でアーカイブを切り替えられる', async () => {
@@ -55,15 +57,26 @@ describe('Members - メンバー設定モーダル', () => {
     render(<Members worksheetId={null} />);
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /YamadaTaro/ })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /Yamada Taro/ })).toBeInTheDocument();
     });
 
-    await user.click(screen.getByRole('button', { name: /YamadaTaro/ }));
-    await user.click(screen.getByRole('button', { name: 'アーカイブにする' }));
+    await user.click(screen.getByRole('button', { name: /Yamada Taro/ }));
+    
+    // 編集ボタン（複数ある場合は最初のもの）をクリック
+    const editButtons = screen.getAllByRole('button', { name: '編集' });
+    await user.click(editButtons[0]);
+
+    // アーカイブチェックボックスをチェック
+    const archiveCheckbox = screen.getByLabelText('アーカイブにする');
+    await user.click(archiveCheckbox);
+
+    // 保存ボタンをクリック
+    const saveButtons = screen.getAllByRole('button', { name: '保存' });
+    await user.click(saveButtons[0]);
 
     await waitFor(() => {
       expect(axios.patch).toHaveBeenCalledWith('/api/v1/members/1', {
-        member: { archive: true },
+        member: { archive: true, name: 'Yamada Taro', kana: 'ヤマダ タロウ' },
       });
     });
   });
@@ -74,12 +87,21 @@ describe('Members - メンバー設定モーダル', () => {
     render(<Members worksheetId={null} />);
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /YamadaTaro/ })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /Yamada Taro/ })).toBeInTheDocument();
     });
 
-    await user.click(screen.getByRole('button', { name: /YamadaTaro/ }));
-    await user.selectOptions(screen.getByLabelText('当番名'), '3');
-    await user.selectOptions(screen.getByLabelText('設定種別'), '1');
+    // メンバーカードをクリックして詳細ビューを開く
+    await user.click(screen.getByRole('button', { name: /Yamada Taro/ }));
+
+    // モーダル内で設定パネルの当番名セレクトを選択
+    const workSelect = screen.getByLabelText('当番名');
+    await user.selectOptions(workSelect, '3');
+
+    // 設定種別を選択
+    const statusSelect = screen.getByLabelText('設定種別');
+    await user.selectOptions(statusSelect, '1');
+
+    // 設定を追加ボタンを押す
     await user.click(screen.getByRole('button', { name: '設定を追加' }));
 
     await waitFor(() => {
