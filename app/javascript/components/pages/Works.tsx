@@ -117,19 +117,6 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
     }
   };
 
-  const handleDeleteWork = async (): Promise<void> => {
-    if (!selectedWork || !confirm('本当に削除しますか？')) return;
-
-    try {
-      await axios.delete(`/api/v1/works/${selectedWork.id}`);
-      setWorks((currentWorks) => currentWorks.filter((work) => work.id !== selectedWork.id));
-      setSelectedWork(null);
-      setEditMode(false);
-    } catch {
-      alert('当番の削除に失敗しました');
-    }
-  };
-
   if (loading) return <div className="text-center py-12">読み込み中...</div>;
 
   return (
@@ -309,9 +296,6 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
                       保存
                     </button>
                   </div>
-                  <button type="button" onClick={handleDeleteWork} className="w-full btn-danger">
-                    削除
-                  </button>
                 </form>
               </>
             ) : (
