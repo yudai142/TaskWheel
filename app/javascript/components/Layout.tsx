@@ -129,6 +129,7 @@ export default function Layout({
               </div>
               <button
                 onClick={onWorksheetNotificationDismiss}
+                aria-label="通知を閉じる"
                 className="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"
               >
                 <XMarkIcon className="h-5 w-5" />
@@ -145,6 +146,7 @@ export default function Layout({
                 <h3 className="text-lg font-bold text-gray-900">新しいワークシートを作成</h3>
                 <button
                   onClick={() => onShowWorksheetModal(false)}
+                  aria-label="モーダルを閉じる"
                   className="text-gray-500 hover:text-gray-700"
                 >
                   <XMarkIcon className="h-6 w-6" />
