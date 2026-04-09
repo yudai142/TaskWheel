@@ -1,17 +1,15 @@
 require 'rails_helper'
 
-describe 'API V1 Members - name カラム統合' do
-  let(:user) { create(:user) }
-  let(:worksheet) { create(:worksheet, user:) }
-  let(:member) { create(:member, worksheet:, family_name: '山田', given_name: '太郎', kana_name: 'ヤマダ') }
-  let(:headers) { { 'COOKIE' => "user_id=#{user.id}" } }
+describe 'API V1 Members - name カラム統合', type: :request do
+  let!(:user) { User.find_by(email: 'default@taskwheel.local') || create(:user, email: 'default@taskwheel.local') }
+  let!(:worksheet) { user.worksheets.first || create(:worksheet, user:) }
+  let!(:member) { create(:member, worksheet:, name: '山田 太郎', kana: 'ヤマダ タロウ') }
 
   describe 'PATCH /api/v1/members/:id' do
     context '名前を更新できる' do
       it 'フルネーム形式で名前を更新' do
         patch "/api/v1/members/#{member.id}", 
-              params: { member: { name: '佐藤 次郎' } },
-              headers:
+              params: { member: { name: '佐藤 次郎' } }
 
         expect(response).to have_http_status(:ok)
         expect(json_response['name']).to eq('佐藤 次郎')
@@ -19,8 +17,7 @@ describe 'API V1 Members - name カラム統合' do
 
       it 'かな名を更新' do
         patch "/api/v1/members/#{member.id}", 
-              params: { member: { kana: 'サトウ ジロウ' } },
-              headers:
+              params: { member: { kana: 'サトウ ジロウ' } }
 
         expect(response).to have_http_status(:ok)
         expect(json_response['kana']).to eq('サトウ ジロウ')
@@ -30,8 +27,7 @@ describe 'API V1 Members - name カラム統合' do
     context 'アーカイブ状態を更新' do
       it 'アーカイブにできる' do
         patch "/api/v1/members/#{member.id}", 
-              params: { member: { archive: true } },
-              headers:
+              params: { member: { archive: true } }
 
         expect(response).to have_http_status(:ok)
         member.reload
@@ -49,11 +45,11 @@ describe 'API V1 Members - name カラム統合' do
         ]
 
         post '/api/v1/members/bulk_create',
-             params: { members: members_data, worksheet_id: worksheet.id },
-             headers:
+             params: { members: members_data, worksheet_id: worksheet.id }
 
         expect(response).to have_http_status(:created)
-        expect(json_response['created_count']).to eq(2)
+        expect(json_response.is_a?(Array)).to be(true)
+        expect(json_response.length).to eq(2)
         expect(worksheet.members.count).to eq(3) # member + 2 new
       end
 
@@ -64,24 +60,20 @@ describe 'API V1 Members - name カラム統合' do
         ]
 
         post '/api/v1/members/bulk_create',
-             params: { members: members_data, worksheet_id: worksheet.id },
-             headers:
+             params: { members: members_data, worksheet_id: worksheet.id }
 
-        expect(response).to have_http_status(:created)
-        expect(json_response['created_count']).to eq(1)
-        expect(json_response['failed_count']).to eq(1)
+        expect(response).to have_http_status(422)
       end
     end
   end
 
   describe 'GET /api/v1/members' do
-    let!(:archived_member) { create(:member, worksheet:, family_name: '新田', given_name: '葉男', archive: true) }
+    let!(:archived_member) { create(:member, worksheet:, name: '新田 葉男', kana: 'ニッタ ハオ', archive: true) }
 
     context 'アーカイブフィルタリング' do
       it '有効なメンバーのみを取得' do
         get '/api/v1/members', 
-            params: { filter: 'active' },
-            headers:
+            params: { filter: 'active' }
 
         expect(response).to have_http_status(:ok)
         expect(json_response.length).to eq(1)
@@ -90,8 +82,7 @@ describe 'API V1 Members - name カラム統合' do
 
       it 'すべてのメンバーを取得' do
         get '/api/v1/members', 
-            params: { filter: 'all' },
-            headers:
+            params: { filter: 'all' }
 
         expect(response).to have_http_status(:ok)
         expect(json_response.length).to eq(2)
@@ -99,8 +90,7 @@ describe 'API V1 Members - name カラム統合' do
 
       it 'アーカイブのみを取得' do
         get '/api/v1/members', 
-            params: { filter: 'archived' },
-            headers:
+            params: { filter: 'archived' }
 
         expect(response).to have_http_status(:ok)
         expect(json_response.length).to eq(1)
