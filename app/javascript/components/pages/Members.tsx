@@ -10,9 +10,10 @@ interface MemberFormData {
 
 interface Props {
   worksheetId: number | null;
+  isDemoUser?: boolean;
 }
 
-export default function Members({ worksheetId }: Props): JSX.Element {
+export default function Members({ worksheetId, isDemoUser = false }: Props): JSX.Element {
   const [members, setMembers] = useState<Member[]>([]);
   const [works, setWorks] = useState<Work[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -30,6 +31,7 @@ export default function Members({ worksheetId }: Props): JSX.Element {
 
   useEffect(() => {
     void fetchMembers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [worksheetId]);
 
   const fetchMembers = async (): Promise<void> => {
@@ -129,11 +131,19 @@ export default function Members({ worksheetId }: Props): JSX.Element {
 
   if (loading) return <div className="text-center py-12">読み込み中...</div>;
 
+  const handleShowForm = (): void => {
+    if (isDemoUser) {
+      alert('デモアカウントではメンバーを追加できません');
+      return;
+    }
+    setShowForm(!showForm);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900">メンバー管理</h2>
-        <button onClick={() => setShowForm(!showForm)} className="btn-primary">
+        <button onClick={handleShowForm} className="btn-primary">
           {showForm ? 'キャンセル' : '新規追加'}
         </button>
       </div>

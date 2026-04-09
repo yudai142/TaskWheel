@@ -37,6 +37,7 @@ interface LayoutProps {
   onCreateWorksheet: () => Promise<void>;
   worksheetNotification: Notification | null;
   onWorksheetNotificationDismiss: () => void;
+  isDemoUser?: boolean;
 }
 
 export default function Layout({
@@ -53,6 +54,7 @@ export default function Layout({
   onCreateWorksheet,
   worksheetNotification,
   onWorksheetNotificationDismiss,
+  isDemoUser = false,
 }: LayoutProps): JSX.Element {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
 
@@ -205,7 +207,11 @@ export default function Layout({
                 </button>
               ))}
               <button
-                onClick={() => onShowWorksheetModal(true)}
+                onClick={() =>
+                  isDemoUser
+                    ? alert('デモアカウントではワークシートを作成できません')
+                    : onShowWorksheetModal(true)
+                }
                 className="flex items-center gap-1 px-3 py-2 rounded-lg border-2 border-primary-200 text-primary-600 hover:bg-primary-50 transition-colors whitespace-nowrap"
                 title="新しいワークシートを作成"
               >

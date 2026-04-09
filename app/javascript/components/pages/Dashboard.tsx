@@ -21,11 +21,12 @@ interface Notification {
 
 interface Props {
   worksheetId: number | null;
+  isDemoUser?: boolean;
 }
 
 type StatsTab = 'works' | 'members' | 'assigned';
 
-export default function Dashboard({ worksheetId }: Props): JSX.Element {
+export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): JSX.Element {
   const [works, setWorks] = useState<Work[]>([]);
   const [members, setMembers] = useState<Member[]>([]);
   const [histories, setHistories] = useState<History[]>([]);

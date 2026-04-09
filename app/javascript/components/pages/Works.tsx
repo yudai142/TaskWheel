@@ -9,9 +9,10 @@ interface WorkFormData {
 
 interface Props {
   worksheetId: number | null;
+  isDemoUser?: boolean;
 }
 
-export default function Works({ worksheetId }: Props): JSX.Element {
+export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.Element {
   const [works, setWorks] = useState<Work[]>([]);
   const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -23,6 +24,7 @@ export default function Works({ worksheetId }: Props): JSX.Element {
 
   useEffect(() => {
     void fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [worksheetId]);
 
   const fetchData = async (): Promise<void> => {
@@ -71,11 +73,19 @@ export default function Works({ worksheetId }: Props): JSX.Element {
   // members は型チェックのために使用
   void members;
 
+  const handleShowForm = (): void => {
+    if (isDemoUser) {
+      alert('デモアカウントでは当番を追加できません');
+      return;
+    }
+    setShowForm(!showForm);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900">当番管理</h2>
-        <button onClick={() => setShowForm(!showForm)} className="btn-primary">
+        <button onClick={handleShowForm} className="btn-primary">
           {showForm ? 'キャンセル' : '新規追加'}
         </button>
       </div>

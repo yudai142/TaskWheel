@@ -112,7 +112,21 @@ export default function App(): JSX.Element {
     await login('test@example.com', 'password123');
   };
 
+  // デモユーザーかどうかを判定
+  const isDemoUser = (): boolean => {
+    return currentUser?.email === 'test@example.com';
+  };
+
   const handleCreateWorksheet = async (): Promise<void> => {
+    if (isDemoUser()) {
+      setWorksheetNotification({
+        message: 'デモアカウントではワークシートを作成できません',
+        type: 'error',
+      });
+      window.setTimeout(() => setWorksheetNotification(null), 4000);
+      return;
+    }
+
     if (!newWorksheetName.trim()) return;
 
     try {
@@ -203,12 +217,22 @@ export default function App(): JSX.Element {
         onCreateWorksheet={handleCreateWorksheet}
         worksheetNotification={worksheetNotification}
         onWorksheetNotificationDismiss={() => setWorksheetNotification(null)}
+        isDemoUser={isDemoUser()}
       >
         <Routes>
           <Route path="/password-reset" element={<PasswordResetPage />} />
-          <Route path="/" element={<Dashboard worksheetId={activeWorksheetId} />} />
-          <Route path="/members" element={<Members worksheetId={activeWorksheetId} />} />
-          <Route path="/works" element={<Works worksheetId={activeWorksheetId} />} />
+          <Route
+            path="/"
+            element={<Dashboard worksheetId={activeWorksheetId} isDemoUser={isDemoUser()} />}
+          />
+          <Route
+            path="/members"
+            element={<Members worksheetId={activeWorksheetId} isDemoUser={isDemoUser()} />}
+          />
+          <Route
+            path="/works"
+            element={<Works worksheetId={activeWorksheetId} isDemoUser={isDemoUser()} />}
+          />
           <Route path="/history" element={<History worksheetId={activeWorksheetId} />} />
           <Route path="/settings" element={<Settings worksheetId={activeWorksheetId} />} />
         </Routes>
