@@ -7,7 +7,11 @@ interface WorkFormData {
   multiple: number;
 }
 
-export default function Works(): JSX.Element {
+interface Props {
+  worksheetId: number | null;
+}
+
+export default function Works({ worksheetId }: Props): JSX.Element {
   const [works, setWorks] = useState<Work[]>([]);
   const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -18,14 +22,18 @@ export default function Works(): JSX.Element {
   });
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    void fetchData();
+  }, [worksheetId]);
 
   const fetchData = async (): Promise<void> => {
     try {
       const [worksRes, membersRes] = await Promise.all([
-        axios.get<Work[]>('/api/v1/works'),
-        axios.get<Member[]>('/api/v1/members'),
+        axios.get<Work[]>('/api/v1/works', {
+          params: { worksheet_id: worksheetId },
+        }),
+        axios.get<Member[]>('/api/v1/members', {
+          params: { worksheet_id: worksheetId },
+        }),
       ]);
       setWorks(worksRes.data);
       setMembers(membersRes.data);

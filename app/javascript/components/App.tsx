@@ -60,7 +60,6 @@ export default function App(): JSX.Element {
       });
   }, []);
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => {
     if (currentWorksheet) {
       setActiveWorksheetId(currentWorksheet.id);

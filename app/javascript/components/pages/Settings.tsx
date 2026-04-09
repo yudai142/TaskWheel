@@ -1,42 +1,47 @@
-import React, { useState } from 'react'
-import axios from 'axios'
+import React, { useState } from 'react';
+import axios from 'axios';
 
-export default function Settings(): JSX.Element {
-  const [resetDate, setResetDate] = useState<string>('')
-  const [weekMode, setWeekMode] = useState<boolean>(false)
-  const [saving, setSaving] = useState<boolean>(false)
+interface Props {
+  worksheetId: number | null;
+}
+
+export default function Settings({ worksheetId }: Props): JSX.Element {
+  // worksheetId は今後のAPI拡張のために受け取る
+  const [resetDate, setResetDate] = useState<string>('');
+  const [weekMode, setWeekMode] = useState<boolean>(false);
+  const [saving, setSaving] = useState<boolean>(false);
 
   const handleResetDateChange = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
-    const date = e.target.value
-    setResetDate(date)
+    const date = e.target.value;
+    setResetDate(date);
 
-    if (!date) return
+    if (!date) return;
 
-    setSaving(true)
+    setSaving(true);
     try {
       await axios.post('/api/v1/shuffle_options', {
         shuffle_option: { reset_date: date },
-      })
-      alert('リセット日付を更新しました')
+      });
+      alert('リセット日付を更新しました');
     } catch {
-      alert('更新に失敗しました')
+      alert('更新に失敗しました');
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
-  }
+  };
 
   const handleWeekModeToggle = async (): Promise<void> => {
-    setSaving(true)
+    setSaving(true);
     try {
-      setWeekMode(!weekMode)
+      setWeekMode(!weekMode);
       // TODO: Implement week mode toggle API
-      alert('週間モードを更新しました')
+      alert('週間モードを更新しました');
     } catch {
-      alert('更新に失敗しました')
+      alert('更新に失敗しました');
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
-  }
+  };
 
   return (
     <div className="space-y-6 max-w-2xl">
@@ -72,9 +77,7 @@ export default function Settings(): JSX.Element {
               週間モード
             </label>
           </div>
-          <p className="text-sm text-gray-500">
-            オンの場合、曜日ごとの当番割り当てを管理します
-          </p>
+          <p className="text-sm text-gray-500">オンの場合、曜日ごとの当番割り当てを管理します</p>
         </div>
       </div>
 
@@ -94,5 +97,5 @@ export default function Settings(): JSX.Element {
         </p>
       </div>
     </div>
-  )
+  );
 }

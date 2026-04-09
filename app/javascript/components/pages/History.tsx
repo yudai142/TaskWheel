@@ -1,49 +1,53 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
-import type { History } from '../../types'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import type { History } from '../../types';
 
-export default function HistoryPage(): JSX.Element {
-  const [histories, setHistories] = useState<History[]>([])
-  const [loading, setLoading] = useState<boolean>(true)
-  const [selectedMonth, setSelectedMonth] = useState<Date>(new Date())
+interface Props {
+  worksheetId: number | null;
+}
+
+export default function HistoryPage({ worksheetId }: Props): JSX.Element {
+  const [histories, setHistories] = useState<History[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [selectedMonth, setSelectedMonth] = useState<Date>(new Date());
 
   useEffect(() => {
-    fetchHistories()
-  }, [selectedMonth])
+    void fetchHistories();
+  }, [selectedMonth, worksheetId]);
 
   const fetchHistories = async (): Promise<void> => {
     try {
-      const year = selectedMonth.getFullYear()
-      const month = selectedMonth.getMonth() + 1
+      const year = selectedMonth.getFullYear();
+      const month = selectedMonth.getMonth() + 1;
       const response = await axios.get<History[]>('/api/v1/histories', {
-        params: { year, month },
-      })
-      setHistories(response.data)
+        params: { year, month, worksheet_id: worksheetId },
+      });
+      setHistories(response.data);
     } catch {
       // Error fetching histories
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleDelete = async (id: number): Promise<void> => {
-    if (!window.confirm('この記録を削除しますか？')) return
+    if (!window.confirm('この記録を削除しますか？')) return;
     try {
-      await axios.delete(`/api/v1/histories/${id}`)
-      fetchHistories()
+      await axios.delete(`/api/v1/histories/${id}`);
+      fetchHistories();
     } catch {
-      alert('削除に失敗しました')
+      alert('削除に失敗しました');
     }
-  }
+  };
 
   const groupedHistories = histories.reduce<Record<string, History[]>>((acc, history) => {
-    const date = new Date(history.date).toLocaleDateString('ja-JP')
-    if (!acc[date]) acc[date] = []
-    acc[date].push(history)
-    return acc
-  }, {})
+    const date = new Date(history.date).toLocaleDateString('ja-JP');
+    if (!acc[date]) acc[date] = [];
+    acc[date].push(history);
+    return acc;
+  }, {});
 
-  if (loading) return <div className="text-center py-12">読み込み中...</div>
+  if (loading) return <div className="text-center py-12">読み込み中...</div>;
 
   return (
     <div className="space-y-6">
@@ -52,9 +56,7 @@ export default function HistoryPage(): JSX.Element {
         <div className="flex items-center space-x-4">
           <button
             onClick={() =>
-              setSelectedMonth(
-                new Date(selectedMonth.getFullYear(), selectedMonth.getMonth() - 1)
-              )
+              setSelectedMonth(new Date(selectedMonth.getFullYear(), selectedMonth.getMonth() - 1))
             }
             className="btn-secondary"
           >
@@ -65,9 +67,7 @@ export default function HistoryPage(): JSX.Element {
           </span>
           <button
             onClick={() =>
-              setSelectedMonth(
-                new Date(selectedMonth.getFullYear(), selectedMonth.getMonth() + 1)
-              )
+              setSelectedMonth(new Date(selectedMonth.getFullYear(), selectedMonth.getMonth() + 1))
             }
             className="btn-secondary"
           >
@@ -110,5 +110,5 @@ export default function HistoryPage(): JSX.Element {
         <div className="text-center py-12 text-gray-500">記録がありません</div>
       )}
     </div>
-  )
+  );
 }

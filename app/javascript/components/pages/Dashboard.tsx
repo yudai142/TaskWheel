@@ -11,18 +11,21 @@ import {
   CheckCircleIcon,
   SparklesIcon,
   XMarkIcon,
-  PlusIcon,
 } from '@heroicons/react/24/outline';
-import type { Member, Work, History, WorksheetSummary } from '../../types';
+import type { Member, Work, History } from '../../types';
 
 interface Notification {
   message: string;
   type: 'success' | 'error';
 }
 
+interface Props {
+  worksheetId: number | null;
+}
+
 type StatsTab = 'works' | 'members' | 'assigned';
 
-export default function Dashboard(): JSX.Element {
+export default function Dashboard({ worksheetId }: Props): JSX.Element {
   const [works, setWorks] = useState<Work[]>([]);
   const [members, setMembers] = useState<Member[]>([]);
   const [histories, setHistories] = useState<History[]>([]);
@@ -33,9 +36,6 @@ export default function Dashboard(): JSX.Element {
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [notification, setNotification] = useState<Notification | null>(null);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
-  const [worksheets, setWorksheets] = useState<WorksheetSummary[]>([]);
-  const [showWorksheetModal, setShowWorksheetModal] = useState<boolean>(false);
-  const [newWorksheetName, setNewWorksheetName] = useState<string>('');
 
   const showNotification = useCallback((message: string, type: 'success' | 'error' = 'success') => {
     setNotification({ message, type });
@@ -49,10 +49,14 @@ export default function Dashboard(): JSX.Element {
       const day = selectedDate.getDate();
 
       const [worksRes, membersRes, historiesRes] = await Promise.all([
-        axios.get<Work[]>('/api/v1/works'),
-        axios.get<Member[]>('/api/v1/members'),
+        axios.get<Work[]>('/api/v1/works', {
+          params: { worksheet_id: worksheetId },
+        }),
+        axios.get<Member[]>('/api/v1/members', {
+          params: { worksheet_id: worksheetId },
+        }),
         axios.get<History[]>('/api/v1/histories', {
-          params: { year, month, day },
+          params: { year, month, day, worksheet_id: worksheetId },
         }),
       ]);
       setWorks(worksRes.data.sort((a, b) => a.id - b.id));
@@ -63,7 +67,7 @@ export default function Dashboard(): JSX.Element {
     } finally {
       setLoading(false);
     }
-  }, [selectedDate]);
+  }, [selectedDate, worksheetId]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -71,18 +75,6 @@ export default function Dashboard(): JSX.Element {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const fetchWorksheets = async (): Promise<void> => {
-      try {
-        const res = await axios.get<WorksheetSummary[]>('/api/v1/worksheets');
-        setWorksheets(res.data);
-      } catch {
-        // Error fetching worksheets
-      }
-    };
-    void fetchWorksheets();
   }, []);
 
   useEffect(() => {
@@ -133,30 +125,6 @@ export default function Dashboard(): JSX.Element {
       showNotification(msg, 'error');
     } finally {
       setShuffling(null);
-    }
-  };
-
-  const handleCreateWorksheet = async (): Promise<void> => {
-    if (!newWorksheetName.trim()) {
-      showNotification('ワークシート名を入力してください', 'error');
-      return;
-    }
-
-    try {
-      const res = await axios.post<WorksheetSummary>('/api/v1/worksheets', {
-        name: newWorksheetName,
-        interval: 7,
-        week_use: false,
-        week: 0,
-      });
-      setWorksheets((prev) => [...prev, res.data]);
-      setShowWorksheetModal(false);
-      setNewWorksheetName('');
-      showNotification('ワークシートを作成しました', 'success');
-    } catch (error) {
-      const axiosError = error as { response?: { data?: { errors?: string[] } } };
-      const msg = axiosError.response?.data?.errors?.[0] || 'ワークシート作成に失敗しました';
-      showNotification(msg, 'error');
     }
   };
 
@@ -504,177 +472,9 @@ export default function Dashboard(): JSX.Element {
         </div>
       )}
 
-      {/* Worksheet Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2">
-        {worksheets.map((worksheet: WorksheetSummary) => (
-          <button
-            key={worksheet.id}
-            role="tab"
-            className={`px-4 py-2 rounded-lg whitespace-nowrap transition-colors ${
-              // Note: activeWorksheetId comparison for visual feedback
-              'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-            }`}
-          >
-            {worksheet.name}
-          </button>
-        ))}
-        <button
-          onClick={() => setShowWorksheetModal(true)}
-          className="flex items-center gap-1 px-3 py-2 rounded-lg border-2 border-primary-200 text-primary-600 hover:bg-primary-50 transition-colors whitespace-nowrap"
-          title="新しいワークシートを作成"
-        >
-          <PlusIcon className="h-5 w-5" />
-        </button>
-      </div>
-
-      {/* Worksheet Creation Modal */}
-      {showWorksheetModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
-            <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-lg font-bold text-gray-900">新しいワークシートを作成</h3>
-              <button
-                onClick={() => setShowWorksheetModal(false)}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                <XMarkIcon className="h-6 w-6" />
-              </button>
-            </div>
-            <div className="space-y-4">
-              <input
-                type="text"
-                placeholder="ワークシート名"
-                value={newWorksheetName}
-                onChange={(e) => setNewWorksheetName(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    void handleCreateWorksheet();
-                  }
-                }}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
-                autoFocus
-              />
-              <div className="flex gap-2 justify-end">
-                <button
-                  onClick={() => setShowWorksheetModal(false)}
-                  className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
-                >
-                  キャンセル
-                </button>
-                <button
-                  onClick={() => void handleCreateWorksheet()}
-                  className="px-4 py-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors"
-                >
-                  作成
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Date Navigation Header */}
-      <div
-        className={`card bg-gradient-to-r from-primary-50 to-blue-50 border-2 border-primary-200 sticky top-0 z-40 transition-all ${
-          isScrolled ? 'py-1 shadow-lg' : 'py-4'
-        }`}
-      >
-        <div
-          className={`flex items-center justify-center flex-wrap transition-all ${isScrolled ? 'gap-1.5' : 'gap-3'}`}
-        >
-          <button
-            onClick={handlePrevDay}
-            className={`btn-secondary flex items-center transition-all ${isScrolled ? 'p-1.5' : 'p-2'}`}
-            title="前の日"
-          >
-            <ChevronLeftIcon className={`transition-all ${isScrolled ? 'h-4 w-4' : 'h-5 w-5'}`} />
-          </button>
-
-          <div className="flex items-center space-x-2 relative">
-            <button
-              onClick={() => setShowCalendar(!showCalendar)}
-              className="text-primary-600 hover:text-primary-700 transition-colors flex-shrink-0"
-              title="カレンダーを表示"
-            >
-              <CalendarIcon className={`transition-all ${isScrolled ? 'h-5 w-5' : 'h-6 w-6'}`} />
-            </button>
-            {showCalendar && (
-              <>
-                <div className="fixed inset-0 z-40" onClick={() => setShowCalendar(false)} />
-                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 z-50 bg-white rounded-xl shadow-2xl border border-indigo-100 p-2">
-                  <Calendar
-                    value={selectedDate}
-                    onChange={(value: unknown) => {
-                      if (value instanceof Date) {
-                        setSelectedDate(value);
-                        setShowCalendar(false);
-                      }
-                    }}
-                    locale="ja-JP"
-                    className="react-calendar-custom"
-                  />
-                </div>
-              </>
-            )}
-            <span
-              className={`font-bold text-gray-900 whitespace-nowrap transition-all ${isScrolled ? 'text-base' : 'text-xl'}`}
-            >
-              {formatDate(selectedDate)}
-            </span>
-            {!isToday(selectedDate) && (
-              <button
-                onClick={handleToday}
-                className={`bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors font-medium flex-shrink-0 ${isScrolled ? 'text-xs px-1.5 py-0.5' : 'text-sm px-2 py-1'}`}
-              >
-                今日
-              </button>
-            )}
-          </div>
-
-          <button
-            onClick={() => {
-              const isDisabled =
-                shuffling === 'all' || validWorksCount === 0 || histories.length === 0;
-              if (isDisabled && histories.length === 0) {
-                showNotification('参加メンバーを選択してください', 'error');
-                return;
-              }
-              if (!isDisabled) {
-                handleShuffleAllWorks();
-              }
-            }}
-            className={`flex items-center justify-center font-medium rounded-lg transition-all duration-200 ${
-              shuffling === 'all' || validWorksCount === 0 || histories.length === 0
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed opacity-50 pointer-events-auto'
-                : 'btn-primary hover:shadow-lg'
-            } ${isScrolled ? 'px-3 py-1.5 text-sm' : 'px-4 py-2'}`}
-          >
-            {shuffling === 'all' ? (
-              <>
-                <span className="animate-spin mr-2">⏳</span>
-                <span className={isScrolled ? 'hidden sm:inline' : ''}>処理中...</span>
-              </>
-            ) : (
-              <>
-                <SparklesIcon className={`mr-2 ${isScrolled ? 'h-4 w-4' : 'h-5 w-5'}`} />
-                <span className={isScrolled ? 'hidden sm:inline' : ''}>シャッフル</span>
-              </>
-            )}
-          </button>
-
-          <button
-            onClick={handleNextDay}
-            className={`btn-secondary flex items-center transition-all ${isScrolled ? 'p-1.5' : 'p-2'}`}
-            title="次の日"
-          >
-            <ChevronRightIcon className={`transition-all ${isScrolled ? 'h-4 w-4' : 'h-5 w-5'}`} />
-          </button>
-        </div>
-      </div>
-
       {/* Stats Cards as Tabs */}
       <div
-        className={`grid sticky top-12 z-30 bg-white rounded-lg transition-all border ${
+        className={`grid sticky top-0 z-30 bg-white rounded-lg transition-all border ${
           isScrolled
             ? 'py-1.5 px-2 shadow-md grid-cols-1 md:grid-cols-3 gap-1.5 lg:gap-2 border-gray-200'
             : 'py-4 px-4 grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6 border-transparent'

@@ -8,7 +8,11 @@ interface MemberFormData {
   kana_name: string;
 }
 
-export default function Members(): JSX.Element {
+interface Props {
+  worksheetId: number | null;
+}
+
+export default function Members({ worksheetId }: Props): JSX.Element {
   const [members, setMembers] = useState<Member[]>([]);
   const [works, setWorks] = useState<Work[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -25,16 +29,18 @@ export default function Members(): JSX.Element {
   });
 
   useEffect(() => {
-    fetchMembers();
-  }, []);
+    void fetchMembers();
+  }, [worksheetId]);
 
   const fetchMembers = async (): Promise<void> => {
     try {
       const [membersResponse, worksResponse] = await Promise.all([
         axios.get<Member[]>('/api/v1/members', {
-          params: { include_archived: 'true', include_settings: 'true' },
+          params: { include_archived: 'true', include_settings: 'true', worksheet_id: worksheetId },
         }),
-        axios.get<Work[]>('/api/v1/works'),
+        axios.get<Work[]>('/api/v1/works', {
+          params: { worksheet_id: worksheetId },
+        }),
       ]);
       setMembers(membersResponse.data);
       setWorks(
