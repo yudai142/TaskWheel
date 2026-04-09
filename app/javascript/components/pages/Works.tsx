@@ -299,6 +299,7 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
                       type="button"
                       onClick={() => {
                         setEditMode(false);
+                        setSelectedWork(null);
                       }}
                       className="btn-secondary flex-1"
                     >
