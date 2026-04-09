@@ -22,8 +22,9 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
         json_response = response.parsed_body
 
         expect(json_response[0]).to have_key('id')
-        expect(json_response[0]).to have_key('given_name')
-        expect(json_response[0]).to have_key('family_name')
+        expect(json_response[0]).to have_key('name')
+        expect(json_response[0]).to have_key('kana')
+        expect(json_response[0]).to have_key('archive')
       end
 
       it 'メンバーの ID を選択可能である' do

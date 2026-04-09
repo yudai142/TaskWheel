@@ -70,8 +70,8 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
         json_response = response.parsed_body
 
         expect(json_response[0]).to have_key('id')
-        expect(json_response[0]).to have_key('given_name')
-        expect(json_response[0]).to have_key('family_name')
+        expect(json_response[0]).to have_key('name')
+        expect(json_response[0]).to have_key('kana')
         expect(json_response[0]).to have_key('archive')
       end
 
