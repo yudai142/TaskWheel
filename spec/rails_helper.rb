@@ -19,6 +19,9 @@ require 'rspec/rails'
 
 # Add additional requires below this line. Rails is not loaded until this point!
 
+# Load support files
+Dir["#{__dir__}/support/**/*.rb"].each { |f| require f }
+
 begin
   ActiveRecord::Migration.maintain_test_schema!
 rescue ActiveRecord::PendingMigrationError => e
@@ -37,6 +40,25 @@ RSpec.configure do |config|
     DatabaseCleaner.allow_remote_database_url = true
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with(:truncation)
+
+    # テスト環境用のデフォルトユーザーとワークシートを Idempotent に作成
+    # 既存ユーザーを削除して新規作成し、テスト中の整合性を保証
+    User.where(email: 'default@taskwheel.local').destroy_all
+    default_user = User.create!(
+      email: 'default@taskwheel.local',
+      password: 'password123',
+      password_confirmation: 'password123',
+      name: 'Test User'
+    )
+
+    # デフォルトユーザーのワークシートを作成
+    Worksheet.create!(
+      user: default_user,
+      name: 'Default Worksheet',
+      interval: 1,
+      week_use: false,
+      week: 0
+    )
   end
 
   config.around do |example|
@@ -75,7 +97,6 @@ RSpec.configure do |config|
   # Set default test request headers and environment for API tests
   config.before(:each, type: :request) do
     ENV['RAILS_ENV'] = 'test'
-    # Set headers for API requests
     host! 'localhost:3000'
   end
 end
