@@ -25,6 +25,9 @@ module Api
       # POST /api/v1/auth/login
       # メール/パスワードでログイン
       def login
+        # ユーザーが登録されていない場合、デモアカウントを自動生成
+        User.seed_demo_user!
+
         user = User.find_by(email: params[:email].to_s.strip.downcase)
         if user&.valid_password?(params[:password])
           session[:user_id] = user.id
