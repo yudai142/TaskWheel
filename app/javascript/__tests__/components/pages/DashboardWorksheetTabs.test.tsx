@@ -6,7 +6,18 @@ import Dashboard from '../../../components/pages/Dashboard';
 import { setDefaultAxiosMocks } from '../../fixtures/axiosMocks';
 
 vi.mock('axios');
-const mockedAxios = axios as unknown as ReturnType<typeof vi.fn>;
+
+type MockedAxios = {
+  get: {
+    mockResolvedValue: (value: unknown) => void;
+    mockImplementation: (fn: (url: string) => Promise<unknown>) => void;
+  };
+  post: { mockResolvedValue: (value: unknown) => void };
+  patch: { mockResolvedValue: (value: unknown) => void };
+  delete: { mockResolvedValue: (value: unknown) => void };
+};
+
+const mockedAxios = axios as unknown as MockedAxios;
 
 describe('Dashboard - Worksheet Tabs Feature', () => {
   const mockWorksheets = [
@@ -29,7 +40,7 @@ describe('Dashboard - Worksheet Tabs Feature', () => {
   beforeEach(() => {
     setDefaultAxiosMocks();
 
-    vi.mocked(mockedAxios.get).mockImplementation((url: string) => {
+    mockedAxios.get.mockImplementation((url: string) => {
       if (url.includes('/api/v1/works')) {
         return Promise.resolve({ data: mockWorks });
       }
@@ -98,7 +109,7 @@ describe('Dashboard - Worksheet Tabs Feature', () => {
   it('ワークシート名を入力して作成ボタンをクリックする', async () => {
     const user = userEvent.setup();
 
-    vi.mocked(mockedAxios.post).mockResolvedValue({
+    mockedAxios.post.mockResolvedValue({
       data: { id: 3, name: '新しいワークシート', interval: 7, week_use: false, week: 0 },
     });
 
@@ -119,7 +130,7 @@ describe('Dashboard - Worksheet Tabs Feature', () => {
     fireEvent.click(createButton);
 
     await waitFor(() => {
-      expect(vi.mocked(mockedAxios.post)).toHaveBeenCalledWith(
+      expect(mockedAxios.post).toHaveBeenCalledWith(
         '/api/v1/worksheets',
         expect.objectContaining({ name: '新しいワークシート' })
       );
@@ -148,8 +159,8 @@ describe('Dashboard - Worksheet Tabs Feature', () => {
       week: 0,
     };
 
-    vi.mocked(mockedAxios.post).mockResolvedValue({ data: newWorksheet });
-    vi.mocked(mockedAxios.get).mockImplementation((url: string) => {
+    mockedAxios.post.mockResolvedValue({ data: newWorksheet });
+    mockedAxios.get.mockImplementation((url: string) => {
       if (url.includes('/api/v1/worksheets')) {
         return Promise.resolve({
           data: [...mockWorksheets, newWorksheet],
