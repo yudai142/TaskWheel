@@ -161,6 +161,7 @@ export default function Dashboard({ worksheetId }: Props): JSX.Element {
           year,
           month,
           day,
+          worksheet_id: worksheetId,
         }
       );
 
@@ -472,9 +473,108 @@ export default function Dashboard({ worksheetId }: Props): JSX.Element {
         </div>
       )}
 
+      {/* Date Navigation Header */}
+      <div
+        className={`card bg-gradient-to-r from-primary-50 to-blue-50 border-2 border-primary-200 sticky top-0 z-40 transition-all ${
+          isScrolled ? 'py-1 shadow-lg' : 'py-4'
+        }`}
+      >
+        <div
+          className={`flex items-center justify-center flex-wrap transition-all ${isScrolled ? 'gap-1.5' : 'gap-3'}`}
+        >
+          <button
+            onClick={handlePrevDay}
+            className={`btn-secondary flex items-center transition-all ${isScrolled ? 'p-1.5' : 'p-2'}`}
+            title="前の日"
+          >
+            <ChevronLeftIcon className={`transition-all ${isScrolled ? 'h-4 w-4' : 'h-5 w-5'}`} />
+          </button>
+
+          <div className="flex items-center space-x-2 relative">
+            <button
+              onClick={() => setShowCalendar(!showCalendar)}
+              className="text-primary-600 hover:text-primary-700 transition-colors flex-shrink-0"
+              title="カレンダーを表示"
+            >
+              <CalendarIcon className={`transition-all ${isScrolled ? 'h-5 w-5' : 'h-6 w-6'}`} />
+            </button>
+            {showCalendar && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setShowCalendar(false)} />
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 z-50 bg-white rounded-xl shadow-2xl border border-indigo-100 p-2">
+                  <Calendar
+                    value={selectedDate}
+                    onChange={(value: unknown) => {
+                      if (value instanceof Date) {
+                        setSelectedDate(value);
+                        setShowCalendar(false);
+                      }
+                    }}
+                    locale="ja-JP"
+                    className="react-calendar-custom"
+                  />
+                </div>
+              </>
+            )}
+            <span
+              className={`font-bold text-gray-900 whitespace-nowrap transition-all ${isScrolled ? 'text-base' : 'text-xl'}`}
+            >
+              {formatDate(selectedDate)}
+            </span>
+            {!isToday(selectedDate) && (
+              <button
+                onClick={handleToday}
+                className={`bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors font-medium flex-shrink-0 ${isScrolled ? 'text-xs px-1.5 py-0.5' : 'text-sm px-2 py-1'}`}
+              >
+                今日
+              </button>
+            )}
+          </div>
+
+          <button
+            onClick={() => {
+              const isDisabled =
+                shuffling === 'all' || validWorksCount === 0 || histories.length === 0;
+              if (isDisabled && histories.length === 0) {
+                showNotification('参加メンバーを選択してください', 'error');
+                return;
+              }
+              if (!isDisabled) {
+                handleShuffleAllWorks();
+              }
+            }}
+            className={`flex items-center justify-center font-medium rounded-lg transition-all duration-200 ${
+              shuffling === 'all' || validWorksCount === 0 || histories.length === 0
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed opacity-50 pointer-events-auto'
+                : 'btn-primary hover:shadow-lg'
+            } ${isScrolled ? 'px-3 py-1.5 text-sm' : 'px-4 py-2'}`}
+          >
+            {shuffling === 'all' ? (
+              <>
+                <span className="animate-spin mr-2">⏳</span>
+                <span className={isScrolled ? 'hidden sm:inline' : ''}>処理中...</span>
+              </>
+            ) : (
+              <>
+                <SparklesIcon className={`mr-2 ${isScrolled ? 'h-4 w-4' : 'h-5 w-5'}`} />
+                <span className={isScrolled ? 'hidden sm:inline' : ''}>シャッフル</span>
+              </>
+            )}
+          </button>
+
+          <button
+            onClick={handleNextDay}
+            className={`btn-secondary flex items-center transition-all ${isScrolled ? 'p-1.5' : 'p-2'}`}
+            title="次の日"
+          >
+            <ChevronRightIcon className={`transition-all ${isScrolled ? 'h-4 w-4' : 'h-5 w-5'}`} />
+          </button>
+        </div>
+      </div>
+
       {/* Stats Cards as Tabs */}
       <div
-        className={`grid sticky top-0 z-30 bg-white rounded-lg transition-all border ${
+        className={`grid sticky top-12 z-30 bg-white rounded-lg transition-all border ${
           isScrolled
             ? 'py-1.5 px-2 shadow-md grid-cols-1 md:grid-cols-3 gap-1.5 lg:gap-2 border-gray-200'
             : 'py-4 px-4 grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6 border-transparent'
