@@ -389,7 +389,10 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
                   <div className="flex gap-2">
                     <button
                       type="button"
-                      onClick={() => setEditMode(false)}
+                      onClick={() => {
+                        setEditMode(false);
+                        setSelectedMember(null);
+                      }}
                       className="btn-secondary flex-1"
                     >
                       キャンセル
