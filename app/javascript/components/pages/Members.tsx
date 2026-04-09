@@ -242,19 +242,6 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
     }
   };
 
-  const handleDeleteMember = async (): Promise<void> => {
-    if (!selectedMember || !window.confirm('本当に削除しますか?')) return;
-
-    try {
-      await axios.delete(`/api/v1/members/${selectedMember.id}`);
-      setMembers((currentMembers) => currentMembers.filter((m) => m.id !== selectedMember.id));
-      setSelectedMember(null);
-      setEditMode(false);
-    } catch {
-      alert('メンバーの削除に失敗しました');
-    }
-  };
-
   if (loading) return <div className="text-center py-12">読み込み中...</div>;
 
   return (
@@ -401,9 +388,6 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
                       保存
                     </button>
                   </div>
-                  <button type="button" onClick={handleDeleteMember} className="w-full btn-danger">
-                    削除
-                  </button>
                 </form>
               </>
             ) : (
