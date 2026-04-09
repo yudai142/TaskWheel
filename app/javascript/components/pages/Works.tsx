@@ -111,6 +111,7 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
       is_above: work.is_above ?? true,
       archive: work.archive,
     });
+    setSettingForm({ member_id: '', status: '0' });
     setEditMode(true);
   };
 

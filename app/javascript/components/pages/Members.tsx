@@ -228,6 +228,7 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
       kana: member.kana,
       archive: member.archive,
     });
+    setSettingForm({ work_id: '', status: '0' });
     setEditMode(true);
   };
 
