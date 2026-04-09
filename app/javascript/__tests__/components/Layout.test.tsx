@@ -197,7 +197,7 @@ describe('Layout - Issue #27: ワークシート選択機能の実装', () => {
         </Layout>
       );
 
-      const closeButton = screen.getByRole('button', { name: '' });
+      const closeButton = screen.getByRole('button', { name: /通知を閉じる/ });
       await user.click(closeButton);
 
       expect(onDismiss).toHaveBeenCalled();
