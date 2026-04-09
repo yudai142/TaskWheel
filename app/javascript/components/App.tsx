@@ -27,7 +27,6 @@ export default function App(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(true);
   const [authenticated, setAuthenticated] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
-  const [currentWorksheet, setCurrentWorksheet] = useState<WorksheetSummary | null>(null);
   const [authModalMode, setAuthModalMode] = useState<'login' | 'register' | null>(
     queryParam('open') === 'login' ? 'login' : null
   );
@@ -48,23 +47,18 @@ export default function App(): JSX.Element {
       .then((res) => {
         setAuthenticated(res.data.authenticated);
         setCurrentUser(res.data.user);
-        setCurrentWorksheet(res.data.current_worksheet);
+        if (res.data.current_worksheet) {
+          setActiveWorksheetId(res.data.current_worksheet.id);
+        }
       })
       .catch(() => {
         setAuthenticated(false);
         setCurrentUser(null);
-        setCurrentWorksheet(null);
       })
       .finally(() => {
         setLoading(false);
       });
   }, []);
-
-  useEffect(() => {
-    if (currentWorksheet) {
-      setActiveWorksheetId(currentWorksheet.id);
-    }
-  }, [currentWorksheet]);
 
   useEffect(() => {
     const fetchWorksheets = async (): Promise<void> => {
@@ -83,7 +77,9 @@ export default function App(): JSX.Element {
     const res = await axios.post<AuthResponse>('/api/v1/auth/login', { email, password });
     setAuthenticated(res.data.authenticated);
     setCurrentUser(res.data.user);
-    setCurrentWorksheet(res.data.current_worksheet);
+    if (res.data.current_worksheet) {
+      setActiveWorksheetId(res.data.current_worksheet.id);
+    }
   };
 
   const register = async (
@@ -100,14 +96,16 @@ export default function App(): JSX.Element {
     });
     setAuthenticated(res.data.authenticated);
     setCurrentUser(res.data.user);
-    setCurrentWorksheet(res.data.current_worksheet);
+    if (res.data.current_worksheet) {
+      setActiveWorksheetId(res.data.current_worksheet.id);
+    }
   };
 
   const logout = async (): Promise<void> => {
     await axios.post('/api/v1/auth/logout');
     setAuthenticated(false);
     setCurrentUser(null);
-    setCurrentWorksheet(null);
+    setActiveWorksheetId(null);
   };
 
   const handleCreateWorksheet = async (): Promise<void> => {
@@ -184,7 +182,6 @@ export default function App(): JSX.Element {
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Layout
         currentUserName={currentUser?.name || currentUser?.email || ''}
-        currentWorksheetName={currentWorksheet?.name || 'ワークシート'}
         onLogout={logout}
         worksheets={worksheets}
         activeWorksheetId={activeWorksheetId}
