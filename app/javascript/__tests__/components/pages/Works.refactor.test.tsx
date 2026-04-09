@@ -5,7 +5,6 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import axios from 'axios';
 import Works from '../../../components/pages/Works';
-import { setDefaultAxiosMocks } from '../../../spec/fixtures/axiosMocks';
 
 vi.mock('axios');
 
@@ -42,13 +41,14 @@ const mockWorksForUIRefactor = [
 describe('Works - UI 刷新テスト', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    setDefaultAxiosMocks();
     (axios.get as unknown as ReturnType<typeof vi.fn>).mockImplementation((url: string) => {
       if (url.includes('/api/v1/works')) {
         return Promise.resolve({ data: mockWorksForUIRefactor.filter((w) => !w.archive) });
       }
       return Promise.resolve({ data: [] });
     });
+    (axios.post as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({ data: {} });
+    (axios.patch as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({ data: {} });
   });
 
   describe('一括登録機能', () => {
