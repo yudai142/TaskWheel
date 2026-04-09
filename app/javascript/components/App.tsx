@@ -108,6 +108,10 @@ export default function App(): JSX.Element {
     setActiveWorksheetId(null);
   };
 
+  const handleDemoLogin = async (): Promise<void> => {
+    await login('test@example.com', 'password123');
+  };
+
   const handleCreateWorksheet = async (): Promise<void> => {
     if (!newWorksheetName.trim()) return;
 
@@ -161,6 +165,7 @@ export default function App(): JSX.Element {
                 <LandingPage
                   onOpenLogin={() => setAuthModalMode('login')}
                   onOpenRegister={() => setAuthModalMode('register')}
+                  onDemoLogin={handleDemoLogin}
                 />
                 {authModalMode && (
                   <AuthModal
