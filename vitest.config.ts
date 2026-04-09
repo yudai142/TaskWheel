@@ -1,6 +1,6 @@
-import { defineConfig } from 'vitest/config'
-import react from '@vitejs/plugin-react'
-import path from 'path'
+import { defineConfig } from 'vitest/config';
+import react from '@vitejs/plugin-react';
+import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
@@ -11,10 +11,12 @@ export default defineConfig({
     css: true,
     include: ['app/javascript/__tests__/**/*.test.{ts,tsx}'],
     mockReset: true,
+    testTimeout: 120000,
+    hookTimeout: 120000,
   },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './app/javascript'),
     },
   },
-})
+});

@@ -15,7 +15,7 @@ development:
 
 test:
   <<: *default
-  url: <%= ENV.fetch("DATABASE_URL_TEST", "postgresql://postgres:password@localhost:5432/task_wheel_test") %>
+  url: <%= ENV.fetch("DATABASE_URL_TEST", "postgresql://postgres@localhost:5432/task_wheel_test") %>
 
 production:
   <<: *default

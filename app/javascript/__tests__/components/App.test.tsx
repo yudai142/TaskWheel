@@ -64,9 +64,15 @@ describe('App - Issue #27: ワークシート選択機能の実装', () => {
       render(<App />);
 
       await waitFor(() => {
-        mockWorksheets.forEach((worksheet) => {
-          expect(screen.queryByText(worksheet.name)).toBeInTheDocument();
-        });
+        expect(screen.queryByText(mockWorksheets[0].name)).toBeInTheDocument();
+      });
+
+      await waitFor(() => {
+        expect(screen.queryByText(mockWorksheets[1].name)).toBeInTheDocument();
+      });
+
+      await waitFor(() => {
+        expect(screen.queryByText(mockWorksheets[2].name)).toBeInTheDocument();
       });
     });
   });

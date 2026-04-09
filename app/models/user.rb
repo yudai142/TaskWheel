@@ -42,17 +42,17 @@ class User < ApplicationRecord
 
   # デモ用当番データ（seed.js から複製）
   DEMO_WORKS_DATA = [
-    { name: 'リーダー', multiple: false, archive: false, is_above: false },
-    { name: 'ハンディモップ', multiple: false, archive: false, is_above: false },
-    { name: 'アクリルボード', multiple: false, archive: false, is_above: false },
-    { name: 'ガラス拭き', multiple: false, archive: false, is_above: false },
-    { name: '除菌シート', multiple: false, archive: false, is_above: false },
-    { name: '窓の出っ張り', multiple: false, archive: false, is_above: false },
-    { name: 'コロコロ', multiple: false, archive: false, is_above: false },
-    { name: 'アルコール拭き', multiple: false, archive: false, is_above: false },
-    { name: '水拭き', multiple: false, archive: false, is_above: false },
-    { name: 'ゴミ捨て', multiple: false, archive: false, is_above: false },
-    { name: '掃除機', multiple: false, archive: true, is_above: false }
+    { name: 'リーダー', multiple: 0, archive: false, is_above: false },
+    { name: 'ハンディモップ', multiple: 0, archive: false, is_above: false },
+    { name: 'アクリルボード', multiple: 0, archive: false, is_above: false },
+    { name: 'ガラス拭き', multiple: 0, archive: false, is_above: false },
+    { name: '除菌シート', multiple: 0, archive: false, is_above: false },
+    { name: '窓の出っ張り', multiple: 0, archive: false, is_above: false },
+    { name: 'コロコロ', multiple: 0, archive: false, is_above: false },
+    { name: 'アルコール拭き', multiple: 0, archive: false, is_above: false },
+    { name: '水拭き', multiple: 0, archive: false, is_above: false },
+    { name: 'ゴミ捨て', multiple: 0, archive: false, is_above: false },
+    { name: '掃除機', multiple: 0, archive: true, is_above: false }
   ].freeze
 
   # ユーザーが一人も登録されていない場合、デモアカウントとサンプルデータを生成

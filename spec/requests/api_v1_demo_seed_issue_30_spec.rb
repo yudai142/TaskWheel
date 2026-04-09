@@ -72,7 +72,7 @@ RSpec.describe 'API V1 Demo Seed (Issue #30)', type: :request do
         # 最初の当番確認
         first_work = worksheet.works.first
         expect(first_work.name).to eq('リーダー')
-        expect(first_work.multiple).to be(false)
+        expect(first_work.multiple).to eq(0)
         expect(first_work.archive).to be(false)
         expect(first_work.is_above).to be(false)
 
