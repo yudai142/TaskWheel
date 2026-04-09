@@ -61,7 +61,7 @@ describe('Members - メンバー設定モーダル', () => {
     });
 
     await user.click(screen.getByRole('button', { name: /Yamada Taro/ }));
-    
+
     // 編集ボタン（複数ある場合は最初のもの）をクリック
     const editButtons = screen.getAllByRole('button', { name: '編集' });
     await user.click(editButtons[0]);

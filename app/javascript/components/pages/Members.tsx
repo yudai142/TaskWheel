@@ -392,7 +392,10 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
                   <div>
                     <form onSubmit={handleEditSubmit} className="space-y-4">
                       <div>
-                        <label htmlFor="edit-name" className="block text-sm font-medium text-gray-700">
+                        <label
+                          htmlFor="edit-name"
+                          className="block text-sm font-medium text-gray-700"
+                        >
                           名前
                         </label>
                         <input
@@ -405,7 +408,10 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
                         />
                       </div>
                       <div>
-                        <label htmlFor="edit-kana" className="block text-sm font-medium text-gray-700">
+                        <label
+                          htmlFor="edit-kana"
+                          className="block text-sm font-medium text-gray-700"
+                        >
                           かな
                         </label>
                         <input
@@ -413,7 +419,9 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
                           type="text"
                           className="input-field"
                           value={editFormData.kana}
-                          onChange={(e) => setEditFormData({ ...editFormData, kana: e.target.value })}
+                          onChange={(e) =>
+                            setEditFormData({ ...editFormData, kana: e.target.value })
+                          }
                           required
                         />
                         <p className="text-xs text-gray-500 mt-1">
@@ -454,10 +462,15 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
 
                   {/* 右：固定/除外設定パネル */}
                   <div className="border-l border-gray-200 pl-6">
-                    <form onSubmit={handleAddSetting} className="space-y-4 rounded-xl border border-gray-200 p-4">
+                    <form
+                      onSubmit={handleAddSetting}
+                      className="space-y-4 rounded-xl border border-gray-200 p-4"
+                    >
                       <div>
                         <h4 className="font-semibold text-gray-900">固定/除外設定を追加</h4>
-                        <p className="text-sm text-gray-500">当番名と設定種別を選んで登録します。</p>
+                        <p className="text-sm text-gray-500">
+                          当番名と設定種別を選んで登録します。
+                        </p>
                       </div>
                       <div>
                         <label
@@ -470,7 +483,9 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
                           id="member-setting-work"
                           className="input-field"
                           value={settingForm.work_id}
-                          onChange={(e) => setSettingForm({ ...settingForm, work_id: e.target.value })}
+                          onChange={(e) =>
+                            setSettingForm({ ...settingForm, work_id: e.target.value })
+                          }
                           required
                         >
                           <option value="">当番を選択</option>
@@ -492,7 +507,9 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
                           id="member-setting-status"
                           className="input-field"
                           value={settingForm.status}
-                          onChange={(e) => setSettingForm({ ...settingForm, status: e.target.value })}
+                          onChange={(e) =>
+                            setSettingForm({ ...settingForm, status: e.target.value })
+                          }
                         >
                           <option value="0">固定</option>
                           <option value="1">除外</option>

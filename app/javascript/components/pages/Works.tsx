@@ -403,7 +403,10 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
 
                   {/* 右：メンバー固定/除外設定パネル */}
                   <div className="border-l border-gray-200 pl-6">
-                    <form onSubmit={handleAddSetting} className="space-y-4 rounded-xl border border-gray-200 p-4">
+                    <form
+                      onSubmit={handleAddSetting}
+                      className="space-y-4 rounded-xl border border-gray-200 p-4"
+                    >
                       <div>
                         <h4 className="font-semibold text-gray-900">メンバー固定/除外設定を追加</h4>
                         <p className="text-sm text-gray-500">
@@ -470,24 +473,28 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
                         {(selectedWork.member_options ?? []).length === 0 && (
                           <p className="text-sm text-gray-500">まだ設定はありません。</p>
                         )}
-                        {(selectedWork.member_options ?? []).map((option) => (
-                          <div
-                            key={option.id}
-                            className="flex items-center justify-between rounded-lg bg-gray-50 px-4 py-3"
-                          >
-                            <div>
-                              <p className="font-medium text-gray-900">{option.work_name}</p>
-                              <p className="text-sm text-gray-500">{option.status_label}</p>
-                            </div>
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteSetting(option.id)}
-                              className="text-sm font-medium text-red-500 hover:text-red-700"
+                        {(selectedWork.member_options ?? []).map((option) => {
+                          const memberName =
+                            members.find((m) => m.id === option.member_id)?.name || '削除済み';
+                          return (
+                            <div
+                              key={option.id}
+                              className="flex items-center justify-between rounded-lg bg-gray-50 px-4 py-3"
                             >
-                              解除
-                            </button>
-                          </div>
-                        ))}
+                              <div>
+                                <p className="font-medium text-gray-900">{memberName}</p>
+                                <p className="text-sm text-gray-500">{option.status_label}</p>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteSetting(option.id)}
+                                className="text-sm font-medium text-red-500 hover:text-red-700"
+                              >
+                                解除
+                              </button>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
