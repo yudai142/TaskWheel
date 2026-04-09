@@ -92,7 +92,7 @@ jobs:
       - name: Setup database
         env:
           RAILS_ENV: test
-          DATABASE_URL: postgresql://postgres@localhost/task_wheel_test
+          DATABASE_URL_TEST: postgresql://postgres@localhost/task_wheel_test
         run: |
           bundle exec rails db:create
           bundle exec rails db:migrate
@@ -100,7 +100,7 @@ jobs:
       - name: Run Rails tests
         env:
           RAILS_ENV: test
-          DATABASE_URL: postgresql://postgres@localhost/task_wheel_test
+          DATABASE_URL_TEST: postgresql://postgres@localhost/task_wheel_test
         run: bundle exec rspec spec/requests/ -f progress
 
   test-summary:
