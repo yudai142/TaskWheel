@@ -12,6 +12,11 @@ import AuthModal from './auth/AuthModal';
 import PasswordResetPage from './auth/PasswordResetPage';
 import type { AuthResponse, AuthUser, WorksheetSummary } from '../types';
 
+interface Notification {
+  message: string;
+  type: 'success' | 'error';
+}
+
 function queryParam(name: string): string | null {
   const SearchParams = globalThis.URLSearchParams;
   const params = new SearchParams(globalThis.location.search);
@@ -22,7 +27,6 @@ export default function App(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(true);
   const [authenticated, setAuthenticated] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
-  const [currentWorksheet, setCurrentWorksheet] = useState<WorksheetSummary | null>(null);
   const [authModalMode, setAuthModalMode] = useState<'login' | 'register' | null>(
     queryParam('open') === 'login' ? 'login' : null
   );
@@ -31,6 +35,11 @@ export default function App(): JSX.Element {
       ? 'パスワードを再設定しました。新しいパスワードでログインしてください。'
       : null
   );
+  const [worksheets, setWorksheets] = useState<WorksheetSummary[]>([]);
+  const [activeWorksheetId, setActiveWorksheetId] = useState<number | null>(null);
+  const [showWorksheetModal, setShowWorksheetModal] = useState<boolean>(false);
+  const [newWorksheetName, setNewWorksheetName] = useState<string>('');
+  const [worksheetNotification, setWorksheetNotification] = useState<Notification | null>(null);
 
   useEffect(() => {
     axios
@@ -38,23 +47,39 @@ export default function App(): JSX.Element {
       .then((res) => {
         setAuthenticated(res.data.authenticated);
         setCurrentUser(res.data.user);
-        setCurrentWorksheet(res.data.current_worksheet);
+        if (res.data.current_worksheet) {
+          setActiveWorksheetId(res.data.current_worksheet.id);
+        }
       })
       .catch(() => {
         setAuthenticated(false);
         setCurrentUser(null);
-        setCurrentWorksheet(null);
       })
       .finally(() => {
         setLoading(false);
       });
   }, []);
 
+  useEffect(() => {
+    const fetchWorksheets = async (): Promise<void> => {
+      if (!authenticated) return;
+      try {
+        const res = await axios.get<WorksheetSummary[]>('/api/v1/worksheets');
+        setWorksheets(res.data);
+      } catch {
+        // Error fetching worksheets
+      }
+    };
+    void fetchWorksheets();
+  }, [authenticated]);
+
   const login = async (email: string, password: string): Promise<void> => {
     const res = await axios.post<AuthResponse>('/api/v1/auth/login', { email, password });
     setAuthenticated(res.data.authenticated);
     setCurrentUser(res.data.user);
-    setCurrentWorksheet(res.data.current_worksheet);
+    if (res.data.current_worksheet) {
+      setActiveWorksheetId(res.data.current_worksheet.id);
+    }
   };
 
   const register = async (
@@ -71,14 +96,39 @@ export default function App(): JSX.Element {
     });
     setAuthenticated(res.data.authenticated);
     setCurrentUser(res.data.user);
-    setCurrentWorksheet(res.data.current_worksheet);
+    if (res.data.current_worksheet) {
+      setActiveWorksheetId(res.data.current_worksheet.id);
+    }
   };
 
   const logout = async (): Promise<void> => {
     await axios.post('/api/v1/auth/logout');
     setAuthenticated(false);
     setCurrentUser(null);
-    setCurrentWorksheet(null);
+    setActiveWorksheetId(null);
+  };
+
+  const handleCreateWorksheet = async (): Promise<void> => {
+    if (!newWorksheetName.trim()) return;
+
+    try {
+      const res = await axios.post<WorksheetSummary>('/api/v1/worksheets', {
+        name: newWorksheetName,
+      });
+      setWorksheets([...worksheets, res.data]);
+      setNewWorksheetName('');
+      setShowWorksheetModal(false);
+      setWorksheetNotification({ message: 'ワークシートを作成しました', type: 'success' });
+      window.setTimeout(() => setWorksheetNotification(null), 4000);
+    } catch (error) {
+      const axiosError = error as { response?: { data?: { error?: string; errors?: string[] } } };
+      const msg =
+        axiosError.response?.data?.errors?.join(', ') ||
+        axiosError.response?.data?.error ||
+        'ワークシート作成に失敗しました';
+      setWorksheetNotification({ message: msg, type: 'error' });
+      window.setTimeout(() => setWorksheetNotification(null), 4000);
+    }
   };
 
   if (loading) {
@@ -132,16 +182,25 @@ export default function App(): JSX.Element {
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Layout
         currentUserName={currentUser?.name || currentUser?.email || ''}
-        currentWorksheetName={currentWorksheet?.name || 'ワークシート'}
         onLogout={logout}
+        worksheets={worksheets}
+        activeWorksheetId={activeWorksheetId}
+        onWorksheetSelect={setActiveWorksheetId}
+        showWorksheetModal={showWorksheetModal}
+        newWorksheetName={newWorksheetName}
+        onShowWorksheetModal={setShowWorksheetModal}
+        onNewWorksheetNameChange={setNewWorksheetName}
+        onCreateWorksheet={handleCreateWorksheet}
+        worksheetNotification={worksheetNotification}
+        onWorksheetNotificationDismiss={() => setWorksheetNotification(null)}
       >
         <Routes>
           <Route path="/password-reset" element={<PasswordResetPage />} />
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/members" element={<Members />} />
-          <Route path="/works" element={<Works />} />
-          <Route path="/history" element={<History />} />
-          <Route path="/settings" element={<Settings />} />
+          <Route path="/" element={<Dashboard worksheetId={activeWorksheetId} />} />
+          <Route path="/members" element={<Members worksheetId={activeWorksheetId} />} />
+          <Route path="/works" element={<Works worksheetId={activeWorksheetId} />} />
+          <Route path="/history" element={<History worksheetId={activeWorksheetId} />} />
+          <Route path="/settings" element={<Settings worksheetId={activeWorksheetId} />} />
         </Routes>
       </Layout>
     </Router>

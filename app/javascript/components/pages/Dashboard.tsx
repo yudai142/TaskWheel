@@ -19,9 +19,13 @@ interface Notification {
   type: 'success' | 'error';
 }
 
+interface Props {
+  worksheetId: number | null;
+}
+
 type StatsTab = 'works' | 'members' | 'assigned';
 
-export default function Dashboard(): JSX.Element {
+export default function Dashboard({ worksheetId }: Props): JSX.Element {
   const [works, setWorks] = useState<Work[]>([]);
   const [members, setMembers] = useState<Member[]>([]);
   const [histories, setHistories] = useState<History[]>([]);
@@ -45,10 +49,14 @@ export default function Dashboard(): JSX.Element {
       const day = selectedDate.getDate();
 
       const [worksRes, membersRes, historiesRes] = await Promise.all([
-        axios.get<Work[]>('/api/v1/works'),
-        axios.get<Member[]>('/api/v1/members'),
+        axios.get<Work[]>('/api/v1/works', {
+          params: { worksheet_id: worksheetId },
+        }),
+        axios.get<Member[]>('/api/v1/members', {
+          params: { worksheet_id: worksheetId },
+        }),
         axios.get<History[]>('/api/v1/histories', {
-          params: { year, month, day },
+          params: { year, month, day, worksheet_id: worksheetId },
         }),
       ]);
       setWorks(worksRes.data.sort((a, b) => a.id - b.id));
@@ -59,7 +67,7 @@ export default function Dashboard(): JSX.Element {
     } finally {
       setLoading(false);
     }
-  }, [selectedDate]);
+  }, [selectedDate, worksheetId]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -153,6 +161,7 @@ export default function Dashboard(): JSX.Element {
           year,
           month,
           day,
+          worksheet_id: worksheetId,
         }
       );
 
