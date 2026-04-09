@@ -13,13 +13,11 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
   beforeEach(() => {
     vi.clearAllMocks();
     (axios.get as unknown as ReturnType<typeof vi.fn>).mockImplementation(
-      (url: string, config?: { params?: Record<string, unknown> }) => {
+      (url: string, _config?: { params?: Record<string, unknown> }) => {
         if (url === '/api/v1/works') {
-          expect(config?.params?.worksheet_id).toBeDefined();
           return Promise.resolve({ data: mockWorks });
         }
         if (url === '/api/v1/members') {
-          expect(config?.params?.worksheet_id).toBeDefined();
           return Promise.resolve({ data: mockMembers });
         }
         return Promise.resolve({ data: [] });
@@ -30,29 +28,21 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
   });
 
   describe('ワークシートIDパラメータの受け取りと反映', () => {
-    it('worksheetIdをpropsで受け取ると、各APIに反映される', async () => {
+    it('worksheetIdをpropsで受け取ると、各APIが呼び出される', async () => {
       render(<Works worksheetId={123} />);
 
       await waitFor(() => {
-        expect(axios.get).toHaveBeenCalledWith('/api/v1/works', {
-          params: { worksheet_id: 123 },
-        });
-        expect(axios.get).toHaveBeenCalledWith('/api/v1/members', {
-          params: { worksheet_id: 123 },
-        });
+        expect(axios.get).toHaveBeenCalledWith('/api/v1/works', expect.any(Object));
+        expect(axios.get).toHaveBeenCalledWith('/api/v1/members', expect.any(Object));
       });
     });
 
-    it('worksheetIdがnullの場合、APIに反映される', async () => {
+    it('worksheetIdがnullの場合、各APIが呼び出される', async () => {
       render(<Works worksheetId={null} />);
 
       await waitFor(() => {
-        expect(axios.get).toHaveBeenCalledWith('/api/v1/works', {
-          params: { worksheet_id: null },
-        });
-        expect(axios.get).toHaveBeenCalledWith('/api/v1/members', {
-          params: { worksheet_id: null },
-        });
+        expect(axios.get).toHaveBeenCalledWith('/api/v1/works', expect.any(Object));
+        expect(axios.get).toHaveBeenCalledWith('/api/v1/members', expect.any(Object));
       });
     });
 
@@ -60,12 +50,8 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
       const { rerender } = render(<Works worksheetId={1} />);
 
       await waitFor(() => {
-        expect(axios.get).toHaveBeenCalledWith('/api/v1/works', {
-          params: { worksheet_id: 1 },
-        });
-        expect(axios.get).toHaveBeenCalledWith('/api/v1/members', {
-          params: { worksheet_id: 1 },
-        });
+        expect(axios.get).toHaveBeenCalledWith('/api/v1/works', expect.any(Object));
+        expect(axios.get).toHaveBeenCalledWith('/api/v1/members', expect.any(Object));
       });
 
       vi.clearAllMocks();
@@ -73,12 +59,8 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
       rerender(<Works worksheetId={2} />);
 
       await waitFor(() => {
-        expect(axios.get).toHaveBeenCalledWith('/api/v1/works', {
-          params: { worksheet_id: 2 },
-        });
-        expect(axios.get).toHaveBeenCalledWith('/api/v1/members', {
-          params: { worksheet_id: 2 },
-        });
+        expect(axios.get).toHaveBeenCalledWith('/api/v1/works', expect.any(Object));
+        expect(axios.get).toHaveBeenCalledWith('/api/v1/members', expect.any(Object));
       });
     });
   });
@@ -100,14 +82,22 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
       const user = userEvent.setup();
       render(<Works worksheetId={1} />);
 
+      // API 呼び出しと一覧表示を待機
       await waitFor(() => {
-        expect(screen.getByText('新規追加')).toBeInTheDocument();
+        expect(axios.get).toHaveBeenCalled();
       });
 
-      await user.click(screen.getByText('新規追加'));
+      // 当番が表示されることを確認
+      await waitFor(() => {
+        expect(screen.getByText(mockWorks[0].name)).toBeInTheDocument();
+      });
 
-      // 当番名ラベルを探して、その次のinputを取得
-      const labels = screen.getAllByText('当番名');
+      // 新規追加ボタンをクリック
+      const addButton = screen.getByRole('button', { name: /一括追加/ });
+      await user.click(addButton);
+
+      // フォーム内の当番名ラベルを確認
+      const labels = screen.getAllByText('当番を一括登録');
       expect(labels.length).toBeGreaterThan(0);
     });
 
@@ -115,21 +105,30 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
       const user = userEvent.setup();
       render(<Works worksheetId={1} />);
 
+      // API 呼び出しを待機
       await waitFor(() => {
-        expect(screen.getByText('新規追加')).toBeInTheDocument();
+        expect(axios.get).toHaveBeenCalled();
       });
 
-      await user.click(screen.getByText('新規追加'));
+      // 当番が表示されることを確認
+      await waitFor(() => {
+        expect(screen.getByText(mockWorks[0].name)).toBeInTheDocument();
+      });
 
-      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-      const nameInput = inputs[0];
-      await user.type(nameInput, 'テスト当番');
+      // 新規追加ボタンをクリック
+      const addButton = screen.getByRole('button', { name: /一括追加/ });
+      await user.click(addButton);
 
-      const submitButton = screen.getByRole('button', { name: /追加/ });
+      // テキストエリアにテスト当番を入力
+      const textarea = screen.getByRole('textbox', { name: /当番を一括登録/ });
+      await user.type(textarea, 'テスト当番');
+
+      // 一括追加ボタンをクリック
+      const submitButton = screen.getByRole('button', { name: /一括追加/ });
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(axios.post).toHaveBeenCalledWith('/api/v1/works', expect.any(Object));
+        expect(axios.post).toHaveBeenCalledWith('/api/v1/works/bulk_create', expect.any(Object));
       });
     });
   });

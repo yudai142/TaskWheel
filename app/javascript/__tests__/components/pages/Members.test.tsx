@@ -33,7 +33,7 @@ describe('Members - メンバー設定モーダル', () => {
     (axios.delete as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({ data: {} });
   });
 
-  it('メンバーカードを押すと設定モーダルが開く', async () => {
+  it('メンバーカードを押すと詳細ビューとメンバー設定パネルが開く', async () => {
     const user = userEvent.setup();
 
     render(<Members worksheetId={null} />);
@@ -44,10 +44,12 @@ describe('Members - メンバー設定モーダル', () => {
 
     await user.click(screen.getByRole('button', { name: /Yamada Taro/ }));
 
-    // 2列レイアウト内で設定パネルが表示されることを確認
-    expect(screen.getByText('メンバーを編集')).toBeInTheDocument();
-    expect(screen.getByText('メンバー固定/除外設定を追加')).toBeInTheDocument();
-    expect(screen.getByLabelText('メンバー名')).toBeInTheDocument();
+    // 詳細ビューが表示される（最初は「編集」ボタンが表示される）
+    expect(screen.getByRole('button', { name: '編集' })).toBeInTheDocument();
+
+    // 右側に設定パネルが表示される
+    expect(screen.getByText('固定/除外設定を追加')).toBeInTheDocument();
+    expect(screen.getByLabelText('当番名')).toBeInTheDocument();
     expect(screen.getByLabelText('設定種別')).toBeInTheDocument();
   });
 
@@ -62,11 +64,14 @@ describe('Members - メンバー設定モーダル', () => {
 
     await user.click(screen.getByRole('button', { name: /Yamada Taro/ }));
 
-    // 編集ボタン（複数ある場合は最初のもの）をクリック
-    const editButtons = screen.getAllByRole('button', { name: '編集' });
-    await user.click(editButtons[0]);
+    // 詳細ビューで「編集」ボタンが表示されるまで待機
+    const editButton = await screen.findByRole('button', { name: '編集' });
+    await user.click(editButton);
 
     // アーカイブチェックボックスをチェック
+    await waitFor(() => {
+      expect(screen.getByLabelText('アーカイブにする')).toBeInTheDocument();
+    });
     const archiveCheckbox = screen.getByLabelText('アーカイブにする');
     await user.click(archiveCheckbox);
 
