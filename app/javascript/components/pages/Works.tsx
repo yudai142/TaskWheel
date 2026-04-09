@@ -110,7 +110,7 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
       setWorks((currentWorks) =>
         currentWorks.map((work) => (work.id === response.data.id ? response.data : work))
       );
-      setSelectedWork(response.data);
+      setSelectedWork(null);
       setEditMode(false);
     } catch {
       alert('当番の更新に失敗しました');
