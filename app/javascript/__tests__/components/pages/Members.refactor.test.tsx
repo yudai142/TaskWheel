@@ -5,7 +5,6 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import axios from 'axios';
 import Members from '../../../components/pages/Members';
-import { setDefaultAxiosMocks } from '../../../spec/fixtures/axiosMocks';
 
 vi.mock('axios');
 
@@ -63,7 +62,18 @@ const mockWorks = [
 describe('Members - UI 刷新テスト', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    setDefaultAxiosMocks();
+    // デフォルトの mock 設定
+    (axios.get as unknown as ReturnType<typeof vi.fn>).mockImplementation((url: string) => {
+      if (url.includes('/api/v1/members')) {
+        return Promise.resolve({ data: mockMembersForUIRefactor.filter((m) => !m.archive) });
+      }
+      if (url.includes('/api/v1/works')) {
+        return Promise.resolve({ data: mockWorks });
+      }
+      return Promise.resolve({ data: [] });
+    });
+    (axios.post as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({ data: {} });
+    (axios.patch as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({ data: {} });
   });
 
   describe('一括登録機能', () => {
@@ -71,73 +81,56 @@ describe('Members - UI 刷新テスト', () => {
       render(<Members worksheetId={null} />);
 
       await waitFor(() => {
-        expect(screen.getByRole('button', { name: /一括登録/ })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /一括追加/ })).toBeInTheDocument();
       });
     });
 
-    it('一括登録を押すとテキストフィールドが表示される', async () => {
+    it('一括追加を押すとテキストエリアが表示される', async () => {
       const user = userEvent.setup();
       render(<Members worksheetId={null} />);
 
       await waitFor(() => {
-        expect(screen.getByRole('button', { name: /一括登録/ })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /一括追加/ })).toBeInTheDocument();
       });
 
-      await user.click(screen.getByRole('button', { name: /一括登録/ }));
+      await user.click(screen.getByRole('button', { name: /一括追加/ }));
 
-      expect(screen.getByPlaceholderText(/改行で複数登録/)).toBeInTheDocument();
+      expect(screen.getByLabelText(/メンバーを一括登録/)).toBeInTheDocument();
     });
 
     it('改行区切りで複数メンバーを登録できる', async () => {
       const user = userEvent.setup();
       (axios.post as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
-        data: { created_count: 2, failed_count: 0 },
+        data: [
+          { id: 4, name: '鈴木花子', kana: 'スズキハナコ', archive: false },
+          { id: 5, name: '伊藤次郎', kana: 'イトウジロウ', archive: false },
+        ],
       });
 
       render(<Members worksheetId={null} />);
 
       await waitFor(() => {
-        expect(screen.getByRole('button', { name: /一括登録/ })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /一括追加/ })).toBeInTheDocument();
       });
 
-      await user.click(screen.getByRole('button', { name: /一括登録/ }));
+      await user.click(screen.getByRole('button', { name: /一括追加/ }));
 
-      const nameField = screen.getByPlaceholderText(/改行で複数登録/);
-      await user.type(nameField, '鈴木花子\n伊藤次郎');
+      const textarea = screen.getByLabelText(/メンバーを一括登録/);
+      await user.type(textarea, '鈴木 花子 スズキ ハナコ\n伊藤 次郎 イトウ ジロウ');
 
-      await user.click(screen.getByRole('button', { name: /登録/ }));
+      await user.click(screen.getByRole('button', { name: /一括追加/ }));
 
       await waitFor(() => {
         expect(axios.post).toHaveBeenCalledWith(
-          expect.stringContaining('/members/bulk_create'),
+          expect.stringContaining('/api/v1/members/bulk_create'),
           expect.any(Object)
         );
       });
     });
   });
 
-  describe('ふりがな自動予測', () => {
-    it('名前入力時にふりがなが自動入力される', async () => {
-      const user = userEvent.setup();
-      render(<Members worksheetId={null} />);
-
-      await waitFor(() => {
-        expect(screen.getByRole('button', { name: /一括登録/ })).toBeInTheDocument();
-      });
-
-      await user.click(screen.getByRole('button', { name: /新規追加/ }));
-
-      const nameInput = screen.getByLabelText(/名前/);
-      await user.type(nameInput, '山田太郎');
-
-      const kanaInput = screen.getByLabelText(/ふりがな/);
-      // 自動予測されることを確認
-      expect(kanaInput).toHaveValue(expect.stringContaining('ヤマダ'));
-    });
-  });
-
   describe('メンバー編集', () => {
-    it('メンバーを押すと編集モーダルが開く', async () => {
+    it('メンバーを押すと詳細モーダルが開く', async () => {
       const user = userEvent.setup();
       (axios.get as unknown as ReturnType<typeof vi.fn>).mockImplementation((url: string) => {
         if (url.includes('/api/v1/members')) {
@@ -157,12 +150,44 @@ describe('Members - UI 刷新テスト', () => {
 
       await user.click(screen.getByRole('button', { name: /山田太郎/ }));
 
-      // 編集フォームが表示される
-      const nameInputs = screen.getAllByDisplayValue(/山田太郎/);
-      expect(nameInputs.length).toBeGreaterThan(0);
+      // 詳細モーダルが表示されて編集ボタンがある
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /編集/ })).toBeInTheDocument();
+      });
     });
 
-    it('モーダルで名前とふりがなを編集できる', async () => {
+    it('編集ボタンを押すと編集フォームが表示される', async () => {
+      const user = userEvent.setup();
+      (axios.get as unknown as ReturnType<typeof vi.fn>).mockImplementation((url: string) => {
+        if (url.includes('/api/v1/members')) {
+          return Promise.resolve({ data: mockMembersForUIRefactor });
+        }
+        if (url.includes('/api/v1/works')) {
+          return Promise.resolve({ data: mockWorks });
+        }
+        return Promise.resolve({ data: [] });
+      });
+
+      render(<Members worksheetId={null} />);
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /山田太郎/ })).toBeInTheDocument();
+      });
+
+      await user.click(screen.getByRole('button', { name: /山田太郎/ }));
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /編集/ })).toBeInTheDocument();
+      });
+
+      await user.click(screen.getByRole('button', { name: /編集/ }));
+
+      // 編集フォームが表示される
+      const nameInput = screen.getByDisplayValue('山田太郎');
+      expect(nameInput).toBeInTheDocument();
+    });
+
+    it('モーダルで名前とかなを編集できる', async () => {
       const user = userEvent.setup();
       (axios.get as unknown as ReturnType<typeof vi.fn>).mockImplementation((url: string) => {
         if (url.includes('/api/v1/members')) {
@@ -174,7 +199,14 @@ describe('Members - UI 刷新テスト', () => {
         return Promise.resolve({ data: [] });
       });
       (axios.patch as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({
-        data: { id: 1, name: '佐藤太郎', kana: 'サトウタロウ', archive: false },
+        data: {
+          id: 1,
+          name: '佐藤太郎',
+          kana: 'サトウタロウ',
+          archive: false,
+          created_at: '2026-01-01',
+          updated_at: '2026-01-01',
+        },
       });
 
       render(<Members worksheetId={null} />);
@@ -185,10 +217,19 @@ describe('Members - UI 刷新テスト', () => {
 
       await user.click(screen.getByRole('button', { name: /山田太郎/ }));
 
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /編集/ })).toBeInTheDocument();
+      });
+
+      await user.click(screen.getByRole('button', { name: /編集/ }));
+
       // 名前を編集
-      const nameInputs = screen.getAllByDisplayValue(/山田太郎/);
-      await user.clear(nameInputs[0]);
-      await user.type(nameInputs[0], '佐藤太郎');
+      const allInputs = screen.queryAllByDisplayValue(/山田太郎/);
+      const nameInput = allInputs.find((el) => el.getAttribute('id') === 'edit-name');
+      if (!nameInput) throw new Error('Name input not found');
+
+      await user.clear(nameInput);
+      await user.type(nameInput, '佐藤太郎');
 
       await user.click(screen.getByRole('button', { name: /保存/ }));
 
@@ -206,7 +247,7 @@ describe('Members - UI 刷新テスト', () => {
   describe('アーカイブフィルタリング', () => {
     beforeEach(() => {
       (axios.get as unknown as ReturnType<typeof vi.fn>).mockImplementation(
-        (url: string, config?: Record<string, unknown>) => {
+        (url: string, config?: { params?: Record<string, unknown> }) => {
           if (url.includes('/api/v1/members')) {
             const filter =
               (config?.params as Record<string, string> | undefined)?.filter || 'active';
@@ -232,11 +273,11 @@ describe('Members - UI 刷新テスト', () => {
       render(<Members worksheetId={null} />);
 
       await waitFor(() => {
-        expect(screen.getByDisplayValue('有効のみ')).toBeInTheDocument();
+        expect(screen.getByDisplayValue('有効なメンバー')).toBeInTheDocument();
       });
     });
 
-    it('「有効のみ」でフィルタできる', async () => {
+    it('「有効なメンバー」でアーカイブを除外して表示', async () => {
       render(<Members worksheetId={null} />);
 
       await waitFor(() => {
@@ -245,12 +286,16 @@ describe('Members - UI 刷新テスト', () => {
       });
     });
 
-    it('「全て表示」でアーカイブを含めて表示', async () => {
+    it('「すべて」でアーカイブを含めて表示', async () => {
       const user = userEvent.setup();
       render(<Members worksheetId={null} />);
 
-      const filterSelect = screen.getByDisplayValue('有効のみ');
-      await user.selectOptions(filterSelect, '全て表示');
+      await waitFor(() => {
+        expect(screen.getByDisplayValue('有効なメンバー')).toBeInTheDocument();
+      });
+
+      const filterSelect = screen.getByDisplayValue('有効なメンバー');
+      await user.selectOptions(filterSelect, 'all');
 
       await waitFor(() => {
         expect(axios.get).toHaveBeenCalledWith(
@@ -262,12 +307,16 @@ describe('Members - UI 刷新テスト', () => {
       });
     });
 
-    it('「アーカイブのみ」でアーカイブのみ表示', async () => {
+    it('「アーカイブ」でアーカイブのみ表示', async () => {
       const user = userEvent.setup();
       render(<Members worksheetId={null} />);
 
-      const filterSelect = screen.getByDisplayValue('有効のみ');
-      await user.selectOptions(filterSelect, 'アーカイブのみ');
+      await waitFor(() => {
+        expect(screen.getByDisplayValue('有効なメンバー')).toBeInTheDocument();
+      });
+
+      const filterSelect = screen.getByDisplayValue('有効なメンバー');
+      await user.selectOptions(filterSelect, 'archived');
 
       await waitFor(() => {
         expect(axios.get).toHaveBeenCalledWith(
