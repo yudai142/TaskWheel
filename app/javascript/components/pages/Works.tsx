@@ -112,7 +112,7 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
       archive: work.archive,
     });
     setSettingForm({ member_id: '', status: '0' });
-    setEditMode(true);
+    setEditMode(false);
   };
 
   const handleEditSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
