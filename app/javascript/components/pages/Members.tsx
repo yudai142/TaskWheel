@@ -235,7 +235,7 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
       setMembers((currentMembers) =>
         currentMembers.map((m) => (m.id === response.data.id ? response.data : m))
       );
-      setSelectedMember(response.data);
+      setSelectedMember(null);
       setEditMode(false);
     } catch {
       alert('メンバーの更新に失敗しました');
