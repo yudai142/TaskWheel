@@ -97,9 +97,28 @@ RSpec.describe 'API V1: Demo Account Restrictions', type: :request do
 
     context 'ワークシート操作の制限' do
       it 'ワークシート作成が 403 Forbidden を返す' do
-        # TODO: ワークシート作成エンドポイントのテストは別途修正予定
-        # 実装は完了済み（worksheets_controller の create に deny_demo_user_modification!を追加）
-        skip 'ワークシート作成テストの params 形式を確認中'
+        post '/api/v1/worksheets', params: {
+          worksheet: { name: 'New Worksheet', interval: 2, week: 0 }
+        }
+
+        expect(response).to have_http_status(:forbidden)
+        expect(response.parsed_body['error']).to eq('デモアカウントではデータの変更はできません')
+      end
+
+      it 'ワークシート更新が 403 Forbidden を返す' do
+        patch "/api/v1/worksheets/#{demo_worksheet.id}", params: {
+          worksheet: { name: 'Updated Worksheet' }
+        }
+
+        expect(response).to have_http_status(:forbidden)
+        expect(response.parsed_body['error']).to eq('デモアカウントではデータの変更はできません')
+      end
+
+      it 'ワークシート削除が 403 Forbidden を返す' do
+        delete "/api/v1/worksheets/#{demo_worksheet.id}"
+
+        expect(response).to have_http_status(:forbidden)
+        expect(response.parsed_body['error']).to eq('デモアカウントではデータの変更はできません')
       end
     end
 

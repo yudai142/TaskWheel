@@ -62,7 +62,7 @@ Rails.application.routes.draw do
       end
 
       # Worksheets
-      resources :worksheets, only: %i[index create]
+      resources :worksheets, only: %i[index create show update destroy]
 
       # Dashboard
       get 'dashboard/member_selection_state', to: 'dashboard#member_selection_state'
