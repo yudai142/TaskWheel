@@ -23,6 +23,26 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
         return Promise.resolve({ data: [] });
       }
     );
+    (axios.patch as unknown as ReturnType<typeof vi.fn>).mockImplementation(
+      (url: string, data: unknown) => {
+        if (url.includes('/api/v1/works/')) {
+          const id = parseInt(url.split('/').pop() || '', 10);
+          const workToUpdate = mockWorks.find((w) => w.id === id);
+          if (workToUpdate && typeof data === 'object' && data !== null && 'work' in data) {
+            const updatedWork = {
+              ...workToUpdate,
+              ...(data as unknown as Record<string, unknown>).work,
+            };
+            return Promise.resolve({ data: updatedWork });
+          }
+          return Promise.resolve({ data: workToUpdate || {} });
+        }
+        if (url.includes('/api/v1/member_option_settings/')) {
+          return Promise.resolve({ data: {} });
+        }
+        return Promise.resolve({ data: {} });
+      }
+    );
     (axios.post as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({ data: {} });
     (axios.delete as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({ data: {} });
   });
@@ -73,6 +93,70 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
         mockWorks.forEach((work) => {
           expect(screen.getByText(work.name)).toBeInTheDocument();
         });
+      });
+    });
+  });
+
+  describe('当番編集機能', () => {
+    it('当番カードをクリックすると編集フォーム＆メンバー設定パネルが表示される', async () => {
+      const user = userEvent.setup();
+      render(<Works worksheetId={1} />);
+
+      // 当番が表示されるまで待機
+      await waitFor(() => {
+        expect(screen.getByText(mockWorks[0].name)).toBeInTheDocument();
+      });
+
+      // 当番カードをクリック
+      await user.click(screen.getByRole('button', { name: new RegExp(mockWorks[0].name) }));
+
+      // 左側：編集フォームが表示される
+      expect(screen.getByText('当番を編集')).toBeInTheDocument();
+      expect(screen.getByLabelText('当番名')).toBeInTheDocument();
+      expect(screen.getByLabelText('複数割り当て数')).toBeInTheDocument();
+
+      // 右側：メンバー設定パネルが表示される
+      expect(screen.getByText('メンバー固定/除外設定を追加')).toBeInTheDocument();
+      expect(screen.getByLabelText('メンバー名')).toBeInTheDocument();
+      expect(screen.getByLabelText('設定種別')).toBeInTheDocument();
+    });
+
+    it('編集フォームで当番を保存できる', async () => {
+      const user = userEvent.setup();
+      render(<Works worksheetId={1} />);
+
+      // 当番が表示されるまで待機
+      await waitFor(() => {
+        expect(screen.getByText(mockWorks[0].name)).toBeInTheDocument();
+      });
+
+      // 当番カードをクリック
+      await user.click(screen.getByRole('button', { name: new RegExp(mockWorks[0].name) }));
+
+      // 当番名を変更
+      const nameInput = screen.getByLabelText('当番名') as HTMLInputElement;
+      await user.clear(nameInput);
+      await user.type(nameInput, '新しい当番名');
+
+      // 保存ボタンをクリック
+      const saveButton = screen.getByRole('button', { name: '保存' });
+      await user.click(saveButton);
+
+      // API呼び出しを確認
+      await waitFor(() => {
+        expect(axios.patch).toHaveBeenCalledWith(
+          `/api/v1/works/${mockWorks[0].id}`,
+          expect.objectContaining({
+            work: expect.objectContaining({
+              name: '新しい当番名',
+            }),
+          })
+        );
+      });
+
+      // モーダルが閉じる
+      await waitFor(() => {
+        expect(screen.queryByText('当番を編集')).not.toBeInTheDocument();
       });
     });
   });
