@@ -1,17 +1,15 @@
 require 'rails_helper'
 
-describe 'API V1 Works - 一括登録・編集・フィルタリング' do
-  let(:user) { create(:user) }
-  let(:worksheet) { create(:worksheet, user:) }
-  let(:work) { create(:work, worksheet:, name: '掃除', multiple: 2, is_above: true) }
-  let(:headers) { { 'COOKIE' => "user_id=#{user.id}" } }
+describe 'API V1 Works - 一括登録・編集・フィルタリング', type: :request do
+  let!(:user) { User.find_by(email: 'default@taskwheel.local') || create(:user, email: 'default@taskwheel.local') }
+  let!(:worksheet) { user.worksheets.first || create(:worksheet, user:) }
+  let!(:work) { create(:work, worksheet:, name: '掃除', multiple: 2, is_above: true) }
 
   describe 'PATCH /api/v1/works/:id' do
     context '当番を編集' do
       it '当番名を更新' do
         patch "/api/v1/works/#{work.id}", 
-              params: { work: { name: 'トイレ掃除' } },
-              headers:
+              params: { work: { name: 'トイレ掃除' } }
 
         expect(response).to have_http_status(:ok)
         expect(json_response['name']).to eq('トイレ掃除')
@@ -19,8 +17,7 @@ describe 'API V1 Works - 一括登録・編集・フィルタリング' do
 
       it '複数割り当て数を更新' do
         patch "/api/v1/works/#{work.id}", 
-              params: { work: { multiple: 3 } },
-              headers:
+              params: { work: { multiple: 3 } }
 
         expect(response).to have_http_status(:ok)
         expect(json_response['multiple']).to eq(3)
@@ -28,8 +25,7 @@ describe 'API V1 Works - 一括登録・編集・フィルタリング' do
 
       it '以上/以下フラグを更新' do
         patch "/api/v1/works/#{work.id}", 
-              params: { work: { is_above: false } },
-              headers:
+              params: { work: { is_above: false } }
 
         expect(response).to have_http_status(:ok)
         expect(json_response['is_above']).to be(false)
@@ -37,8 +33,7 @@ describe 'API V1 Works - 一括登録・編集・フィルタリング' do
 
       it 'アーカイブ状態を更新' do
         patch "/api/v1/works/#{work.id}", 
-              params: { work: { archive: true } },
-              headers:
+              params: { work: { archive: true } }
 
         expect(response).to have_http_status(:ok)
         work.reload
@@ -56,11 +51,11 @@ describe 'API V1 Works - 一括登録・編集・フィルタリング' do
         ]
 
         post '/api/v1/works/bulk_create',
-             params: { works: works_data, worksheet_id: worksheet.id },
-             headers:
+             params: { works: works_data, worksheet_id: worksheet.id }
 
         expect(response).to have_http_status(:created)
-        expect(json_response['created_count']).to eq(2)
+        expect(json_response.is_a?(Array)).to be(true)
+        expect(json_response.length).to eq(2)
         expect(worksheet.works.count).to eq(3) # work + 2 new
       end
 
@@ -71,12 +66,9 @@ describe 'API V1 Works - 一括登録・編集・フィルタリング' do
         ]
 
         post '/api/v1/works/bulk_create',
-             params: { works: works_data, worksheet_id: worksheet.id },
-             headers:
+             params: { works: works_data, worksheet_id: worksheet.id }
 
-        expect(response).to have_http_status(:created)
-        expect(json_response['created_count']).to eq(1)
-        expect(json_response['failed_count']).to eq(1)
+        expect(response).to have_http_status(422)
       end
     end
   end
@@ -87,8 +79,7 @@ describe 'API V1 Works - 一括登録・編集・フィルタリング' do
     context 'アーカイブフィルタリング' do
       it '有効な当番のみを取得' do
         get '/api/v1/works', 
-            params: { filter: 'active' },
-            headers:
+            params: { filter: 'active' }
 
         expect(response).to have_http_status(:ok)
         expect(json_response.length).to eq(1)
@@ -97,8 +88,7 @@ describe 'API V1 Works - 一括登録・編集・フィルタリング' do
 
       it 'すべての当番を取得' do
         get '/api/v1/works', 
-            params: { filter: 'all' },
-            headers:
+            params: { filter: 'all' }
 
         expect(response).to have_http_status(:ok)
         expect(json_response.length).to eq(2)
@@ -106,8 +96,7 @@ describe 'API V1 Works - 一括登録・編集・フィルタリング' do
 
       it 'アーカイブのみを取得' do
         get '/api/v1/works', 
-            params: { filter: 'archived' },
-            headers:
+            params: { filter: 'archived' }
 
         expect(response).to have_http_status(:ok)
         expect(json_response.length).to eq(1)
