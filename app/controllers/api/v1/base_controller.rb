@@ -68,7 +68,7 @@ module Api
       def deny_demo_user_modification!
         return unless demo_user?
 
-        render json: { error: 'デモアカウントではメンバーと当番の変更はできません' },
+        render json: { error: 'デモアカウントではデータの変更はできません' },
                status: :forbidden
       end
     end

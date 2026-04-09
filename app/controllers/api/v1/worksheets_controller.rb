@@ -9,6 +9,7 @@ module Api
       end
 
       def create
+        deny_demo_user_modification!
         worksheet = current_user.worksheets.build(worksheet_params)
         if worksheet.save
           render json: serialize_worksheet(worksheet), status: :created
