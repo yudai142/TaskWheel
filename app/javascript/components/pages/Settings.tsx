@@ -5,7 +5,7 @@ interface Props {
   worksheetId: number | null;
 }
 
-export default function Settings({ worksheetId }: Props): JSX.Element {
+export default function Settings({ worksheetId: _worksheetId }: Props): JSX.Element {
   // worksheetId は今後のAPI拡張のために受け取る
   const [resetDate, setResetDate] = useState<string>('');
   const [weekMode, setWeekMode] = useState<boolean>(false);
@@ -51,8 +51,11 @@ export default function Settings({ worksheetId }: Props): JSX.Element {
         <h3 className="text-lg font-semibold text-gray-900 mb-4">シャッフル設定</h3>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">リセット日付</label>
+            <label htmlFor="reset_date" className="block text-sm font-medium text-gray-700 mb-2">
+              リセット日付
+            </label>
             <input
+              id="reset_date"
               type="date"
               className="input-field"
               value={resetDate}
