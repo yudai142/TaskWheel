@@ -12,6 +12,11 @@ import AuthModal from './auth/AuthModal';
 import PasswordResetPage from './auth/PasswordResetPage';
 import type { AuthResponse, AuthUser, WorksheetSummary } from '../types';
 
+interface Notification {
+  message: string;
+  type: 'success' | 'error';
+}
+
 function queryParam(name: string): string | null {
   const SearchParams = globalThis.URLSearchParams;
   const params = new SearchParams(globalThis.location.search);
@@ -31,6 +36,11 @@ export default function App(): JSX.Element {
       ? 'パスワードを再設定しました。新しいパスワードでログインしてください。'
       : null
   );
+  const [worksheets, setWorksheets] = useState<WorksheetSummary[]>([]);
+  const [activeWorksheetId, setActiveWorksheetId] = useState<number | null>(null);
+  const [showWorksheetModal, setShowWorksheetModal] = useState<boolean>(false);
+  const [newWorksheetName, setNewWorksheetName] = useState<string>('');
+  const [worksheetNotification, setWorksheetNotification] = useState<Notification | null>(null);
 
   useEffect(() => {
     axios
@@ -49,6 +59,26 @@ export default function App(): JSX.Element {
         setLoading(false);
       });
   }, []);
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => {
+    if (currentWorksheet) {
+      setActiveWorksheetId(currentWorksheet.id);
+    }
+  }, [currentWorksheet]);
+
+  useEffect(() => {
+    const fetchWorksheets = async (): Promise<void> => {
+      if (!authenticated) return;
+      try {
+        const res = await axios.get<WorksheetSummary[]>('/api/v1/worksheets');
+        setWorksheets(res.data);
+      } catch {
+        // Error fetching worksheets
+      }
+    };
+    void fetchWorksheets();
+  }, [authenticated]);
 
   const login = async (email: string, password: string): Promise<void> => {
     const res = await axios.post<AuthResponse>('/api/v1/auth/login', { email, password });
@@ -79,6 +109,29 @@ export default function App(): JSX.Element {
     setAuthenticated(false);
     setCurrentUser(null);
     setCurrentWorksheet(null);
+  };
+
+  const handleCreateWorksheet = async (): Promise<void> => {
+    if (!newWorksheetName.trim()) return;
+
+    try {
+      const res = await axios.post<WorksheetSummary>('/api/v1/worksheets', {
+        name: newWorksheetName,
+      });
+      setWorksheets([...worksheets, res.data]);
+      setNewWorksheetName('');
+      setShowWorksheetModal(false);
+      setWorksheetNotification({ message: 'ワークシートを作成しました', type: 'success' });
+      window.setTimeout(() => setWorksheetNotification(null), 4000);
+    } catch (error) {
+      const axiosError = error as { response?: { data?: { error?: string; errors?: string[] } } };
+      const msg =
+        axiosError.response?.data?.errors?.join(', ') ||
+        axiosError.response?.data?.error ||
+        'ワークシート作成に失敗しました';
+      setWorksheetNotification({ message: msg, type: 'error' });
+      window.setTimeout(() => setWorksheetNotification(null), 4000);
+    }
   };
 
   if (loading) {
@@ -134,14 +187,24 @@ export default function App(): JSX.Element {
         currentUserName={currentUser?.name || currentUser?.email || ''}
         currentWorksheetName={currentWorksheet?.name || 'ワークシート'}
         onLogout={logout}
+        worksheets={worksheets}
+        activeWorksheetId={activeWorksheetId}
+        onWorksheetSelect={setActiveWorksheetId}
+        showWorksheetModal={showWorksheetModal}
+        newWorksheetName={newWorksheetName}
+        onShowWorksheetModal={setShowWorksheetModal}
+        onNewWorksheetNameChange={setNewWorksheetName}
+        onCreateWorksheet={handleCreateWorksheet}
+        worksheetNotification={worksheetNotification}
+        onWorksheetNotificationDismiss={() => setWorksheetNotification(null)}
       >
         <Routes>
           <Route path="/password-reset" element={<PasswordResetPage />} />
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/members" element={<Members />} />
-          <Route path="/works" element={<Works />} />
-          <Route path="/history" element={<History />} />
-          <Route path="/settings" element={<Settings />} />
+          <Route path="/" element={<Dashboard worksheetId={activeWorksheetId} />} />
+          <Route path="/members" element={<Members worksheetId={activeWorksheetId} />} />
+          <Route path="/works" element={<Works worksheetId={activeWorksheetId} />} />
+          <Route path="/history" element={<History worksheetId={activeWorksheetId} />} />
+          <Route path="/settings" element={<Settings worksheetId={activeWorksheetId} />} />
         </Routes>
       </Layout>
     </Router>
