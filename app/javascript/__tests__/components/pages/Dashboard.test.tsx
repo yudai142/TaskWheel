@@ -231,4 +231,30 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
       // (実装時に具体的な検証を追加)
     });
   });
+
+  describe('Issue #27: ワークシート連携', () => {
+    it('ダッシュボードが選択中のワークシートIDをパラメータで受け取る', async () => {
+      const { container } = render(<Dashboard worksheetId={1} />);
+      expect(container).toBeInTheDocument();
+    });
+
+    it('ワークシート変更時にデータを再取得する', async () => {
+      const axiosGetSpy = vi.spyOn(axios, 'get');
+      setupDefaultAxiosMocks();
+
+      const { rerender } = render(<Dashboard worksheetId={1} />);
+
+      await waitFor(() => {
+        expect(axiosGetSpy).toHaveBeenCalled();
+      });
+
+      // ワークシートIDが変更される
+      rerender(<Dashboard worksheetId={2} />);
+
+      await waitFor(() => {
+        // 再度API呼び出しが行われることを確認
+        expect(axiosGetSpy.mock.calls.length).toBeGreaterThan(1);
+      });
+    });
+  });
 });

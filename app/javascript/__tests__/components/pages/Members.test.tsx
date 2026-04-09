@@ -92,4 +92,30 @@ describe('Members - メンバー設定モーダル', () => {
       });
     });
   });
+
+  describe('Issue #27: ワークシート連携', () => {
+    it('メンバーページが選択中のワークシートIDをパラメータで受け取る', async () => {
+      const { container } = render(<Members worksheetId={1} />);
+      expect(container).toBeInTheDocument();
+    });
+
+    it('ワークシート変更時にメンバーデータを再取得する', async () => {
+      const axiosGetSpy = vi.spyOn(axios, 'get');
+
+      const { rerender } = render(<Members worksheetId={1} />);
+
+      await waitFor(() => {
+        expect(axiosGetSpy).toHaveBeenCalledWith('/api/v1/members', expect.any(Object));
+      });
+
+      const callCountBefore = axiosGetSpy.mock.calls.length;
+
+      rerender(<Members worksheetId={2} />);
+
+      await waitFor(() => {
+        // 再度API呼び出しが行われることを確認
+        expect(axiosGetSpy.mock.calls.length).toBeGreaterThan(callCountBefore);
+      });
+    });
+  });
 });
