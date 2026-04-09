@@ -117,7 +117,12 @@ export default function App(): JSX.Element {
 
     try {
       const res = await axios.post<WorksheetSummary>('/api/v1/worksheets', {
-        name: newWorksheetName,
+        worksheet: {
+          name: newWorksheetName,
+          interval: 1,
+          week: 0,
+          week_use: false,
+        },
       });
       setWorksheets([...worksheets, res.data]);
       setNewWorksheetName('');
