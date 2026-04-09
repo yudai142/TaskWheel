@@ -44,4 +44,29 @@ describe('LandingPage', () => {
 
     expect(onOpenLogin).toHaveBeenCalledTimes(1);
   });
+
+  describe('Issue #30: デモログイン機能', () => {
+    it('"デモでログイン"ボタンが表示される', () => {
+      const onDemoLogin = vi.fn();
+      render(
+        <LandingPage onOpenLogin={vi.fn()} onOpenRegister={vi.fn()} onDemoLogin={onDemoLogin} />
+      );
+
+      const demoButton = screen.getByRole('button', { name: /デモでログイン/ });
+      expect(demoButton).toBeInTheDocument();
+    });
+
+    it('"デモでログイン"ボタンクリックで onDemoLogin が呼ばれる', async () => {
+      const user = userEvent.setup();
+      const onDemoLogin = vi.fn();
+      render(
+        <LandingPage onOpenLogin={vi.fn()} onOpenRegister={vi.fn()} onDemoLogin={onDemoLogin} />
+      );
+
+      const demoButton = screen.getByRole('button', { name: /デモでログイン/ });
+      await user.click(demoButton);
+
+      expect(onDemoLogin).toHaveBeenCalledTimes(1);
+    });
+  });
 });
