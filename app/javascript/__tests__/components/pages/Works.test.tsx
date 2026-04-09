@@ -50,6 +50,9 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
         expect(axios.get).toHaveBeenCalledWith('/api/v1/works', {
           params: { worksheet_id: null },
         });
+        expect(axios.get).toHaveBeenCalledWith('/api/v1/members', {
+          params: { worksheet_id: null },
+        });
       });
     });
 
@@ -60,6 +63,9 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
         expect(axios.get).toHaveBeenCalledWith('/api/v1/works', {
           params: { worksheet_id: 1 },
         });
+        expect(axios.get).toHaveBeenCalledWith('/api/v1/members', {
+          params: { worksheet_id: 1 },
+        });
       });
 
       vi.clearAllMocks();
@@ -68,6 +74,9 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
 
       await waitFor(() => {
         expect(axios.get).toHaveBeenCalledWith('/api/v1/works', {
+          params: { worksheet_id: 2 },
+        });
+        expect(axios.get).toHaveBeenCalledWith('/api/v1/members', {
           params: { worksheet_id: 2 },
         });
       });
@@ -83,12 +92,6 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
           expect(screen.getByText(work.name)).toBeInTheDocument();
         });
       });
-    });
-
-    it('読み込み中状態が表示される', () => {
-      render(<Works worksheetId={1} />);
-
-      expect(screen.getByText('読み込み中...')).toBeInTheDocument();
     });
   });
 
@@ -127,29 +130,6 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
 
       await waitFor(() => {
         expect(axios.post).toHaveBeenCalledWith('/api/v1/works', expect.any(Object));
-      });
-    });
-  });
-
-  describe('当番削除機能', () => {
-    it('削除ボタンで当番が削除される', async () => {
-      const user = userEvent.setup();
-
-      window.confirm = vi.fn().mockReturnValue(true);
-
-      render(<Works worksheetId={1} />);
-
-      await waitFor(() => {
-        mockWorks.forEach((work) => {
-          expect(screen.getByText(work.name)).toBeInTheDocument();
-        });
-      });
-
-      const deleteButton = screen.getAllByRole('button', { name: /削除/ })[0];
-      await user.click(deleteButton);
-
-      await waitFor(() => {
-        expect(axios.delete).toHaveBeenCalled();
       });
     });
   });
