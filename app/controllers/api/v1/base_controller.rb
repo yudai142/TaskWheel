@@ -58,6 +58,16 @@ module Api
       def render_error(message, status = :bad_request)
         render json: { error: message }, status: status
       end
-    end
-  end
-end
+
+      # デモアカウントかどうかを判定
+      def demo_user?
+        current_user&.email == 'test@example.com'
+      end
+
+      # デモアカウント時の操作制限チェック
+      def deny_demo_user_modification!
+        return unless demo_user?
+
+        render json: { error: 'デモアカウントではメンバーと当番の変更はできません' },
+               status: :forbidden
+      end

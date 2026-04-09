@@ -15,17 +15,20 @@ module Api
       end
 
       def create
+        deny_demo_user_modification! and return
         @work = current_worksheet.works.build(work_params)
         @work.save!
         render json: @work, status: :created
       end
 
       def update
+        deny_demo_user_modification! and return
         @work.update!(work_params)
         render json: @work
       end
 
       def destroy
+        deny_demo_user_modification! and return
         @work.destroy!
         head :no_content
       end
@@ -45,6 +48,7 @@ module Api
       end
 
       def bulk_update
+        deny_demo_user_modification! and return
         Work.transaction do
           params[:works].each do |work_data|
             work = current_worksheet.works.find(work_data[:id])

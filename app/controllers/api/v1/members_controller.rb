@@ -16,22 +16,26 @@ module Api
       end
 
       def create
+        deny_demo_user_modification! and return
         @member = current_worksheet.members.build(member_params)
         @member.save!
         render json: @member, status: :created
       end
 
       def update
+        deny_demo_user_modification! and return
         @member.update!(member_params)
         render json: @member
       end
 
       def destroy
+        deny_demo_user_modification! and return
         @member.destroy!
         head :no_content
       end
 
       def bulk_update
+        deny_demo_user_modification! and return
         Member.transaction do
           params[:members].each do |member_data|
             member = current_worksheet.members.find(member_data[:id])
