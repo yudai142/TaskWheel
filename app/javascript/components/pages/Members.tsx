@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import type { Member, Work, MemberOptionSetting } from '../../types';
+import ImportModal from '../ImportModal';
 
 interface BulkFormData {
   text: string;
@@ -164,6 +165,7 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
     work_id: '',
     status: '0',
   });
+  const [showImportModal, setShowImportModal] = useState<boolean>(false);
 
   useEffect(() => {
     void fetchData();
@@ -365,6 +367,20 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
             title={isDemoUser ? 'デモアカウントでは使用できません' : ''}
           >
             {showSingleForm ? 'キャンセル' : '新規登録'}
+          </button>
+          <button
+            onClick={() => setShowImportModal(true)}
+            className="btn-secondary py-1 whitespace-nowrap"
+            disabled={isDemoUser || members.length === 0}
+            title={
+              isDemoUser
+                ? 'デモアカウントでは使用できません'
+                : members.length === 0
+                  ? 'インポート対象がありません'
+                  : ''
+            }
+          >
+            インポート
           </button>
         </div>
       </div>
@@ -631,6 +647,15 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
           </div>
         </div>
       )}
+
+      <ImportModal
+        isOpen={showImportModal}
+        onClose={() => setShowImportModal(false)}
+        onImportComplete={fetchData}
+        importType="members"
+        itemsToImport={members}
+        isDemoUser={isDemoUser}
+      />
     </div>
   );
 }

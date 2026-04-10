@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import axios from 'axios';
 import { render, screen, waitFor } from '@testing-library/react';
 import App from '../../components/App';
-import { setDefaultAxiosMocks } from '../spec/fixtures/axiosMocks';
+import { setDefaultAxiosMocks } from '../fixtures/axiosMocks';
 
 vi.mock('axios');
 const mockedAxios = vi.mocked(axios, true);

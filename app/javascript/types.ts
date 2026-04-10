@@ -7,6 +7,14 @@ export interface MemberOptionSetting {
   status_label: string;
 }
 
+export interface Worksheet {
+  id: number;
+  name: string;
+  interval: number;
+  week_use: boolean;
+  week: number;
+}
+
 export interface Member {
   id: number;
   name: string;
