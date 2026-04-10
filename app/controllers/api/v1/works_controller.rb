@@ -6,7 +6,8 @@ module Api
       before_action :set_work, only: %i[show update destroy]
 
       def index
-        @works = current_worksheet.works.includes(:members, :off_works)
+        worksheet = current_worksheet_for_params
+        @works = worksheet.works.includes(:members, :off_works)
         filter = params[:filter] || 'active'
         @works = case filter
                  when 'active'
