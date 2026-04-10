@@ -231,11 +231,14 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
   };
 
   const handleNameChange = (newName: string): void => {
-    setEditFormData({ ...editFormData, name: newName });
-    if (!editFormData.kana || editFormData.kana === '') {
+    setEditFormData((prev) => {
       const predicted = predictKana(newName);
-      setEditFormData((prev) => ({ ...prev, kana: predicted }));
-    }
+      return {
+        ...prev,
+        name: newName,
+        kana: !prev.kana ? predicted : prev.kana,
+      };
+    });
   };
 
   const handleEditSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
