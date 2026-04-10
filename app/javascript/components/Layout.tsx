@@ -5,7 +5,6 @@ import {
   UserGroupIcon,
   ClipboardDocumentListIcon,
   CalendarIcon,
-  CogIcon,
   Bars3Icon,
   XMarkIcon,
   PlusIcon,
@@ -65,7 +64,6 @@ export default function Layout({
     { name: 'メンバー', href: '/members', icon: UserGroupIcon },
     { name: 'タスク', href: '/works', icon: ClipboardDocumentListIcon },
     { name: '履歴', href: '/history', icon: CalendarIcon },
-    { name: '設定', href: '/settings', icon: CogIcon },
   ];
 
   return (
