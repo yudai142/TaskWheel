@@ -6,8 +6,8 @@ describe 'API V1 Works - 一括登録・編集・フィルタリング', type: :
   let!(:work) { create(:work, worksheet:, name: '掃除', multiple: 2, is_above: true) }
 
   describe 'PATCH /api/v1/works/:id' do
-    context '当番を編集' do
-      it '当番名を更新' do
+    context 'タスクを編集' do
+      it 'タスク名を更新' do
         patch "/api/v1/works/#{work.id}", 
               params: { work: { name: 'トイレ掃除' } }
 
@@ -43,8 +43,8 @@ describe 'API V1 Works - 一括登録・編集・フィルタリング', type: :
   end
 
   describe 'POST /api/v1/works/bulk_create' do
-    context '複数当番を一括登録' do
-      it '改行区切りで当番を一括登録' do
+    context '複数タスクを一括登録' do
+      it '改行区切りでタスクを一括登録' do
         works_data = [
           { name: 'トイレ掃除', multiple: 1, is_above: true },
           { name: 'ゴミ捨て', multiple: 2, is_above: false },
@@ -77,7 +77,7 @@ describe 'API V1 Works - 一括登録・編集・フィルタリング', type: :
     let!(:archived_work) { create(:work, worksheet:, name: '除雪', archive: true) }
 
     context 'アーカイブフィルタリング' do
-      it '有効な当番のみを取得' do
+      it '有効なタスクのみを取得' do
         get '/api/v1/works', 
             params: { filter: 'active' }
 
@@ -86,7 +86,7 @@ describe 'API V1 Works - 一括登録・編集・フィルタリング', type: :
         expect(json_response[0]['id']).to eq(work.id)
       end
 
-      it 'すべての当番を取得' do
+      it 'すべてのタスクを取得' do
         get '/api/v1/works', 
             params: { filter: 'all' }
 

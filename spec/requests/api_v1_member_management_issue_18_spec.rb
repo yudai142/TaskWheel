@@ -64,7 +64,7 @@ RSpec.describe 'API V1: Member Management Modal (Issue #18)', type: :request do
       expect(MemberOption.find_by(member_id: member.id, work_id: work_a.id)&.status).to eq(0)
     end
 
-    it '同じ当番で固定と除外を両方登録できない' do
+    it '同じタスクで固定と除外を両方登録できない' do
       create(:member_option, member: member, work: work_a, status: 0)
 
       post '/api/v1/member_options', params: {
@@ -159,7 +159,7 @@ RSpec.describe 'API V1: Member Management Modal (Issue #18)', type: :request do
       expect(History.find_by(member_id: member.id, date: today)&.work_id).to eq(work_b.id)
     end
 
-    it '除外設定された当番を避けて割り当てる' do
+    it '除外設定されたタスクを避けて割り当てる' do
       create(:member_option, member: member, work: work_a, status: 1)
       create(:history, member: member, work: nil, date: today)
 

@@ -92,7 +92,7 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
         .filter((work) => work.name);
 
       if (lines.length === 0) {
-        alert('有効な当番を入力してください');
+        alert('有効なタスクを入力してください');
         return;
       }
 
@@ -105,7 +105,7 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
       setShowBulkForm(false);
       await fetchData();
     } catch {
-      alert('当番の一括追加に失敗しました');
+      alert('タスクの一括追加に失敗しました');
     }
   };
 
@@ -122,7 +122,7 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
       setShowSingleForm(false);
       await fetchData();
     } catch {
-      alert('当番の追加に失敗しました');
+      alert('タスクの追加に失敗しました');
     }
   };
 
@@ -151,7 +151,7 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
       );
       setSelectedWork(null);
     } catch {
-      alert('当番の更新に失敗しました');
+      alert('タスクの更新に失敗しました');
     }
   };
 
@@ -201,14 +201,14 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">当番管理</h2>
-        <div className="flex gap-2">
+        <h2 className="text-2xl font-bold text-gray-900">タスク管理</h2>
+        <div className="flex gap-2 items-center">
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value as 'active' | 'all' | 'archived')}
-            className="input-field py-2"
+            className="input-field py-1"
           >
-            <option value="active">有効な当番</option>
+            <option value="active">有効なタスク</option>
             <option value="all">すべて</option>
             <option value="archived">アーカイブ</option>
           </select>
@@ -217,7 +217,7 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
               setShowBulkForm(!showBulkForm);
               setShowSingleForm(false);
             }}
-            className="btn-primary"
+            className="btn-primary py-1 whitespace-nowrap"
             disabled={isDemoUser}
             title={isDemoUser ? 'デモアカウントでは本機能は使用できません' : ''}
           >
@@ -228,7 +228,7 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
               setShowSingleForm(!showSingleForm);
               setShowBulkForm(false);
             }}
-            className="btn-primary"
+            className="btn-primary py-1 whitespace-nowrap"
             disabled={isDemoUser}
             title={isDemoUser ? 'デモアカウントでは本機能は使用できません' : ''}
           >
@@ -242,10 +242,10 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
           <form onSubmit={handleBulkSubmit} className="space-y-4">
             <div>
               <label htmlFor="bulk-works" className="block text-sm font-medium text-gray-700">
-                当番を一括登録
+                タスクを一括登録
               </label>
               <p className="text-xs text-gray-500 mb-2">
-                1行に1当番「名前 複数数 (オプション)」の形式で入力してください
+                1行に1タスク「名前 複数数 (オプション)」の形式で入力してください
               </p>
               <textarea
                 id="bulk-works"
@@ -268,7 +268,7 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
           <form onSubmit={handleSingleSubmit} className="space-y-4">
             <div>
               <label htmlFor="single-work-name" className="block text-sm font-medium text-gray-700">
-                当番名
+                タスク名
               </label>
               <input
                 id="single-work-name"
@@ -363,14 +363,14 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
             <div className="grid grid-cols-2 gap-6">
               {/* 左：編集フォーム */}
               <div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-6">当番を編集</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-6">タスクを編集</h3>
                 <form onSubmit={handleEditSubmit} className="space-y-4">
                   <div>
                     <label
                       htmlFor="edit-work-name"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      当番名
+                      タスク名
                     </label>
                     <input
                       id="edit-work-name"
@@ -512,7 +512,7 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
                   <div>
                     <h4 className="font-semibold text-gray-900">現在の設定</h4>
                     <p className="text-sm text-gray-500">
-                      この当番に対して登録済みのメンバー固定/除外設定です。
+                      このタスクに対して登録済みのメンバー固定/除外設定です。
                     </p>
                   </div>
                   <div className="mt-4 space-y-3">

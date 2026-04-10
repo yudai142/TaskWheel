@@ -1,6 +1,6 @@
-# 掃除当番管理 - TaskWheel
+# 掃除タスク管理 - TaskWheel
 
-Rails + React + PostgreSQL + Docker + Tailwind CSSで構築された、掃除当番管理アプリケーション。
+Rails + React + PostgreSQL + Docker + Tailwind CSSで構築された、掃除タスク管理アプリケーション。
 
 ## 特徴
 
@@ -18,21 +18,21 @@ Rails + React + PostgreSQL + Docker + Tailwind CSSで構築された、掃除当
 - 苗字、名前、かな名の管理
 - アーカイブ機能
 
-### 当番管理
+### タスク管理
 
-- 当番（掃除タスク）の登録・編集・削除
+- タスク（掃除タスク）の登録・編集・削除
 - 複数割り当て機能
-- メンバーごとの担当当番設定
+- メンバーごとの担当タスク設定
 
 ### 自動シャッフル
 
-- ワンクリックで当番を自動割り当て
+- ワンクリックでタスクを自動割り当て
 - 週間モード/日数間隔モードの切り替え
 - リセット日付の自動管理
 
 ### 履歴管理
 
-- 当番割り当ての履歴を記録
+- タスク割り当ての履歴を記録
 - 月ごとの履歴表示
 - 履歴の検索・削除
 
@@ -155,11 +155,11 @@ POST   /api/v1/members/bulk_update # 複数メンバー更新
 #### Works
 
 ```
-GET    /api/v1/works             # 全当番取得
-POST   /api/v1/works             # 当番作成
-GET    /api/v1/works/:id         # 当番取得
-PUT    /api/v1/works/:id         # 当番更新
-DELETE /api/v1/works/:id         # 当番削除
+GET    /api/v1/works             # 全タスク取得
+POST   /api/v1/works             # タスク作成
+GET    /api/v1/works/:id         # タスク取得
+PUT    /api/v1/works/:id         # タスク更新
+DELETE /api/v1/works/:id         # タスク削除
 POST   /api/v1/works/shuffle     # シャッフル実行
 ```
 

@@ -7,15 +7,15 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
   let(:yesterday) { today - 1.day }
 
   describe 'GET /api/v1/works - List of duties' do
-    context '当番一覧取得' do
-      it 'すべての当番が返却される' do
+    context 'タスク一覧取得' do
+      it 'すべてのタスクが返却される' do
         get '/api/v1/works'
 
         expect(response).to have_http_status(:ok)
         expect(response.parsed_body.length).to eq(4)
       end
 
-      it '当番のnameが包含されている' do
+      it 'タスクのnameが包含されている' do
         get '/api/v1/works'
 
         expect(response).to have_http_status(:ok)
@@ -25,7 +25,7 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
         expect(json_response[0]).to have_key('id')
       end
 
-      it 'シャッフル対象の当番のみを取得できる' do
+      it 'シャッフル対象のタスクのみを取得できる' do
         # テストセットアップ時に作成された works の数を記録
         get '/api/v1/works'
         initial_count = response.parsed_body.length
@@ -33,10 +33,10 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
         expect(response).to have_http_status(:ok)
         json_response = response.parsed_body
 
-        # let! で作成された当番数と一致することを確認
+        # let! で作成されたタスク数と一致することを確認
         expect(json_response.length).to eq(4)
 
-        # すべての返却された当番の archive フラグを確認
+        # すべての返却されたタスクの archive フラグを確認
         json_response.each do |work|
           expect(work).to have_key('id')
           expect(work).to have_key('name')
@@ -150,7 +150,7 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
   end
 
   describe 'POST /api/v1/histories/bulk_create - Bulk assign duties (シャッフル時)' do
-    context '複数の当番割り当て' do
+    context '複数のタスク割り当て' do
       it '複数の履歴を一括作成できる' do
         params = {
           histories: [
@@ -247,7 +247,7 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
         expect(refreshed.pluck(:work_id).compact).to all(be_in(target_works.map(&:id)))
       end
 
-      it 'off_work の当番は日付一括シャッフルで割り当て対象外になる' do
+      it 'off_work のタスクは日付一括シャッフルで割り当て対象外になる' do
         target_member = create(:member)
         allowed_work = create(:work, multiple: 1, is_above: true, archive: false)
         excluded_work = create(:work, multiple: 1, is_above: true, archive: false)
@@ -268,7 +268,7 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
         expect(refreshed.work_id).to eq(allowed_work.id)
       end
 
-      it 'is_above=true の当番は参加人数が枠数を超えても追加割り当てされる' do
+      it 'is_above=true のタスクは参加人数が枠数を超えても追加割り当てされる' do
         works.each { |work| work.update!(archive: true) }
         expandable_work = create(:work, multiple: 1, is_above: true, archive: false)
         participants = create_list(:member, 3)
@@ -308,7 +308,7 @@ RSpec.describe 'API V1: Dashboard Statistics (Issue #2)', type: :request do
       expect(active_members).to eq(3)
     end
 
-    it '当番数は登録されているすべての当番' do
+    it 'タスク数は登録されているすべてのタスク' do
       get '/api/v1/works'
 
       expect(response.parsed_body.length).to eq(4)

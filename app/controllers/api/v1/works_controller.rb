@@ -179,7 +179,7 @@ module Api
         return render_error('参加メンバーがいません', :unprocessable_content) if histories.empty?
 
         works = load_shufflable_works(extract_target_date)
-        return render_error('シャッフル対象の当番がありません', :unprocessable_content) if works.empty?
+        return render_error('シャッフル対象のタスクがありません', :unprocessable_content) if works.empty?
 
         render json: allocator.shuffle_for_date
       end

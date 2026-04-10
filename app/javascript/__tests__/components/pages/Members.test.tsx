@@ -89,7 +89,7 @@ describe('Members - メンバー管理', () => {
 
       // 右側：固定/除外設定パネルが表示される
       expect(screen.getByText('固定/除外設定を追加')).toBeInTheDocument();
-      expect(screen.getByLabelText('当番名')).toBeInTheDocument();
+      expect(screen.getByLabelText('タスク名')).toBeInTheDocument();
       expect(screen.getByLabelText('設定種別')).toBeInTheDocument();
     });
 
@@ -184,8 +184,8 @@ describe('Members - メンバー管理', () => {
         screen.getByRole('button', { name: new RegExp(mockMembersForManagement[0].name) })
       );
 
-      // 固定/除外設定パネルで当番名とステータスを選択
-      const workSelect = screen.getByLabelText('当番名');
+      // 固定/除外設定パネルでタスク名とステータスを選択
+      const workSelect = screen.getByLabelText('タスク名');
       await user.selectOptions(workSelect, mockWorks[0].id.toString());
 
       const statusSelect = screen.getByLabelText('設定種別');

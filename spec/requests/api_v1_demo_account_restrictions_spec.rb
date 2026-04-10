@@ -69,27 +69,27 @@ RSpec.describe 'API V1: Demo Account Restrictions', type: :request do
       end
     end
 
-    context '当番操作の制限' do
-      it '当番作成が 403 Forbidden を返す' do
+    context 'タスク操作の制限' do
+      it 'タスク作成が 403 Forbidden を返す' do
         post '/api/v1/works', params: {
           worksheet_id: demo_worksheet.id,
-          name: '新当番'
+          name: '新タスク'
         }
 
         expect(response).to have_http_status(:forbidden)
         expect(response.parsed_body['error']).to eq('デモアカウントではデータの変更はできません')
       end
 
-      it '当番更新が 403 Forbidden を返す' do
+      it 'タスク更新が 403 Forbidden を返す' do
         patch "/api/v1/works/#{demo_work.id}", params: {
-          name: '当番更新'
+          name: 'タスク更新'
         }
 
         expect(response).to have_http_status(:forbidden)
         expect(response.parsed_body['error']).to eq('デモアカウントではデータの変更はできません')
       end
 
-      it '当番削除が 403 Forbidden を返す' do
+      it 'タスク削除が 403 Forbidden を返す' do
         delete "/api/v1/works/#{demo_work.id}"
 
         expect(response).to have_http_status(:forbidden)

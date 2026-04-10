@@ -329,11 +329,11 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900">メンバー管理</h2>
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value as 'active' | 'all' | 'archived')}
-            className="input-field py-2"
+            className="input-field py-1"
           >
             <option value="active">有効なメンバー</option>
             <option value="all">すべて</option>
@@ -344,7 +344,7 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
               setShowBulkForm(!showBulkForm);
               setShowSingleForm(false);
             }}
-            className="btn-primary"
+            className="btn-primary py-1 whitespace-nowrap"
             disabled={isDemoUser}
             title={isDemoUser ? 'デモアカウントでは使用できません' : ''}
           >
@@ -355,7 +355,7 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
               setShowSingleForm(!showSingleForm);
               setShowBulkForm(false);
             }}
-            className="btn-primary"
+            className="btn-primary py-1 whitespace-nowrap"
             disabled={isDemoUser}
             title={isDemoUser ? 'デモアカウントでは使用できません' : ''}
           >
@@ -543,14 +543,14 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
                 >
                   <div>
                     <h4 className="font-semibold text-gray-900">固定/除外設定を追加</h4>
-                    <p className="text-sm text-gray-500">当番名と設定種別を選んで登録します。</p>
+                    <p className="text-sm text-gray-500">タスク名と設定種別を選んで登録します。</p>
                   </div>
                   <div>
                     <label
                       htmlFor="member-setting-work"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      当番名
+                      タスク名
                     </label>
                     <select
                       id="member-setting-work"
@@ -559,7 +559,7 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
                       onChange={(e) => setSettingForm({ ...settingForm, work_id: e.target.value })}
                       required
                     >
-                      <option value="">当番を選択</option>
+                      <option value="">タスクを選択</option>
                       {works.map((work) => (
                         <option key={work.id} value={String(work.id)}>
                           {work.name}

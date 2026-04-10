@@ -64,7 +64,7 @@ RSpec.describe 'API V1 Demo Seed (Issue #30)', type: :request do
         expect(first_member.archive).to be(false)
       end
 
-      it 'デモ当番データ自動生成確認' do
+      it 'デモタスクデータ自動生成確認' do
         post '/api/v1/auth/login', params: {
           email: 'test@example.com',
           password: 'password123'
@@ -74,14 +74,14 @@ RSpec.describe 'API V1 Demo Seed (Issue #30)', type: :request do
         worksheet = user.worksheets.first
         expect(worksheet.works.count).to eq(11)
 
-        # 最初の当番確認
+        # 最初のタスク確認
         first_work = worksheet.works.first
         expect(first_work.name).to eq('リーダー')
         expect(first_work.multiple).to eq(0)
         expect(first_work.archive).to be(false)
         expect(first_work.is_above).to be(false)
 
-        # アーカイブ当番確認
+        # アーカイブタスク確認
         archived_work = worksheet.works.find_by(name: '掃除機')
         expect(archived_work.archive).to be(true)
       end

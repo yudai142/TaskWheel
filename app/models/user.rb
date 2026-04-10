@@ -40,7 +40,7 @@ class User < ApplicationRecord
     { name: '数 瑛斗', kana: 'かずえいと', archive: false }
   ].freeze
 
-  # デモ用当番データ（seed.js から複製）
+  # デモ用タスクデータ（seed.js から複製）
   DEMO_WORKS_DATA = [
     { name: 'リーダー', multiple: 0, archive: false, is_above: false },
     { name: 'ハンディモップ', multiple: 0, archive: false, is_above: false },
@@ -81,7 +81,7 @@ class User < ApplicationRecord
       worksheet.members.create!(member_data)
     end
 
-    # デモ当番データ生成
+    # デモタスクデータ生成
     DEMO_WORKS_DATA.each do |work_data|
       worksheet.works.create!(work_data)
     end

@@ -56,7 +56,7 @@ const setupCommonMocks = (works: Work[], members: Member[], histories: History[]
   });
 
   mockedAxios.patch.mockImplementation((url: string, data: unknown) => {
-    // 当番更新のモック
+    // タスク更新のモック
     if (url.includes('/api/v1/works/')) {
       const id = parseInt(url.split('/').pop() || '', 10);
       const workToUpdate = works.find((w) => w.id === id);

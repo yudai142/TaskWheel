@@ -90,8 +90,8 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
     });
   });
 
-  describe('当番一覧の表示', () => {
-    it('当番一覧が正しく表示される', async () => {
+  describe('タスク一覧の表示', () => {
+    it('タスク一覧が正しく表示される', async () => {
       render(<Works worksheetId={1} />);
 
       await waitFor(() => {
@@ -102,22 +102,22 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
     });
   });
 
-  describe('当番編集機能', () => {
-    it('当番カードをクリックすると編集フォーム＆メンバー設定パネルが表示される', async () => {
+  describe('タスク編集機能', () => {
+    it('タスクカードをクリックすると編集フォーム＆メンバー設定パネルが表示される', async () => {
       const user = userEvent.setup();
       render(<Works worksheetId={1} />);
 
-      // 当番が表示されるまで待機
+      // タスクが表示されるまで待機
       await waitFor(() => {
         expect(screen.getByText(mockWorks[0].name)).toBeInTheDocument();
       });
 
-      // 当番カードをクリック
+      // タスクカードをクリック
       await user.click(screen.getByRole('button', { name: new RegExp(mockWorks[0].name) }));
 
       // 左側：編集フォームが表示される
-      expect(screen.getByText('当番を編集')).toBeInTheDocument();
-      expect(screen.getByLabelText('当番名')).toBeInTheDocument();
+      expect(screen.getByText('タスクを編集')).toBeInTheDocument();
+      expect(screen.getByLabelText('タスク名')).toBeInTheDocument();
       expect(screen.getByLabelText('複数割り当て数')).toBeInTheDocument();
 
       // 右側：メンバー設定パネルが表示される
@@ -126,22 +126,22 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
       expect(screen.getByLabelText('設定種別')).toBeInTheDocument();
     });
 
-    it('編集フォームで当番を保存できる', async () => {
+    it('編集フォームでタスクを保存できる', async () => {
       const user = userEvent.setup();
       render(<Works worksheetId={1} />);
 
-      // 当番が表示されるまで待機
+      // タスクが表示されるまで待機
       await waitFor(() => {
         expect(screen.getByText(mockWorks[0].name)).toBeInTheDocument();
       });
 
-      // 当番カードをクリック
+      // タスクカードをクリック
       await user.click(screen.getByRole('button', { name: new RegExp(mockWorks[0].name) }));
 
-      // 当番名を変更
-      const nameInput = screen.getByLabelText('当番名') as HTMLInputElement;
+      // タスク名を変更
+      const nameInput = screen.getByLabelText('タスク名') as HTMLInputElement;
       await user.clear(nameInput);
-      await user.type(nameInput, '新しい当番名');
+      await user.type(nameInput, '新しいタスク名');
 
       // 保存ボタンをクリック
       const saveButton = screen.getByRole('button', { name: '保存' });
@@ -153,7 +153,7 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
           `/api/v1/works/${mockWorks[0].id}`,
           expect.objectContaining({
             work: expect.objectContaining({
-              name: '新しい当番名',
+              name: '新しいタスク名',
             }),
           })
         );
@@ -161,13 +161,13 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
 
       // モーダルが閉じる
       await waitFor(() => {
-        expect(screen.queryByText('当番を編集')).not.toBeInTheDocument();
+        expect(screen.queryByText('タスクを編集')).not.toBeInTheDocument();
       });
     });
   });
 
-  describe('当番作成機能', () => {
-    it('新規追加ボタンで当番作成フォームが表示される', async () => {
+  describe('タスク作成機能', () => {
+    it('新規追加ボタンでタスク作成フォームが表示される', async () => {
       const user = userEvent.setup();
       render(<Works worksheetId={1} />);
 
@@ -176,7 +176,7 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
         expect(axios.get).toHaveBeenCalled();
       });
 
-      // 当番が表示されることを確認
+      // タスクが表示されることを確認
       await waitFor(() => {
         expect(screen.getByText(mockWorks[0].name)).toBeInTheDocument();
       });
@@ -185,12 +185,12 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
       const addButton = screen.getByRole('button', { name: /一括追加/ });
       await user.click(addButton);
 
-      // フォーム内の当番名ラベルを確認
-      const labels = screen.getAllByText('当番を一括登録');
+      // フォーム内のタスク名ラベルを確認
+      const labels = screen.getAllByText('タスクを一括登録');
       expect(labels.length).toBeGreaterThan(0);
     });
 
-    it('当番を作成すると、データが再取得される', async () => {
+    it('タスクを作成すると、データが再取得される', async () => {
       const user = userEvent.setup();
       render(<Works worksheetId={1} />);
 
@@ -199,7 +199,7 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
         expect(axios.get).toHaveBeenCalled();
       });
 
-      // 当番が表示されることを確認
+      // タスクが表示されることを確認
       await waitFor(() => {
         expect(screen.getByText(mockWorks[0].name)).toBeInTheDocument();
       });
@@ -208,9 +208,9 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
       const addButton = screen.getByRole('button', { name: /一括追加/ });
       await user.click(addButton);
 
-      // テキストエリアにテスト当番を入力
-      const textarea = screen.getByRole('textbox', { name: /当番を一括登録/ });
-      await user.type(textarea, 'テスト当番');
+      // テキストエリアにテストタスクを入力
+      const textarea = screen.getByRole('textbox', { name: /タスクを一括登録/ });
+      await user.type(textarea, 'テストタスク');
 
       // 一括追加ボタンをクリック
       const submitButton = screen.getByRole('button', { name: /一括追加/ });

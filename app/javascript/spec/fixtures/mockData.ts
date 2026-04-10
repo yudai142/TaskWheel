@@ -5,7 +5,7 @@ import type { Member, Work, History, MemberOptionSetting } from '../../types';
  * Issue #2 ダッシュボード統計表示タブUIのテスト用データ
  */
 
-// 当番（掃除タスク）のモックデータ
+// タスク（掃除タスク）のモックデータ
 export const mockWorks: Work[] = [
   {
     id: 1,

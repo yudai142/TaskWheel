@@ -100,7 +100,7 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
     // 除外状態をチェック
     const work = works.find((w: Work) => w.id === workId);
     if (work && !work.is_above) {
-      showNotification('この当番はシャッフル対象から除外されています', 'error');
+      showNotification('このタスクはシャッフル対象から除外されています', 'error');
       return;
     }
 
@@ -134,7 +134,7 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
     const allMembersWithRecords = Array.from(new Set(histories.map((h: History) => h.member_id)));
 
     if (works.length === 0) {
-      showNotification('当番が登録されていません', 'error');
+      showNotification('タスクが登録されていません', 'error');
       return;
     }
 
@@ -143,7 +143,7 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
       return;
     }
     if (validWorksCount === 0) {
-      showNotification('シャッフル対象の当番がありません。当番一覧を確認してください', 'error');
+      showNotification('シャッフル対象のタスクがありません。タスク一覧を確認してください', 'error');
       return;
     }
 
@@ -286,13 +286,13 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
       // データを再取得
       const worksRes = await axios.get<Work[]>('/api/v1/works');
       setWorks(worksRes.data.sort((a, b) => a.id - b.id));
-      showNotification('当番の設定を更新しました', 'success');
+      showNotification('タスクの設定を更新しました', 'success');
     } catch (error) {
       const axiosError = error as { response?: { data?: { error?: string; errors?: string[] } } };
       const msg =
         axiosError.response?.data?.errors?.join(', ') ||
         axiosError.response?.data?.error ||
-        '当番の更新に失敗しました';
+        'タスクの更新に失敗しました';
       showNotification(msg, 'error');
       console.error('handleToggleWorkExclusion error:', error);
     }
@@ -597,7 +597,7 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
               <p
                 className={`font-medium text-primary-600 uppercase tracking-wide transition-all ${isScrolled ? 'text-xs leading-tight' : 'text-sm'}`}
               >
-                当番数
+                タスク数
               </p>
               <p
                 className={`font-bold text-primary-900 transition-all ${isScrolled ? 'text-xl mt-0.5' : 'text-4xl mt-2'}`}
@@ -758,18 +758,18 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
       {activeStatsTab === 'works' && (
         <div className="card" role="tabpanel">
           <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">当番管理</h3>
+            <h3 className="text-lg font-semibold text-gray-900">タスク管理</h3>
             <p className="text-sm text-gray-600">
               シャッフル対象: {validWorksCount}/{works.length}個
             </p>
           </div>
 
           <p className="text-sm text-gray-600 mb-4">
-            シャッフルから除外したい当番にチェックを入れてください。チェックされた当番はシャッフル対象から外れます。
+            シャッフルから除外したいタスクにチェックを入れてください。チェックされたタスクはシャッフル対象から外れます。
           </p>
 
           {works.length === 0 ? (
-            <p className="text-sm text-gray-500">当番が登録されていません。</p>
+            <p className="text-sm text-gray-500">タスクが登録されていません。</p>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {works.map((work: Work) => {
@@ -809,14 +809,16 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
           <div className="mb-6">
             <div className="flex items-center">
               <SparklesIcon className="h-6 w-6 text-primary-600 mr-2" />
-              <h2 className="text-2xl font-bold text-gray-900">{formatDate(selectedDate)}の当番</h2>
+              <h2 className="text-2xl font-bold text-gray-900">
+                {formatDate(selectedDate)}のタスク
+              </h2>
             </div>
           </div>
 
           {works.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-500 text-lg">当番が登録されていません</p>
-              <p className="text-gray-400 text-sm mt-2">「当番」ページから追加してください</p>
+              <p className="text-gray-500 text-lg">タスクが登録されていません</p>
+              <p className="text-gray-400 text-sm mt-2">「タスク」ページから追加してください</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -891,13 +893,13 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
                         }`}
                         title={
                           isExcluded
-                            ? 'この当番はシャッフル対象から除外されています'
+                            ? 'このタスクはシャッフル対象から除外されています'
                             : assignedMembersCount === 0
                               ? 'メンバーを1人以上選択してください'
                               : ''
                         }
                       >
-                        {shuffling === work.id ? '処理中...' : 'この当番をシャッフル'}
+                        {shuffling === work.id ? '処理中...' : 'このタスクをシャッフル'}
                       </button>
                     </div>
 

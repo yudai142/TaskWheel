@@ -61,7 +61,7 @@ export default function Layout({
   const navigation: NavItem[] = [
     { name: 'ダッシュボード', href: '/', icon: HomeIcon },
     { name: 'メンバー', href: '/members', icon: UserGroupIcon },
-    { name: '当番', href: '/works', icon: ClipboardDocumentListIcon },
+    { name: 'タスク', href: '/works', icon: ClipboardDocumentListIcon },
     { name: '履歴', href: '/history', icon: CalendarIcon },
     { name: '設定', href: '/settings', icon: CogIcon },
   ];
