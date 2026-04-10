@@ -29,6 +29,15 @@ module Api
         end
       end
 
+      # パラメータまたはセッションからワークシートを取得（パラメータを優先）
+      def current_worksheet_for_params
+        if params[:worksheet_id].present?
+          worksheet = current_user.worksheets.find_by(id: params[:worksheet_id])
+          return worksheet if worksheet.present?
+        end
+        current_worksheet
+      end
+
       def authenticate_user_from_session!
         return if current_user
 

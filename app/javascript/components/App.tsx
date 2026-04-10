@@ -108,6 +108,23 @@ export default function App(): JSX.Element {
     setActiveWorksheetId(null);
   };
 
+  const handleWorksheetSelect = async (worksheetId: number): Promise<void> => {
+    try {
+      // サーバーのセッションを更新
+      await axios.post('/api/v1/worksheets/set_current', { worksheet_id: worksheetId });
+      // ローカルステートを更新
+      setActiveWorksheetId(worksheetId);
+    } catch (error) {
+      const axiosError = error as { response?: { data?: { error?: string; errors?: string[] } } };
+      const msg =
+        axiosError.response?.data?.errors?.join(', ') ||
+        axiosError.response?.data?.error ||
+        'ワークシート切り替えに失敗しました';
+      setWorksheetNotification({ message: msg, type: 'error' });
+      window.setTimeout(() => setWorksheetNotification(null), 4000);
+    }
+  };
+
   const handleDemoLogin = async (): Promise<void> => {
     await login('test@example.com', 'password123');
   };
@@ -209,7 +226,7 @@ export default function App(): JSX.Element {
         onLogout={logout}
         worksheets={worksheets}
         activeWorksheetId={activeWorksheetId}
-        onWorksheetSelect={setActiveWorksheetId}
+        onWorksheetSelect={handleWorksheetSelect}
         showWorksheetModal={showWorksheetModal}
         newWorksheetName={newWorksheetName}
         onShowWorksheetModal={setShowWorksheetModal}

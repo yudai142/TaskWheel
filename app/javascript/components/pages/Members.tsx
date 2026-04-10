@@ -174,7 +174,12 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
     try {
       const [membersResponse, worksResponse] = await Promise.all([
         axios.get<Member[]>('/api/v1/members', {
-          params: { filter, include_archived: 'true', include_settings: 'true' },
+          params: {
+            filter,
+            include_archived: 'true',
+            include_settings: 'true',
+            worksheet_id: worksheetId,
+          },
         }),
         axios.get<Work[]>('/api/v1/works', {
           params: { worksheet_id: worksheetId },

@@ -4,7 +4,8 @@ module Api
   module V1
     class HistoriesController < BaseController
       def index
-        worksheet_member_ids = current_worksheet.members.pluck(:id)
+        worksheet = current_worksheet_for_params
+        worksheet_member_ids = worksheet.members.pluck(:id)
 
         @histories = if params[:year] && params[:month] && params[:day]
                        date = Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i)

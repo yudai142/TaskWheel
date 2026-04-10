@@ -40,6 +40,14 @@ module Api
         head :no_content
       end
 
+      def set_current
+        worksheet = current_user.worksheets.find(params[:worksheet_id])
+        session[:current_worksheet_id] = worksheet.id
+        render json: {
+          current_worksheet: serialize_worksheet(worksheet)
+        }
+      end
+
       private
 
       def worksheet_params

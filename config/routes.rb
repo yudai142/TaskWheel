@@ -64,7 +64,11 @@ Rails.application.routes.draw do
       end
 
       # Worksheets
-      resources :worksheets, only: %i[index create show update destroy]
+      resources :worksheets, only: %i[index create show update destroy] do
+        collection do
+          post :set_current
+        end
+      end
 
       # Dashboard
       get 'dashboard/member_selection_state', to: 'dashboard#member_selection_state'

@@ -6,7 +6,8 @@ module Api
       before_action :set_member, only: %i[show update destroy]
 
       def index
-        scope = current_worksheet.members.includes(member_options: :work).order(:id)
+        worksheet = current_worksheet_for_params
+        scope = worksheet.members.includes(member_options: :work).order(:id)
         
         # include_archived パラメータを優先
         if include_archived?
