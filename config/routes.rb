@@ -77,6 +77,9 @@ Rails.application.routes.draw do
           post :set_current
           get :importable
         end
+        member do
+          post :assign_member
+        end
       end
 
       # Dashboard

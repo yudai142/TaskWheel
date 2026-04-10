@@ -59,6 +59,50 @@ module Api
         render json: worksheets.map { |worksheet| serialize_worksheet(worksheet) }
       end
 
+      def assign_member
+        deny_demo_user_modification! and return
+        worksheet = current_user.worksheets.find(params[:worksheet_id])
+        member_id = params[:member_id]
+        work_id = params[:work_id]
+
+        # メンバーとワークを検証
+        member = worksheet.members.find_by(id: member_id)
+        work = worksheet.works.find_by(id: work_id)
+
+        unless member && work
+          render json: { error: 'メンバーまたはタスクが見つかりません' }, status: :not_found
+          return
+        end
+
+        # 今日の日付を取得
+        today = Date.today
+        year = today.year
+        month = today.month
+        day = today.day
+
+        # 既存の割り当てを確認
+        existing_history =
+          History.find_by(member_id:, year:, month:, day:)
+
+        if existing_history
+          # 既存の割り当てを更新
+          existing_history.update(work_id:)
+        else
+          # 新しい割り当てを作成
+          History.create(
+            member_id:,
+            work_id:,
+            year:,
+            month:,
+            day:
+          )
+        end
+
+        render json: { member_id:, work_id: }, status: :ok
+      rescue StandardError => e
+        render json: { error: e.message }, status: :internal_server_error
+      end
+
       private
 
       def worksheet_params

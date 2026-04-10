@@ -12,6 +12,7 @@ import {
   SparklesIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
+import { AssignMemberModal } from '../AssignMemberModal';
 import type { Member, Work, History } from '../../types';
 
 interface Notification {
@@ -37,6 +38,11 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [notification, setNotification] = useState<Notification | null>(null);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
+  const [selectedMemberForAssignment, setSelectedMemberForAssignment] = useState<Member | null>(
+    null
+  );
+  const [currentAssignmentWorkId, setCurrentAssignmentWorkId] = useState<number | null>(null);
+  const [showAssignMemberModal, setShowAssignMemberModal] = useState<boolean>(false);
 
   const showNotification = useCallback((message: string, type: 'success' | 'error' = 'success') => {
     setNotification({ message, type });
@@ -190,6 +196,22 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
     } catch {
       showNotification('削除に失敗しました', 'error');
     }
+  };
+
+  const handleOpenAssignMemberModal = (memberName: string, workId: number): void => {
+    const member = members.find((m) => m.name === memberName);
+    if (member) {
+      setSelectedMemberForAssignment(member);
+      setCurrentAssignmentWorkId(workId);
+      setShowAssignMemberModal(true);
+    }
+  };
+
+  const handleSaveAssignment = async (): Promise<void> => {
+    fetchData();
+    setShowAssignMemberModal(false);
+    setSelectedMemberForAssignment(null);
+    setCurrentAssignmentWorkId(null);
   };
 
   const getTodayAssignedMembers = (workId: number): History[] => {
@@ -451,6 +473,23 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
 
   return (
     <div className="space-y-6">
+      {/* AssignMemberModal */}
+      {worksheetId && selectedMemberForAssignment && (
+        <AssignMemberModal
+          isOpen={showAssignMemberModal}
+          member={selectedMemberForAssignment}
+          works={works}
+          worksheetId={worksheetId}
+          currentWorkId={currentAssignmentWorkId}
+          onClose={() => {
+            setShowAssignMemberModal(false);
+            setSelectedMemberForAssignment(null);
+            setCurrentAssignmentWorkId(null);
+          }}
+          onSave={handleSaveAssignment}
+        />
+      )}
+
       {/* Notification Popup */}
       {notification && (
         <div className="fixed top-6 right-6 z-50 max-w-sm w-full animate-fade-in">
@@ -912,8 +951,11 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
                           {todayAssignments.map((assignment) => (
                             <div
                               key={assignment.id}
-                              onClick={() => handleDeleteMember(assignment.id)}
-                              className="p-4 bg-white border-2 border-primary-300 rounded-lg hover:bg-red-50 hover:border-red-400 cursor-pointer transition-all flex items-center justify-center"
+                              onClick={() =>
+                                handleOpenAssignMemberModal(assignment.member?.name || '', work.id)
+                              }
+                              className="p-4 bg-white border-2 border-primary-300 rounded-lg hover:bg-primary-50 hover:border-primary-500 cursor-pointer transition-all flex items-center justify-center"
+                              title="クリックで割り当て先を変更"
                             >
                               <p className="font-semibold text-gray-900 text-center">
                                 {assignment.member?.name}

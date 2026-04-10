@@ -10,6 +10,7 @@ import Settings from './pages/Settings';
 import LandingPage from './auth/LandingPage';
 import AuthModal from './auth/AuthModal';
 import PasswordResetPage from './auth/PasswordResetPage';
+import { EditWorksheetModal } from './EditWorksheetModal';
 import type { AuthResponse, AuthUser, WorksheetSummary } from '../types';
 
 interface Notification {
@@ -40,6 +41,8 @@ export default function App(): JSX.Element {
   const [showWorksheetModal, setShowWorksheetModal] = useState<boolean>(false);
   const [newWorksheetName, setNewWorksheetName] = useState<string>('');
   const [worksheetNotification, setWorksheetNotification] = useState<Notification | null>(null);
+  const [editingWorksheet, setEditingWorksheet] = useState<WorksheetSummary | null>(null);
+  const [showEditWorksheetModal, setShowEditWorksheetModal] = useState<boolean>(false);
 
   useEffect(() => {
     axios
@@ -171,6 +174,39 @@ export default function App(): JSX.Element {
     }
   };
 
+  const handleEditWorksheet = async (updatedWorksheet: WorksheetSummary): Promise<void> => {
+    try {
+      setWorksheets(
+        worksheets.map((ws) => (ws.id === updatedWorksheet.id ? updatedWorksheet : ws))
+      );
+      setShowEditWorksheetModal(false);
+      setEditingWorksheet(null);
+      setWorksheetNotification({ message: 'ワークシートを更新しました', type: 'success' });
+      window.setTimeout(() => setWorksheetNotification(null), 4000);
+    } catch (error) {
+      const axiosError = error as { response?: { data?: { error?: string; errors?: string[] } } };
+      const msg =
+        axiosError.response?.data?.errors?.join(', ') ||
+        axiosError.response?.data?.error ||
+        'ワークシート更新に失敗しました';
+      setWorksheetNotification({ message: msg, type: 'error' });
+      window.setTimeout(() => setWorksheetNotification(null), 4000);
+    }
+  };
+
+  const handleOpenEditWorksheetModal = (worksheet: WorksheetSummary): void => {
+    if (isDemoUser()) {
+      setWorksheetNotification({
+        message: 'デモアカウントではワークシートを編集できません',
+        type: 'error',
+      });
+      window.setTimeout(() => setWorksheetNotification(null), 4000);
+      return;
+    }
+    setEditingWorksheet(worksheet);
+    setShowEditWorksheetModal(true);
+  };
+
   if (loading) {
     return <div className="flex items-center justify-center min-h-screen">読み込み中...</div>;
   }
@@ -221,12 +257,24 @@ export default function App(): JSX.Element {
 
   return (
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <EditWorksheetModal
+        isOpen={showEditWorksheetModal}
+        worksheet={
+          editingWorksheet || { id: 0, name: '', user_id: 0, created_at: '', updated_at: '' }
+        }
+        onClose={() => {
+          setShowEditWorksheetModal(false);
+          setEditingWorksheet(null);
+        }}
+        onSave={handleEditWorksheet}
+      />
       <Layout
         currentUserName={currentUser?.name || currentUser?.email || ''}
         onLogout={logout}
         worksheets={worksheets}
         activeWorksheetId={activeWorksheetId}
         onWorksheetSelect={handleWorksheetSelect}
+        onEditWorksheet={handleOpenEditWorksheetModal}
         showWorksheetModal={showWorksheetModal}
         newWorksheetName={newWorksheetName}
         onShowWorksheetModal={setShowWorksheetModal}

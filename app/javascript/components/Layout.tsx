@@ -30,6 +30,7 @@ interface LayoutProps {
   worksheets: WorksheetSummary[];
   activeWorksheetId: number | null;
   onWorksheetSelect: (id: number) => void;
+  onEditWorksheet: (worksheet: WorksheetSummary) => void;
   showWorksheetModal: boolean;
   newWorksheetName: string;
   onShowWorksheetModal: (show: boolean) => void;
@@ -47,6 +48,7 @@ export default function Layout({
   worksheets,
   activeWorksheetId,
   onWorksheetSelect,
+  onEditWorksheet,
   showWorksheetModal,
   newWorksheetName,
   onShowWorksheetModal,
@@ -197,11 +199,13 @@ export default function Layout({
                   key={worksheet.id}
                   role="tab"
                   onClick={() => onWorksheetSelect(worksheet.id)}
+                  onDoubleClick={() => onEditWorksheet(worksheet)}
                   className={`px-4 py-2 rounded-lg whitespace-nowrap transition-colors ${
                     activeWorksheetId === worksheet.id
-                      ? 'bg-primary-600 text-white border border-primary-600'
+                      ? 'bg-primary-600 text-white border border-primary-600 hover:bg-primary-700'
                       : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
                   }`}
+                  title="ダブルクリックで編集"
                 >
                   {worksheet.name}
                 </button>
