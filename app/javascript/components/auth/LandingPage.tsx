@@ -25,7 +25,7 @@ export default function LandingPage({
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-teal-50 px-4 py-10">
       <div className="mx-auto max-w-4xl">
         <h1 className="mb-2 text-4xl font-black text-slate-900">TaskWheel</h1>
-        <p className="mb-8 text-slate-700">チームのタスク管理をシンプルにするアプリ</p>
+        <p className="mb-8 text-slate-700">タスクの割り当てを楽に管理にするアプリ</p>
 
         <div className="mb-8 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-100">
           <h2 className="mb-4 text-xl font-bold text-slate-900">はじめる</h2>

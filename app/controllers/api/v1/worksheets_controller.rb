@@ -61,11 +61,11 @@ module Api
 
       def assign_member
         deny_demo_user_modification! and return
-        worksheet = current_user.worksheets.find(params[:worksheet_id])
+        worksheet = current_user.worksheets.find(params[:id])
         member_id = params[:member_id]
         work_id = params[:work_id]
 
-        Rails.logger.info "Assigning member: worksheet=#{params[:worksheet_id]}, member=#{member_id}, work=#{work_id}"
+        Rails.logger.info "Assigning member: worksheet=#{params[:id]}, member=#{member_id}, work=#{work_id}"
 
         # メンバーとワークを検証
         member = worksheet.members.find_by(id: member_id)
@@ -81,9 +81,9 @@ module Api
         # 今日の日付を取得
         today = Date.today
 
-        # 既存の割り当てを確認（work_id = null のもののみ）
+        # 既存の割り当てを確認（work_id の値に関わらず検索）
         existing_history =
-          History.find_by(member_id:, date: today, work_id: nil, worksheet_id: worksheet.id)
+          History.find_by(member_id:, date: today, worksheet_id: worksheet.id)
 
         Rails.logger.info "Found existing history: #{existing_history.present?}"
 
