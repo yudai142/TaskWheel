@@ -48,6 +48,17 @@ module Api
         }
       end
 
+      def importable
+        # 現在のワークシート ID を取得
+        current_ws_id = session[:current_worksheet_id]
+        
+        # 現在のユーザーのワークシート一覧を取得（現在選択中以外）
+        worksheets = current_user.worksheets.order(:created_at)
+        worksheets = worksheets.where.not(id: current_ws_id) if current_ws_id.present?
+        
+        render json: worksheets.map { |worksheet| serialize_worksheet(worksheet) }
+      end
+
       private
 
       def worksheet_params

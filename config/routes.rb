@@ -25,6 +25,7 @@ Rails.application.routes.draw do
         collection do
           post :bulk_create
           post :bulk_update
+          post :import
         end
       end
 
@@ -35,6 +36,7 @@ Rails.application.routes.draw do
           post :shuffle
           post :shuffle_with_selected_members
           post :bulk_update
+          post :import
         end
         resources :off_work_dates, only: %i[index create destroy]
       end
@@ -67,6 +69,7 @@ Rails.application.routes.draw do
       resources :worksheets, only: %i[index create show update destroy] do
         collection do
           post :set_current
+          get :importable
         end
       end
 

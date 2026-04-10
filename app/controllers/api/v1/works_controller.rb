@@ -85,6 +85,34 @@ module Api
         render json: { success: true }
       end
 
+      def import
+        deny_demo_user_modification! and return
+        
+        begin
+          source_worksheet = current_user.worksheets.find(params[:source_worksheet_id])
+          target_worksheet = current_user.worksheets.find(params[:target_worksheet_id])
+        rescue ActiveRecord::RecordNotFound
+          return render_error('ワークシートが見つかりません', :not_found)
+        end
+        
+        imported_works = []
+        Work.transaction do
+          params[:work_ids].each do |work_id|
+            source_work = source_worksheet.works.find(work_id)
+            new_work = target_worksheet.works.build(
+              name: source_work.name,
+              multiple: source_work.multiple,
+              archive: source_work.archive,
+              is_above: source_work.is_above
+            )
+            new_work.save!
+            imported_works << new_work
+          end
+        end
+        
+        render json: imported_works, include: %i[members off_works], status: :created
+      end
+
       def shuffle_with_selected_members
         date = extract_target_date_from_param
         requested_member_ids = Array(params[:member_ids]).compact.map(&:to_i).uniq

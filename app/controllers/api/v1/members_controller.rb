@@ -78,6 +78,33 @@ module Api
         render json: { success: true }
       end
 
+      def import
+        deny_demo_user_modification! and return
+        
+        begin
+          source_worksheet = current_user.worksheets.find(params[:source_worksheet_id])
+          target_worksheet = current_user.worksheets.find(params[:target_worksheet_id])
+        rescue ActiveRecord::RecordNotFound
+          return render_error('ワークシートが見つかりません', :not_found)
+        end
+        
+        imported_members = []
+        Member.transaction do
+          params[:member_ids].each do |member_id|
+            source_member = source_worksheet.members.find(member_id)
+            new_member = target_worksheet.members.build(
+              name: source_member.name,
+              kana: source_member.kana,
+              archive: source_member.archive
+            )
+            new_member.save!
+            imported_members << new_member
+          end
+        end
+        
+        render json: imported_members.map { |member| serialize_member(member) }, status: :created
+      end
+
       private
 
       def set_member
