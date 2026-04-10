@@ -195,20 +195,25 @@ export default function Layout({
             {/* Worksheet Tabs */}
             <div className="flex items-center gap-2 overflow-x-auto">
               {worksheets.map((worksheet: WorksheetSummary) => (
-                <button
-                  key={worksheet.id}
-                  role="tab"
-                  onClick={() => onWorksheetSelect(worksheet.id)}
-                  onDoubleClick={() => onEditWorksheet(worksheet)}
-                  className={`px-4 py-2 rounded-lg whitespace-nowrap transition-colors ${
-                    activeWorksheetId === worksheet.id
-                      ? 'bg-primary-600 text-white border border-primary-600 hover:bg-primary-700'
-                      : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-                  }`}
-                  title="ダブルクリックで編集"
-                >
-                  {worksheet.name}
-                </button>
+                <div key={worksheet.id} className="relative">
+                  <button
+                    key={`${worksheet.id}-select`}
+                    role="tab"
+                    onClick={() =>
+                      activeWorksheetId === worksheet.id
+                        ? onEditWorksheet(worksheet)
+                        : onWorksheetSelect(worksheet.id)
+                    }
+                    className={`px-4 py-2 rounded-lg whitespace-nowrap transition-colors ${
+                      activeWorksheetId === worksheet.id
+                        ? 'bg-primary-600 text-white border border-primary-600 hover:bg-primary-700'
+                        : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+                    }`}
+                    title={activeWorksheetId === worksheet.id ? 'クリックで編集' : 'クリックで切り替え'}
+                  >
+                    {worksheet.name}
+                  </button>
+                </div>
               ))}
               <button
                 onClick={() =>

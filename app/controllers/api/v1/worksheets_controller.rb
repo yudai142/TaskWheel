@@ -65,9 +65,13 @@ module Api
         member_id = params[:member_id]
         work_id = params[:work_id]
 
+        Rails.logger.info "Assigning member: worksheet=#{params[:worksheet_id]}, member=#{member_id}, work=#{work_id}"
+
         # メンバーとワークを検証
         member = worksheet.members.find_by(id: member_id)
         work = worksheet.works.find_by(id: work_id)
+
+        Rails.logger.info "Found member: #{member.present?}, work: #{work.present?}"
 
         unless member && work
           render json: { error: 'メンバーまたはタスクが見つかりません' }, status: :not_found
@@ -80,16 +84,18 @@ module Api
         month = today.month
         day = today.day
 
-        # 既存の割り当てを確認
+        # 既存の割り当てを確認（work_id = null のもののみ）
         existing_history =
-          History.find_by(member_id:, year:, month:, day:)
+          History.find_by(member_id:, year:, month:, day:, work_id: nil)
+
+        Rails.logger.info "Found existing history: #{existing_history.present?}"
 
         if existing_history
           # 既存の割り当てを更新
-          existing_history.update(work_id:)
+          existing_history.update!(work_id:)
         else
           # 新しい割り当てを作成
-          History.create(
+          History.create!(
             member_id:,
             work_id:,
             year:,
@@ -100,6 +106,7 @@ module Api
 
         render json: { member_id:, work_id: }, status: :ok
       rescue StandardError => e
+        Rails.logger.error "Assignment error: #{e.message}"
         render json: { error: e.message }, status: :internal_server_error
       end
 

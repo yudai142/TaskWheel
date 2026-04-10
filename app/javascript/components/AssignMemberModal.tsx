@@ -45,7 +45,15 @@ export function AssignMemberModal({
     setError(null);
 
     try {
-      await axios.post(
+      // デバッグログ
+      console.log('Assigning member:', {
+        worksheetId,
+        memberId: member.id,
+        workId: selectedWorkId,
+        url: `/api/v1/worksheets/${worksheetId}/assign_member`,
+      });
+
+      const response = await axios.post(
         `/api/v1/worksheets/${worksheetId}/assign_member`,
         { member_id: member.id, work_id: selectedWorkId },
         {
@@ -54,9 +62,12 @@ export function AssignMemberModal({
           },
         }
       );
+
+      console.log('Assignment response:', response.data);
       onSave();
       onClose();
     } catch (err) {
+      console.error('Assignment error:', err);
       const error = err as {
         response?: { data?: { error?: string; errors?: string[] } };
       };
