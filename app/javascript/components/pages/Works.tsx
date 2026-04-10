@@ -570,7 +570,7 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
         onClose={() => setShowImportModal(false)}
         onImportComplete={fetchData}
         importType="works"
-        itemsToImport={works}
+        currentWorksheetId={worksheetId}
         isDemoUser={isDemoUser}
       />
     </div>
