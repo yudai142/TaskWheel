@@ -1,12 +1,12 @@
 FactoryBot.define do
   factory :history do
     transient do
-      worksheet { create(:worksheet) }
+      worksheet { nil }
     end
 
-    member { association :member, worksheet: worksheet }
-    work { association :work, worksheet: worksheet }
-    worksheet_id { worksheet.id }
+    member { association :member, worksheet: (worksheet || Worksheet.order(:id).first || association(:worksheet)) }
+    work { association :work, worksheet: member.worksheet }
+    worksheet_id { member.worksheet_id }
     date { Date.current }
 
     trait :past do
