@@ -10,6 +10,11 @@ describe 'Api::V1::Members/Works - Import from Other Worksheets', type: :request
   let(:other_user_worksheet) { create(:worksheet, user: other_user, name: 'Other User Worksheet') }
 
   before do
+    # letの遅延評価をトリガーする
+    source_worksheet
+    target_worksheet
+    other_user_worksheet
+    
     post '/api/v1/auth/login', params: { email: user.email, password: 'password123' }
     @auth_headers = {
       'Content-Type' => 'application/json'
@@ -24,11 +29,14 @@ describe 'Api::V1::Members/Works - Import from Other Worksheets', type: :request
         member2 = create(:member, worksheet: source_worksheet, name: 'メンバー2')
 
         # ターゲットワークシートにインポート
-        post '/api/v1/members/import', params: {
-          source_worksheet_id: source_worksheet.id,
-          target_worksheet_id: target_worksheet.id,
-          member_ids: [member1.id, member2.id]
-        }, headers: @auth_headers
+        post '/api/v1/members/import',
+          params: {
+            source_worksheet_id: source_worksheet.id,
+            target_worksheet_id: target_worksheet.id,
+            member_ids: [member1.id, member2.id]
+          },
+          headers: @auth_headers,
+          as: :json
 
         expect(response).to have_http_status(:created)
 
@@ -41,11 +49,14 @@ describe 'Api::V1::Members/Works - Import from Other Worksheets', type: :request
       it 'creates copies of members, not moving them' do
         member = create(:member, worksheet: source_worksheet, name: 'テストメンバー')
 
-        post '/api/v1/members/import', params: {
-          source_worksheet_id: source_worksheet.id,
-          target_worksheet_id: target_worksheet.id,
-          member_ids: [member.id]
-        }, headers: @auth_headers
+        post '/api/v1/members/import',
+          params: {
+            source_worksheet_id: source_worksheet.id,
+            target_worksheet_id: target_worksheet.id,
+            member_ids: [member.id]
+          },
+          headers: @auth_headers,
+          as: :json
 
         expect(response).to have_http_status(:created)
 
@@ -62,11 +73,14 @@ describe 'Api::V1::Members/Works - Import from Other Worksheets', type: :request
       it 'rejects the import' do
         member = create(:member, worksheet: other_user_worksheet, name: 'Other User Member')
 
-        post '/api/v1/members/import', params: {
-          source_worksheet_id: other_user_worksheet.id,
-          target_worksheet_id: target_worksheet.id,
-          member_ids: [member.id]
-        }, headers: @auth_headers
+        post '/api/v1/members/import',
+          params: {
+            source_worksheet_id: other_user_worksheet.id,
+            target_worksheet_id: target_worksheet.id,
+            member_ids: [member.id]
+          },
+          headers: @auth_headers,
+          as: :json
 
         expect(response).to have_http_status(:not_found)
       end
@@ -76,11 +90,14 @@ describe 'Api::V1::Members/Works - Import from Other Worksheets', type: :request
       it 'rejects the import' do
         member = create(:member, worksheet: source_worksheet, name: 'メンバー')
 
-        post '/api/v1/members/import', params: {
-          source_worksheet_id: source_worksheet.id,
-          target_worksheet_id: other_user_worksheet.id,
-          member_ids: [member.id]
-        }, headers: @auth_headers
+        post '/api/v1/members/import',
+          params: {
+            source_worksheet_id: source_worksheet.id,
+            target_worksheet_id: other_user_worksheet.id,
+            member_ids: [member.id]
+          },
+          headers: @auth_headers,
+          as: :json
 
         expect(response).to have_http_status(:not_found)
       end
@@ -95,11 +112,14 @@ describe 'Api::V1::Members/Works - Import from Other Worksheets', type: :request
         work2 = create(:work, worksheet: source_worksheet, name: 'タスク2')
 
         # ターゲットワークシートにインポート
-        post '/api/v1/works/import', params: {
-          source_worksheet_id: source_worksheet.id,
-          target_worksheet_id: target_worksheet.id,
-          work_ids: [work1.id, work2.id]
-        }, headers: @auth_headers
+        post '/api/v1/works/import',
+          params: {
+            source_worksheet_id: source_worksheet.id,
+            target_worksheet_id: target_worksheet.id,
+            work_ids: [work1.id, work2.id]
+          },
+          headers: @auth_headers,
+          as: :json
 
         expect(response).to have_http_status(:created)
 
@@ -112,11 +132,14 @@ describe 'Api::V1::Members/Works - Import from Other Worksheets', type: :request
       it 'creates copies of works, not moving them' do
         work = create(:work, worksheet: source_worksheet, name: 'テストタスク')
 
-        post '/api/v1/works/import', params: {
-          source_worksheet_id: source_worksheet.id,
-          target_worksheet_id: target_worksheet.id,
-          work_ids: [work.id]
-        }, headers: @auth_headers
+        post '/api/v1/works/import',
+          params: {
+            source_worksheet_id: source_worksheet.id,
+            target_worksheet_id: target_worksheet.id,
+            work_ids: [work.id]
+          },
+          headers: @auth_headers,
+          as: :json
 
         expect(response).to have_http_status(:created)
 
@@ -133,11 +156,14 @@ describe 'Api::V1::Members/Works - Import from Other Worksheets', type: :request
       it 'rejects the import' do
         work = create(:work, worksheet: other_user_worksheet, name: 'Other User Work')
 
-        post '/api/v1/works/import', params: {
-          source_worksheet_id: other_user_worksheet.id,
-          target_worksheet_id: target_worksheet.id,
-          work_ids: [work.id]
-        }, headers: @auth_headers
+        post '/api/v1/works/import',
+          params: {
+            source_worksheet_id: other_user_worksheet.id,
+            target_worksheet_id: target_worksheet.id,
+            work_ids: [work.id]
+          },
+          headers: @auth_headers,
+          as: :json
 
         expect(response).to have_http_status(:not_found)
       end
@@ -147,11 +173,14 @@ describe 'Api::V1::Members/Works - Import from Other Worksheets', type: :request
       it 'rejects the import' do
         work = create(:work, worksheet: source_worksheet, name: 'タスク')
 
-        post '/api/v1/works/import', params: {
-          source_worksheet_id: source_worksheet.id,
-          target_worksheet_id: other_user_worksheet.id,
-          work_ids: [work.id]
-        }, headers: @auth_headers
+        post '/api/v1/works/import',
+          params: {
+            source_worksheet_id: source_worksheet.id,
+            target_worksheet_id: other_user_worksheet.id,
+            work_ids: [work.id]
+          },
+          headers: @auth_headers,
+          as: :json
 
         expect(response).to have_http_status(:not_found)
       end
@@ -175,7 +204,9 @@ describe 'Api::V1::Members/Works - Import from Other Worksheets', type: :request
       end
 
       it 'returns current worksheet as excluded' do
-        post '/api/v1/worksheets/set_current', params: { worksheet_id: source_worksheet.id }
+        post '/api/v1/worksheets/set_current',
+          params: { worksheet_id: source_worksheet.id },
+          as: :json
 
         get '/api/v1/worksheets/importable', headers: @auth_headers
 
