@@ -50,6 +50,35 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
     status: '0',
   });
   const [showImportModal, setShowImportModal] = useState<boolean>(false);
+  const handleDemoUserAction = (actionName: string): void => {
+    if (isDemoUser) {
+      alert(`デモアカウントではタスクを${actionName}できません`);
+      return;
+    }
+  };
+
+  const handleBulkFormToggle = (): void => {
+    handleDemoUserAction('追加');
+    if (!isDemoUser) {
+      setShowBulkForm(!showBulkForm);
+      setShowSingleForm(false);
+    }
+  };
+
+  const handleSingleFormToggle = (): void => {
+    handleDemoUserAction('追加');
+    if (!isDemoUser) {
+      setShowSingleForm(!showSingleForm);
+      setShowBulkForm(false);
+    }
+  };
+
+  const handleImportModalOpen = (): void => {
+    handleDemoUserAction('インポート');
+    if (!isDemoUser) {
+      setShowImportModal(true);
+    }
+  };
 
   useEffect(() => {
     void fetchData();
@@ -215,38 +244,24 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
             <option value="archived">アーカイブ</option>
           </select>
           <button
-            onClick={() => {
-              setShowBulkForm(!showBulkForm);
-              setShowSingleForm(false);
-            }}
+            onClick={handleBulkFormToggle}
             className="btn-primary py-1 whitespace-nowrap"
-            disabled={isDemoUser}
-            title={isDemoUser ? 'デモアカウントでは本機能は使用できません' : ''}
+            title="一括追加"
           >
             {showBulkForm ? 'キャンセル' : '一括追加'}
           </button>
           <button
-            onClick={() => {
-              setShowSingleForm(!showSingleForm);
-              setShowBulkForm(false);
-            }}
+            onClick={handleSingleFormToggle}
             className="btn-primary py-1 whitespace-nowrap"
-            disabled={isDemoUser}
-            title={isDemoUser ? 'デモアカウントでは本機能は使用できません' : ''}
+            title="新規登録"
           >
             {showSingleForm ? 'キャンセル' : '新規登録'}
           </button>
           <button
-            onClick={() => setShowImportModal(true)}
+            onClick={handleImportModalOpen}
             className="btn-secondary py-1 whitespace-nowrap"
-            disabled={isDemoUser || works.length === 0}
-            title={
-              isDemoUser
-                ? 'デモアカウントでは使用できません'
-                : works.length === 0
-                  ? 'インポート対象がありません'
-                  : ''
-            }
+            disabled={works.length === 0}
+            title={works.length === 0 ? 'インポート対象がありません' : 'インポート'}
           >
             インポート
           </button>
