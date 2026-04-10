@@ -7,17 +7,24 @@ module Api
 
       def index
         scope = current_worksheet.members.includes(member_options: :work).order(:id)
-        filter = params[:filter] || 'active'
-        scope = case filter
-                when 'active'
-                  scope.active
-                when 'archived'
-                  scope.archived
-                when 'all'
-                  scope
-                else
-                  scope.active
-                end
+        
+        # include_archived パラメータを優先
+        if include_archived?
+          scope = scope  # すべて含める
+        else
+          filter = params[:filter] || 'active'
+          scope = case filter
+                  when 'active'
+                    scope.active
+                  when 'archived'
+                    scope.archived
+                  when 'all'
+                    scope
+                  else
+                    scope.active
+                  end
+        end
+        
         render json: scope.map { |member| serialize_member(member) }
       end
 
