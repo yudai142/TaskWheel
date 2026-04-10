@@ -260,7 +260,13 @@ export default function App(): JSX.Element {
       <EditWorksheetModal
         isOpen={showEditWorksheetModal}
         worksheet={
-          editingWorksheet || { id: 0, name: '', user_id: 0, created_at: '', updated_at: '' }
+          editingWorksheet || {
+            id: 0,
+            name: '',
+            interval: 0,
+            week_use: false,
+            week: 0,
+          }
         }
         onClose={() => {
           setShowEditWorksheetModal(false);

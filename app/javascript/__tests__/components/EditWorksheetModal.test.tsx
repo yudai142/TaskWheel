@@ -3,19 +3,20 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import axios from 'axios';
 import { EditWorksheetModal } from '../../components/EditWorksheetModal';
-import { setDefaultAxiosMocks } from '../spec/axiosMocks';
+import { setDefaultAxiosMocks } from '../fixtures/axiosMocks';
+import type { WorksheetSummary } from '../../types';
 
 vi.mock('axios');
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mockAxios = axios as any;
 
 describe('EditWorksheetModal', () => {
-  const mockWorksheet = {
+  const mockWorksheet: WorksheetSummary = {
     id: 1,
     name: 'Sample Worksheet',
-    user_id: 1,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z',
+    interval: 7,
+    week_use: false,
+    week: 0,
   };
 
   beforeEach(() => {

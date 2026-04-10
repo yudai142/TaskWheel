@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import type { WorksheetSummary } from '../../types';
+import type { WorksheetSummary } from '../types';
 
 interface EditWorksheetModalProps {
   isOpen: boolean;
@@ -16,12 +16,12 @@ export function EditWorksheetModal({
   onClose,
   onSave,
 }: EditWorksheetModalProps): JSX.Element | null {
-  const [worksheetName, setWorksheetName] = useState<string>(worksheet.name);
+  const [worksheetName, setWorksheetName] = useState<string>(worksheet.name || '');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    setWorksheetName(worksheet.name);
+    setWorksheetName(worksheet.name || '');
     setError(null);
   }, [worksheet, isOpen]);
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import type { Member, Work } from '../../types';
+import type { Member, Work } from '../types';
 
 interface AssignMemberModalProps {
   isOpen: boolean;

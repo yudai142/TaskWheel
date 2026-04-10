@@ -3,41 +3,39 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import axios from 'axios';
 import { AssignMemberModal } from '../../components/AssignMemberModal';
-import { setDefaultAxiosMocks } from '../spec/axiosMocks';
+import { setDefaultAxiosMocks } from '../fixtures/axiosMocks';
+import type { Member, Work } from '../../types';
 
 vi.mock('axios');
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mockAxios = axios as any;
 
 describe('AssignMemberModal', () => {
-  const mockMember = {
+  const mockMember: Member = {
     id: 1,
     name: 'John Doe',
     kana: 'ジョンドウ',
     archive: false,
-    worksheet_id: 1,
     created_at: '2024-01-01T00:00:00Z',
     updated_at: '2024-01-01T00:00:00Z',
   };
 
-  const mockWorks = [
+  const mockWorks: Work[] = [
     {
       id: 1,
       name: 'Work A',
-      multiple: false,
+      multiple: 0,
       archive: false,
-      is_above: false,
-      worksheet_id: 1,
+      is_above: true,
       created_at: '2024-01-01T00:00:00Z',
       updated_at: '2024-01-01T00:00:00Z',
     },
     {
       id: 2,
       name: 'Work B',
-      multiple: false,
+      multiple: 0,
       archive: false,
-      is_above: false,
-      worksheet_id: 1,
+      is_above: true,
       created_at: '2024-01-01T00:00:00Z',
       updated_at: '2024-01-01T00:00:00Z',
     },
@@ -56,6 +54,8 @@ describe('AssignMemberModal', () => {
         isOpen={true}
         member={mockMember}
         works={mockWorks}
+        worksheetId={1}
+        currentWorkId={1}
         onClose={mockOnClose}
         onSave={vi.fn()}
       />
@@ -72,6 +72,8 @@ describe('AssignMemberModal', () => {
         isOpen={false}
         member={mockMember}
         works={mockWorks}
+        worksheetId={1}
+        currentWorkId={1}
         onClose={mockOnClose}
         onSave={vi.fn()}
       />
@@ -88,6 +90,8 @@ describe('AssignMemberModal', () => {
         isOpen={true}
         member={mockMember}
         works={mockWorks}
+        worksheetId={1}
+        currentWorkId={1}
         onClose={mockOnClose}
         onSave={vi.fn()}
       />
@@ -106,6 +110,8 @@ describe('AssignMemberModal', () => {
         isOpen={true}
         member={mockMember}
         works={mockWorks}
+        worksheetId={1}
+        currentWorkId={1}
         onClose={mockOnClose}
         onSave={vi.fn()}
       />
@@ -131,6 +137,8 @@ describe('AssignMemberModal', () => {
         isOpen={true}
         member={mockMember}
         works={mockWorks}
+        worksheetId={1}
+        currentWorkId={1}
         onClose={mockOnClose}
         onSave={mockOnSave}
       />
@@ -144,7 +152,7 @@ describe('AssignMemberModal', () => {
 
     await waitFor(() => {
       expect(mockAxios.post).toHaveBeenCalledWith(
-        `/api/v1/worksheets/${mockMember.worksheet_id}/assign_member`,
+        `/api/v1/worksheets/1/assign_member`,
         { member_id: mockMember.id, work_id: 2 },
         expect.any(Object)
       );
@@ -160,6 +168,8 @@ describe('AssignMemberModal', () => {
         isOpen={true}
         member={mockMember}
         works={mockWorks}
+        worksheetId={1}
+        currentWorkId={1}
         onClose={mockOnClose}
         onSave={vi.fn()}
       />
@@ -182,6 +192,8 @@ describe('AssignMemberModal', () => {
         isOpen={true}
         member={mockMember}
         works={mockWorks}
+        worksheetId={1}
+        currentWorkId={1}
         onClose={mockOnClose}
         onSave={vi.fn()}
       />
@@ -212,6 +224,8 @@ describe('AssignMemberModal', () => {
         isOpen={true}
         member={mockMember}
         works={mockWorks}
+        worksheetId={1}
+        currentWorkId={1}
         onClose={mockOnClose}
         onSave={mockOnSave}
       />

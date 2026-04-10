@@ -39,6 +39,7 @@ describe('Layout - Issue #27: ワークシート選択機能の実装', () => {
     worksheets: mockWorksheets,
     activeWorksheetId: 1,
     onWorksheetSelect: vi.fn(),
+    onEditWorksheet: vi.fn(),
     showWorksheetModal: false,
     newWorksheetName: '',
     onShowWorksheetModal: vi.fn(),
