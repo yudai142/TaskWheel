@@ -29,11 +29,19 @@ describe('Members - メンバー管理', () => {
         if (url.includes('/api/v1/members/')) {
           const id = parseInt(url.split('/').pop() || '', 10);
           const memberToUpdate = mockMembersForManagement.find((m) => m.id === id);
-          if (memberToUpdate && typeof data === 'object' && data !== null && 'member' in data) {
-            const updatedMember = {
-              ...memberToUpdate,
-              ...(data as unknown as Record<string, unknown>).member,
-            };
+          if (
+            memberToUpdate &&
+            typeof data === 'object' &&
+            data !== null &&
+            'member' in data &&
+            typeof (data as Record<string, unknown>).member === 'object' &&
+            (data as Record<string, unknown>).member !== null
+          ) {
+            const memberUpdate = (data as Record<string, unknown>).member as Record<
+              string,
+              unknown
+            >;
+            const updatedMember = { ...memberToUpdate, ...memberUpdate };
             return Promise.resolve({ data: updatedMember });
           }
           return Promise.resolve({ data: memberToUpdate || {} });
