@@ -23,7 +23,7 @@ class FairShuffleAllocator
     candidate_members = candidate_members.where(id: fixed_member_ids) if fixed_member_ids.any?
     candidate_members = candidate_members.where.not(id: excluded_member_ids) if excluded_member_ids.any?
 
-    today_assigned_counts = History.where(date: @date).where.not(work_id: nil).group(:member_id).count
+    today_assigned_counts = History.where(date: @date, worksheet_id: @worksheet.id).where.not(work_id: nil).group(:member_id).count
 
     scored_candidates = build_single_work_candidates(
       candidate_members: candidate_members,
@@ -46,7 +46,7 @@ class FairShuffleAllocator
     best_score = scored_candidates.min_by(&:last).last
     selected_member = scored_candidates.select { |_, score| score == best_score }.map(&:first).first
 
-    history = History.find_or_initialize_by(member_id: selected_member.id, date: @date)
+    history = History.find_or_initialize_by(member_id: selected_member.id, date: @date, worksheet_id: @worksheet.id)
     history.work_id = work.id
     history.save!
 
@@ -54,7 +54,7 @@ class FairShuffleAllocator
   end
 
   def shuffle_for_date(member_ids: nil)
-    histories = History.where(date: @date)
+    histories = History.where(date: @date, worksheet_id: @worksheet.id)
     histories = histories.where(member_id: member_ids) if member_ids.present?
     histories = histories.order(:id).to_a
     raise ActiveRecord::RecordInvalid, History.new if histories.empty?
@@ -133,7 +133,7 @@ class FairShuffleAllocator
       start_date = latest_reset_date if latest_reset_date.present?
     end
 
-    History.where(date: start_date..@date)
+    History.where(date: start_date..@date, worksheet_id: @worksheet.id)
            .where.not(work_id: nil)
            .distinct
            .pluck(:member_id, :work_id)

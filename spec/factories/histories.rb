@@ -6,6 +6,7 @@ FactoryBot.define do
 
     member { association :member, worksheet: worksheet }
     work { association :work, worksheet: worksheet }
+    worksheet_id { worksheet.id }
     date { Date.current }
 
     trait :past do

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_04_09_000001) do
+ActiveRecord::Schema[7.1].define(version: 2026_04_10_000001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,10 +20,13 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_09_000001) do
     t.date "date", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "worksheet_id", null: false
     t.index ["date"], name: "index_histories_on_date"
     t.index ["member_id", "date"], name: "index_histories_on_member_id_and_date"
     t.index ["member_id"], name: "index_histories_on_member_id"
     t.index ["work_id"], name: "index_histories_on_work_id"
+    t.index ["worksheet_id", "date"], name: "index_histories_on_worksheet_id_and_date"
+    t.index ["worksheet_id"], name: "index_histories_on_worksheet_id"
   end
 
   create_table "member_options", force: :cascade do |t|
@@ -106,6 +109,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_09_000001) do
   end
 
   add_foreign_key "histories", "members"
+  add_foreign_key "histories", "worksheets"
   add_foreign_key "member_options", "members"
   add_foreign_key "member_options", "works"
   add_foreign_key "members", "worksheets"

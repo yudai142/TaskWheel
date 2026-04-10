@@ -130,7 +130,7 @@ module Api
 
         History.transaction do
           member_ids.each do |member_id|
-            History.find_or_create_by!(member_id: member_id, date: date) do |history|
+            History.find_or_create_by!(member_id: member_id, date: date, worksheet_id: current_worksheet.id) do |history|
               history.work_id = nil
             end
           end
@@ -163,7 +163,7 @@ module Api
       def remove_duplicate_assignments(date)
         # 指定日付のHistoryレコードをメンバーごとにグループ化
         worksheet_member_ids = current_worksheet.members.pluck(:id)
-        histories = History.where(date: date, member_id: worksheet_member_ids)
+        histories = History.where(date: date, member_id: worksheet_member_ids, worksheet_id: current_worksheet.id)
         grouped = histories.group_by(&:member_id)
 
         # 同じメンバーが複数回割り当てられている場合、最初の1つ以外を削除
@@ -204,7 +204,7 @@ module Api
 
       def shuffle_for_date(allocator)
         worksheet_member_ids = current_worksheet.members.pluck(:id)
-        histories = History.where(date: extract_target_date, member_id: worksheet_member_ids).includes(:member).to_a
+        histories = History.where(date: extract_target_date, member_id: worksheet_member_ids, worksheet_id: current_worksheet.id).includes(:member).to_a
         return render_error('参加メンバーがいません', :unprocessable_content) if histories.empty?
 
         works = load_shufflable_works(extract_target_date)

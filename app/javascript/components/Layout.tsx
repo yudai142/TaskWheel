@@ -209,7 +209,9 @@ export default function Layout({
                         ? 'bg-primary-600 text-white border border-primary-600 hover:bg-primary-700'
                         : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
                     }`}
-                    title={activeWorksheetId === worksheet.id ? 'クリックで編集' : 'クリックで切り替え'}
+                    title={
+                      activeWorksheetId === worksheet.id ? 'クリックで編集' : 'クリックで切り替え'
+                    }
                   >
                     {worksheet.name}
                   </button>

@@ -3,9 +3,11 @@
 class History < ApplicationRecord
   belongs_to :work, optional: true
   belongs_to :member
+  belongs_to :worksheet
 
   validates :date, presence: true
-  validates :member_id, uniqueness: { scope: :date }
+  validates :worksheet_id, presence: true
+  validates :member_id, uniqueness: { scope: [:worksheet_id, :date] }
 
   scope :by_date, ->(date) { where(date: date) }
   scope :by_month, lambda { |year, month|
