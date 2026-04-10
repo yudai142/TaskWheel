@@ -146,9 +146,15 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
   const [works, setWorks] = useState<Work[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [showBulkForm, setShowBulkForm] = useState<boolean>(false);
+  const [showSingleForm, setShowSingleForm] = useState<boolean>(false);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   const [filter, setFilter] = useState<'active' | 'all' | 'archived'>('active');
   const [bulkFormData, setBulkFormData] = useState<BulkFormData>({ text: '' });
+  const [singleFormData, setSingleFormData] = useState<EditFormData>({
+    name: '',
+    kana: '',
+    archive: false,
+  });
   const [editFormData, setEditFormData] = useState<EditFormData>({
     name: '',
     kana: '',
@@ -217,6 +223,23 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
       await fetchData();
     } catch {
       alert('メンバーの一括追加に失敗しました');
+    }
+  };
+
+  const handleSingleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault();
+    if (!worksheetId) return;
+
+    try {
+      await axios.post<Member>('/api/v1/members', {
+        member: singleFormData,
+      });
+
+      setSingleFormData({ name: '', kana: '', archive: false });
+      setShowSingleForm(false);
+      await fetchData();
+    } catch {
+      alert('メンバーの追加に失敗しました');
     }
   };
 
@@ -317,12 +340,26 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
             <option value="archived">アーカイブ</option>
           </select>
           <button
-            onClick={() => setShowBulkForm(!showBulkForm)}
+            onClick={() => {
+              setShowBulkForm(!showBulkForm);
+              setShowSingleForm(false);
+            }}
             className="btn-primary"
             disabled={isDemoUser}
             title={isDemoUser ? 'デモアカウントでは使用できません' : ''}
           >
             {showBulkForm ? 'キャンセル' : '一括追加'}
+          </button>
+          <button
+            onClick={() => {
+              setShowSingleForm(!showSingleForm);
+              setShowBulkForm(false);
+            }}
+            className="btn-primary"
+            disabled={isDemoUser}
+            title={isDemoUser ? 'デモアカウントでは使用できません' : ''}
+          >
+            {showSingleForm ? 'キャンセル' : '新規登録'}
           </button>
         </div>
       </div>
@@ -349,6 +386,57 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
             <button type="submit" className="btn-primary w-full">
               一括追加
             </button>
+          </form>
+        </div>
+      )}
+
+      {showSingleForm && (
+        <div className="card">
+          <form onSubmit={handleSingleSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="single-name" className="block text-sm font-medium text-gray-700">
+                名前
+              </label>
+              <input
+                id="single-name"
+                type="text"
+                className="input-field"
+                value={singleFormData.name}
+                onChange={(e) => {
+                  const newName = e.target.value;
+                  setSingleFormData((prev) => {
+                    const predicted = predictKana(newName);
+                    return {
+                      ...prev,
+                      name: newName,
+                      kana: !prev.kana ? predicted : prev.kana,
+                    };
+                  });
+                }}
+                placeholder="例：山田太郎"
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="single-kana" className="block text-sm font-medium text-gray-700">
+                かな
+              </label>
+              <input
+                id="single-kana"
+                type="text"
+                className="input-field"
+                value={singleFormData.kana}
+                onChange={(e) => setSingleFormData({ ...singleFormData, kana: e.target.value })}
+                placeholder="例：ヤマダタロウ"
+                required
+              />
+              <p className="text-xs text-gray-500 mt-1">※名前を入力するとかなが自動予測されます</p>
+            </div>
+            <div className="flex gap-3">
+              <button type="submit" className="btn-primary flex-1">
+                登録
+              </button>
+            </div>
           </form>
         </div>
       )}

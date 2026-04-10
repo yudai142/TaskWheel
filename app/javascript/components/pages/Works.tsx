@@ -28,9 +28,16 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
   const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [showBulkForm, setShowBulkForm] = useState<boolean>(false);
+  const [showSingleForm, setShowSingleForm] = useState<boolean>(false);
   const [selectedWork, setSelectedWork] = useState<Work | null>(null);
   const [filter, setFilter] = useState<'active' | 'all' | 'archived'>('active');
   const [bulkFormData, setBulkFormData] = useState<BulkFormData>({ text: '' });
+  const [singleFormData, setSingleFormData] = useState<EditFormData>({
+    name: '',
+    multiple: 1,
+    is_above: false,
+    archive: false,
+  });
   const [editFormData, setEditFormData] = useState<EditFormData>({
     name: '',
     multiple: 1,
@@ -99,6 +106,23 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
       await fetchData();
     } catch {
       alert('当番の一括追加に失敗しました');
+    }
+  };
+
+  const handleSingleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault();
+    if (!worksheetId) return;
+
+    try {
+      await axios.post<Work>('/api/v1/works', {
+        work: singleFormData,
+      });
+
+      setSingleFormData({ name: '', multiple: 1, is_above: false, archive: false });
+      setShowSingleForm(false);
+      await fetchData();
+    } catch {
+      alert('当番の追加に失敗しました');
     }
   };
 
@@ -189,12 +213,26 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
             <option value="archived">アーカイブ</option>
           </select>
           <button
-            onClick={() => setShowBulkForm(!showBulkForm)}
+            onClick={() => {
+              setShowBulkForm(!showBulkForm);
+              setShowSingleForm(false);
+            }}
             className="btn-primary"
             disabled={isDemoUser}
             title={isDemoUser ? 'デモアカウントでは本機能は使用できません' : ''}
           >
             {showBulkForm ? 'キャンセル' : '一括追加'}
+          </button>
+          <button
+            onClick={() => {
+              setShowSingleForm(!showSingleForm);
+              setShowBulkForm(false);
+            }}
+            className="btn-primary"
+            disabled={isDemoUser}
+            title={isDemoUser ? 'デモアカウントでは本機能は使用できません' : ''}
+          >
+            {showSingleForm ? 'キャンセル' : '新規登録'}
           </button>
         </div>
       </div>
@@ -221,6 +259,67 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
             <button type="submit" className="btn-primary w-full">
               一括追加
             </button>
+          </form>
+        </div>
+      )}
+
+      {showSingleForm && (
+        <div className="card">
+          <form onSubmit={handleSingleSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="single-work-name" className="block text-sm font-medium text-gray-700">
+                当番名
+              </label>
+              <input
+                id="single-work-name"
+                type="text"
+                className="input-field"
+                value={singleFormData.name}
+                onChange={(e) => setSingleFormData({ ...singleFormData, name: e.target.value })}
+                placeholder="例：掃除"
+                required
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="single-work-multiple"
+                className="block text-sm font-medium text-gray-700"
+              >
+                複数割り当て数
+              </label>
+              <input
+                id="single-work-multiple"
+                type="number"
+                min="0"
+                className="input-field"
+                value={singleFormData.multiple}
+                onChange={(e) =>
+                  setSingleFormData({
+                    ...singleFormData,
+                    multiple: parseInt(e.target.value, 10),
+                  })
+                }
+              />
+            </div>
+            <div className="flex items-center gap-3">
+              <input
+                id="single-work-is-above"
+                type="checkbox"
+                className="w-4 h-4"
+                checked={singleFormData.is_above}
+                onChange={(e) =>
+                  setSingleFormData({ ...singleFormData, is_above: e.target.checked })
+                }
+              />
+              <label htmlFor="single-work-is-above" className="text-sm font-medium text-gray-700">
+                以上を選択時はチェック（チェックなし=以下）
+              </label>
+            </div>
+            <div className="flex gap-3">
+              <button type="submit" className="btn-primary flex-1">
+                登録
+              </button>
+            </div>
           </form>
         </div>
       )}
