@@ -7,6 +7,12 @@ Rails.application.routes.draw do
              },
              skip: %i[sessions registrations passwords]
 
+  # OmniAuth Google コールバックのカスタムルート
+  devise_scope :user do
+    get 'auth/google/callback', to: 'users/omniauth_callbacks#google_oauth2'
+    get 'auth/failure', to: 'users/omniauth_callbacks#failure'
+  end
+
   namespace :api do
     namespace :v1 do
       scope :auth do
