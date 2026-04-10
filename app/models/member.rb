@@ -7,17 +7,18 @@ class Member < ApplicationRecord
   has_many :works, through: :member_options
   has_many :histories, dependent: :destroy
 
-  validates :family_name, :given_name, :kana_name, presence: true
-  validates :family_name, :given_name, length: { maximum: 30 }
+  validates :name, :kana, presence: true
+  validates :name, length: { maximum: 255 }
 
   scope :active, -> { where(archive: false) }
   scope :archived, -> { where(archive: true) }
 
+  # 過去の互換性のためのメソッド
   def full_name
-    "#{family_name}#{given_name}"
+    name
   end
 
   def full_name_kana
-    kana_name
+    kana
   end
 end

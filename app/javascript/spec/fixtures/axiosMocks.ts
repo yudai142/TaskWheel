@@ -55,10 +55,24 @@ const setupCommonMocks = (works: Work[], members: Member[], histories: History[]
     return Promise.resolve({ data: [] });
   });
 
-  mockedAxios.patch.mockImplementation((url: string, _data: unknown) => {
-    // シャッフル除外機能のモック
+  mockedAxios.patch.mockImplementation((url: string, data: unknown) => {
+    // タスク更新のモック
     if (url.includes('/api/v1/works/')) {
-      return Promise.resolve({ data: { success: true } });
+      const id = parseInt(url.split('/').pop() || '', 10);
+      const workToUpdate = works.find((w) => w.id === id);
+      if (
+        workToUpdate &&
+        typeof data === 'object' &&
+        data !== null &&
+        'work' in data &&
+        typeof (data as Record<string, unknown>).work === 'object' &&
+        (data as Record<string, unknown>).work !== null
+      ) {
+        const workUpdate = (data as Record<string, unknown>).work as Record<string, unknown>;
+        const updatedWork = { ...workToUpdate, ...workUpdate };
+        return Promise.resolve({ data: updatedWork });
+      }
+      return Promise.resolve({ data: workToUpdate || {} });
     }
     return Promise.resolve({ data: {} });
   });

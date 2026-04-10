@@ -23,6 +23,7 @@ Rails.application.routes.draw do
       # Members
       resources :members do
         collection do
+          post :bulk_create
           post :bulk_update
         end
       end
@@ -30,6 +31,7 @@ Rails.application.routes.draw do
       # Works (duties)
       resources :works do
         collection do
+          post :bulk_create
           post :shuffle
           post :shuffle_with_selected_members
           post :bulk_update

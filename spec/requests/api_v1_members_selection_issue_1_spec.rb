@@ -22,8 +22,9 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
         json_response = response.parsed_body
 
         expect(json_response[0]).to have_key('id')
-        expect(json_response[0]).to have_key('given_name')
-        expect(json_response[0]).to have_key('family_name')
+        expect(json_response[0]).to have_key('name')
+        expect(json_response[0]).to have_key('kana')
+        expect(json_response[0]).to have_key('archive')
       end
 
       it 'メンバーの ID を選択可能である' do
@@ -73,7 +74,7 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
         expect(assigned_ids_set).to be_subset(selected_ids_set)
       end
 
-      it '重複せず各メンバーに異なる当番が割り当てられる' do
+      it '重複せず各メンバーに異なるタスクが割り当てられる' do
         selected_member_ids = [members[0].id, members[1].id, members[2].id]
         params = {
           member_ids: selected_member_ids,
@@ -86,7 +87,7 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
         expect(response).to have_http_status(:ok)
         json_response = response.parsed_body
 
-        # 同じメンバーが複数の当番に割り当てられていないことを確認
+        # 同じメンバーが複数のタスクに割り当てられていないことを確認
         member_assignments = json_response.group_by { |h| h['member_id'] }
         member_assignments.each_value do |assignments|
           work_ids = assignments.map { |a| a['work_id'] }
@@ -118,17 +119,17 @@ RSpec.describe 'API V1: Member Selection & Shuffle (Issue #1)', type: :request d
         expect(assigned_set & excluded_set).to be_empty
       end
 
-      it '当番が十分でない場合もシャッフルが実行される' do
+      it 'タスクが十分でない場合もシャッフルが実行される' do
         selected_member_ids = [members[0].id, members[1].id, members[2].id, members[3].id]
         params = {
           member_ids: selected_member_ids,
-          work_ids: [works[0].id], # 当番が不足
+          work_ids: [works[0].id], # タスクが不足
           date: today
         }
 
         post '/api/v1/works/shuffle_with_selected_members', params: params
 
-        # 当番が足りなくても、各メンバーに一度は割り当てられる
+        # タスクが足りなくても、各メンバーに一度は割り当てられる
         # または適切なエラーが返される
         expect(response.status).to be_in([200, 422, 400])
       end

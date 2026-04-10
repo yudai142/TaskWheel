@@ -7,6 +7,17 @@ module Api
 
       def index
         @works = current_worksheet.works.includes(:members, :off_works)
+        filter = params[:filter] || 'active'
+        @works = case filter
+                 when 'active'
+                   @works.where(archive: false)
+                 when 'archived'
+                   @works.where(archive: true)
+                 when 'all'
+                   @works
+                 else
+                   @works.where(archive: false)
+                 end
         render json: @works, include: %i[members off_works]
       end
 
@@ -31,6 +42,21 @@ module Api
         deny_demo_user_modification! and return
         @work.destroy!
         head :no_content
+      end
+
+      def bulk_create
+        deny_demo_user_modification! and return
+        works = []
+        Work.transaction do
+          params[:works].each do |work_data|
+            work = current_worksheet.works.build(work_data.permit(:name, :multiple, :archive, :is_above))
+            work.save!
+            works << work
+          end
+        end
+        render json: works, include: %i[members off_works], status: :created
+      rescue ActiveRecord::RecordInvalid => e
+        render_error(e.record.errors.full_messages.join(', '), :unprocessable_content)
       end
 
       def shuffle
@@ -153,7 +179,7 @@ module Api
         return render_error('参加メンバーがいません', :unprocessable_content) if histories.empty?
 
         works = load_shufflable_works(extract_target_date)
-        return render_error('シャッフル対象の当番がありません', :unprocessable_content) if works.empty?
+        return render_error('シャッフル対象のタスクがありません', :unprocessable_content) if works.empty?
 
         render json: allocator.shuffle_for_date
       end

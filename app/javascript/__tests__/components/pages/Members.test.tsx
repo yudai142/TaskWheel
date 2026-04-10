@@ -9,12 +9,12 @@ import { mockMembersForManagement, mockWorks } from '../../../spec/fixtures/mock
 
 vi.mock('axios');
 
-describe('Members - メンバー設定モーダル', () => {
+describe('Members - メンバー管理', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     (axios.get as unknown as ReturnType<typeof vi.fn>).mockImplementation(
-      (url: string, config?: { params?: Record<string, string> }) => {
-        if (url === '/api/v1/members' && config?.params?.include_archived === 'true') {
+      (url: string, _config?: { params?: Record<string, unknown> }) => {
+        if (url === '/api/v1/members') {
           return Promise.resolve({ data: mockMembersForManagement });
         }
         if (url === '/api/v1/works') {
@@ -24,71 +24,185 @@ describe('Members - メンバー設定モーダル', () => {
       }
     );
     (axios.post as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({ data: {} });
-    (axios.patch as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({
-      data: {
-        ...mockMembersForManagement[0],
-        archive: true,
-      },
-    });
+    (axios.patch as unknown as ReturnType<typeof vi.fn>).mockImplementation(
+      (url: string, data: unknown) => {
+        if (url.includes('/api/v1/members/')) {
+          const id = parseInt(url.split('/').pop() || '', 10);
+          const memberToUpdate = mockMembersForManagement.find((m) => m.id === id);
+          if (
+            memberToUpdate &&
+            typeof data === 'object' &&
+            data !== null &&
+            'member' in data &&
+            typeof (data as Record<string, unknown>).member === 'object' &&
+            (data as Record<string, unknown>).member !== null
+          ) {
+            const memberUpdate = (data as Record<string, unknown>).member as Record<
+              string,
+              unknown
+            >;
+            const updatedMember = { ...memberToUpdate, ...memberUpdate };
+            return Promise.resolve({ data: updatedMember });
+          }
+          return Promise.resolve({ data: memberToUpdate || {} });
+        }
+        return Promise.resolve({ data: {} });
+      }
+    );
     (axios.delete as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({ data: {} });
   });
 
-  it('メンバーカードを押すと設定モーダルが開く', async () => {
-    const user = userEvent.setup();
+  describe('メンバー一覧表示', () => {
+    it('メンバーカードが一覧表示される', async () => {
+      render(<Members worksheetId={null} />);
 
-    render(<Members worksheetId={null} />);
-
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /YamadaTaro/ })).toBeInTheDocument();
-    });
-
-    await user.click(screen.getByRole('button', { name: /YamadaTaro/ }));
-
-    expect(screen.getByText('固定/除外設定を追加')).toBeInTheDocument();
-    expect(screen.getAllByText('掃除A').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('固定').length).toBeGreaterThan(0);
-  });
-
-  it('モーダル内でアーカイブを切り替えられる', async () => {
-    const user = userEvent.setup();
-
-    render(<Members worksheetId={null} />);
-
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /YamadaTaro/ })).toBeInTheDocument();
-    });
-
-    await user.click(screen.getByRole('button', { name: /YamadaTaro/ }));
-    await user.click(screen.getByRole('button', { name: 'アーカイブにする' }));
-
-    await waitFor(() => {
-      expect(axios.patch).toHaveBeenCalledWith('/api/v1/members/1', {
-        member: { archive: true },
+      await waitFor(() => {
+        mockMembersForManagement.forEach((member) => {
+          expect(screen.getByRole('button', { name: new RegExp(member.name) })).toBeInTheDocument();
+        });
       });
     });
   });
 
-  it('固定/除外設定を追加できる', async () => {
-    const user = userEvent.setup();
+  describe('メンバー編集機能', () => {
+    it('メンバーカードをクリックすると編集フォーム＆固定/除外設定パネルが表示される', async () => {
+      const user = userEvent.setup();
+      render(<Members worksheetId={null} />);
 
-    render(<Members worksheetId={null} />);
+      // メンバーが表示されるまで待機
+      await waitFor(() => {
+        expect(
+          screen.getByRole('button', { name: new RegExp(mockMembersForManagement[0].name) })
+        ).toBeInTheDocument();
+      });
 
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /YamadaTaro/ })).toBeInTheDocument();
+      // メンバーカードをクリック
+      await user.click(
+        screen.getByRole('button', { name: new RegExp(mockMembersForManagement[0].name) })
+      );
+
+      // 左側：編集フォームが表示される
+      expect(screen.getByText('メンバーを編集')).toBeInTheDocument();
+      expect(screen.getByLabelText('名前')).toBeInTheDocument();
+      expect(screen.getByLabelText('かな')).toBeInTheDocument();
+      expect(screen.getByLabelText('アーカイブにする')).toBeInTheDocument();
+
+      // 右側：固定/除外設定パネルが表示される
+      expect(screen.getByText('固定/除外設定を追加')).toBeInTheDocument();
+      expect(screen.getByLabelText('タスク名')).toBeInTheDocument();
+      expect(screen.getByLabelText('設定種別')).toBeInTheDocument();
     });
 
-    await user.click(screen.getByRole('button', { name: /YamadaTaro/ }));
-    await user.selectOptions(screen.getByLabelText('当番名'), '3');
-    await user.selectOptions(screen.getByLabelText('設定種別'), '1');
-    await user.click(screen.getByRole('button', { name: '設定を追加' }));
+    it('編集フォームでメンバーを保存できる', async () => {
+      const user = userEvent.setup();
+      render(<Members worksheetId={null} />);
 
-    await waitFor(() => {
-      expect(axios.post).toHaveBeenCalledWith('/api/v1/member_options', {
-        member_option: {
-          member_id: 1,
-          work_id: 3,
-          status: 1,
-        },
+      // メンバーが表示されるまで待機
+      await waitFor(() => {
+        expect(
+          screen.getByRole('button', { name: new RegExp(mockMembersForManagement[0].name) })
+        ).toBeInTheDocument();
+      });
+
+      // メンバーカードをクリック
+      await user.click(
+        screen.getByRole('button', { name: new RegExp(mockMembersForManagement[0].name) })
+      );
+
+      // 名前を変更
+      const nameInput = screen.getByLabelText('名前') as HTMLInputElement;
+      await user.clear(nameInput);
+      await user.type(nameInput, '新しい名前');
+
+      // 保存ボタンをクリック
+      const saveButtons = screen.getAllByRole('button', { name: '保存' });
+      await user.click(saveButtons[0]);
+
+      // API呼び出しを確認
+      await waitFor(() => {
+        expect(axios.patch).toHaveBeenCalledWith(
+          `/api/v1/members/${mockMembersForManagement[0].id}`,
+          expect.objectContaining({
+            member: expect.objectContaining({
+              name: '新しい名前',
+            }),
+          })
+        );
+      });
+    });
+
+    it('アーカイブを切り替えして保存できる', async () => {
+      const user = userEvent.setup();
+      render(<Members worksheetId={null} />);
+
+      // メンバーが表示されるまで待機
+      await waitFor(() => {
+        expect(
+          screen.getByRole('button', { name: new RegExp(mockMembersForManagement[0].name) })
+        ).toBeInTheDocument();
+      });
+
+      // メンバーカードをクリック
+      await user.click(
+        screen.getByRole('button', { name: new RegExp(mockMembersForManagement[0].name) })
+      );
+
+      // アーカイブチェックボックスをチェック
+      const archiveCheckbox = screen.getByLabelText('アーカイブにする');
+      await user.click(archiveCheckbox);
+
+      // 保存ボタンをクリック
+      const saveButtons = screen.getAllByRole('button', { name: '保存' });
+      await user.click(saveButtons[0]);
+
+      // API呼び出しを確認
+      await waitFor(() => {
+        expect(axios.patch).toHaveBeenCalledWith(
+          `/api/v1/members/${mockMembersForManagement[0].id}`,
+          expect.objectContaining({
+            member: expect.objectContaining({
+              archive: true,
+            }),
+          })
+        );
+      });
+    });
+
+    it('固定/除外設定を追加できる', async () => {
+      const user = userEvent.setup();
+      render(<Members worksheetId={null} />);
+
+      // メンバーが表示されるまで待機
+      await waitFor(() => {
+        expect(
+          screen.getByRole('button', { name: new RegExp(mockMembersForManagement[0].name) })
+        ).toBeInTheDocument();
+      });
+
+      // メンバーカードをクリック
+      await user.click(
+        screen.getByRole('button', { name: new RegExp(mockMembersForManagement[0].name) })
+      );
+
+      // 固定/除外設定パネルでタスク名とステータスを選択
+      const workSelect = screen.getByLabelText('タスク名');
+      await user.selectOptions(workSelect, mockWorks[0].id.toString());
+
+      const statusSelect = screen.getByLabelText('設定種別');
+      await user.selectOptions(statusSelect, '1');
+
+      // 設定を追加ボタンを押す
+      await user.click(screen.getByRole('button', { name: '設定を追加' }));
+
+      // API呼び出しを確認
+      await waitFor(() => {
+        expect(axios.post).toHaveBeenCalledWith('/api/v1/member_options', {
+          member_option: {
+            member_id: mockMembersForManagement[0].id,
+            work_id: mockWorks[0].id,
+            status: 1,
+          },
+        });
       });
     });
   });
@@ -99,22 +213,41 @@ describe('Members - メンバー設定モーダル', () => {
       expect(container).toBeInTheDocument();
     });
 
-    it('ワークシート変更時にメンバーデータを再取得する', async () => {
-      const axiosGetSpy = vi.spyOn(axios, 'get');
+    it('worksheetIdがnullの場合、各APIが呼び出される', async () => {
+      render(<Members worksheetId={null} />);
 
+      await waitFor(() => {
+        expect(axios.get).toHaveBeenCalledWith('/api/v1/members', expect.any(Object));
+        expect(axios.get).toHaveBeenCalledWith('/api/v1/works', expect.any(Object));
+      });
+    });
+
+    it('worksheetIdが変更されると、データが再取得される', async () => {
       const { rerender } = render(<Members worksheetId={1} />);
 
       await waitFor(() => {
-        expect(axiosGetSpy).toHaveBeenCalledWith('/api/v1/members', expect.any(Object));
+        expect(axios.get).toHaveBeenCalledWith('/api/v1/members', expect.any(Object));
+        expect(axios.get).toHaveBeenCalledWith('/api/v1/works', expect.any(Object));
       });
 
-      const callCountBefore = axiosGetSpy.mock.calls.length;
+      vi.clearAllMocks();
+      (axios.get as unknown as ReturnType<typeof vi.fn>).mockImplementation(
+        (url: string, _config?: { params?: Record<string, unknown> }) => {
+          if (url === '/api/v1/members') {
+            return Promise.resolve({ data: mockMembersForManagement });
+          }
+          if (url === '/api/v1/works') {
+            return Promise.resolve({ data: mockWorks });
+          }
+          return Promise.resolve({ data: [] });
+        }
+      );
 
       rerender(<Members worksheetId={2} />);
 
       await waitFor(() => {
-        // 再度API呼び出しが行われることを確認
-        expect(axiosGetSpy.mock.calls.length).toBeGreaterThan(callCountBefore);
+        expect(axios.get).toHaveBeenCalledWith('/api/v1/members', expect.any(Object));
+        expect(axios.get).toHaveBeenCalledWith('/api/v1/works', expect.any(Object));
       });
     });
   });

@@ -29,7 +29,7 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
       });
     });
 
-    it('初期表示タブが「当番数」である', async () => {
+    it('初期表示タブが「タスク数」である', async () => {
       render(<Dashboard worksheetId={null} />);
 
       await waitFor(() => {
@@ -72,8 +72,8 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
     });
   });
 
-  describe('当番数タブの機能', () => {
-    it('当番数タブで掃除項目一覧が表示される', async () => {
+  describe('タスク数タブの機能', () => {
+    it('タスク数タブで掃除項目一覧が表示される', async () => {
       render(<Dashboard worksheetId={null} />);
 
       await waitFor(() => {
@@ -165,7 +165,7 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
       render(<Dashboard worksheetId={null} />);
 
       await waitFor(() => {
-        expect(screen.getByText(/当番数/i)).toBeInTheDocument();
+        expect(screen.getByText(/タスク数/i)).toBeInTheDocument();
       });
 
       // 日付を変更
@@ -182,7 +182,7 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
       render(<Dashboard worksheetId={null} />);
 
       await waitFor(() => {
-        expect(screen.getByText(/当番数/i)).toBeInTheDocument();
+        expect(screen.getByText(/タスク数/i)).toBeInTheDocument();
       });
 
       // 初期表示の統計数値を確認
@@ -195,13 +195,13 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
       render(<Dashboard worksheetId={null} />);
 
       await waitFor(() => {
-        expect(screen.getByText(/当番数/i)).toBeInTheDocument();
+        expect(screen.getByText(/タスク数/i)).toBeInTheDocument();
       });
 
       // レスポンシブなUIが正しく描画されていることを確認
       const container =
-        screen.getByText(/当番数/i).closest('.container') ||
-        screen.getByText(/当番数/i).closest('[class*="grid"]');
+        screen.getByText(/タスク数/i).closest('.container') ||
+        screen.getByText(/タスク数/i).closest('[class*="grid"]');
 
       expect(container).toBeInTheDocument();
     });
@@ -212,7 +212,7 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
       render(<Dashboard worksheetId={null} />);
 
       await waitFor(() => {
-        expect(screen.getByText(/当番数/i)).toBeInTheDocument();
+        expect(screen.getByText(/タスク数/i)).toBeInTheDocument();
       });
 
       // シャッフルボタンが存在し、機能することを確認
@@ -224,7 +224,7 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
       render(<Dashboard worksheetId={null} />);
 
       await waitFor(() => {
-        expect(screen.getByText(/当番数/i)).toBeInTheDocument();
+        expect(screen.getByText(/タスク数/i)).toBeInTheDocument();
       });
 
       // 各種ボタンが存在して機能可能であることを確認

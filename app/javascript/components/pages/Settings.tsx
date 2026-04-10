@@ -63,7 +63,7 @@ export default function Settings({ worksheetId: _worksheetId }: Props): JSX.Elem
               disabled={saving}
             />
             <p className="text-sm text-gray-500 mt-2">
-              指定した日付で当番割り当ての履歴がリセットされます
+              指定した日付でタスク割り当ての履歴がリセットされます
             </p>
           </div>
 
@@ -80,7 +80,7 @@ export default function Settings({ worksheetId: _worksheetId }: Props): JSX.Elem
               週間モード
             </label>
           </div>
-          <p className="text-sm text-gray-500">オンの場合、曜日ごとの当番割り当てを管理します</p>
+          <p className="text-sm text-gray-500">オンの場合、曜日ごとのタスク割り当てを管理します</p>
         </div>
       </div>
 

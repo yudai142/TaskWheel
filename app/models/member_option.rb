@@ -5,7 +5,7 @@ class MemberOption < ApplicationRecord
   belongs_to :member
 
   validates :status, presence: true
-  validates :work_id, uniqueness: { scope: :member_id, message: '同じ当番にはすでに設定済みです' }
+  validates :work_id, uniqueness: { scope: :member_id, message: '同じタスクにはすでに設定済みです' }
   validates :status, inclusion: { in: [0, 1] }
   validate :fixed_setting_must_be_single_per_member
 

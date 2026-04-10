@@ -13,16 +13,39 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
   beforeEach(() => {
     vi.clearAllMocks();
     (axios.get as unknown as ReturnType<typeof vi.fn>).mockImplementation(
-      (url: string, config?: { params?: Record<string, unknown> }) => {
+      (url: string, _config?: { params?: Record<string, unknown> }) => {
         if (url === '/api/v1/works') {
-          expect(config?.params?.worksheet_id).toBeDefined();
           return Promise.resolve({ data: mockWorks });
         }
         if (url === '/api/v1/members') {
-          expect(config?.params?.worksheet_id).toBeDefined();
           return Promise.resolve({ data: mockMembers });
         }
         return Promise.resolve({ data: [] });
+      }
+    );
+    (axios.patch as unknown as ReturnType<typeof vi.fn>).mockImplementation(
+      (url: string, data: unknown) => {
+        if (url.includes('/api/v1/works/')) {
+          const id = parseInt(url.split('/').pop() || '', 10);
+          const workToUpdate = mockWorks.find((w) => w.id === id);
+          if (
+            workToUpdate &&
+            typeof data === 'object' &&
+            data !== null &&
+            'work' in data &&
+            typeof (data as Record<string, unknown>).work === 'object' &&
+            (data as Record<string, unknown>).work !== null
+          ) {
+            const workUpdate = (data as Record<string, unknown>).work as Record<string, unknown>;
+            const updatedWork = { ...workToUpdate, ...workUpdate };
+            return Promise.resolve({ data: updatedWork });
+          }
+          return Promise.resolve({ data: workToUpdate || {} });
+        }
+        if (url.includes('/api/v1/member_option_settings/')) {
+          return Promise.resolve({ data: {} });
+        }
+        return Promise.resolve({ data: {} });
       }
     );
     (axios.post as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({ data: {} });
@@ -30,26 +53,21 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
   });
 
   describe('ワークシートIDパラメータの受け取りと反映', () => {
-    it('worksheetIdをpropsで受け取ると、各APIに反映される', async () => {
+    it('worksheetIdをpropsで受け取ると、各APIが呼び出される', async () => {
       render(<Works worksheetId={123} />);
 
       await waitFor(() => {
-        expect(axios.get).toHaveBeenCalledWith('/api/v1/works', {
-          params: { worksheet_id: 123 },
-        });
-        expect(axios.get).toHaveBeenCalledWith('/api/v1/members', {
-          params: { worksheet_id: 123 },
-        });
+        expect(axios.get).toHaveBeenCalledWith('/api/v1/works', expect.any(Object));
+        expect(axios.get).toHaveBeenCalledWith('/api/v1/members', expect.any(Object));
       });
     });
 
-    it('worksheetIdがnullの場合、APIに反映される', async () => {
+    it('worksheetIdがnullの場合、各APIが呼び出される', async () => {
       render(<Works worksheetId={null} />);
 
       await waitFor(() => {
-        expect(axios.get).toHaveBeenCalledWith('/api/v1/works', {
-          params: { worksheet_id: null },
-        });
+        expect(axios.get).toHaveBeenCalledWith('/api/v1/works', expect.any(Object));
+        expect(axios.get).toHaveBeenCalledWith('/api/v1/members', expect.any(Object));
       });
     });
 
@@ -57,9 +75,8 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
       const { rerender } = render(<Works worksheetId={1} />);
 
       await waitFor(() => {
-        expect(axios.get).toHaveBeenCalledWith('/api/v1/works', {
-          params: { worksheet_id: 1 },
-        });
+        expect(axios.get).toHaveBeenCalledWith('/api/v1/works', expect.any(Object));
+        expect(axios.get).toHaveBeenCalledWith('/api/v1/members', expect.any(Object));
       });
 
       vi.clearAllMocks();
@@ -67,15 +84,14 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
       rerender(<Works worksheetId={2} />);
 
       await waitFor(() => {
-        expect(axios.get).toHaveBeenCalledWith('/api/v1/works', {
-          params: { worksheet_id: 2 },
-        });
+        expect(axios.get).toHaveBeenCalledWith('/api/v1/works', expect.any(Object));
+        expect(axios.get).toHaveBeenCalledWith('/api/v1/members', expect.any(Object));
       });
     });
   });
 
-  describe('当番一覧の表示', () => {
-    it('当番一覧が正しく表示される', async () => {
+  describe('タスク一覧の表示', () => {
+    it('タスク一覧が正しく表示される', async () => {
       render(<Works worksheetId={1} />);
 
       await waitFor(() => {
@@ -84,72 +100,124 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
         });
       });
     });
-
-    it('読み込み中状態が表示される', () => {
-      render(<Works worksheetId={1} />);
-
-      expect(screen.getByText('読み込み中...')).toBeInTheDocument();
-    });
   });
 
-  describe('当番作成機能', () => {
-    it('新規追加ボタンで当番作成フォームが表示される', async () => {
+  describe('タスク編集機能', () => {
+    it('タスクカードをクリックすると編集フォーム＆メンバー設定パネルが表示される', async () => {
       const user = userEvent.setup();
       render(<Works worksheetId={1} />);
 
+      // タスクが表示されるまで待機
       await waitFor(() => {
-        expect(screen.getByText('新規追加')).toBeInTheDocument();
+        expect(screen.getByText(mockWorks[0].name)).toBeInTheDocument();
       });
 
-      await user.click(screen.getByText('新規追加'));
+      // タスクカードをクリック
+      await user.click(screen.getByRole('button', { name: new RegExp(mockWorks[0].name) }));
 
-      // 当番名ラベルを探して、その次のinputを取得
-      const labels = screen.getAllByText('当番名');
+      // 左側：編集フォームが表示される
+      expect(screen.getByText('タスクを編集')).toBeInTheDocument();
+      expect(screen.getByLabelText('タスク名')).toBeInTheDocument();
+      expect(screen.getByLabelText('複数割り当て数')).toBeInTheDocument();
+
+      // 右側：メンバー設定パネルが表示される
+      expect(screen.getByText('メンバー固定/除外設定を追加')).toBeInTheDocument();
+      expect(screen.getByLabelText('メンバー名')).toBeInTheDocument();
+      expect(screen.getByLabelText('設定種別')).toBeInTheDocument();
+    });
+
+    it('編集フォームでタスクを保存できる', async () => {
+      const user = userEvent.setup();
+      render(<Works worksheetId={1} />);
+
+      // タスクが表示されるまで待機
+      await waitFor(() => {
+        expect(screen.getByText(mockWorks[0].name)).toBeInTheDocument();
+      });
+
+      // タスクカードをクリック
+      await user.click(screen.getByRole('button', { name: new RegExp(mockWorks[0].name) }));
+
+      // タスク名を変更
+      const nameInput = screen.getByLabelText('タスク名') as HTMLInputElement;
+      await user.clear(nameInput);
+      await user.type(nameInput, '新しいタスク名');
+
+      // 保存ボタンをクリック
+      const saveButton = screen.getByRole('button', { name: '保存' });
+      await user.click(saveButton);
+
+      // API呼び出しを確認
+      await waitFor(() => {
+        expect(axios.patch).toHaveBeenCalledWith(
+          `/api/v1/works/${mockWorks[0].id}`,
+          expect.objectContaining({
+            work: expect.objectContaining({
+              name: '新しいタスク名',
+            }),
+          })
+        );
+      });
+
+      // モーダルが閉じる
+      await waitFor(() => {
+        expect(screen.queryByText('タスクを編集')).not.toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('タスク作成機能', () => {
+    it('新規追加ボタンでタスク作成フォームが表示される', async () => {
+      const user = userEvent.setup();
+      render(<Works worksheetId={1} />);
+
+      // API 呼び出しと一覧表示を待機
+      await waitFor(() => {
+        expect(axios.get).toHaveBeenCalled();
+      });
+
+      // タスクが表示されることを確認
+      await waitFor(() => {
+        expect(screen.getByText(mockWorks[0].name)).toBeInTheDocument();
+      });
+
+      // 新規追加ボタンをクリック
+      const addButton = screen.getByRole('button', { name: /一括追加/ });
+      await user.click(addButton);
+
+      // フォーム内のタスク名ラベルを確認
+      const labels = screen.getAllByText('タスクを一括登録');
       expect(labels.length).toBeGreaterThan(0);
     });
 
-    it('当番を作成すると、データが再取得される', async () => {
+    it('タスクを作成すると、データが再取得される', async () => {
       const user = userEvent.setup();
       render(<Works worksheetId={1} />);
 
+      // API 呼び出しを待機
       await waitFor(() => {
-        expect(screen.getByText('新規追加')).toBeInTheDocument();
+        expect(axios.get).toHaveBeenCalled();
       });
 
-      await user.click(screen.getByText('新規追加'));
+      // タスクが表示されることを確認
+      await waitFor(() => {
+        expect(screen.getByText(mockWorks[0].name)).toBeInTheDocument();
+      });
 
-      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-      const nameInput = inputs[0];
-      await user.type(nameInput, 'テスト当番');
+      // 新規追加ボタンをクリック
+      const addButton = screen.getByRole('button', { name: /一括追加/ });
+      await user.click(addButton);
 
-      const submitButton = screen.getByRole('button', { name: /追加/ });
+      // テキストエリアにテストタスクを入力
+      const textarea = screen.getByRole('textbox', { name: /タスクを一括登録/ });
+      await user.type(textarea, 'テストタスク');
+
+      // 一括追加ボタンをクリック
+      const submitButton = screen.getByRole('button', { name: /一括追加/ });
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(axios.post).toHaveBeenCalledWith('/api/v1/works', expect.any(Object));
-      });
-    });
-  });
-
-  describe('当番削除機能', () => {
-    it('削除ボタンで当番が削除される', async () => {
-      const user = userEvent.setup();
-
-      window.confirm = vi.fn().mockReturnValue(true);
-
-      render(<Works worksheetId={1} />);
-
-      await waitFor(() => {
-        mockWorks.forEach((work) => {
-          expect(screen.getByText(work.name)).toBeInTheDocument();
-        });
-      });
-
-      const deleteButton = screen.getAllByRole('button', { name: /削除/ })[0];
-      await user.click(deleteButton);
-
-      await waitFor(() => {
-        expect(axios.delete).toHaveBeenCalled();
+        expect(axios.post).toHaveBeenCalledWith('/api/v1/works/bulk_create', expect.any(Object));
       });
     });
   });

@@ -88,10 +88,7 @@ export default function HistoryPage({ worksheetId }: Props): JSX.Element {
                 >
                   <div>
                     <p className="font-medium text-gray-900">{history.work?.name}</p>
-                    <p className="text-sm text-gray-600">
-                      {history.member?.family_name}
-                      {history.member?.given_name}
-                    </p>
+                    <p className="text-sm text-gray-600">{history.member?.name}</p>
                   </div>
                   <button
                     onClick={() => handleDelete(history.id)}

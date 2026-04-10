@@ -23,7 +23,7 @@ RSpec.describe FairShuffleAllocator, type: :service do
       expect(assignment_counts.max - assignment_counts.min).to be <= 1
     end
 
-    it '同じ当番への偏りを最小化する' do
+    it '同じタスクへの偏りを最小化する' do
       members = create_list(:member, 2)
       works = create_list(:work, 2, multiple: 1, is_above: false, archive: false)
 
@@ -45,7 +45,7 @@ RSpec.describe FairShuffleAllocator, type: :service do
       end
     end
 
-    it 'interval 内の同一当番再割り当てを避ける' do
+    it 'interval 内の同一タスク再割り当てを避ける' do
       member = create(:member)
       work_a = create(:work, multiple: 1, is_above: true, archive: false)
       work_b = create(:work, multiple: 1, is_above: true, archive: false)
@@ -75,7 +75,7 @@ RSpec.describe FairShuffleAllocator, type: :service do
       expect(History.find_by(member_id: member.id, date: base_date)&.work_id).to eq(work.id)
     end
 
-    it '固定設定されたメンバーは指定当番に割り当てられる' do
+    it '固定設定されたメンバーは指定タスクに割り当てられる' do
       member = create(:member)
       fixed_work = create(:work, multiple: 1, is_above: false, archive: false)
       other_work = create(:work, multiple: 1, is_above: false, archive: false)
@@ -121,7 +121,7 @@ RSpec.describe FairShuffleAllocator, type: :service do
       expect(History.find_by(member_id: member.id, date: base_date)&.work_id).to eq(fixed_work.id)
     end
 
-    it '除外設定された当番は他候補がある限り割り当てない' do
+    it '除外設定されたタスクは他候補がある限り割り当てない' do
       member = create(:member)
       excluded_work = create(:work, multiple: 1, is_above: false, archive: false)
       allowed_work = create(:work, multiple: 1, is_above: false, archive: false)
@@ -171,7 +171,7 @@ RSpec.describe FairShuffleAllocator, type: :service do
       expect(History.where(date: base_date, work_id: work_b.id).count).to eq(1)
     end
 
-    it 'is_above=false の当番は multiple の上限を超えて割り当てない' do
+    it 'is_above=false のタスクは multiple の上限を超えて割り当てない' do
       capped_work = create(:work, multiple: 1, is_above: false, archive: false)
       participants = create_list(:member, 3)
 
@@ -186,7 +186,7 @@ RSpec.describe FairShuffleAllocator, type: :service do
       expect(result[:unassigned_count]).to eq(2)
     end
 
-    it 'is_above=true の追加枠は当番間で偏りを抑えて配分される' do
+    it 'is_above=true の追加枠はタスク間で偏りを抑えて配分される' do
       work_a = create(:work, multiple: 1, is_above: true, archive: false)
       work_b = create(:work, multiple: 1, is_above: true, archive: false)
       participants = create_list(:member, 7)

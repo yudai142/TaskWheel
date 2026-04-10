@@ -9,9 +9,8 @@ export interface MemberOptionSetting {
 
 export interface Member {
   id: number;
-  family_name: string;
-  given_name: string;
-  kana_name: string;
+  name: string;
+  kana: string;
   archive: boolean;
   created_at: string;
   updated_at: string;
@@ -27,6 +26,7 @@ export interface Work {
   created_at: string;
   updated_at: string;
   members?: Member[];
+  member_options?: MemberOptionSetting[];
 }
 
 export interface History {
