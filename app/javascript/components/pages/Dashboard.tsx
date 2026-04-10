@@ -188,21 +188,11 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
     }
   };
 
-  const handleDeleteMember = async (historyId: number): Promise<void> => {
-    if (!window.confirm('この割り当てを削除しますか？')) return;
-    try {
-      await axios.delete(`/api/v1/histories/${historyId}`);
-      fetchData();
-    } catch {
-      showNotification('削除に失敗しました', 'error');
-    }
-  };
-
-  const handleOpenAssignMemberModal = (memberName: string, workId: number): void => {
+  const handleOpenAssignMemberModal = (memberName: string, workId: number | null): void => {
     const member = members.find((m) => m.name === memberName);
     if (member) {
       setSelectedMemberForAssignment(member);
-      setCurrentAssignmentWorkId(workId);
+      setCurrentAssignmentWorkId(workId ?? null);
       setShowAssignMemberModal(true);
     }
   };
@@ -885,7 +875,9 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
                       {unassignedMembers.map((member) => (
                         <div
                           key={member.id}
-                          className="p-4 bg-white border-2 border-yellow-300 rounded-lg hover:shadow-md transition-all flex items-center justify-center"
+                          onClick={() => handleOpenAssignMemberModal(member.name, null)}
+                          className="p-4 bg-white border-2 border-yellow-300 rounded-lg hover:bg-yellow-50 hover:border-yellow-500 cursor-pointer transition-all flex items-center justify-center"
+                          title="クリックで割り当て先を変更"
                         >
                           <p className="font-semibold text-gray-900 text-center">{member.name}</p>
                         </div>

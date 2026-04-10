@@ -80,13 +80,10 @@ module Api
 
         # 今日の日付を取得
         today = Date.today
-        year = today.year
-        month = today.month
-        day = today.day
 
         # 既存の割り当てを確認（work_id = null のもののみ）
         existing_history =
-          History.find_by(member_id:, year:, month:, day:, work_id: nil)
+          History.find_by(member_id:, date: today, work_id: nil, worksheet_id: worksheet.id)
 
         Rails.logger.info "Found existing history: #{existing_history.present?}"
 
@@ -98,9 +95,8 @@ module Api
           History.create!(
             member_id:,
             work_id:,
-            year:,
-            month:,
-            day:
+            date: today,
+            worksheet_id: worksheet.id
           )
         end
 

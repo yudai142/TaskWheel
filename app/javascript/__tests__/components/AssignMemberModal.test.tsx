@@ -242,4 +242,88 @@ describe('AssignMemberModal', () => {
       expect(mockOnClose).toHaveBeenCalled();
     });
   });
+
+  it('should handle unassigned member (currentWorkId = null)', async () => {
+    const user = userEvent.setup();
+    const mockOnClose = vi.fn();
+    const mockOnSave = vi.fn();
+
+    mockAxios.post.mockResolvedValue({
+      data: { member_id: 1, work_id: 1 },
+    });
+
+    render(
+      <AssignMemberModal
+        isOpen={true}
+        member={mockMember}
+        works={mockWorks}
+        worksheetId={1}
+        currentWorkId={null}
+        onClose={mockOnClose}
+        onSave={mockOnSave}
+      />
+    );
+
+    // セレクトで未選択状態でタスクを選択
+    const select = screen.getByRole('combobox');
+    expect(select).toHaveValue('');
+
+    await user.selectOptions(select, 'Work A');
+    expect(select).toHaveValue('1');
+
+    const saveButton = screen.getByRole('button', { name: /保存/i });
+    await user.click(saveButton);
+
+    await waitFor(() => {
+      expect(mockAxios.post).toHaveBeenCalledWith(
+        `/api/v1/worksheets/1/assign_member`,
+        { member_id: mockMember.id, work_id: 1 },
+        expect.any(Object)
+      );
+      expect(mockOnSave).toHaveBeenCalled();
+      expect(mockOnClose).toHaveBeenCalled();
+    });
+  });
+
+  it('should change assignment for already assigned member', async () => {
+    const user = userEvent.setup();
+    const mockOnClose = vi.fn();
+    const mockOnSave = vi.fn();
+
+    mockAxios.post.mockResolvedValue({
+      data: { member_id: 1, work_id: 2 },
+    });
+
+    render(
+      <AssignMemberModal
+        isOpen={true}
+        member={mockMember}
+        works={mockWorks}
+        worksheetId={1}
+        currentWorkId={1}
+        onClose={mockOnClose}
+        onSave={mockOnSave}
+      />
+    );
+
+    // 初期状態は Work A が選択されている
+    const select = screen.getByRole('combobox');
+    expect(select).toHaveValue('1');
+
+    // Work B に変更
+    await user.selectOptions(select, 'Work B');
+    expect(select).toHaveValue('2');
+
+    const saveButton = screen.getByRole('button', { name: /保存/i });
+    await user.click(saveButton);
+
+    await waitFor(() => {
+      expect(mockAxios.post).toHaveBeenCalledWith(
+        `/api/v1/worksheets/1/assign_member`,
+        { member_id: mockMember.id, work_id: 2 },
+        expect.any(Object)
+      );
+      expect(mockOnSave).toHaveBeenCalled();
+    });
+  });
 });
