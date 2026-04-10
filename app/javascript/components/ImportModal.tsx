@@ -7,7 +7,7 @@ interface ImportModalProps {
   onClose: () => void;
   onImportComplete: () => void;
   importType: 'members' | 'works';
-  itemsToImport?: Member[] | Work[];
+  currentWorksheetId: number | null;
   isDemoUser?: boolean;
 }
 
@@ -16,15 +16,16 @@ export default function ImportModal({
   onClose,
   onImportComplete,
   importType,
-  itemsToImport = [],
+  currentWorksheetId,
   isDemoUser = false,
 }: ImportModalProps): JSX.Element | null {
   const [worksheets, setWorksheets] = useState<Worksheet[]>([]);
   const [selectedSourceWorksheet, setSelectedSourceWorksheet] = useState<number | ''>('');
-  const [selectedTargetWorksheet, setSelectedTargetWorksheet] = useState<number | ''>('');
+  const [sourceWorksheetItems, setSourceWorksheetItems] = useState<(Member | Work)[]>([]);
   const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
   const [loading, setLoading] = useState<boolean>(false);
   const [importing, setImporting] = useState<boolean>(false);
+  const [fetchingItems, setFetchingItems] = useState<boolean>(false);
 
   // ワークシート一覧を取得
   useEffect(() => {
@@ -41,11 +42,42 @@ export default function ImportModal({
       setLoading(true);
       void fetchWorksheets();
       setSelectedSourceWorksheet('');
-      setSelectedTargetWorksheet('');
+      setSourceWorksheetItems([]);
       setSelectedItems(new Set());
       setLoading(false);
     }
   }, [isOpen]);
+
+  // インポート元ワークシートのメンバー/タスク一覧を取得
+  useEffect(() => {
+    const fetchSourceItems = async (): Promise<void> => {
+      if (!selectedSourceWorksheet) {
+        setSourceWorksheetItems([]);
+        setSelectedItems(new Set());
+        return;
+      }
+
+      setFetchingItems(true);
+      try {
+        const endpoint = importType === 'members' ? '/api/v1/members' : '/api/v1/works';
+        const response = await axios.get<Member[] | Work[]>(endpoint, {
+          params: {
+            worksheet_id: selectedSourceWorksheet,
+            include_settings: importType === 'members' ? 'false' : undefined,
+          },
+        });
+        setSourceWorksheetItems(response.data);
+        setSelectedItems(new Set());
+      } catch {
+        alert('インポート対象の取得に失敗しました');
+        setSourceWorksheetItems([]);
+      } finally {
+        setFetchingItems(false);
+      }
+    };
+
+    void fetchSourceItems();
+  }, [selectedSourceWorksheet, importType]);
 
   const handleSelectItem = (itemId: number): void => {
     const newSelected = new Set(selectedItems);
@@ -58,16 +90,16 @@ export default function ImportModal({
   };
 
   const handleSelectAll = (): void => {
-    if (selectedItems.size === itemsToImport.length) {
+    if (selectedItems.size === sourceWorksheetItems.length) {
       setSelectedItems(new Set());
     } else {
-      const allIds = itemsToImport.map((item: Member | Work) => item.id);
+      const allIds = sourceWorksheetItems.map((item: Member | Work) => item.id);
       setSelectedItems(new Set(allIds));
     }
   };
 
   const handleImport = async (): Promise<void> => {
-    if (!selectedSourceWorksheet || !selectedTargetWorksheet || selectedItems.size === 0) {
+    if (!selectedSourceWorksheet || !currentWorksheetId || selectedItems.size === 0) {
       alert('ワークシートと対象項目を選択してください');
       return;
     }
@@ -76,25 +108,56 @@ export default function ImportModal({
     try {
       const itemIds = Array.from(selectedItems);
 
-      if (importType === 'members') {
-        await axios.post('/api/v1/members/import', {
-          source_worksheet_id: selectedSourceWorksheet,
-          target_worksheet_id: selectedTargetWorksheet,
-          member_ids: itemIds,
-        });
-      } else {
-        await axios.post('/api/v1/works/import', {
-          source_worksheet_id: selectedSourceWorksheet,
-          target_worksheet_id: selectedTargetWorksheet,
-          work_ids: itemIds,
-        });
-      }
+      const requestPayload =
+        importType === 'members'
+          ? {
+              source_worksheet_id: selectedSourceWorksheet,
+              target_worksheet_id: currentWorksheetId,
+              member_ids: itemIds,
+            }
+          : {
+              source_worksheet_id: selectedSourceWorksheet,
+              target_worksheet_id: currentWorksheetId,
+              work_ids: itemIds,
+            };
 
+      console.log(`Importing ${importType}:`, requestPayload);
+
+      const endpoint = importType === 'members' ? '/api/v1/members/import' : '/api/v1/works/import';
+
+      const response = await axios.post(endpoint, requestPayload, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log('Import successful:', response.data);
       alert('インポートが完了しました');
       onImportComplete();
       onClose();
-    } catch {
-      alert('インポートに失敗しました');
+    } catch (error) {
+      console.error('インポートエラー:', error);
+      let errorMessage = 'インポートに失敗しました';
+
+      if (axios.isAxiosError(error)) {
+        const status = error.response?.status;
+        const data = error.response?.data as Record<string, unknown> | undefined;
+
+        // エラーメッセージの順序: error → message → status テキスト
+        if (data?.error) {
+          errorMessage = String(data.error);
+        } else if (data?.message) {
+          errorMessage = String(data.message);
+        } else if (status) {
+          errorMessage = `HTTPエラー ${status}`;
+        } else {
+          errorMessage = error.message || 'インポートに失敗しました';
+        }
+
+        console.error(`API Error - Status: ${status}, Message: ${errorMessage}`);
+      }
+
+      alert(errorMessage);
     } finally {
       setImporting(false);
     }
@@ -105,7 +168,8 @@ export default function ImportModal({
   }
 
   const itemLabel = importType === 'members' ? 'メンバー' : 'タスク';
-  const allSelected = selectedItems.size === itemsToImport.length && itemsToImport.length > 0;
+  const allSelected =
+    selectedItems.size === sourceWorksheetItems.length && sourceWorksheetItems.length > 0;
 
   return (
     <div
@@ -117,56 +181,29 @@ export default function ImportModal({
         <h3 className="text-2xl font-bold text-gray-900 mb-6">{itemLabel}をインポート</h3>
 
         {/* ワークシート選択 */}
-        <div className="grid grid-cols-2 gap-6 mb-6">
-          <div>
-            <label
-              htmlFor="import-source-ws"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              インポート元ワークシート
-            </label>
-            <select
-              id="import-source-ws"
-              value={selectedSourceWorksheet}
-              onChange={(e) =>
-                setSelectedSourceWorksheet(e.target.value ? Number(e.target.value) : '')
-              }
-              className="input-field"
-              disabled={loading || isDemoUser}
-            >
-              <option value="">選択してください</option>
-              {worksheets.map((ws) => (
-                <option key={ws.id} value={ws.id}>
-                  {ws.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label
-              htmlFor="import-target-ws"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              インポート先ワークシート
-            </label>
-            <select
-              id="import-target-ws"
-              value={selectedTargetWorksheet}
-              onChange={(e) =>
-                setSelectedTargetWorksheet(e.target.value ? Number(e.target.value) : '')
-              }
-              className="input-field"
-              disabled={loading || isDemoUser}
-            >
-              <option value="">選択してください</option>
-              {worksheets.map((ws) => (
-                <option key={ws.id} value={ws.id}>
-                  {ws.name}
-                </option>
-              ))}
-            </select>
-          </div>
+        <div className="mb-6">
+          <label
+            htmlFor="import-source-ws"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            インポート元ワークシート
+          </label>
+          <select
+            id="import-source-ws"
+            value={selectedSourceWorksheet}
+            onChange={(e) =>
+              setSelectedSourceWorksheet(e.target.value ? Number(e.target.value) : '')
+            }
+            className="input-field"
+            disabled={loading || isDemoUser}
+          >
+            <option value="">選択してください</option>
+            {worksheets.map((ws) => (
+              <option key={ws.id} value={ws.id}>
+                {ws.name}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* 項目選択 */}
@@ -177,7 +214,7 @@ export default function ImportModal({
               <button
                 onClick={handleSelectAll}
                 className="text-sm text-blue-600 hover:text-blue-800 font-medium"
-                disabled={isDemoUser}
+                disabled={isDemoUser || fetchingItems || sourceWorksheetItems.length === 0}
                 type="button"
               >
                 {allSelected ? 'すべて解除' : 'すべて選択'}
@@ -185,13 +222,17 @@ export default function ImportModal({
             </div>
 
             <div className="max-h-64 overflow-y-auto border border-gray-300 rounded-lg">
-              {itemsToImport.length === 0 ? (
+              {fetchingItems ? (
+                <div className="p-4 text-center text-gray-500 text-sm">
+                  {itemLabel}を読み込み中...
+                </div>
+              ) : sourceWorksheetItems.length === 0 ? (
                 <div className="p-4 text-center text-gray-500 text-sm">
                   インポート対象がありません
                 </div>
               ) : (
                 <div className="space-y-0">
-                  {(itemsToImport as (Member | Work)[]).map((item) => (
+                  {(sourceWorksheetItems as (Member | Work)[]).map((item) => (
                     <label
                       key={item.id}
                       className="flex items-center p-3 border-b border-gray-200 hover:bg-gray-50 cursor-pointer"
@@ -235,11 +276,7 @@ export default function ImportModal({
             onClick={handleImport}
             className="btn-primary"
             disabled={
-              importing ||
-              !selectedSourceWorksheet ||
-              !selectedTargetWorksheet ||
-              selectedItems.size === 0 ||
-              isDemoUser
+              importing || !selectedSourceWorksheet || selectedItems.size === 0 || isDemoUser
             }
             type="button"
           >
