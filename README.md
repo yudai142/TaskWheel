@@ -524,36 +524,38 @@ erDiagram
 
 ユーザー認証情報を管理します。
 
-| カラム名 | 型 | 制約 | 説明 |
-|---------|-----|------|------|
-| id | integer | PK | ユーザーID |
-| email | string | UK | メールアドレス |
-| encrypted_password | string | | 暗号化パスワード |
-| provider | string | | OAuth プロバイダ（google-oauth2など）|
-| uid | string | | OAuth UID |
-| name | string | | ユーザー名 |
-| created_at | datetime | | 作成日時 |
-| updated_at | datetime | | 更新日時 |
+| カラム名           | 型       | 制約 | 説明                                  |
+| ------------------ | -------- | ---- | ------------------------------------- |
+| id                 | integer  | PK   | ユーザーID                            |
+| email              | string   | UK   | メールアドレス                        |
+| encrypted_password | string   |      | 暗号化パスワード                      |
+| provider           | string   |      | OAuth プロバイダ（google-oauth2など） |
+| uid                | string   |      | OAuth UID                             |
+| name               | string   |      | ユーザー名                            |
+| created_at         | datetime |      | 作成日時                              |
+| updated_at         | datetime |      | 更新日時                              |
 
 **関連付け:**
+
 - `has_many :worksheets`（ユーザーが複数のワークシートを所有）
 
 #### Worksheets テーブル
 
 シフト・タスク管理のセット単位で区切られた独立した管理単位です。
 
-| カラム名 | 型 | 制約 | 説明 |
-|---------|-----|------|------|
-| id | integer | PK | ワークシートID |
-| user_id | bigint | FK → users | 所有ユーザー |
-| name | string | | ワークシート名（例：「2026年春シフト」）|
-| interval | integer | NOT NULL | リセット間隔（日数） |
-| week_use | boolean | DEFAULT: false | 週間モード有効フラグ |
-| week | integer | DEFAULT: 0 | 週の開始曜日 |
-| created_at | datetime | | 作成日時 |
-| updated_at | datetime | | 更新日時 |
+| カラム名   | 型       | 制約           | 説明                                     |
+| ---------- | -------- | -------------- | ---------------------------------------- |
+| id         | integer  | PK             | ワークシートID                           |
+| user_id    | bigint   | FK → users     | 所有ユーザー                             |
+| name       | string   |                | ワークシート名（例：「2026年春シフト」） |
+| interval   | integer  | NOT NULL       | リセット間隔（日数）                     |
+| week_use   | boolean  | DEFAULT: false | 週間モード有効フラグ                     |
+| week       | integer  | DEFAULT: 0     | 週の開始曜日                             |
+| created_at | datetime |                | 作成日時                                 |
+| updated_at | datetime |                | 更新日時                                 |
 
 **関連付け:**
+
 - `belongs_to :user`
 - `has_many :members`
 - `has_many :works`
@@ -564,17 +566,18 @@ erDiagram
 
 ワークシート内のメンバー（人員）情報を管理します。
 
-| カラム名 | 型 | 制約 | 説明 |
-|---------|-----|------|------|
-| id | integer | PK | メンバーID |
-| worksheet_id | bigint | FK → worksheets | 所属ワークシート |
-| name | string | NOT NULL | メンバー名 |
-| kana | string | NOT NULL | フリガナ（カタカナ） |
-| archive | boolean | DEFAULT: false | アーカイブフラグ |
-| created_at | datetime | | 作成日時 |
-| updated_at | datetime | | 更新日時 |
+| カラム名     | 型       | 制約            | 説明                 |
+| ------------ | -------- | --------------- | -------------------- |
+| id           | integer  | PK              | メンバーID           |
+| worksheet_id | bigint   | FK → worksheets | 所属ワークシート     |
+| name         | string   | NOT NULL        | メンバー名           |
+| kana         | string   | NOT NULL        | フリガナ（カタカナ） |
+| archive      | boolean  | DEFAULT: false  | アーカイブフラグ     |
+| created_at   | datetime |                 | 作成日時             |
+| updated_at   | datetime |                 | 更新日時             |
 
 **関連付け:**
+
 - `belongs_to :worksheet`
 - `has_many :histories`
 - `has_many :member_options`
@@ -583,18 +586,19 @@ erDiagram
 
 ワークシート内のタスク（掃除担当）情報を管理します。
 
-| カラム名 | 型 | 制約 | 説明 |
-|---------|-----|------|------|
-| id | integer | PK | タスクID |
-| worksheet_id | bigint | FK → worksheets | 所属ワークシート |
-| name | string | NOT NULL | タスク名 |
-| multiple | integer | | 複数割り当て人数上限 |
-| archive | boolean | DEFAULT: false | アーカイブフラグ |
-| is_above | boolean | DEFAULT: true | 優先度（true=優先） |
-| created_at | datetime | | 作成日時 |
-| updated_at | datetime | | 更新日時 |
+| カラム名     | 型       | 制約            | 説明                 |
+| ------------ | -------- | --------------- | -------------------- |
+| id           | integer  | PK              | タスクID             |
+| worksheet_id | bigint   | FK → worksheets | 所属ワークシート     |
+| name         | string   | NOT NULL        | タスク名             |
+| multiple     | integer  |                 | 複数割り当て人数上限 |
+| archive      | boolean  | DEFAULT: false  | アーカイブフラグ     |
+| is_above     | boolean  | DEFAULT: true   | 優先度（true=優先）  |
+| created_at   | datetime |                 | 作成日時             |
+| updated_at   | datetime |                 | 更新日時             |
 
 **関連付け:**
+
 - `belongs_to :worksheet`
 - `has_many :histories`
 - `has_many :member_options`
@@ -604,22 +608,24 @@ erDiagram
 
 メンバーへのタスク割り当て履歴を記録します。
 
-| カラム名 | 型 | 制約 | 説明 |
-|---------|-----|------|------|
-| id | integer | PK | 履歴ID |
-| worksheet_id | bigint | FK → worksheets | 所属ワークシート |
-| member_id | bigint | FK → members | 割り当てメンバー |
-| work_id | bigint | FK → works, nullable | 割り当てタスク（未割り当ての場合NULL） |
-| date | date | NOT NULL | 割り当て日 |
-| created_at | datetime | | 作成日時 |
-| updated_at | datetime | | 更新日時 |
+| カラム名     | 型       | 制約                 | 説明                                   |
+| ------------ | -------- | -------------------- | -------------------------------------- |
+| id           | integer  | PK                   | 履歴ID                                 |
+| worksheet_id | bigint   | FK → worksheets      | 所属ワークシート                       |
+| member_id    | bigint   | FK → members         | 割り当てメンバー                       |
+| work_id      | bigint   | FK → works, nullable | 割り当てタスク（未割り当ての場合NULL） |
+| date         | date     | NOT NULL             | 割り当て日                             |
+| created_at   | datetime |                      | 作成日時                               |
+| updated_at   | datetime |                      | 更新日時                               |
 
 **インデックス:**
+
 - `worksheet_id`, `date`（ダッシュボード取得最適化）
 - `member_id`, `date`（メンバーごとの実績確認）
 - `work_id`（taタスクごとの実績確認）
 
 **関連付け:**
+
 - `belongs_to :worksheet`
 - `belongs_to :member`
 - `belongs_to :work, optional: true`
@@ -628,19 +634,21 @@ erDiagram
 
 メンバーごとのタスク実績制限（除外・対象設定）を管理します。
 
-| カラム名 | 型 | 制約 | 説明 |
-|---------|-----|------|------|
-| id | integer | PK | オプションID |
-| work_id | bigint | FK → works | 対象タスク |
-| member_id | bigint | FK → members | 対象メンバー |
-| status | integer | NOT NULL | ステータス（0: 除外, 1: 対象） |
-| created_at | datetime | | 作成日時 |
-| updated_at | datetime | | 更新日時 |
+| カラム名   | 型       | 制約         | 説明                           |
+| ---------- | -------- | ------------ | ------------------------------ |
+| id         | integer  | PK           | オプションID                   |
+| work_id    | bigint   | FK → works   | 対象タスク                     |
+| member_id  | bigint   | FK → members | 対象メンバー                   |
+| status     | integer  | NOT NULL     | ステータス（0: 除外, 1: 対象） |
+| created_at | datetime |              | 作成日時                       |
+| updated_at | datetime |              | 更新日時                       |
 
 **約束:**
+
 - `work_id` + `member_id` の組み合わせは一意（重複不可）
 
 **関連付け:**
+
 - `belongs_to :work`
 - `belongs_to :member`
 
@@ -648,32 +656,35 @@ erDiagram
 
 特定のタスクを指定日に除外する設定を管理します。
 
-| カラム名 | 型 | 制約 | 説明 |
-|---------|-----|------|------|
-| id | integer | PK | 除外日設定ID |
-| work_id | bigint | FK → works | 対象タスク |
-| date | date | NOT NULL | 除外日 |
-| created_at | datetime | | 作成日時 |
-| updated_at | datetime | | 更新日時 |
+| カラム名   | 型       | 制約       | 説明         |
+| ---------- | -------- | ---------- | ------------ |
+| id         | integer  | PK         | 除外日設定ID |
+| work_id    | bigint   | FK → works | 対象タスク   |
+| date       | date     | NOT NULL   | 除外日       |
+| created_at | datetime |            | 作成日時     |
+| updated_at | datetime |            | 更新日時     |
 
 **制約:**
+
 - `work_id` + `date` の組み合わせは一意（重複不可）
 
 **関連付け:**
+
 - `belongs_to :work`
 
 #### ShuffleOptions テーブル
 
 自動シャッフル（タスク割り当て）のリセット日程を管理します。
 
-| カラム名 | 型 | 制約 | 説明 |
-|---------|-----|------|------|
-| id | integer | PK | オプションID |
-| reset_date | date | | 次回リセット日 |
-| created_at | datetime | | 作成日時 |
-| updated_at | datetime | | 更新日時 |
+| カラム名   | 型       | 制約 | 説明           |
+| ---------- | -------- | ---- | -------------- |
+| id         | integer  | PK   | オプションID   |
+| reset_date | date     |      | 次回リセット日 |
+| created_at | datetime |      | 作成日時       |
+| updated_at | datetime |      | 更新日時       |
 
 **関連付け:**
+
 - グローバル設定（複数ワークシート間で共有）
 
 ## トラブルシューティング
