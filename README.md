@@ -1,6 +1,6 @@
 # タスクの割り当てシャッフルアプリ - TaskWheel
 
-Rails 7 + React 18 + TypeScript + PostgreSQL + Docker + Tailwind CSSで構築された、マルチテナント対応の掃除タスク管理アプリケーション。
+Rails 7 + React 18 + TypeScript + PostgreSQL + Docker + Tailwind CSSで構築された、マルチテナント対応のタスク割り当て管理アプリケーション。
 
 ## 特徴
 
