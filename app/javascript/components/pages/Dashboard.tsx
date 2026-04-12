@@ -272,8 +272,11 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
         axiosError.response?.data?.errors?.join(', ') ||
         axiosError.response?.data?.error ||
         'メンバー選択の更新に失敗しました';
-      showNotification(msg, 'error');
       console.error('handleToggleParticipant error:', error);
+      // エラー時のみメッセージを表示
+      if (axiosError.response?.status === 404 || axiosError.response?.status === 422) {
+        showNotification(msg, 'error');
+      }
     }
   };
 
