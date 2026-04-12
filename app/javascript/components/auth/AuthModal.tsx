@@ -60,7 +60,28 @@ export default function AuthModal({
       }
     } catch (e) {
       if (axios.isAxiosError(e)) {
-        setError(e.response?.data?.message || '認証に失敗しました');
+        // エラーメッセージの詳細抽出
+        const errorData = e.response?.data as Record<string, unknown> | undefined;
+        let errorMessage = '認証に失敗しました';
+
+        if (errorData?.message) {
+          errorMessage = String(errorData.message);
+        } else if (errorData?.errors) {
+          const errors = errorData.errors as Record<string, unknown>;
+          const errorMessages = Object.entries(errors)
+            .map(([field, msgs]) => {
+              if (Array.isArray(msgs)) {
+                return `${field}: ${msgs.join(', ')}`;
+              }
+              return `${field}: ${String(msgs)}`;
+            })
+            .join('\n');
+          errorMessage = errorMessages || '認証に失敗しました';
+        } else if (errorData?.error) {
+          errorMessage = String(errorData.error);
+        }
+
+        setError(errorMessage);
       } else {
         setError(e instanceof Error ? e.message : '認証に失敗しました');
       }
