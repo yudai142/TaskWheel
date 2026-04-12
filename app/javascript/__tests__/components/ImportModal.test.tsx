@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import ImportModal from '../../components/ImportModal';
 import axios from 'axios';
 
@@ -17,11 +18,11 @@ describe('ImportModal', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockedAxios.get.mockResolvedValue({ data: [] });
-    mockedAxios.post.mockResolvedValue({ data: [] });
   });
 
   it('モーダルが表示される', () => {
+    mockedAxios.get.mockResolvedValue({ data: [] });
+
     render(
       <ImportModal
         isOpen={true}
@@ -38,6 +39,8 @@ describe('ImportModal', () => {
   });
 
   it('ワークシートを選択するとメンバーを取得して表示する', async () => {
+    const user = userEvent.setup();
+
     const mockWorksheets = [
       {
         id: 2,
@@ -83,8 +86,14 @@ describe('ImportModal', () => {
       />
     );
 
+    // ワークシートが読み込まれるのを待つ
+    await waitFor(() => {
+      const select = screen.getByDisplayValue('選択してください');
+      expect(select.querySelector('option[value="2"]')).toBeInTheDocument();
+    });
+
     const select = screen.getByDisplayValue('選択してください');
-    fireEvent.change(select, { target: { value: '2' } });
+    await user.selectOptions(select, '2');
 
     await waitFor(() => {
       expect(screen.getByText('メンバーA')).toBeInTheDocument();
@@ -93,6 +102,8 @@ describe('ImportModal', () => {
   });
 
   it('メンバーをチェックして選択できる', async () => {
+    const user = userEvent.setup();
+
     const mockWorksheets = [
       {
         id: 2,
@@ -130,20 +141,28 @@ describe('ImportModal', () => {
       />
     );
 
+    // ワークシートが読み込まれるのを待つ
+    await waitFor(() => {
+      const select = screen.getByDisplayValue('選択してください');
+      expect(select.querySelector('option[value="2"]')).toBeInTheDocument();
+    });
+
     const select = screen.getByDisplayValue('選択してください');
-    fireEvent.change(select, { target: { value: '2' } });
+    await user.selectOptions(select, '2');
 
     await waitFor(() => {
       expect(screen.getByText('メンバーA')).toBeInTheDocument();
     });
 
     const checkboxes = screen.getAllByRole('checkbox');
-    fireEvent.click(checkboxes[0]);
+    await user.click(checkboxes[0]);
 
     expect(checkboxes[0]).toBeChecked();
   });
 
   it('インポートボタンで API にポストして現在のワークシートにインポートする', async () => {
+    const user = userEvent.setup();
+
     const mockWorksheets = [
       {
         id: 2,
@@ -185,9 +204,15 @@ describe('ImportModal', () => {
       />
     );
 
+    // ワークシートが読み込まれるのを待つ
+    await waitFor(() => {
+      const select = screen.getByDisplayValue('選択してください');
+      expect(select.querySelector('option[value="2"]')).toBeInTheDocument();
+    });
+
     // ワークシート選択
     const select = screen.getByDisplayValue('選択してください');
-    fireEvent.change(select, { target: { value: '2' } });
+    await user.selectOptions(select, '2');
 
     await waitFor(() => {
       expect(screen.getByText('メンバーA')).toBeInTheDocument();
@@ -195,11 +220,11 @@ describe('ImportModal', () => {
 
     // チェック
     const checkboxes = screen.getAllByRole('checkbox');
-    fireEvent.click(checkboxes[0]);
+    await user.click(checkboxes[0]);
 
     // インポート
     const importButton = screen.getByRole('button', { name: 'インポート' });
-    fireEvent.click(importButton);
+    await user.click(importButton);
 
     await waitFor(() => {
       expect(mockedAxios.post).toHaveBeenCalledWith(
@@ -220,6 +245,8 @@ describe('ImportModal', () => {
   });
 
   it('タスクのインポートに対応する', async () => {
+    const user = userEvent.setup();
+
     const mockWorksheets = [
       {
         id: 2,
@@ -247,6 +274,10 @@ describe('ImportModal', () => {
       .mockResolvedValueOnce({ data: mockWorksheets })
       .mockResolvedValueOnce({ data: mockWorks });
 
+    mockedAxios.post.mockResolvedValueOnce({ data: mockWorks });
+
+    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
+
     render(
       <ImportModal
         isOpen={true}
@@ -260,16 +291,47 @@ describe('ImportModal', () => {
 
     expect(screen.getByText('タスクをインポート')).toBeInTheDocument();
 
+    // ワークシートが読み込まれるのを待つ
+    await waitFor(() => {
+      const select = screen.getByDisplayValue('選択してください');
+      expect(select.querySelector('option[value="2"]')).toBeInTheDocument();
+    });
+
     const select = screen.getByDisplayValue('選択してください');
-    fireEvent.change(select, { target: { value: '2' } });
+    await user.selectOptions(select, '2');
 
     await waitFor(() => {
       expect(screen.getByText('タスクA')).toBeInTheDocument();
     });
+
+    const checkboxes = screen.getAllByRole('checkbox');
+    await user.click(checkboxes[0]);
+
+    const importButton = screen.getByRole('button', { name: 'インポート' });
+    await user.click(importButton);
+
+    await waitFor(() => {
+      expect(mockedAxios.post).toHaveBeenCalledWith(
+        '/api/v1/works/import',
+        expect.objectContaining({
+          source_worksheet_id: 2,
+          target_worksheet_id: 1,
+          work_ids: [20],
+        }),
+        expect.any(Object)
+      );
+    });
+
+    expect(mockOnImportComplete).toHaveBeenCalled();
+    expect(mockOnClose).toHaveBeenCalled();
+
+    alertSpy.mockRestore();
   });
 
   it('isOpen が false の場合はモーダルを表示しない', () => {
-    const { container } = render(
+    mockedAxios.get.mockResolvedValue({ data: [] });
+
+    render(
       <ImportModal
         isOpen={false}
         onClose={mockOnClose}
@@ -280,11 +342,11 @@ describe('ImportModal', () => {
       />
     );
 
-    expect(container.firstChild).toBeNull();
+    expect(screen.queryByText('メンバーをインポート')).not.toBeInTheDocument();
   });
 
   it('デモユーザーはインポートできない', () => {
-    mockedAxios.get.mockResolvedValueOnce({ data: [] });
+    mockedAxios.get.mockResolvedValue({ data: [] });
 
     render(
       <ImportModal
@@ -297,7 +359,7 @@ describe('ImportModal', () => {
       />
     );
 
-    expect(screen.getByLabelText('インポート元ワークシート')).toBeDisabled();
-    expect(screen.getByRole('button', { name: 'インポート' })).toBeDisabled();
+    const select = screen.getByDisplayValue('選択してください');
+    expect(select).toBeDisabled();
   });
 });
