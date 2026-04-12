@@ -157,6 +157,12 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
     }
   };
 
+  const handleSingleFormKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
+  };
+
   const handleOpenEditModal = (work: Work): void => {
     setSelectedWork(work);
     setEditFormData({
@@ -307,6 +313,7 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
                 className="input-field"
                 value={singleFormData.name}
                 onChange={(e) => setSingleFormData({ ...singleFormData, name: e.target.value })}
+                onKeyDown={handleSingleFormKeyDown}
                 placeholder="例：掃除"
                 required
               />
@@ -330,6 +337,7 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
                     multiple: parseInt(e.target.value, 10),
                   })
                 }
+                onKeyDown={handleSingleFormKeyDown}
               />
             </div>
             <div className="flex items-center gap-3">
