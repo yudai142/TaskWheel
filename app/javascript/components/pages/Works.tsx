@@ -134,6 +134,7 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
 
       setBulkFormData({ text: '' });
       setShowBulkForm(false);
+      alert('タスクを一括登録しました');
       await fetchData();
     } catch {
       alert('タスクの一括追加に失敗しました');
@@ -151,6 +152,7 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
 
       setSingleFormData({ name: '', multiple: 1, is_above: true, archive: false });
       setShowSingleForm(false);
+      alert('タスクを登録しました');
       await fetchData();
     } catch {
       alert('タスクの追加に失敗しました');

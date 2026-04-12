@@ -257,6 +257,7 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
 
       setBulkFormData({ text: '' });
       setShowBulkForm(false);
+      alert('メンバーを一括登録しました');
       await fetchData();
     } catch {
       alert('メンバーの一括追加に失敗しました');
@@ -274,6 +275,7 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
 
       setSingleFormData({ name: '', kana: '', archive: false });
       setShowSingleForm(false);
+      alert('メンバーを登録しました');
       await fetchData();
     } catch {
       alert('メンバーの追加に失敗しました');
