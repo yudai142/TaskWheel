@@ -319,6 +319,11 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
     e.preventDefault();
     if (!selectedMember) return;
 
+    if (isDemoUser) {
+      alert('デモユーザーはメンバー情報を編集できません');
+      return;
+    }
+
     try {
       const response = await axios.patch<Member>(`/api/v1/members/${selectedMember.id}`, {
         member: editFormData,

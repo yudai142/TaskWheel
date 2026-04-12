@@ -180,6 +180,11 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
     e.preventDefault();
     if (!selectedWork) return;
 
+    if (isDemoUser) {
+      alert('デモユーザーはタスク情報を編集できません');
+      return;
+    }
+
     try {
       const response = await axios.patch<Work>(`/api/v1/works/${selectedWork.id}`, {
         work: editFormData,
