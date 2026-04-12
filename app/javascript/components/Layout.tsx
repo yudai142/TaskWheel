@@ -8,6 +8,7 @@ import {
   Bars3Icon,
   XMarkIcon,
   PlusIcon,
+  ArrowRightOnRectangleIcon,
 } from '@heroicons/react/24/outline';
 import type { WorksheetSummary } from '../types';
 
@@ -105,11 +106,19 @@ export default function Layout({
             onClick={() => {
               void onLogout();
             }}
-            className={`w-full rounded border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors ${
-              !sidebarOpen && 'p-2 text-center'
+            className={`w-full rounded border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 ${
+              sidebarOpen && 'justify-start'
             }`}
+            title={sidebarOpen ? '' : 'ログアウト'}
           >
-            {sidebarOpen ? 'ログアウト' : '出'}
+            {sidebarOpen ? (
+              <>
+                <ArrowRightOnRectangleIcon className="w-4 h-4" />
+                ログアウト
+              </>
+            ) : (
+              <ArrowRightOnRectangleIcon className="w-5 h-5" />
+            )}
           </button>
         </div>
       </div>
