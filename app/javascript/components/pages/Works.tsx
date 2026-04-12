@@ -149,7 +149,7 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
         work: singleFormData,
       });
 
-      setSingleFormData({ name: '', multiple: 1, is_above: false, archive: false });
+      setSingleFormData({ name: '', multiple: 1, is_above: true, archive: false });
       setShowSingleForm(false);
       await fetchData();
     } catch {
