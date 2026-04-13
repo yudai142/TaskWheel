@@ -397,21 +397,23 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
           </select>
           <button
             onClick={handleBulkFormToggle}
-            className="btn-primary py-1 whitespace-nowrap"
+            disabled={isDemoUser}
+            className={`btn-primary py-1 whitespace-nowrap ${isDemoUser ? 'opacity-50 cursor-not-allowed' : ''}`}
             title="一括追加"
           >
             {showBulkForm ? 'キャンセル' : '一括追加'}
           </button>
           <button
             onClick={handleSingleFormToggle}
-            className="btn-primary py-1 whitespace-nowrap"
+            disabled={isDemoUser}
+            className={`btn-primary py-1 whitespace-nowrap ${isDemoUser ? 'opacity-50 cursor-not-allowed' : ''}`}
             title="新規登録"
           >
             {showSingleForm ? 'キャンセル' : '新規登録'}
           </button>
           <button
             onClick={handleImportModalOpen}
-            className="btn-secondary py-1 whitespace-nowrap"
+            disabled={members.length === 0 || isDemoUser}
             disabled={members.length === 0}
             title={members.length === 0 ? 'インポート対象がありません' : 'インポート'}
           >
@@ -505,7 +507,8 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
             key={member.id}
             type="button"
             onClick={() => handleOpenEditModal(member)}
-            className="card text-left transition hover:shadow-lg hover:-translate-y-0.5"
+            disabled={isDemoUser}
+            className={`card text-left transition ${isDemoUser ? 'opacity-60 cursor-not-allowed' : 'hover:shadow-lg hover:-translate-y-0.5'}`}
           >
             <div className="flex items-start justify-between">
               <div className="flex-1">
@@ -588,7 +591,7 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
                     >
                       キャンセル
                     </button>
-                    <button type="submit" className="btn-primary flex-1">
+                    <button type="submit" disabled={isDemoUser} className={`btn-primary flex-1 ${isDemoUser ? 'opacity-50 cursor-not-allowed' : ''}`}>
                       保存
                     </button>
                   </div>
@@ -644,7 +647,7 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
                       <option value="1">除外</option>
                     </select>
                   </div>
-                  <button type="submit" className="btn-primary w-full">
+                  <button type="submit" disabled={isDemoUser} className={`btn-primary w-full ${isDemoUser ? 'opacity-50 cursor-not-allowed' : ''}`}>
                     設定を追加
                   </button>
                 </form>
@@ -673,7 +676,8 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
                         <button
                           type="button"
                           onClick={() => handleDeleteSetting(option.id)}
-                          className="text-sm font-medium text-red-500 hover:text-red-700"
+                          disabled={isDemoUser}
+                          className={`text-sm font-medium ${isDemoUser ? 'text-gray-400 cursor-not-allowed' : 'text-red-500 hover:text-red-700'}`}
                         >
                           解除
                         </button>
