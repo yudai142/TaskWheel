@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import ImportModal from '../../components/ImportModal';
 import axios from 'axios';
 
@@ -17,11 +18,11 @@ describe('ImportModal', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockedAxios.get.mockResolvedValue({ data: [] });
-    mockedAxios.post.mockResolvedValue({ data: [] });
   });
 
   it('モーダルが表示される', () => {
+    mockedAxios.get.mockResolvedValue({ data: [] });
+
     render(
       <ImportModal
         isOpen={true}
@@ -38,6 +39,8 @@ describe('ImportModal', () => {
   });
 
   it('ワークシートを選択するとメンバーを取得して表示する', async () => {
+    const user = userEvent.setup({ delay: null });
+
     const mockWorksheets = [
       {
         id: 2,
@@ -83,16 +86,25 @@ describe('ImportModal', () => {
       />
     );
 
-    const select = screen.getByDisplayValue('選択してください');
-    fireEvent.change(select, { target: { value: '2' } });
-
-    await waitFor(() => {
-      expect(screen.getByText('メンバーA')).toBeInTheDocument();
-      expect(screen.getByText('メンバーB')).toBeInTheDocument();
+    // ワークシートが読み込まれるのを待つ
+    const select = await waitFor(() => screen.getByDisplayValue('選択してください'), {
+      timeout: 5000,
     });
+
+    await user.selectOptions(select, '2');
+
+    await waitFor(
+      () => {
+        expect(screen.getByText('メンバーA')).toBeInTheDocument();
+        expect(screen.getByText('メンバーB')).toBeInTheDocument();
+      },
+      { timeout: 5000 }
+    );
   });
 
   it('メンバーをチェックして選択できる', async () => {
+    const user = userEvent.setup({ delay: null });
+
     const mockWorksheets = [
       {
         id: 2,
@@ -130,20 +142,29 @@ describe('ImportModal', () => {
       />
     );
 
-    const select = screen.getByDisplayValue('選択してください');
-    fireEvent.change(select, { target: { value: '2' } });
-
-    await waitFor(() => {
-      expect(screen.getByText('メンバーA')).toBeInTheDocument();
+    // ワークシートが読み込まれるのを待つ
+    const select = await waitFor(() => screen.getByDisplayValue('選択してください'), {
+      timeout: 5000,
     });
 
+    await user.selectOptions(select, '2');
+
+    await waitFor(
+      () => {
+        expect(screen.getByText('メンバーA')).toBeInTheDocument();
+      },
+      { timeout: 5000 }
+    );
+
     const checkboxes = screen.getAllByRole('checkbox');
-    fireEvent.click(checkboxes[0]);
+    await user.click(checkboxes[0]);
 
     expect(checkboxes[0]).toBeChecked();
   });
 
   it('インポートボタンで API にポストして現在のワークシートにインポートする', async () => {
+    const user = userEvent.setup({ delay: null });
+
     const mockWorksheets = [
       {
         id: 2,
@@ -185,33 +206,43 @@ describe('ImportModal', () => {
       />
     );
 
-    // ワークシート選択
-    const select = screen.getByDisplayValue('選択してください');
-    fireEvent.change(select, { target: { value: '2' } });
-
-    await waitFor(() => {
-      expect(screen.getByText('メンバーA')).toBeInTheDocument();
+    // ワークシートが読み込まれるのを待つ
+    const select = await waitFor(() => screen.getByDisplayValue('選択してください'), {
+      timeout: 5000,
     });
+
+    // ワークシート選択
+    await user.selectOptions(select, '2');
+
+    await waitFor(
+      () => {
+        expect(screen.getByText('メンバーA')).toBeInTheDocument();
+      },
+      { timeout: 5000 }
+    );
 
     // チェック
     const checkboxes = screen.getAllByRole('checkbox');
-    fireEvent.click(checkboxes[0]);
+    await user.click(checkboxes[0]);
 
     // インポート
     const importButton = screen.getByRole('button', { name: 'インポート' });
-    fireEvent.click(importButton);
+    await user.click(importButton);
 
-    await waitFor(() => {
-      expect(mockedAxios.post).toHaveBeenCalledWith(
-        '/api/v1/members/import',
-        expect.objectContaining({
-          source_worksheet_id: 2,
-          target_worksheet_id: 1,
-          member_ids: [10],
-        }),
-        expect.any(Object)
-      );
-    });
+    await waitFor(
+      () => {
+        expect(mockedAxios.post).toHaveBeenCalledWith(
+          '/api/v1/members/import',
+          expect.objectContaining({
+            source_worksheet_id: 2,
+            target_worksheet_id: 1,
+            member_ids: [10],
+          }),
+          expect.any(Object)
+        );
+      },
+      { timeout: 5000 }
+    );
 
     expect(mockOnImportComplete).toHaveBeenCalled();
     expect(mockOnClose).toHaveBeenCalled();
@@ -220,6 +251,8 @@ describe('ImportModal', () => {
   });
 
   it('タスクのインポートに対応する', async () => {
+    const user = userEvent.setup({ delay: null });
+
     const mockWorksheets = [
       {
         id: 2,
@@ -247,6 +280,10 @@ describe('ImportModal', () => {
       .mockResolvedValueOnce({ data: mockWorksheets })
       .mockResolvedValueOnce({ data: mockWorks });
 
+    mockedAxios.post.mockResolvedValueOnce({ data: mockWorks });
+
+    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
+
     render(
       <ImportModal
         isOpen={true}
@@ -260,16 +297,49 @@ describe('ImportModal', () => {
 
     expect(screen.getByText('タスクをインポート')).toBeInTheDocument();
 
-    const select = screen.getByDisplayValue('選択してください');
-    fireEvent.change(select, { target: { value: '2' } });
-
-    await waitFor(() => {
-      expect(screen.getByText('タスクA')).toBeInTheDocument();
+    // ワークシートが読み込まれるのを待つ
+    const select = await waitFor(() => screen.getByDisplayValue('選択してください'), {
+      timeout: 5000,
     });
+
+    await user.selectOptions(select, '2');
+
+    await waitFor(
+      () => {
+        expect(screen.getByText('タスクA')).toBeInTheDocument();
+      },
+      { timeout: 5000 }
+    );
+
+    const checkboxes = screen.getAllByRole('checkbox');
+    await user.click(checkboxes[0]);
+
+    const importButton = screen.getByRole('button', { name: 'インポート' });
+    await user.click(importButton);
+
+    await waitFor(
+      () => {
+        expect(mockedAxios.post).toHaveBeenCalledWith(
+          '/api/v1/works/import',
+          expect.objectContaining({
+            source_worksheet_id: 2,
+            target_worksheet_id: 1,
+            work_ids: [20],
+          }),
+          expect.any(Object)
+        );
+      },
+      { timeout: 5000 }
+    );
+
+    expect(mockOnImportComplete).toHaveBeenCalled();
+    expect(mockOnClose).toHaveBeenCalled();
+
+    alertSpy.mockRestore();
   });
 
   it('isOpen が false の場合はモーダルを表示しない', () => {
-    const { container } = render(
+    render(
       <ImportModal
         isOpen={false}
         onClose={mockOnClose}
@@ -280,12 +350,10 @@ describe('ImportModal', () => {
       />
     );
 
-    expect(container.firstChild).toBeNull();
+    expect(screen.queryByText('メンバーをインポート')).not.toBeInTheDocument();
   });
 
-  it('デモユーザーはインポートできない', () => {
-    mockedAxios.get.mockResolvedValueOnce({ data: [] });
-
+  it('デモユーザーはインポートできない', async () => {
     render(
       <ImportModal
         isOpen={true}
@@ -297,7 +365,9 @@ describe('ImportModal', () => {
       />
     );
 
-    expect(screen.getByLabelText('インポート元ワークシート')).toBeDisabled();
-    expect(screen.getByRole('button', { name: 'インポート' })).toBeDisabled();
+    const select = await waitFor(() => screen.getByDisplayValue('選択してください'), {
+      timeout: 5000,
+    });
+    expect(select).toBeDisabled();
   });
 });

@@ -23,117 +23,117 @@ interface Props {
   isDemoUser?: boolean;
 }
 
-// 日本語テキストをカタカナに変換する簡易実装
-const hiraganaToKatakana = (text: string): string => {
-  const hiraganaKatakanaMap: { [key: string]: string } = {
-    あ: 'ア',
-    い: 'イ',
-    う: 'ウ',
-    え: 'エ',
-    お: 'オ',
-    か: 'カ',
-    き: 'キ',
-    く: 'ク',
-    け: 'ケ',
-    こ: 'コ',
-    が: 'ガ',
-    ぎ: 'ギ',
-    ぐ: 'グ',
-    げ: 'ゲ',
-    ご: 'ゴ',
-    さ: 'サ',
-    し: 'シ',
-    す: 'ス',
-    せ: 'セ',
-    そ: 'ソ',
-    ざ: 'ザ',
-    じ: 'ジ',
-    ず: 'ズ',
-    ぜ: 'ゼ',
-    ぞ: 'ゾ',
-    た: 'タ',
-    ち: 'チ',
-    つ: 'ツ',
-    て: 'テ',
-    と: 'ト',
-    だ: 'ダ',
-    ぢ: 'ヂ',
-    づ: 'ヅ',
-    で: 'デ',
-    ど: 'ド',
-    な: 'ナ',
-    に: 'ニ',
-    ぬ: 'ヌ',
-    ね: 'ネ',
-    の: 'ノ',
-    は: 'ハ',
-    ひ: 'ヒ',
-    ふ: 'フ',
-    へ: 'ヘ',
-    ほ: 'ホ',
-    ば: 'バ',
-    び: 'ビ',
-    ぶ: 'ブ',
-    べ: 'ベ',
-    ぼ: 'ボ',
-    ぱ: 'パ',
-    ぴ: 'ピ',
-    ぷ: 'プ',
-    ぺ: 'ペ',
-    ぽ: 'ポ',
-    ま: 'マ',
-    み: 'ミ',
-    む: 'ム',
-    め: 'メ',
-    も: 'モ',
-    や: 'ヤ',
-    ゆ: 'ユ',
-    よ: 'ヨ',
-    ら: 'ラ',
-    り: 'リ',
-    る: 'ル',
-    れ: 'レ',
-    ろ: 'ロ',
-    わ: 'ワ',
-    ゐ: 'ヰ',
-    ゑ: 'ヱ',
-    を: 'ヲ',
-    ん: 'ン',
+// ひらがな予測関数（ひらがナ返却用）
+const predictKanaHiragana = (name: string): string => {
+  // ひらがなが含まれていたら、そのままひらがなを返す
+  if (/[ぁ-ん]/.test(name)) {
+    return name;
+  }
+
+  // カタカナからひらがなに変換するマップ
+  const katakanaHiraganaMap: { [key: string]: string } = {
+    ア: 'あ',
+    イ: 'い',
+    ウ: 'う',
+    エ: 'え',
+    オ: 'お',
+    カ: 'か',
+    キ: 'き',
+    ク: 'く',
+    ケ: 'け',
+    コ: 'こ',
+    ガ: 'が',
+    ギ: 'ぎ',
+    グ: 'ぐ',
+    ゲ: 'げ',
+    ゴ: 'ご',
+    サ: 'さ',
+    シ: 'し',
+    ス: 'す',
+    セ: 'せ',
+    ソ: 'そ',
+    ザ: 'ざ',
+    ジ: 'じ',
+    ズ: 'ず',
+    ゼ: 'ぜ',
+    ゾ: 'ぞ',
+    タ: 'た',
+    チ: 'ち',
+    ツ: 'つ',
+    テ: 'て',
+    ト: 'と',
+    ダ: 'だ',
+    ヂ: 'ぢ',
+    ヅ: 'づ',
+    デ: 'で',
+    ド: 'ど',
+    ナ: 'な',
+    ニ: 'に',
+    ヌ: 'ぬ',
+    ネ: 'ね',
+    ノ: 'の',
+    ハ: 'は',
+    ヒ: 'ひ',
+    フ: 'ふ',
+    ヘ: 'へ',
+    ホ: 'ほ',
+    バ: 'ば',
+    ビ: 'び',
+    ブ: 'ぶ',
+    ベ: 'べ',
+    ボ: 'ぼ',
+    パ: 'ぱ',
+    ピ: 'ぴ',
+    プ: 'ぷ',
+    ペ: 'ぺ',
+    ポ: 'ぽ',
+    マ: 'ま',
+    ミ: 'み',
+    ム: 'む',
+    メ: 'め',
+    モ: 'も',
+    ヤ: 'や',
+    ユ: 'ゆ',
+    ヨ: 'よ',
+    ラ: 'ら',
+    リ: 'り',
+    ル: 'る',
+    レ: 'れ',
+    ロ: 'ろ',
+    ワ: 'わ',
+    ヰ: 'ゐ',
+    ヱ: 'ゑ',
+    ヲ: 'を',
+    ン: 'ん',
     ー: 'ー',
     ' ': ' ',
   };
 
-  return text
-    .split('')
-    .map((char) => hiraganaKatakanaMap[char] || char)
-    .join('');
-};
-
-// 基本的な名前予測
-const predictKana = (name: string): string => {
-  if (/[ぁ-ん]/.test(name)) {
-    return hiraganaToKatakana(name);
-  }
-  if (/[ァ-ン]/.test(name)) {
-    return name;
-  }
-
-  const commonNameMap: { [key: string]: string } = {
-    山田: 'ヤマダ',
-    佐藤: 'サトウ',
-    鈴木: 'スズキ',
-    伊藤: 'イトウ',
-    高橋: 'タカハシ',
-    渡辺: 'ワタナベ',
-    中村: 'ナカムラ',
-    小林: 'コバヤシ',
-    田中: 'タナカ',
-    太郎: 'タロウ',
-    次郎: 'ジロウ',
-    花子: 'ハナコ',
+  const commonNameMapHiragana: { [key: string]: string } = {
+    山田: 'やまだ',
+    佐藤: 'さとう',
+    鈴木: 'すずき',
+    伊藤: 'いとう',
+    高橋: 'たかはし',
+    渡辺: 'わたなべ',
+    中村: 'なかむら',
+    小林: 'こばやし',
+    田中: 'たなか',
+    太郎: 'たろう',
+    次郎: 'じろう',
+    花子: 'はなこ',
   };
 
-  for (const [kanji, kana] of Object.entries(commonNameMap)) {
+  // カタカナをひらがなに変換
+  if (/[ァ-ン]/.test(name)) {
+    return name
+      .split('')
+      .map((char) => katakanaHiraganaMap[char] || char)
+      .join('');
+  }
+
+  // 漢字の辞書マップで対応するひらがなに変換
+  for (const [kanji, kana] of Object.entries(commonNameMapHiragana)) {
     if (name.includes(kanji)) {
       return name.split(kanji).join(kana);
     }
@@ -257,6 +257,7 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
 
       setBulkFormData({ text: '' });
       setShowBulkForm(false);
+      alert('メンバーを一括登録しました');
       await fetchData();
     } catch {
       alert('メンバーの一括追加に失敗しました');
@@ -274,9 +275,16 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
 
       setSingleFormData({ name: '', kana: '', archive: false });
       setShowSingleForm(false);
+      alert('メンバーを登録しました');
       await fetchData();
     } catch {
       alert('メンバーの追加に失敗しました');
+    }
+  };
+
+  const handleSingleFormKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
     }
   };
 
@@ -292,18 +300,29 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
 
   const handleNameChange = (newName: string): void => {
     setEditFormData((prev) => {
-      const predicted = predictKana(newName);
+      const predicted = predictKanaHiragana(newName);
       return {
         ...prev,
         name: newName,
-        kana: !prev.kana ? predicted : prev.kana,
+        kana: predicted,
       };
     });
+  };
+
+  const handleEditFormKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
   };
 
   const handleEditSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     if (!selectedMember) return;
+
+    if (isDemoUser) {
+      alert('デモユーザーはメンバー情報を編集できません');
+      return;
+    }
 
     try {
       const response = await axios.patch<Member>(`/api/v1/members/${selectedMember.id}`, {
@@ -442,14 +461,15 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
                 onChange={(e) => {
                   const newName = e.target.value;
                   setSingleFormData((prev) => {
-                    const predicted = predictKana(newName);
+                    const predicted = predictKanaHiragana(newName);
                     return {
                       ...prev,
                       name: newName,
-                      kana: !prev.kana ? predicted : prev.kana,
+                      kana: predicted,
                     };
                   });
                 }}
+                onKeyDown={handleSingleFormKeyDown}
                 placeholder="例：山田太郎"
                 required
               />
@@ -464,7 +484,8 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
                 className="input-field"
                 value={singleFormData.kana}
                 onChange={(e) => setSingleFormData({ ...singleFormData, kana: e.target.value })}
-                placeholder="例：ヤマダタロウ"
+                onKeyDown={handleSingleFormKeyDown}
+                placeholder="例：やまただろう"
                 required
               />
               <p className="text-xs text-gray-500 mt-1">※名前を入力するとかなが自動予測されます</p>
@@ -524,6 +545,7 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
                       className="input-field"
                       value={editFormData.name}
                       onChange={(e) => handleNameChange(e.target.value)}
+                      onKeyDown={handleEditFormKeyDown}
                       required
                     />
                   </div>
@@ -537,6 +559,7 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
                       className="input-field"
                       value={editFormData.kana}
                       onChange={(e) => setEditFormData({ ...editFormData, kana: e.target.value })}
+                      onKeyDown={handleEditFormKeyDown}
                       required
                     />
                     <p className="text-xs text-gray-500 mt-1">

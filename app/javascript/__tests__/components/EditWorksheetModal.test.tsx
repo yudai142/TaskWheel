@@ -151,7 +151,7 @@ describe('EditWorksheetModal', () => {
     await user.click(saveButton);
 
     await waitFor(() => {
-      expect(screen.getByText(/エラーが発生しました/i)).toBeInTheDocument();
+      expect(screen.getByText(/ワークシート名の更新に失敗しました/i)).toBeInTheDocument();
     });
   });
 

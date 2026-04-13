@@ -134,6 +134,7 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
 
       setBulkFormData({ text: '' });
       setShowBulkForm(false);
+      alert('タスクを一括登録しました');
       await fetchData();
     } catch {
       alert('タスクの一括追加に失敗しました');
@@ -149,11 +150,18 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
         work: singleFormData,
       });
 
-      setSingleFormData({ name: '', multiple: 1, is_above: false, archive: false });
+      setSingleFormData({ name: '', multiple: 1, is_above: true, archive: false });
       setShowSingleForm(false);
+      alert('タスクを登録しました');
       await fetchData();
     } catch {
       alert('タスクの追加に失敗しました');
+    }
+  };
+
+  const handleSingleFormKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
     }
   };
 
@@ -171,6 +179,11 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
   const handleEditSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     if (!selectedWork) return;
+
+    if (isDemoUser) {
+      alert('デモユーザーはタスク情報を編集できません');
+      return;
+    }
 
     try {
       const response = await axios.patch<Work>(`/api/v1/works/${selectedWork.id}`, {
@@ -307,6 +320,7 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
                 className="input-field"
                 value={singleFormData.name}
                 onChange={(e) => setSingleFormData({ ...singleFormData, name: e.target.value })}
+                onKeyDown={handleSingleFormKeyDown}
                 placeholder="例：掃除"
                 required
               />
@@ -330,6 +344,7 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
                     multiple: parseInt(e.target.value, 10),
                   })
                 }
+                onKeyDown={handleSingleFormKeyDown}
               />
             </div>
             <div className="flex items-center gap-3">

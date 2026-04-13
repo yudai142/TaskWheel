@@ -267,13 +267,21 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
       setMembers(membersRes.data);
       setHistories(historiesRes.data);
     } catch (error) {
-      const axiosError = error as { response?: { data?: { error?: string; errors?: string[] } } };
+      const axiosError = error as {
+        response?: {
+          status?: number;
+          data?: { error?: string; errors?: string[] };
+        };
+      };
       const msg =
         axiosError.response?.data?.errors?.join(', ') ||
         axiosError.response?.data?.error ||
         'メンバー選択の更新に失敗しました';
-      showNotification(msg, 'error');
       console.error('handleToggleParticipant error:', error);
+      // エラー時のみメッセージを表示
+      if (axiosError.response?.status === 404 || axiosError.response?.status === 422) {
+        showNotification(msg, 'error');
+      }
     }
   };
 
