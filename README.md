@@ -2,6 +2,33 @@
 
 Rails 7 + React 18 + TypeScript + PostgreSQL + Docker + Tailwind CSSで構築された、マルチテナント対応のタスク割り当て管理アプリケーション。
 
+## 📋 サービス概要
+
+TaskWheel は、店舗・施設・学校など、定期的にタスク（シフト、当番、掃除など）を割り当てる必要がある組織のための**タスク自動割り当てシステム**です。メンバーの実績を考慮した公平で効率的な割り当てを自動化し、管理業務を大幅に削減します。
+
+## 😤 表に見えている困りごと
+
+- **手動割り当ての負担**: 毎回、誰にどのタスクを割り当てるか を決める必要がある
+- **公平性の懸念**: 主観や人間関係によって割り当てが偏ってしまう
+- **履歴管理の煩雑性**: 過去の割り当て実績を紙やスプレッドシートで管理するのが大変
+- **メンバー管理の手間**: 新規・退職・配置変更に伴う更新作業が多い
+
+## 🎯 解決したい課題
+
+- ✅ **自動シャッフル機能**: ワンクリックで公平な割り当てを自動生成
+- ✅ **実績ベースの配分**: 各メンバーの過去実績を自動計算して偏りのない割り当て
+- ✅ **一元管理**: すべての割り当て履歴をシステムで一元管理
+- ✅ **柔軟な切り替え**: 週単位・日数間隔・手動割り当てなど複数のモードに対応
+- ✅ **例外対応**: 特定日にタスクを除外したり、メンバーが担当できないタスクを設定
+
+## 👥 想定ユーザー
+
+- **マンション・オフィスビルの管理組合員**: 当番制の掃除シフト管理
+- **飲食店・小売店の店長**: シフト勤務スタッフの勤務日数調整
+- **学校・保育園**: 学級当番・給食当番などの自動割り当て
+- **病院・介護施設**: 看護実習生や介護スタッフの配置管理
+- **イベント運営チーム**: ボランティア・スタッフのタスク割り当て
+
 ## 特徴
 
 - **マルチテナント対応**: ユーザーごとに独立したワークシート管理
@@ -60,132 +87,6 @@ Rails 7 + React 18 + TypeScript + PostgreSQL + Docker + Tailwind CSSで構築さ
 - タスク割り当ての履歴を記録
 - 月ごとの履歴表示・検索
 - メンバー・タスク単位での実績確認
-
-## セットアップ
-
-### 前提条件
-
-- Docker & Docker Compose
-- (オプション) Ruby 3.2+, Node.js 18+
-
-### インストール
-
-1. **プロジェクトのクローン**
-
-```bash
-cd TaskWheel
-```
-
-2. **.envファイルの設定**
-
-```bash
-cp .env.example .env
-```
-
-Googleログインを利用する場合は、`.env` に以下を設定してください。
-
-```bash
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
-```
-
-Google Cloud Console 側では OAuth クライアント（Webアプリ）を作成し、承認済みリダイレクト URI に以下を登録してください。
-
-```text
-http://localhost:3000/users/auth/google_oauth2/callback
-```
-
-3. **Dockerコンテナの起動**
-
-```bash
-docker-compose up -d
-```
-
-4. **データベースの初期化**
-
-```bash
-docker-compose exec web rails db:create
-docker-compose exec web rails db:migrate
-```
-
-5. **アプリケーションにアクセス**
-
-ブラウザで `http://localhost:3000` を開く
-
-6. **再設定メール確認（Gmail SMTP）**
-
-`.env` に Gmail SMTP 設定を追加してください。
-
-```bash
-SMTP_ADDRESS=smtp.gmail.com
-SMTP_PORT=587
-SMTP_DOMAIN=gmail.com
-SMTP_USER_NAME=your_gmail_address@gmail.com
-SMTP_PASSWORD=your_google_app_password
-SMTP_AUTHENTICATION=plain
-SMTP_ENABLE_STARTTLS_AUTO=true
-```
-
-`SMTP_PASSWORD` には Google アカウントの通常パスワードではなく、2段階認証を有効化した上で発行した **アプリパスワード** を設定してください。
-
-設定後に `docker compose up -d --build` で再起動し、「パスワードを忘れた場合」から送信したメールが Gmail 受信箱に届くことを確認してください。
-
-## 開発
-
-### ローカル開発（Docker不使用）
-
-```bash
-# Ruby環境の設定
-bundle install
-
-# Node環境の設定
-npm install
-
-# データベースの作成
-rails db:create
-
-# マイグレーションの実行
-rails db:migrate
-
-# 開発サーバーの起動
-rails s -b 0.0.0.0
-```
-
-別のターミナルで以下を実行：
-
-```bash
-# Vite 開発サーバーの起動
-npm run dev
-```
-
-### テストの実行
-
-```bash
-# Rails RSpec テストの実行
-docker-compose exec web rspec spec/
-
-# React Vitest テストの実行
-docker-compose exec web npm run test
-
-# すべてのテストを実行
-docker-compose exec web npm run test:all
-```
-
-### コード品質チェック
-
-```bash
-# Ruby コードの lint チェック
-docker-compose exec web rubocop
-
-# TypeScript 型チェック
-docker-compose exec web npx tsc --noEmit
-
-# ESLint (JavaScript/TypeScript)
-docker-compose exec web npx eslint app/javascript
-
-# Prettier (コード整形)
-docker-compose exec web npx prettier --write app/javascript
-```
 
 ### 技術スタック詳細
 
@@ -272,155 +173,6 @@ DELETE /api/v1/worksheets/:worksheet_id/member_options  # オプション削除
 
 ```
 POST   /api/v1/worksheets/:worksheet_id/off_works  # 除外日設定
-DELETE /api/v1/worksheets/:worksheet_id/off_works  # 除外日削除
-```
-
-## ディレクトリ構造
-
-```
-TaskWheel/
-├── app/
-│   ├── controllers/
-│   │   ├── api/v1/              # REST API コントローラー
-│   │   │   ├── members_controller.rb
-│   │   │   ├── works_controller.rb
-│   │   │   ├── histories_controller.rb
-│   │   │   ├── worksheets_controller.rb
-│   │   │   ├── member_options_controller.rb
-│   │   │   ├── off_works_controller.rb
-│   │   │   └── ...
-│   │   ├── application_controller.rb
-│   │   ├── pages_controller.rb
-│   │   └── users/               # Devise ユーザー管理
-│   ├── models/
-│   │   ├── user.rb              # ユーザーモデル（Devise）
-│   │   ├── worksheet.rb         # ワークシートモデル
-│   │   ├── member.rb            # メンバー管理
-│   │   ├── work.rb              # タスク管理
-│   │   ├── history.rb           # 割り当て履歴
-│   │   ├── member_option.rb     # タスク実績制限
-│   │   ├── off_work.rb          # タスク除外日
-│   │   ├── shuffle_option.rb    # シャッフルオプション
-│   │   └── application_record.rb
-│   ├── serializers/             # JSON シリアライザー
-│   │   ├── member_serializer.rb
-│   │   ├── work_serializer.rb
-│   │   ├── history_serializer.rb
-│   │   ├── off_work_serializer.rb
-│   │   └── ...
-│   ├── services/                # ビジネスロジック
-│   │   ├── fair_shuffle_allocator.rb   # 公平性を考慮した割り当て
-│   │   ├── fairness_score_calculator.rb  # 公平性スコア計算
-│   │   └── ...
-│   ├── helpers/
-│   ├── javascript/
-│   │   ├── components/
-│   │   │   ├── App.tsx
-│   │   │   ├── Layout.tsx
-│   │   │   ├── EditWorksheetModal.tsx
-│   │   │   ├── AssignMemberModal.tsx
-│   │   │   ├── pages/
-│   │   │   │   ├── Dashboard.tsx
-│   │   │   │   ├── Members.tsx
-│   │   │   │   ├── Works.tsx
-│   │   │   │   ├── Histories.tsx
-│   │   │   │   ├── Settings.tsx
-│   │   │   │   ├── Auth/
-│   │   │   │   │   ├── LoginPage.tsx
-│   │   │   │   │   └── LandingPage.tsx
-│   │   │   │   └── ...
-│   │   │   └── ...
-│   │   ├── __tests__/
-│   │   │   ├── components/
-│   │   │   │   ├── __test__.tsx
-│   │   │   │   ├── Layout.test.tsx
-│   │   │   │   ├── EditWorksheetModal.test.tsx
-│   │   │   │   ├── AssignMemberModal.test.tsx
-│   │   │   │   ├── pages/
-│   │   │   │   │   └── ...
-│   │   │   │   └── ...
-│   │   │   └── ...
-│   │   ├── spec/
-│   │   │   ├── fixtures/
-│   │   │   │   ├── mockData.ts      # Vitest 用 モックデータ
-│   │   │   │   ├── axiosMocks.ts    # Axios モックセットアップ
-│   │   │   │   └── ...
-│   │   │   └── ...
-│   │   ├── lib/
-│   │   │   ├── api.ts              # Axios インスタンス
-│   │   │   ├── auth.ts             # 認証ユーティリティ
-│   │   │   └── ...
-│   │   ├── types.ts                # TypeScript グローバル型定義
-│   │   ├── types/                  # 型定義ディレクトリ
-│   │   ├── stylesheets/            # Tailwind CSS
-│   │   ├── entrypoints/            # エントリーポイント
-│   │   └── packs/                  # Shakapacker 設定
-│   ├── views/
-│   │   ├── layouts/
-│   │   │   └── application.html.erb
-│   │   ├── devise/                 # Devise テンプレート
-│   │   └── pages/
-│   └── assets/
-├── config/
-│   ├── routes.rb                # API ルーティング定義
-│   ├── application.rb           # Rails 初期化設定
-│   ├── database.yml             # データベース接続
-│   ├── environments/            # 環境別設定
-│   ├── initializers/
-│   │   ├── devise.rb            # Devise 設定
-│   │   └── ...
-│   └── locales/
-├── db/
-│   ├── schema.rb                # DB スキーマ定義（自動生成）
-│   ├── seeds.rb                 # 初期データ
-│   └── migrate/                 # マイグレーションファイル
-├── spec/
-│   ├── rails_helper.rb
-│   ├── spec_helper.rb
-│   ├── requests/                # API リクエストスペック
-│   │   ├── api_v1_members_spec.rb
-│   │   ├── api_v1_works_spec.rb
-│   │   ├── api_v1_worksheets_spec.rb
-│   │   ├── api_v1_worksheet_assign_member_spec.rb
-│   │   └── ...
-│   ├── services/                # サービス単体テスト
-│   ├── factories/               # FactoryBot 定義
-│   │   ├── members.rb
-│   │   ├── works.rb
-│   │   ├── histories.rb
-│   │   ├── users.rb
-│   │   └── ...
-│   └── support/
-├── public/
-│   ├── builds/                  # Vite ビルド出力
-│   ├── images/                  # 静的画像
-│   └── vite-dev/                # Vite 開発サーバー
-├── bin/
-│   ├── rails
-│   ├── rake
-│   └── vite
-├── docker/                      # Docker 設定
-├── config.ru                    # Rack アプリケーション設定
-├── Dockerfile                   # Docker イメージ定義
-├── docker-compose.yml           # マルチコンテナ定義
-├── docker-entrypoint.sh         # 開発環境エントリーポイント
-├── docker-entrypoint-prod.sh    # 本番環境エントリーポイント
-├── Gemfile                      # Ruby 依存関係
-├── Gemfile.lock
-├── package.json                 # Node 依存関係
-├── tsconfig.json                # TypeScript 設定
-├── vite.config.ts               # Vite ビルド設定
-├── vite.config.mts              # Vite マニフェスト設定
-├── vitest.config.ts             # Vitest テスト設定
-├── vitest.setup.ts              # Vitest セットアップ
-├── tailwind.config.cjs          # Tailwind CSS 設定
-├── postcss.config.cjs           # PostCSS 設定
-├── eslint.config.js             # ESLint 設定
-├── .github/
-│   ├── workflows/               # GitHub Actions CI/CD
-│   └── copilot-instructions.md  # Copilot カスタム指示
-├── Procfile.dev                 # 開発環境プロセス定義
-└── README.md                    # このファイル
 ```
 
 ## データベーススキーマ
@@ -686,43 +438,3 @@ erDiagram
 **関連付け:**
 
 - グローバル設定（複数ワークシート間で共有）
-
-## トラブルシューティング
-
-### ポートが既に使用されている場合
-
-```bash
-# ポート 3000 を使用しているプロセスを確認
-lsof -i :3000
-
-# 別のポートを使用する場合、docker-compose.ymlを編集
-# ports: "3000:3000" → "3001:3000"
-```
-
-### データベース接続エラー
-
-```bash
-# コンテナのログを確認
-docker-compose logs db
-
-# コンテナを再起動
-docker-compose restart db
-```
-
-### Node モジュールのエラー
-
-```bash
-# モジュールを再インストール
-docker-compose exec web npm install
-
-# キャッシュをクリア
-docker-compose exec web npm cache clean --force
-```
-
-## ライセンス
-
-MIT
-
-## 作者
-
-TaskWheel Development Team

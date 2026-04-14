@@ -414,7 +414,6 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
           <button
             onClick={handleImportModalOpen}
             disabled={members.length === 0 || isDemoUser}
-            disabled={members.length === 0}
             title={members.length === 0 ? 'インポート対象がありません' : 'インポート'}
           >
             インポート
@@ -591,7 +590,11 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
                     >
                       キャンセル
                     </button>
-                    <button type="submit" disabled={isDemoUser} className={`btn-primary flex-1 ${isDemoUser ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                    <button
+                      type="submit"
+                      disabled={isDemoUser}
+                      className={`btn-primary flex-1 ${isDemoUser ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    >
                       保存
                     </button>
                   </div>
@@ -647,7 +650,11 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
                       <option value="1">除外</option>
                     </select>
                   </div>
-                  <button type="submit" disabled={isDemoUser} className={`btn-primary w-full ${isDemoUser ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                  <button
+                    type="submit"
+                    disabled={isDemoUser}
+                    className={`btn-primary w-full ${isDemoUser ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  >
                     設定を追加
                   </button>
                 </form>
