@@ -1,1 +1,5 @@
+#!/bin/sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+export PATH="$HOME/.proto/bin:$HOME/.proto/shims:$PATH"
 npx lint-staged
