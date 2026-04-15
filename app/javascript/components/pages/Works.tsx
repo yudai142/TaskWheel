@@ -275,6 +275,7 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
           <button
             onClick={handleImportModalOpen}
             disabled={works.length === 0 || isDemoUser}
+            className={`btn-primary py-1 whitespace-nowrap ${isDemoUser ? 'opacity-50 cursor-not-allowed' : ''}`}
             title={works.length === 0 ? 'インポート対象がありません' : 'インポート'}
           >
             インポート

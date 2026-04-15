@@ -414,6 +414,7 @@ export default function Members({ worksheetId, isDemoUser = false }: Props): JSX
           <button
             onClick={handleImportModalOpen}
             disabled={members.length === 0 || isDemoUser}
+            className={`btn-primary py-1 whitespace-nowrap ${isDemoUser ? 'opacity-50 cursor-not-allowed' : ''}`}
             title={members.length === 0 ? 'インポート対象がありません' : 'インポート'}
           >
             インポート
