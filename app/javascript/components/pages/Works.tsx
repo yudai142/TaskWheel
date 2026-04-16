@@ -165,6 +165,12 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
     }
   };
 
+  const handleEditFormKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
+  };
+
   const handleOpenEditModal = (work: Work): void => {
     setSelectedWork(work);
     setEditFormData({
@@ -427,6 +433,7 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
                       className="input-field"
                       value={editFormData.name}
                       onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
+                      onKeyDown={handleEditFormKeyDown}
                       required
                     />
                   </div>
@@ -448,6 +455,7 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
                           multiple: parseInt(e.target.value, 10),
                         })
                       }
+                      onKeyDown={handleEditFormKeyDown}
                       min="1"
                     />
                   </div>
