@@ -13,7 +13,7 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { AssignMemberModal } from '../AssignMemberModal';
-import type { Member, Work, History } from '../../types';
+import type { Member, Work, History, OffWork } from '../../types';
 
 interface Notification {
   message: string;
@@ -31,6 +31,7 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
   const [works, setWorks] = useState<Work[]>([]);
   const [members, setMembers] = useState<Member[]>([]);
   const [histories, setHistories] = useState<History[]>([]);
+  const [offWorks, setOffWorks] = useState<OffWork[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [loading, setLoading] = useState<boolean>(true);
   const [shuffling, setShuffling] = useState<number | 'all' | null>(null);
@@ -54,8 +55,9 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
       const year = selectedDate.getFullYear();
       const month = selectedDate.getMonth() + 1;
       const day = selectedDate.getDate();
+      const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
-      const [worksRes, membersRes, historiesRes] = await Promise.all([
+      const [worksRes, membersRes, historiesRes, offWorksRes] = await Promise.all([
         axios.get<Work[]>('/api/v1/works', {
           params: { worksheet_id: worksheetId },
         }),
@@ -65,10 +67,14 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
         axios.get<History[]>('/api/v1/histories', {
           params: { year, month, day, worksheet_id: worksheetId },
         }),
+        axios.get<OffWork[]>('/api/v1/off_works', {
+          params: { date: dateStr, worksheet_id: worksheetId },
+        }),
       ]);
       setWorks(worksRes.data.sort((a, b) => a.id - b.id));
       setMembers(membersRes.data);
       setHistories(historiesRes.data);
+      setOffWorks(offWorksRes.data);
     } catch {
       // Error fetching data
     } finally {
@@ -103,19 +109,21 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
       return;
     }
 
-    // 除外状態をチェック
-    const work = works.find((w: Work) => w.id === workId);
-    if (work && !work.is_above) {
-      showNotification('このタスクはシャッフル対象から除外されています', 'error');
+    // その日の OffWorks から除外状態をチェック
+    const year = selectedDate.getFullYear();
+    const month = selectedDate.getMonth() + 1;
+    const day = selectedDate.getDate();
+    const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const isExcludedToday = offWorks.some(
+      (ow: OffWork) => ow.work_id === workId && ow.date === dateStr
+    );
+    if (isExcludedToday) {
+      showNotification('このタスクは本日シャッフル対象から除外されています', 'error');
       return;
     }
 
     setShuffling(workId);
     try {
-      const year = selectedDate.getFullYear();
-      const month = selectedDate.getMonth() + 1;
-      const day = selectedDate.getDate();
-
       const response = await axios.post<{ member: Member }>('/api/v1/works/shuffle', {
         work_id: workId,
         participant_member_ids: allMembersWithRecords,
@@ -287,32 +295,39 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
 
   const handleToggleWorkExclusion = async (workId: number): Promise<void> => {
     try {
-      // 現在の Work オブジェクトを取得
-      const work = works.find((w: Work) => w.id === workId);
-      if (!work) return;
+      const year = selectedDate.getFullYear();
+      const month = selectedDate.getMonth() + 1;
+      const day = selectedDate.getDate();
+      const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
-      // is_above を反転
-      // チェック入れる（除外） = is_above を false に
-      // チェック外す（対象に戻す） = is_above を true に
-      const newIsAbove = !work.is_above;
+      // その日の OffWork レコードを検索
+      const existingOffWork = offWorks.find(
+        (ow: OffWork) => ow.work_id === workId && ow.date === dateStr
+      );
 
-      // API で Work を更新
-      await axios.patch(`/api/v1/works/${workId}`, {
-        work: {
-          is_above: newIsAbove,
-        },
-      });
+      if (existingOffWork) {
+        // 既に除外されている場合は削除（対象に戻す）
+        await axios.delete(`/api/v1/off_works/${existingOffWork.id}`);
+      } else {
+        // 除外されていない場合は作成
+        await axios.post('/api/v1/off_works', {
+          off_work: {
+            work_id: workId,
+            date: dateStr,
+            worksheet_id: worksheetId,
+          },
+        });
+      }
 
       // データを再取得
-      const worksRes = await axios.get<Work[]>('/api/v1/works');
-      setWorks(worksRes.data.sort((a, b) => a.id - b.id));
-      showNotification('タスクの設定を更新しました', 'success');
+      await fetchData();
+      showNotification('タスク除外設定を更新しました', 'success');
     } catch (error) {
       const axiosError = error as { response?: { data?: { error?: string; errors?: string[] } } };
       const msg =
         axiosError.response?.data?.errors?.join(', ') ||
         axiosError.response?.data?.error ||
-        'タスクの更新に失敗しました';
+        'タスク除外設定の更新に失敗しました';
       showNotification(msg, 'error');
       console.error('handleToggleWorkExclusion error:', error);
     }
@@ -451,7 +466,13 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
   const showWorksSection = activeStatsTab === 'assigned';
 
   // 統計データ計算
-  const validWorksCount = works.filter((w: Work) => w.is_above).length;
+  const year = selectedDate.getFullYear();
+  const month = selectedDate.getMonth() + 1;
+  const day = selectedDate.getDate();
+  const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  const validWorksCount = works.filter(
+    (w: Work) => !offWorks.some((ow: OffWork) => ow.work_id === w.id && ow.date === dateStr)
+  ).length;
 
   // 未割り当てメンバーを計算
   // work_id が null = 参加しているが未割り当て
@@ -810,7 +831,13 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {works.map((work: Work) => {
-                const isExcluded = !work.is_above;
+                const year = selectedDate.getFullYear();
+                const month = selectedDate.getMonth() + 1;
+                const day = selectedDate.getDate();
+                const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const isExcluded = offWorks.some(
+                  (ow: OffWork) => ow.work_id === work.id && ow.date === dateStr
+                );
                 return (
                   <label
                     key={work.id}
