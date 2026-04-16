@@ -48,24 +48,24 @@ describe 'API V1 OffWorks - シャッフル除外タスク管理 Issue #40', typ
       end
 
       it 'work_id なしで作成失敗' do
-        expect {
-          post '/api/v1/off_works',
-               params: { off_work: { date: '2026-04-18' } }
-        }.to raise_error(ActiveRecord::RecordInvalid)
+        post '/api/v1/off_works',
+             params: { off_work: { date: '2026-04-18' } }
+
+        expect(response).to have_http_status(:unprocessable_content)
       end
 
       it 'date なしで作成失敗' do
-        expect {
-          post '/api/v1/off_works',
-               params: { off_work: { work_id: work1.id } }
-        }.to raise_error(ActiveRecord::RecordInvalid)
+        post '/api/v1/off_works',
+             params: { off_work: { work_id: work1.id } }
+
+        expect(response).to have_http_status(:unprocessable_content)
       end
 
       it '同じタスク・日付の重複登録は失敗' do
-        expect {
-          post '/api/v1/off_works',
-               params: { off_work: { work_id: work1.id, date: '2026-04-16' } }
-        }.to raise_error(ActiveRecord::RecordInvalid)
+        post '/api/v1/off_works',
+             params: { off_work: { work_id: work1.id, date: '2026-04-16' } }
+
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end
@@ -80,9 +80,9 @@ describe 'API V1 OffWorks - シャッフル除外タスク管理 Issue #40', typ
       end
 
       it '存在しない OffWork を削除失敗' do
-        expect {
-          delete '/api/v1/off_works/99999'
-        }.to raise_error(ActiveRecord::RecordNotFound)
+        delete '/api/v1/off_works/99999'
+
+        expect(response).to have_http_status(:not_found)
       end
     end
   end
