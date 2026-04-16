@@ -52,6 +52,12 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
 
   const fetchData = useCallback(async (): Promise<void> => {
     try {
+      // worksheetId がない場合はスキップ
+      if (!worksheetId) {
+        setLoading(false);
+        return;
+      }
+
       const year = selectedDate.getFullYear();
       const month = selectedDate.getMonth() + 1;
       const day = selectedDate.getDate();
@@ -467,6 +473,24 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
 
   if (loading) {
     return <div className="text-center py-12 text-gray-600">読み込み中...</div>;
+  }
+
+  if (!worksheetId) {
+    return (
+      <div className="text-center py-12 text-gray-600">
+        <p>ワークシートを選択してダッシュボードを開始してください</p>
+      </div>
+    );
+  }
+
+  // データが読み込めない場合のチェック
+  if (works.length === 0 && members.length === 0 && histories.length === 0) {
+    return (
+      <div className="text-center py-12 text-gray-600">
+        <p>データの読み込みに失敗しました</p>
+        <p className="text-sm mt-2">ページをリロードしてください</p>
+      </div>
+    );
   }
 
   const showParticipantSection = activeStatsTab === 'members';
