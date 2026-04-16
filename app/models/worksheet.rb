@@ -5,6 +5,7 @@ class Worksheet < ApplicationRecord
   has_many :members, dependent: :destroy
   has_many :works, dependent: :destroy
   has_many :histories, dependent: :destroy
+  has_many :off_works, through: :works
 
   before_validation :assign_test_fallback_user, on: :create
 
