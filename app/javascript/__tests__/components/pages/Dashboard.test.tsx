@@ -105,6 +105,16 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
 
     it('除外チェックされた掃除項目はシャッフル対象から外れる', async () => {
       const user = userEvent.setup();
+
+      // OffWorks API をモック
+      const mockOffWorks = [];
+      (axios.get as any).mockImplementation((url: string) => {
+        if (url === '/api/v1/off_works') {
+          return Promise.resolve({ data: mockOffWorks });
+        }
+        return setupDefaultAxiosMocks(axios)(url);
+      });
+
       render(<Dashboard worksheetId={null} />);
 
       await waitFor(() => {
@@ -116,11 +126,24 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
       if (checkboxes.length > 0) {
         const checkbox = checkboxes[0] as HTMLInputElement;
 
-        // チェック状態の変化を確認（状態が変わることを確認）
+        // チェック前は未チェック
+        expect(checkbox.checked).toBe(false);
+
+        // チェック状態を変化させる
         await user.click(checkbox);
 
-        // チェックボックスがクリック可能であることを確認
-        expect(checkbox).toBeInTheDocument();
+        // POST リクエストが呼ばれたことを確認（OffWork レコード作成）
+        await waitFor(() => {
+          expect(axios.post).toHaveBeenCalledWith(
+            '/api/v1/off_works',
+            expect.objectContaining({
+              off_work: expect.objectContaining({
+                work_id: expect.any(Number),
+                date: expect.any(String),
+              }),
+            })
+          );
+        });
       }
     });
   });
