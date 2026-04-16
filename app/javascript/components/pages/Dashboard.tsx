@@ -57,7 +57,7 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
       const day = selectedDate.getDate();
       const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
-      const [worksRes, membersRes, historiesRes, offWorksRes] = await Promise.all([
+      const results = await Promise.allSettled([
         axios.get<Work[]>('/api/v1/works', {
           params: { worksheet_id: worksheetId },
         }),
@@ -71,16 +71,23 @@ export default function Dashboard({ worksheetId, _isDemoUser = false }: Props): 
           params: { date: dateStr, worksheet_id: worksheetId },
         }),
       ]);
-      setWorks(worksRes.data.sort((a, b) => a.id - b.id));
-      setMembers(membersRes.data);
-      setHistories(historiesRes.data);
-      setOffWorks(offWorksRes.data);
-    } catch {
-      // Error fetching data
+
+      const worksRes = results[0].status === 'fulfilled' ? results[0].value.data : [];
+      const membersRes = results[1].status === 'fulfilled' ? results[1].value.data : [];
+      const historiesRes = results[2].status === 'fulfilled' ? results[2].value.data : [];
+      const offWorksRes = results[3].status === 'fulfilled' ? results[3].value.data : [];
+
+      setWorks(worksRes.sort((a, b) => a.id - b.id));
+      setMembers(membersRes);
+      setHistories(historiesRes);
+      setOffWorks(offWorksRes);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      showNotification('データの読み込みに失敗しました', 'error');
     } finally {
       setLoading(false);
     }
-  }, [selectedDate, worksheetId]);
+  }, [selectedDate, worksheetId, showNotification]);
 
   useEffect(() => {
     const handleScroll = () => {

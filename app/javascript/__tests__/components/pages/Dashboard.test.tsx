@@ -106,13 +106,16 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
     it('除外チェックされた掃除項目はシャッフル対象から外れる', async () => {
       const user = userEvent.setup();
 
-      // OffWorks API をモック
-      const mockOffWorks = [];
-      (axios.get as any).mockImplementation((url: string) => {
-        if (url === '/api/v1/off_works') {
-          return Promise.resolve({ data: mockOffWorks });
+      // デフォルト モック セットアップ
+      setupDefaultAxiosMocks();
+
+      // OffWorks API をモック（GET リクエストで空配列を返す）
+      vi.mocked(axios.get).mockImplementation((url: string) => {
+        if (url.includes('/api/v1/off_works')) {
+          return Promise.resolve({ data: [] });
         }
-        return setupDefaultAxiosMocks(axios)(url);
+        // 他の GET リクエストはデフォルト動作に従う
+        throw new Error(`Unmocked GET: ${url}`);
       });
 
       render(<Dashboard worksheetId={null} />);
@@ -134,7 +137,7 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
 
         // POST リクエストが呼ばれたことを確認（OffWork レコード作成）
         await waitFor(() => {
-          expect(axios.post).toHaveBeenCalledWith(
+          expect(vi.mocked(axios.post)).toHaveBeenCalledWith(
             '/api/v1/off_works',
             expect.objectContaining({
               off_work: expect.objectContaining({
