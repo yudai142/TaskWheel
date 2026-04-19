@@ -148,6 +148,7 @@ export default function Works({ worksheetId, isDemoUser = false }: Props): JSX.E
     try {
       await axios.post<Work>('/api/v1/works', {
         work: singleFormData,
+        worksheet_id: worksheetId,
       });
 
       setSingleFormData({ name: '', multiple: 1, is_above: true, archive: false });
