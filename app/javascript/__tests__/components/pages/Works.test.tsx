@@ -164,6 +164,64 @@ describe('Works - Issue #27: ワークシート選択機能のワークシート
         expect(screen.queryByText('タスクを編集')).not.toBeInTheDocument();
       });
     });
+
+    it('編集フォームでエンターキーを押してもモーダルが閉じない', async () => {
+      const user = userEvent.setup({ delay: null });
+      render(<Works worksheetId={1} />);
+
+      // タスクが表示されるまで待機
+      await waitFor(() => {
+        expect(screen.getByText(mockWorks[0].name)).toBeInTheDocument();
+      });
+
+      // タスクカードをクリック
+      await user.click(screen.getByRole('button', { name: new RegExp(mockWorks[0].name) }));
+
+      // モーダルが開く
+      await waitFor(() => {
+        expect(screen.getByText('タスクを編集')).toBeInTheDocument();
+      });
+
+      // タスク名入力フィールドにフォーカスしてエンターキーを押す
+      const nameInput = screen.getByLabelText('タスク名') as HTMLInputElement;
+      await user.click(nameInput);
+      await user.keyboard('{Enter}');
+
+      // モーダルがまだ開いていることを確認
+      expect(screen.getByText('タスクを編集')).toBeInTheDocument();
+
+      // API 呼び出しがされていないことを確認（エンターキーではsubmitされない）
+      expect(axios.patch).not.toHaveBeenCalled();
+    });
+
+    it('複数割り当て数フィールドでエンターキーを押してもモーダルが閉じない', async () => {
+      const user = userEvent.setup({ delay: null });
+      render(<Works worksheetId={1} />);
+
+      // タスクが表示されるまで待機
+      await waitFor(() => {
+        expect(screen.getByText(mockWorks[0].name)).toBeInTheDocument();
+      });
+
+      // タスクカードをクリック
+      await user.click(screen.getByRole('button', { name: new RegExp(mockWorks[0].name) }));
+
+      // モーダルが開く
+      await waitFor(() => {
+        expect(screen.getByText('タスクを編集')).toBeInTheDocument();
+      });
+
+      // 複数割り当て数入力フィールドにフォーカスしてエンターキーを押す
+      const multipleInput = screen.getByLabelText('複数割り当て数') as HTMLInputElement;
+      await user.click(multipleInput);
+      await user.keyboard('{Enter}');
+
+      // モーダルがまだ開いていることを確認
+      expect(screen.getByText('タスクを編集')).toBeInTheDocument();
+
+      // API 呼び出しがされていないことを確認
+      expect(axios.patch).not.toHaveBeenCalled();
+    });
   });
 
   describe('タスク作成機能', () => {

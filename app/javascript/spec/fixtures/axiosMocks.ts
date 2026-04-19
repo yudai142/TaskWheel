@@ -34,6 +34,9 @@ type MockedAxios = {
   post: {
     mockImplementation: (fn: (url: string, _data: unknown) => Promise<{ data: unknown }>) => void;
   };
+  delete: {
+    mockImplementation: (fn: (url: string) => Promise<{ data: unknown }>) => void;
+  };
 };
 
 const setupCommonMocks = (works: Work[], members: Member[], histories: History[]) => {
@@ -51,6 +54,9 @@ const setupCommonMocks = (works: Work[], members: Member[], histories: History[]
     }
     if (url.includes('/api/v1/histories')) {
       return Promise.resolve({ data: histories });
+    }
+    if (url.includes('/api/v1/off_works')) {
+      return Promise.resolve({ data: [] });
     }
     return Promise.resolve({ data: [] });
   });
@@ -83,6 +89,23 @@ const setupCommonMocks = (works: Work[], members: Member[], histories: History[]
       return Promise.resolve({ data: [] });
     }
     if (url.includes('/api/v1/histories')) {
+      return Promise.resolve({ data: {} });
+    }
+    if (url.includes('/api/v1/off_works')) {
+      return Promise.resolve({ data: {} });
+    }
+    return Promise.resolve({ data: {} });
+  });
+
+  // DELETE メソッドのモック
+  const mockedDelete = axios.delete as unknown as {
+    mockImplementation: (fn: (url: string) => Promise<{ data: unknown }>) => void;
+  };
+  mockedDelete.mockImplementation((url: string) => {
+    if (url.includes('/api/v1/histories/')) {
+      return Promise.resolve({ data: {} });
+    }
+    if (url.includes('/api/v1/off_works/')) {
       return Promise.resolve({ data: {} });
     }
     return Promise.resolve({ data: {} });

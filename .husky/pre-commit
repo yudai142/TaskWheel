@@ -1,5 +1,4 @@
-#!/bin/sh
-. "$(dirname -- "$0")/_/husky.sh"
-
+# proto環境を PATH に追加
 export PATH="$HOME/.proto/bin:$HOME/.proto/shims:$PATH"
+
 npx lint-staged

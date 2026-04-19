@@ -54,6 +54,9 @@ Rails.application.routes.draw do
         end
       end
 
+      # Off Works (daily exclusions)
+      resources :off_works, only: %i[index create destroy]
+
       # Shuffle options
       resources :shuffle_options, only: %i[show update]
 

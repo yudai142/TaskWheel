@@ -28,7 +28,8 @@ module Api
 
       def create
         deny_demo_user_modification! and return
-        @work = current_worksheet.works.build(work_params)
+        worksheet = current_worksheet_for_params
+        @work = worksheet.works.build(work_params)
         @work.save!
         render json: @work, status: :created
       end
@@ -47,10 +48,11 @@ module Api
 
       def bulk_create
         deny_demo_user_modification! and return
+        worksheet = current_worksheet_for_params
         works = []
         Work.transaction do
           params[:works].each do |work_data|
-            work = current_worksheet.works.build(work_data.permit(:name, :multiple, :archive, :is_above))
+            work = worksheet.works.build(work_data.permit(:name, :multiple, :archive, :is_above))
             work.save!
             works << work
           end

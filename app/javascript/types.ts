@@ -7,6 +7,14 @@ export interface MemberOptionSetting {
   status_label: string;
 }
 
+export interface OffWork {
+  id: number;
+  work_id: number;
+  date: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Worksheet {
   id: number;
   name: string;

@@ -21,7 +21,7 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
 
   describe('タブ表示機能', () => {
     it('3つのタブが表示される', async () => {
-      render(<Dashboard worksheetId={null} />);
+      render(<Dashboard worksheetId={1} />);
 
       await waitFor(() => {
         const tabs = screen.getAllByRole('tab');
@@ -30,7 +30,7 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
     });
 
     it('初期表示タブが「タスク数」である', async () => {
-      render(<Dashboard worksheetId={null} />);
+      render(<Dashboard worksheetId={1} />);
 
       await waitFor(() => {
         const workTab = screen.getAllByRole('tab')[0];
@@ -40,7 +40,7 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
 
     it('タブクリックで表示内容が即時に切り替わる', async () => {
       const user = userEvent.setup();
-      render(<Dashboard worksheetId={null} />);
+      render(<Dashboard worksheetId={1} />);
 
       await waitFor(() => {
         const tabs = screen.getAllByRole('tab');
@@ -57,7 +57,7 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
 
     it('割り当て済みタブをクリックできる', async () => {
       const user = userEvent.setup();
-      render(<Dashboard worksheetId={null} />);
+      render(<Dashboard worksheetId={1} />);
 
       await waitFor(() => {
         const tabs = screen.getAllByRole('tab');
@@ -74,7 +74,7 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
 
   describe('タスク数タブの機能', () => {
     it('タスク数タブで掃除項目一覧が表示される', async () => {
-      render(<Dashboard worksheetId={null} />);
+      render(<Dashboard worksheetId={1} />);
 
       await waitFor(() => {
         const tabs = screen.getAllByRole('tab');
@@ -88,7 +88,7 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
 
     it('掃除項目のチェックボックスをチェック/アンチェックできる', async () => {
       const user = userEvent.setup();
-      render(<Dashboard worksheetId={null} />);
+      render(<Dashboard worksheetId={1} />);
 
       await waitFor(() => {
         const checkboxes = screen.queryAllByRole('checkbox');
@@ -105,7 +105,11 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
 
     it('除外チェックされた掃除項目はシャッフル対象から外れる', async () => {
       const user = userEvent.setup();
-      render(<Dashboard worksheetId={null} />);
+
+      // デフォルト モック セットアップ（OffWorks API を含む）
+      setupDefaultAxiosMocks();
+
+      render(<Dashboard worksheetId={1} />);
 
       await waitFor(() => {
         const checkboxes = screen.queryAllByRole('checkbox');
@@ -116,18 +120,31 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
       if (checkboxes.length > 0) {
         const checkbox = checkboxes[0] as HTMLInputElement;
 
-        // チェック状態の変化を確認（状態が変わることを確認）
+        // チェック前は未チェック
+        expect(checkbox.checked).toBe(false);
+
+        // チェック状態を変化させる
         await user.click(checkbox);
 
-        // チェックボックスがクリック可能であることを確認
-        expect(checkbox).toBeInTheDocument();
+        // POST リクエストが呼ばれたことを確認（OffWork レコード作成）
+        await waitFor(() => {
+          expect(vi.mocked(axios.post)).toHaveBeenCalledWith(
+            '/api/v1/off_works',
+            expect.objectContaining({
+              off_work: expect.objectContaining({
+                work_id: expect.any(Number),
+                date: expect.any(String),
+              }),
+            })
+          );
+        });
       }
     });
   });
 
   describe('メンバー数タブの機能', () => {
     it('メンバー数は参加メンバー選択と一致する', async () => {
-      render(<Dashboard worksheetId={null} />);
+      render(<Dashboard worksheetId={1} />);
 
       await waitFor(() => {
         const tabs = screen.getAllByRole('tab');
@@ -146,7 +163,7 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
       vi.clearAllMocks();
       setupAxiosMocksWithArchived();
 
-      render(<Dashboard worksheetId={null} />);
+      render(<Dashboard worksheetId={1} />);
 
       await waitFor(() => {
         const tabs = screen.getAllByRole('tab');
@@ -162,7 +179,7 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
   describe('統計数値の日付連動', () => {
     it('選択日付が変わると統計数値が更新される', async () => {
       const user = userEvent.setup();
-      render(<Dashboard worksheetId={null} />);
+      render(<Dashboard worksheetId={1} />);
 
       await waitFor(() => {
         expect(screen.getByText(/タスク数/i)).toBeInTheDocument();
@@ -179,7 +196,7 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
     });
 
     it('統計カードの数値は日付ごとに異なる', async () => {
-      render(<Dashboard worksheetId={null} />);
+      render(<Dashboard worksheetId={1} />);
 
       await waitFor(() => {
         expect(screen.getByText(/タスク数/i)).toBeInTheDocument();
@@ -192,7 +209,7 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
 
   describe('レスポンシブ対応', () => {
     it('モバイル・デスクトップ双方で崩れず利用できる', async () => {
-      render(<Dashboard worksheetId={null} />);
+      render(<Dashboard worksheetId={1} />);
 
       await waitFor(() => {
         expect(screen.getByText(/タスク数/i)).toBeInTheDocument();
@@ -209,7 +226,7 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
 
   describe('既存機能への影響確認', () => {
     it('シャッフル機能が影響を受けない', async () => {
-      render(<Dashboard worksheetId={null} />);
+      render(<Dashboard worksheetId={1} />);
 
       await waitFor(() => {
         expect(screen.getByText(/タスク数/i)).toBeInTheDocument();
@@ -221,7 +238,7 @@ describe('Dashboard - Issue #2: 統計表示タブ切り替え機能', () => {
     });
 
     it('割り当て機能が影響を受けない', async () => {
-      render(<Dashboard worksheetId={null} />);
+      render(<Dashboard worksheetId={1} />);
 
       await waitFor(() => {
         expect(screen.getByText(/タスク数/i)).toBeInTheDocument();
